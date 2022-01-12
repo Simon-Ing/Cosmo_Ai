@@ -1,0 +1,1827 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "bin/main"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"link_directories",
+			"conan_global_flags",
+			"conan_basic_setup",
+			"conan_cmake_run",
+			"target_link_libraries",
+			"add_compile_options",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt",
+			"cmake-build-release/conanbuildinfo.cmake",
+			"cmake-build-release/conan.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 14,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 784,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 4759,
+				"parent" : 3
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5260,
+				"parent" : 4
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 18,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 5271,
+				"parent" : 4
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 5253,
+				"parent" : 4
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -pthread  -O3 -DNDEBUG "
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-DFLAC__NO_DLL"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-D_DEFAULT_SOURCE"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-D_BSD_SOURCE"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-DHAS_FCHOWN"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-DHAS_STICKY_DIR_BIT"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-D_REENTRANT"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-DLZMA_API_STATIC"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-DLIBJPEG_STATIC"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/opencv/4.5.3/_/_/package/d08dde0a27a192529da0b441b86c4f16fe04503b/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/opencv/4.5.3/_/_/package/d08dde0a27a192529da0b441b86c4f16fe04503b/include/opencv4"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/jasper/2.0.32/_/_/package/c0f14b099e9b359331abfa5be6f0d819983cea5b/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openexr/2.5.7/_/_/package/69698f6e2978013d4a5ee2a23b636a4c92eede84/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openexr/2.5.7/_/_/package/69698f6e2978013d4a5ee2a23b636a4c92eede84/include/OpenEXR"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libtiff/4.3.0/_/_/package/8302753393d88dd719b852c30dc285b2c793cd18/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/eigen/3.3.9/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/eigen3"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/ffmpeg/4.4/_/_/package/2770b46b8645e6555ada38043cbb4bf19de6ac0f/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/quirc/1.1/_/_/package/82c12ed3c6890f0bc8e954bd836c9da56b845711/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/gtk-2.0"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/pango-1.0"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/atk-1.0"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/gdk-pixbuf-2.0"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/libmount"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/blkid"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/fribidi"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/cairo"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/pixman-1"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/harfbuzz"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/glib-2.0"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/protobuf/3.17.1/_/_/package/35f35211396802d98f502dcb5e3e87ae1b51c5f2/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/ade/0.1.1f/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libjpeg/9d/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libdeflate/1.8/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/xz_utils/5.2.5/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/jbig/20160605/_/_/package/f2711434c4877d0e0aa8cdcc4da2a295d5d80304/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/zstd/1.5.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libwebp/1.2.0/_/_/package/034afc24309e6fc60dbccb1dab5b0f9cad6ec656/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/freetype/2.11.0/_/_/package/f1014dc4f9380132c471ceb778980949abf136d3/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/freetype/2.11.0/_/_/package/f1014dc4f9380132c471ceb778980949abf136d3/include/freetype2"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openjpeg/2.4.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openjpeg/2.4.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include/openjpeg-2.4"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openh264/2.1.1/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libx264/20191217/_/_/package/52bfaf5780e9ee7fba3fa4a492156dbcf0dff057/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libx265/3.4/_/_/package/75e903d40ade00f9adc18d07c1d36ecb3e595a39/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libvpx/1.10.0/_/_/package/21d176c6d550e07ab7b17c1513a8ddb7fb960145/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libmp3lame/3.100/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libfdk_aac/2.0.2/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/pulseaudio/14.2/_/_/package/5fc8d29658aff7f1a5341125011d1c47807108ae/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libpng/1.6.37/_/_/package/7929d8ecf29c60d74fd3c1f6cb78bbb3cb49c0c7/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/bzip2/1.0.8/_/_/package/da606cf731e334010b0bf6e85a2a6f891b9f36b0/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libiconv/1.16/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/brotli/1.0.9/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/brotli/1.0.9/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include/brotli"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/openssl/1.1.1l/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libalsa/1.2.5.1/_/_/package/d48130e0dd76369b1338deb3b2372c5a649f9f2d/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/uuid"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/freetype2"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/usr/include/libpng16"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libsndfile/1.0.31/_/_/package/9384eaf0a0891af0df136cb9739770bd5d841e22/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/libcap/2.50/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/zlib/1.2.11/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/vorbis/1.3.7/_/_/package/033a9a186751ed382a6fa5fa2c844ad34b7c3302/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/opus/1.3.1/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/opus/1.3.1/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include/opus"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/flac/1.3.3/_/_/package/b9bd28193f63cd74fd2213b63c74017e7893c24d/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/home/simon/.conan/data/ogg/1.3.4/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"id" : "main::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-pthread  -O3 -DNDEBUG",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-Bsymbolic     -rdynamic",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/opencv/4.5.3/_/_/package/d08dde0a27a192529da0b441b86c4f16fe04503b/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/jasper/2.0.32/_/_/package/c0f14b099e9b359331abfa5be6f0d819983cea5b/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/openexr/2.5.7/_/_/package/69698f6e2978013d4a5ee2a23b636a4c92eede84/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libtiff/4.3.0/_/_/package/8302753393d88dd719b852c30dc285b2c793cd18/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/ffmpeg/4.4/_/_/package/2770b46b8645e6555ada38043cbb4bf19de6ac0f/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/quirc/1.1/_/_/package/82c12ed3c6890f0bc8e954bd836c9da56b845711/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/protobuf/3.17.1/_/_/package/35f35211396802d98f502dcb5e3e87ae1b51c5f2/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/ade/0.1.1f/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libjpeg/9d/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libdeflate/1.8/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/xz_utils/5.2.5/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/jbig/20160605/_/_/package/f2711434c4877d0e0aa8cdcc4da2a295d5d80304/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/zstd/1.5.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libwebp/1.2.0/_/_/package/034afc24309e6fc60dbccb1dab5b0f9cad6ec656/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/freetype/2.11.0/_/_/package/f1014dc4f9380132c471ceb778980949abf136d3/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/openjpeg/2.4.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/openh264/2.1.1/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libx264/20191217/_/_/package/52bfaf5780e9ee7fba3fa4a492156dbcf0dff057/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libx265/3.4/_/_/package/75e903d40ade00f9adc18d07c1d36ecb3e595a39/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libvpx/1.10.0/_/_/package/21d176c6d550e07ab7b17c1513a8ddb7fb960145/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libmp3lame/3.100/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libfdk_aac/2.0.2/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/pulseaudio/14.2/_/_/package/5fc8d29658aff7f1a5341125011d1c47807108ae/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/pulseaudio/14.2/_/_/package/5fc8d29658aff7f1a5341125011d1c47807108ae/lib/pulseaudio",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libpng/1.6.37/_/_/package/7929d8ecf29c60d74fd3c1f6cb78bbb3cb49c0c7/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/bzip2/1.0.8/_/_/package/da606cf731e334010b0bf6e85a2a6f891b9f36b0/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libiconv/1.16/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/brotli/1.0.9/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/openssl/1.1.1l/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libalsa/1.2.5.1/_/_/package/d48130e0dd76369b1338deb3b2372c5a649f9f2d/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libsndfile/1.0.31/_/_/package/9384eaf0a0891af0df136cb9739770bd5d841e22/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/libcap/2.50/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/zlib/1.2.11/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/vorbis/1.3.7/_/_/package/033a9a186751ed382a6fa5fa2c844ad34b7c3302/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/opus/1.3.1/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/flac/1.3.3/_/_/package/b9bd28193f63cd74fd2213b63c74017e7893c24d/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/home/simon/.conan/data/ogg/1.3.4/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/home/simon/.conan/data/opencv/4.5.3/_/_/package/d08dde0a27a192529da0b441b86c4f16fe04503b/lib:/home/simon/.conan/data/jasper/2.0.32/_/_/package/c0f14b099e9b359331abfa5be6f0d819983cea5b/lib:/home/simon/.conan/data/openexr/2.5.7/_/_/package/69698f6e2978013d4a5ee2a23b636a4c92eede84/lib:/home/simon/.conan/data/libtiff/4.3.0/_/_/package/8302753393d88dd719b852c30dc285b2c793cd18/lib:/home/simon/.conan/data/ffmpeg/4.4/_/_/package/2770b46b8645e6555ada38043cbb4bf19de6ac0f/lib:/home/simon/.conan/data/quirc/1.1/_/_/package/82c12ed3c6890f0bc8e954bd836c9da56b845711/lib:/home/simon/.conan/data/protobuf/3.17.1/_/_/package/35f35211396802d98f502dcb5e3e87ae1b51c5f2/lib:/home/simon/.conan/data/ade/0.1.1f/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib:/home/simon/.conan/data/libjpeg/9d/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/libdeflate/1.8/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/xz_utils/5.2.5/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/jbig/20160605/_/_/package/f2711434c4877d0e0aa8cdcc4da2a295d5d80304/lib:/home/simon/.conan/data/zstd/1.5.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/libwebp/1.2.0/_/_/package/034afc24309e6fc60dbccb1dab5b0f9cad6ec656/lib:/home/simon/.conan/data/freetype/2.11.0/_/_/package/f1014dc4f9380132c471ceb778980949abf136d3/lib:/home/simon/.conan/data/openjpeg/2.4.0/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/openh264/2.1.1/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib:/home/simon/.conan/data/libx264/20191217/_/_/package/52bfaf5780e9ee7fba3fa4a492156dbcf0dff057/lib:/home/simon/.conan/data/libx265/3.4/_/_/package/75e903d40ade00f9adc18d07c1d36ecb3e595a39/lib:/home/simon/.conan/data/libvpx/1.10.0/_/_/package/21d176c6d550e07ab7b17c1513a8ddb7fb960145/lib:/home/simon/.conan/data/libmp3lame/3.100/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/libfdk_aac/2.0.2/_/_/package/b911f48570f9bb2902d9e83b2b9ebf9d376c8c56/lib:/home/simon/.conan/data/pulseaudio/14.2/_/_/package/5fc8d29658aff7f1a5341125011d1c47807108ae/lib:/home/simon/.conan/data/pulseaudio/14.2/_/_/package/5fc8d29658aff7f1a5341125011d1c47807108ae/lib/pulseaudio:/home/simon/.conan/data/libpng/1.6.37/_/_/package/7929d8ecf29c60d74fd3c1f6cb78bbb3cb49c0c7/lib:/home/simon/.conan/data/bzip2/1.0.8/_/_/package/da606cf731e334010b0bf6e85a2a6f891b9f36b0/lib:/home/simon/.conan/data/libiconv/1.16/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/brotli/1.0.9/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/openssl/1.1.1l/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/libalsa/1.2.5.1/_/_/package/d48130e0dd76369b1338deb3b2372c5a649f9f2d/lib:/home/simon/.conan/data/libsndfile/1.0.31/_/_/package/9384eaf0a0891af0df136cb9739770bd5d841e22/lib:/home/simon/.conan/data/libcap/2.50/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/zlib/1.2.11/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/vorbis/1.3.7/_/_/package/033a9a186751ed382a6fa5fa2c844ad34b7c3302/lib:/home/simon/.conan/data/opus/1.3.1/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib:/home/simon/.conan/data/flac/1.3.3/_/_/package/b9bd28193f63cd74fd2213b63c74017e7893c24d/lib:/home/simon/.conan/data/ogg/1.3.4/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_ml",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_photo",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_highgui",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_videoio",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_imgcodecs",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_objdetect",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_stitching",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_dnn",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_gapi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_video",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_calib3d",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_features2d",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_flann",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_imgproc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopencv_core",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ljasper",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lIlmImfUtil-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lIlmImf-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lImath-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lHalf-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lIexMath-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lIlmThread-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lIex-2_5",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ltiffxx",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ltiff",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lavdevice",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lavfilter",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lavformat",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lavcodec",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lswscale",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lswresample",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpostproc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lavutil",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lquirc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lprotoc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lprotobuf",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lade",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ljpeg",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ldeflate",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-llzma",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ljbig",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lzstd",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lwebpdecoder",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lwebpdemux",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lwebpmux",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lwebp",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfreetype",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopenjp2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopenh264",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lx264",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lx265",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvpx",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lmp3lame",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfdk-aac",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulse-simple",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulse",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulsecommon-14.2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpng16",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbz2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-liconv",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcharset",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlidec-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlienc-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlicommon-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lssl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcrypto",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lasound",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lsndfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcap",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lz",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbisenc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbisfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbis",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopus",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lFLAC++",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lFLAC",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-logg",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgtk-x11-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgdk-x11-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpangocairo-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-latk-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcairo",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgdk_pixbuf-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgio-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpangoft2-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpango-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgobject-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lglib-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lharfbuzz",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfontconfig",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfreetype",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lstdc++",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-x11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-drm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvdpau",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lX11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lX11-xcb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfontenc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lICE",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lSM",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXau",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXaw7",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXcomposite",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXcursor",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXdamage",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXfixes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXdmcp",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXext",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXft",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXinerama",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxkbfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXmu",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXmuu",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXpm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXrandr",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXrender",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXRes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXss",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXtst",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXv",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXvMC",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXxf86vm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xkb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-icccm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-image",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-shm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-keysyms",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-randr",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-render",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-render-util",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-shape",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-sync",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xfixes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xinerama",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-util",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-dri3",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopenjp2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopenh264",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lx264",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lx265",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvpx",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lmp3lame",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfdk-aac",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulse-simple",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulse",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpulsecommon-14.2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpng16",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbz2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-liconv",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcharset",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlidec-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlienc-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lbrotlicommon-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lssl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcrypto",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lasound",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lsndfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcap",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lz",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbisenc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbisfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvorbis",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lopus",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lFLAC++",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lFLAC",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-logg",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgtk-x11-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgdk-x11-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpangocairo-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-latk-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lcairo",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgdk_pixbuf-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgio-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpangoft2-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpango-1.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lgobject-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lglib-2.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lharfbuzz",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfontconfig",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lstdc++",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-x11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-drm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-x11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lva-drm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lvdpau",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lX11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lX11-xcb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lfontenc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lICE",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lSM",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXau",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXaw7",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXcomposite",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXcursor",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXdamage",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXfixes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXdmcp",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXext",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXft",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXinerama",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxkbfile",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXmu",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXmuu",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXpm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXrandr",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXrender",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXRes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXss",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXtst",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXv",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXvMC",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lXxf86vm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xkb",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-icccm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-image",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-shm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-keysyms",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-randr",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-render",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-render-util",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-shape",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-sync",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xfixes",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-xinerama",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-util",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lxcb-dri3",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lm",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "main",
+	"nameOnDisk" : "main",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "main.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

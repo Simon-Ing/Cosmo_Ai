@@ -1,0 +1,181 @@
+/snap/clion/178/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/snap/clion/178/bin/ninja/linux/ninja -G Ninja /home/simon/CLionProjects/CosmoAi
+CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+-- Conan: Automatic detection of conan settings from cmake
+-- Conan: Settings= -s;build_type=Release;-s;compiler=gcc;-s;compiler.version=9;-s;compiler.libcxx=libstdc++11
+-- Conan: checking conan executable
+-- Conan: Found program /home/simon/.local/bin/conan
+-- Conan: Version found Conan version 1.43.1
+-- Conan executing: /home/simon/.local/bin/conan install . -s build_type=Release -s compiler=gcc -s compiler.version=9 -s compiler.libcxx=libstdc++11 -g=cmake
+Configuration:
+[settings]
+arch=x86_64
+arch_build=x86_64
+build_type=Release
+compiler=gcc
+compiler.libcxx=libstdc++11
+compiler.version=9
+os=Linux
+os_build=Linux
+[options]
+[build_requires]
+[env]
+
+conanfile.txt: Installing package
+Requirements
+    ade/0.1.1f from 'conancenter' - Cache
+    brotli/1.0.9 from 'conancenter' - Cache
+    bzip2/1.0.8 from 'conancenter' - Cache
+    eigen/3.3.9 from 'conancenter' - Cache
+    ffmpeg/4.4 from 'conancenter' - Cache
+    flac/1.3.3 from 'conancenter' - Cache
+    freetype/2.11.0 from 'conancenter' - Cache
+    gtk/system from 'conancenter' - Cache
+    jasper/2.0.32 from 'conancenter' - Cache
+    jbig/20160605 from 'conancenter' - Cache
+    libalsa/1.2.5.1 from 'conancenter' - Cache
+    libcap/2.50 from 'conancenter' - Cache
+    libdeflate/1.8 from 'conancenter' - Cache
+    libfdk_aac/2.0.2 from 'conancenter' - Cache
+    libiconv/1.16 from 'conancenter' - Cache
+    libjpeg/9d from 'conancenter' - Cache
+    libmp3lame/3.100 from 'conancenter' - Cache
+    libpng/1.6.37 from 'conancenter' - Cache
+    libsndfile/1.0.31 from 'conancenter' - Cache
+    libtiff/4.3.0 from 'conancenter' - Cache
+    libvpx/1.10.0 from 'conancenter' - Cache
+    libwebp/1.2.0 from 'conancenter' - Cache
+    libx264/20191217 from 'conancenter' - Cache
+    libx265/3.4 from 'conancenter' - Cache
+    ogg/1.3.4 from 'conancenter' - Cache
+    opencv/4.5.3 from 'conancenter' - Cache
+    openexr/2.5.7 from 'conancenter' - Cache
+    openh264/2.1.1 from 'conancenter' - Cache
+    openjpeg/2.4.0 from 'conancenter' - Cache
+    openssl/1.1.1l from 'conancenter' - Cache
+    opus/1.3.1 from 'conancenter' - Cache
+    protobuf/3.17.1 from 'conancenter' - Cache
+    pulseaudio/14.2 from 'conancenter' - Cache
+    quirc/1.1 from 'conancenter' - Cache
+    vaapi/system from 'conancenter' - Cache
+    vdpau/system from 'conancenter' - Cache
+    vorbis/1.3.7 from 'conancenter' - Cache
+    xorg/system from 'conancenter' - Cache
+    xz_utils/5.2.5 from 'conancenter' - Cache
+    zlib/1.2.11 from 'conancenter' - Cache
+    zstd/1.5.0 from 'conancenter' - Cache
+Packages
+    ade/0.1.1f:b911f48570f9bb2902d9e83b2b9ebf9d376c8c56 - Cache
+    brotli/1.0.9:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    bzip2/1.0.8:da606cf731e334010b0bf6e85a2a6f891b9f36b0 - Cache
+    eigen/3.3.9:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9 - Cache
+    ffmpeg/4.4:2770b46b8645e6555ada38043cbb4bf19de6ac0f - Cache
+    flac/1.3.3:b9bd28193f63cd74fd2213b63c74017e7893c24d - Cache
+    freetype/2.11.0:f1014dc4f9380132c471ceb778980949abf136d3 - Cache
+    gtk/system:cc5e5ca8b619d2dffaaeae1e4924ae3ce085a8f1 - Cache
+    jasper/2.0.32:c0f14b099e9b359331abfa5be6f0d819983cea5b - Cache
+    jbig/20160605:f2711434c4877d0e0aa8cdcc4da2a295d5d80304 - Cache
+    libalsa/1.2.5.1:d48130e0dd76369b1338deb3b2372c5a649f9f2d - Cache
+    libcap/2.50:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    libdeflate/1.8:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    libfdk_aac/2.0.2:b911f48570f9bb2902d9e83b2b9ebf9d376c8c56 - Cache
+    libiconv/1.16:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    libjpeg/9d:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    libmp3lame/3.100:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    libpng/1.6.37:7929d8ecf29c60d74fd3c1f6cb78bbb3cb49c0c7 - Cache
+    libsndfile/1.0.31:9384eaf0a0891af0df136cb9739770bd5d841e22 - Cache
+    libtiff/4.3.0:8302753393d88dd719b852c30dc285b2c793cd18 - Cache
+    libvpx/1.10.0:21d176c6d550e07ab7b17c1513a8ddb7fb960145 - Cache
+    libwebp/1.2.0:034afc24309e6fc60dbccb1dab5b0f9cad6ec656 - Cache
+    libx264/20191217:52bfaf5780e9ee7fba3fa4a492156dbcf0dff057 - Cache
+    libx265/3.4:75e903d40ade00f9adc18d07c1d36ecb3e595a39 - Cache
+    ogg/1.3.4:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    opencv/4.5.3:d08dde0a27a192529da0b441b86c4f16fe04503b - Cache
+    openexr/2.5.7:69698f6e2978013d4a5ee2a23b636a4c92eede84 - Cache
+    openh264/2.1.1:b911f48570f9bb2902d9e83b2b9ebf9d376c8c56 - Cache
+    openjpeg/2.4.0:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    openssl/1.1.1l:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    opus/1.3.1:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    protobuf/3.17.1:35f35211396802d98f502dcb5e3e87ae1b51c5f2 - Cache
+    pulseaudio/14.2:5fc8d29658aff7f1a5341125011d1c47807108ae - Cache
+    quirc/1.1:82c12ed3c6890f0bc8e954bd836c9da56b845711 - Cache
+    vaapi/system:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9 - Cache
+    vdpau/system:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9 - Cache
+    vorbis/1.3.7:033a9a186751ed382a6fa5fa2c844ad34b7c3302 - Cache
+    xorg/system:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9 - Cache
+    xz_utils/5.2.5:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    zlib/1.2.11:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+    zstd/1.5.0:6af9cc7cb931c5ad942174fd7838eb655717c709 - Cache
+
+Installing (downloading, building) binaries...
+ade/0.1.1f: Already installed!
+brotli/1.0.9: Already installed!
+bzip2/1.0.8: Already installed!
+bzip2/1.0.8: Appending PATH environment variable: /home/simon/.conan/data/bzip2/1.0.8/_/_/package/da606cf731e334010b0bf6e85a2a6f891b9f36b0/bin
+eigen/3.3.9: Already installed!
+gtk/system: Already installed!
+jbig/20160605: Already installed!
+jbig/20160605: Appending PATH environment variable: /home/simon/.conan/data/jbig/20160605/_/_/package/f2711434c4877d0e0aa8cdcc4da2a295d5d80304/bin
+libalsa/1.2.5.1: Already installed!
+libcap/2.50: Already installed!
+libdeflate/1.8: Already installed!
+libfdk_aac/2.0.2: Already installed!
+libiconv/1.16: Already installed!
+libiconv/1.16: Appending PATH environment var: /home/simon/.conan/data/libiconv/1.16/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/bin
+libjpeg/9d: Already installed!
+libmp3lame/3.100: Already installed!
+libvpx/1.10.0: Already installed!
+libwebp/1.2.0: Already installed!
+libx264/20191217: Already installed!
+libx265/3.4: Already installed!
+ogg/1.3.4: Already installed!
+openh264/2.1.1: Already installed!
+openjpeg/2.4.0: Already installed!
+openssl/1.1.1l: Already installed!
+opus/1.3.1: Already installed!
+quirc/1.1: Already installed!
+vaapi/system: Already installed!
+vdpau/system: Already installed!
+xorg/system: Already installed!
+xz_utils/5.2.5: Already installed!
+zlib/1.2.11: Already installed!
+zstd/1.5.0: Already installed!
+flac/1.3.3: Already installed!
+flac/1.3.3: Appending PATH environment variable: /home/simon/.conan/data/flac/1.3.3/_/_/package/b9bd28193f63cd74fd2213b63c74017e7893c24d/bin
+jasper/2.0.32: Already installed!
+libpng/1.6.37: Already installed!
+libtiff/4.3.0: Already installed!
+openexr/2.5.7: Already installed!
+protobuf/3.17.1: Already installed!
+protobuf/3.17.1: Appending PATH environment variable: /home/simon/.conan/data/protobuf/3.17.1/_/_/package/35f35211396802d98f502dcb5e3e87ae1b51c5f2/bin
+vorbis/1.3.7: Already installed!
+freetype/2.11.0: Already installed!
+libsndfile/1.0.31: Already installed!
+libsndfile/1.0.31: Appending PATH environment variable: /home/simon/.conan/data/libsndfile/1.0.31/_/_/package/9384eaf0a0891af0df136cb9739770bd5d841e22/bin
+pulseaudio/14.2: Already installed!
+ffmpeg/4.4: Already installed!
+opencv/4.5.3: Already installed!
+conanfile.txt: Generator txt created conanbuildinfo.txt
+conanfile.txt: Generator cmake created conanbuildinfo.cmake
+conanfile.txt: Aggregating env generators
+conanfile.txt: Generated conaninfo.txt
+conanfile.txt: Generated graphinfo
+WARN: ffmpeg/4.4: requirement libwebp/1.2.1 overridden by opencv/4.5.3 to libwebp/1.2.0 
+WARN: pulseaudio/14.2: requirement libalsa/1.2.4 overridden by ffmpeg/4.4 to libalsa/1.2.5.1 
+-- Conan: Loading conanbuildinfo.cmake
+-- Conan: Adjusting output directories
+-- Conan: Using cmake global configuration
+-- Conan: Adjusting default RPATHs Conan policies
+-- Conan: Adjusting language standard
+-- Current conanbuildinfo.cmake directory: /home/simon/CLionProjects/CosmoAi/cmake-build-release
+-- Conan: Compiler GCC>=5, checking major version 9
+-- Conan: Checking correct version: 9
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/simon/CLionProjects/CosmoAi/cmake-build-release
