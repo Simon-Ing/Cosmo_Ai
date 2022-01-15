@@ -5,7 +5,7 @@
 
 //using namespace std;
 
-int window_size = 3000;
+int window_size = 401;
 int R_e = 30;
 int R = 40;
 int x_pos = window_size / 2;
