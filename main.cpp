@@ -1,7 +1,9 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <thread>
 
-using namespace std;
+
+//using namespace std;
 
 int window_size = 401;
 int R_e = 30;
@@ -13,6 +15,30 @@ double K_l = 1.0;
 double K_s = 1.1;
 cv::Mat source;
 cv::Mat image;
+
+
+void point_mass_funct( int thread_begin, int thread_end) {
+    for (int i = thread_begin; i < thread_end; i++) {
+        for (int j = 0; j <= source.cols; j++) {
+            int x = j - window_size / 2;
+            int y = window_size / 2 - i;
+            double r = sqrt(x * x + y * y);
+            double theta = atan2(y, x);
+            double frac = (R_e * R_e * r) / (r * r + R * R + 2 * r * R * cos(theta));
+            double x_ = K_s / K_l * x + frac * (r / R + cos(theta));
+            double y_ = K_s / K_l * y + frac * (-sin(theta));
+            int source_row = window_size / 2 - (int)y_;
+            int source_col = (int)x_ + window_size / 2;
+
+            // If source position within source image
+            if (std::max(source_col, source_row) < window_size && std::min(source_col, source_row) >= 0) {
+                //mutex here if needed. ..?
+                image.at<uchar>(i, j) = source.at<uchar>(source_row, source_col);
+            }
+        }
+    }
+}
+
 
 
 
@@ -32,24 +58,22 @@ static void update(int, void*){
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // This is where the magic happens
-    for(int i=0; i < source.rows; i++){
-        for(int j=0; j <= source.cols; j++){
-            int x = j - window_size/2;
-            int y = window_size/2 - i;
-            double r = sqrt(x*x + y*y);
-            double theta = atan2(y, x);
-            double frac = (R_e*R_e * r) / (r*r + R*R + 2*r*R*cos(theta));
-            double x_ = K_s/K_l*x + frac * (r/R + cos(theta));
-            double y_ = K_s/K_l*y + frac * (-sin(theta));
-            int source_row = window_size/2 - (int)y_;
-            int source_col = (int)x_ + window_size/2;
-
-            // If source position within source image
-            if(max(source_col, source_row) < window_size && min(source_col, source_row) >= 0){
-                image.at<uchar>(i, j) =  source.at<uchar>(source_row, source_col);
-            }
+    int num_threads = std::thread::hardware_concurrency();
+    
+    std::vector<std::thread> threads_vec;
+    for (int k = 0; k < num_threads; k++) {
+        int thread_begin = (source.rows / num_threads) * k;
+        int thread_end = (source.rows / num_threads) * k + (source.rows / num_threads);
+                   
+        std::thread t(point_mass_funct, thread_begin, thread_end);
+        threads_vec.push_back(std::move(t));
+            
+        //point_mass_funct(thread_begin, thread_end);  //for single thread
         }
+    for (auto& thread : threads_vec) {
+        thread.join();
     }
+
 
     source = source(cv::Rect(50,50,source.cols - 100, source.rows - 100));
     image = image(cv::Rect(50,50,image.cols - 100, image.rows - 100));
