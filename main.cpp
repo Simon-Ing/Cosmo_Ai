@@ -58,7 +58,7 @@ static void update(int, void*){
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // This is where the magic happens
-    int num_threads = std::thread::hardware_concurrency()-1;
+    int num_threads = std::thread::hardware_concurrency();
     
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
