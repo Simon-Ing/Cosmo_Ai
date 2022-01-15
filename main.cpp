@@ -1,10 +1,11 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include <future>
+#include <thread>
+
 
 //using namespace std;
 
-int window_size = 2000;
+int window_size = 3000;
 int R_e = 30;
 int R = 40;
 int x_pos = window_size / 2;
@@ -59,15 +60,20 @@ static void update(int, void*){
     // This is where the magic happens
     int num_threads = std::thread::hardware_concurrency()-1;
     
+    std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
         int thread_begin = (source.rows / num_threads) * k;
         int thread_end = (source.rows / num_threads) * k + (source.rows / num_threads);
                    
-            auto mr_async = std::async(std::launch::async, point_mass_funct, thread_begin, thread_end);
-            mr_async.get();
-            //point_mass_funct(thread_begin, thread_end);  //single thread
+        std::thread t(point_mass_funct, thread_begin, thread_end);
+        threads_vec.push_back(std::move(t));
+            
+        //point_mass_funct(thread_begin, thread_end);  //for single thread
         }
-    
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+
 
     source = source(cv::Rect(50,50,source.cols - 100, source.rows - 100));
     image = image(cv::Rect(50,50,image.cols - 100, image.rows - 100));
