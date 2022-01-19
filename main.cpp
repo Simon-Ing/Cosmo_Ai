@@ -2,15 +2,16 @@
 #include <iostream>
 #include <thread>
 
-int window_size = 501;
-int source_size = 50;
-int R_e = 30;
+int window_size = 501;  // Size of source and lens image
+int source_size = 50;   // size of source "Blob"
+int einsteinR = 30;
 double R;
-int xSlider = window_size / 2;
+int xSlider = window_size / 2; // raw values
 int ySlider = window_size / 2;
-int K_l = 1;
-int K_s = 2;
-//int dist_ratio = 2;
+int xSource;                    // Scaled values (to fit coordinate system)
+int ySource;
+double K_l = 2;    // Distance to lens
+double K_s = 3;    // Distance to source
 cv::Mat source;
 cv::Mat image;
 
@@ -30,7 +31,7 @@ void point_mass_funct( int thread_begin, int thread_end) {
 
             // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
             // Find the point from the source corresponding to the point evaluated
-            double frac = (R_e * R_e * r) / (r * r + R * R + 2 * r * R * cos(theta));
+            double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
             double x_ = K_s/K_l * (x + frac * (r / R + cos(theta)));
             double y_ = K_s/K_l * (y + frac * (-sin(theta)));
 
@@ -60,20 +61,19 @@ void refLines(){
 
 
 static void update(int, void*){
-//    R = std::max(R, 1); // constrain R to positive numbers
-    int xPos = xSlider - window_size / 2;
-    int yPos = window_size / 2 - ySlider;
-    std::cout << "x: " << xPos << " y: " << yPos << std::endl;
-    R = sqrt(xPos*xPos + yPos*yPos);
-    // Make a source with black background and a gaussian light source placed at x_pos, y_pos and radius R
+    // Scale position of source to fit coordinate system and calculate distance from center of lens(at origin)
+    xSource = xSlider - window_size / 2;
+    ySource = window_size / 2 - ySlider;
+    R = sqrt(xSource*xSource + ySource*ySource);
+    std::cout << "x: " << xSource << " y: " << ySource << " R: " << R << std::endl;
+
+    // Make a source image with black background and a gaussian light source placed at xSource, ySource and radius R and an empty image
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     cv::circle(source, cv::Point(xSlider, window_size - ySlider), 0, cv::Scalar(254, 254, 254), source_size);
     int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
     cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
-//    refLines();
-
-    // Init a black image
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+    refLines();
 
     // Run the point mass function for each pixel in image. (multi thread)
     unsigned int num_threads = std::thread::hardware_concurrency();
@@ -111,10 +111,10 @@ static void update(int, void*){
 int main()
 {
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("x pos", "Window", &xSlider, window_size, update);
-    cv::createTrackbar("y pos", "Window", &ySlider, window_size, update);
-    cv::createTrackbar("Einstein", "Window", &R_e, 100, update);
-    cv::createTrackbar("Source size", "Window", &source_size, window_size, update);
+    cv::createTrackbar("source x pos", "Window", &xSlider, window_size, update);
+    cv::createTrackbar("source y pos", "Window", &ySlider, window_size, update);
+    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, 100, update);
+    cv::createTrackbar("Source Radius", "Window", &source_size, window_size, update);
     update(0, nullptr);
     cv::waitKey(0);
     return 0;
