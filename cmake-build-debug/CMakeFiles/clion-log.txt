@@ -1,12 +1,4 @@
 /snap/clion/178/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/178/bin/ninja/linux/ninja -G Ninja /home/simon/CLionProjects/CosmoAi
-CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
-  Compatibility with CMake < 2.8.12 will be removed from a future version of
-  CMake.
-
-  Update the VERSION argument <min> value or use a ...<max> suffix to tell
-  CMake that the project does not need compatibility with older versions.
-
-
 -- Conan: Automatic detection of conan settings from cmake
 -- Conan: Settings= -s;build_type=Debug;-s;compiler=gcc;-s;compiler.version=9;-s;compiler.libcxx=libstdc++11
 -- Conan: checking conan executable
@@ -161,8 +153,8 @@ libsndfile/1.0.31: Appending PATH environment variable: /home/simon/.conan/data/
 pulseaudio/14.2: Already installed!
 ffmpeg/4.4: Already installed!
 opencv/4.5.3: Already installed!
-conanfile.txt: Generator txt created conanbuildinfo.txt
 conanfile.txt: Generator cmake created conanbuildinfo.cmake
+conanfile.txt: Generator txt created conanbuildinfo.txt
 conanfile.txt: Aggregating env generators
 conanfile.txt: Generated conaninfo.txt
 conanfile.txt: Generated graphinfo

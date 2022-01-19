@@ -1,12 +1,4 @@
 /snap/clion/178/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/snap/clion/178/bin/ninja/linux/ninja -G Ninja /home/simon/CLionProjects/CosmoAi
-CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
-  Compatibility with CMake < 2.8.12 will be removed from a future version of
-  CMake.
-
-  Update the VERSION argument <min> value or use a ...<max> suffix to tell
-  CMake that the project does not need compatibility with older versions.
-
-
 -- Conan: Automatic detection of conan settings from cmake
 -- Conan: Settings= -s;build_type=Release;-s;compiler=gcc;-s;compiler.version=9;-s;compiler.libcxx=libstdc++11
 -- Conan: checking conan executable
