@@ -2,17 +2,13 @@
 #include <iostream>
 #include <thread>
 
-
-//using namespace std;
-
-int window_size = 401;
+int window_size = 501;
 int R_e = 30;
 int R = 40;
 int x_pos = window_size / 2;
 int y_pos = window_size / 2;
 double K_l = 1.0;
-
-double K_s = 1.1;
+double K_s = 2;
 cv::Mat source;
 cv::Mat image;
 
@@ -63,20 +59,20 @@ static void update(int, void*){
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
         int thread_begin = (source.rows / num_threads) * k;
-        int thread_end = (source.rows / num_threads) * k + (source.rows / num_threads);
-                   
-        std::thread t(point_mass_funct, thread_begin, thread_end);
-        threads_vec.push_back(std::move(t));
+        int thread_end = (source.rows / num_threads) * (k + 1);//(source.rows / num_threads);
+
+//        std::thread t(point_mass_funct, thread_begin, thread_end);
+//        threads_vec.push_back(std::move(t));
             
-        //point_mass_funct(thread_begin, thread_end);  //for single thread
+        point_mass_funct(thread_begin, thread_end);  //for single thread
         }
-    for (auto& thread : threads_vec) {
-        thread.join();
-    }
+//    for (auto& thread : threads_vec) {
+//        thread.join();
+//    }
 
 
-    source = source(cv::Rect(50,50,source.cols - 100, source.rows - 100));
-    image = image(cv::Rect(50,50,image.cols - 100, image.rows - 100));
+    source = source(cv::Rect(100,100,source.cols - 200, source.rows - 200));
+    image = image(cv::Rect(100,100,image.cols - 200, image.rows - 200));
 
     cv::resize(source, source, cv::Size_<int>(501, 501));
     cv::resize(image, image, cv::Size_<int>(501, 501));
