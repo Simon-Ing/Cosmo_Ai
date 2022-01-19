@@ -2,11 +2,12 @@
 #include <iostream>
 #include <thread>
 
-int window_size = 1001;
+int window_size = 501;
+int source_size = 50;
 int R_e = 30;
-int R = 40;
-int x_pos = window_size / 2;
-int y_pos = window_size / 2;
+double R;
+int xSlider = window_size / 2;
+int ySlider = window_size / 2;
 //int K_l = 1;
 //int K_s = 2;
 int dist_ratio = 2;
@@ -58,23 +59,23 @@ void refLines(){
 }
 
 
-
 static void update(int, void*){
-    R = std::max(R, 1); // constrain R to positive numbers
-
+//    R = std::max(R, 1); // constrain R to positive numbers
+    int xPos = xSlider - window_size / 2;
+    int yPos = window_size / 2 - ySlider;
+    R = sqrt(xPos*xPos + yPos*yPos);
     // Make a source with black background and a gaussian light source placed at x_pos, y_pos and radius R
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    cv::circle(source, cv::Point(x_pos, y_pos), 0, cv::Scalar(254, 254, 254), R);
-    int kSize = (R / 2) * 2 + 1; // make sure kernel size is odd
-    cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), R);
-    refLines();
+    cv::circle(source, cv::Point(xSlider, ySlider), 0, cv::Scalar(254, 254, 254), source_size);
+    int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
+    cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
+//    refLines();
 
     // Init a black image
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run the point mass function for each pixel in image. (multi thread)
     unsigned int num_threads = std::thread::hardware_concurrency();
-    std::cout << num_threads << std::endl;
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (source.rows / num_threads) * k;
@@ -109,10 +110,11 @@ static void update(int, void*){
 int main()
 {
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("x pos", "Window", &x_pos, window_size, update);
-    cv::createTrackbar("y pos", "Window", &y_pos, window_size, update);
+    cv::createTrackbar("x pos", "Window", &xSlider, window_size, update);
+    cv::createTrackbar("y pos", "Window", &ySlider, window_size, update);
     cv::createTrackbar("Einstein", "Window", &R_e, 100, update);
-    cv::createTrackbar("Radius", "Window", &R, 100, update);
+    cv::createTrackbar("Source size", "Window", &source_size, window_size, update);
+    update(0, nullptr);
     cv::waitKey(0);
     return 0;
 }
