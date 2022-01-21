@@ -6,29 +6,28 @@ int window_size = 501;  // Size of source and lens image
 int source_size = 50;   // size of source "Blob"
 int einsteinR = 30;
 double R;
-int xPos = 10;
-int yPos = 10;
+int xPos = 20;
+int yPos = 20;
 cv::Mat source;
 cv::Mat image;
 cv::Mat pointSource;
 
 
+// Find the corresponding (X', y') for a given (x, y)
 std::vector<int> pointMass(double R_, double r, double theta) {
-
     // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
     // Find the point from the source corresponding to the point evaluated
     double frac = (einsteinR * einsteinR * r) / (r * r + R_ * R_ + 2 * r * R_ * cos(theta));
-    double x_ = r*cos(theta) + frac * (r / R_ + cos(theta));
-    double y_ = r*sin(theta) + frac * (-sin(theta));
+    double x_ = r*cos(theta) + frac*(r / R_ + cos(theta));
+    double y_ = r*sin(theta) - frac*sin(theta);
 
     // Translate to array index
     int source_row = window_size - (int)round(y_);
     int source_col = (int)round(x_);
-
     return {source_row, source_col};
 }
 
-
+// Find the center of the distorted source
 double findR() {
     for (int y = window_size -1; y >= 0; y--) {
         for (int x = 0; x < window_size; x++) {
@@ -37,9 +36,10 @@ double findR() {
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
+            // Calculate the corresponding (x', y')
             std::vector<int> sourcePos = pointMass(r, r, theta);
 
-            // If index within source; check if value is > 0, if so return radius
+            // If index within source, check if value is > 0, if so we have found R
             if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
                 if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 0) {
                     return r;
@@ -50,14 +50,11 @@ double findR() {
     return 0;
 }
 
+// Distort the image
 void distort( int begin, int end) {
     // Evaluate each point in image plane ~ lens plane
-    for (int row = begin; row < end; row++) {
-        for (int col = 0; col <= source.cols; col++) {
-
-            // set coordinate system with origin in middle and x right and y up
-            int x = col;
-            int y = window_size - row;
+    for (int y = end-1; y >= begin; y--) {
+        for (int x = 0; x <= source.cols; x++) {
 
             // calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
@@ -67,7 +64,7 @@ void distort( int begin, int end) {
 
             // If index within source , copy value to image
             if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                image.at<uchar>(row, col) = source.at<uchar>(sourcePos[0], sourcePos[1]);
+                image.at<uchar>(window_size-y, x) = source.at<uchar>(sourcePos[0], sourcePos[1]);
             }
         }
     }
@@ -76,8 +73,6 @@ void distort( int begin, int end) {
 // Add som lines to the image for reference
 void refLines(){
     for (int i = 0; i < window_size; i++) {
-//        source.at<uchar>(window_size/2, i) = 255;
-//        source.at<uchar>(i, window_size/2) = 255;
         source.at<uchar>(i, window_size - 1) = 255;
         source.at<uchar>(i, 0) = 255;
         source.at<uchar>(window_size - 1, i) = 255;
@@ -85,8 +80,8 @@ void refLines(){
     }
 }
 
-
-static void paralell() {//         Run the point mass function for each pixel in image. (multi thread)
+// Split the image into n pieces where n is number of threads available and distort the pieces in parallel
+static void parallel() {
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
@@ -100,27 +95,28 @@ static void paralell() {//         Run the point mass function for each pixel in
     }
 }
 
+// This function is called each time a slider is updated
 static void update(int, void*){
 
     // Find R by iterating through lens plane, and find the point that the center of the source maps to
     pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 5);
+    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
     R = findR();
 
-    // Make a source image with black background and a gaussian light source placed at xSource, ySource and radius R and an empty image
+    // Make the undistorted image by making a black background and add a gaussian light source placed at xSource, ySource and radius R
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     cv::circle(source, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), source_size);
     int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
     cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
-    image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     refLines();
-
+    // Make black background to draw the distorted image to
+    image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run with single thread:
-//    point_mass_funct(0, window_size);  //for single thread
+    distort(0, window_size);  //for single thread
 
     // ..or parallel:
-    paralell();
+//    parallel();
 
     // Scale, format and show on screen
     cv::resize(source, source, cv::Size_<int>(701, 701));
@@ -136,12 +132,12 @@ static void update(int, void*){
 
 int main()
 {
+    // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
     cv::createTrackbar("source y pos", "Window", &yPos, window_size, update);
     cv::createTrackbar("Einstein Radius", "Window", &einsteinR, 1000, update);
     cv::createTrackbar("Source Radius", "Window", &source_size, window_size, update);
-    update(0, nullptr);
     cv::waitKey(0);
     return 0;
 }
