@@ -395,3 +395,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /CMakeSettings.json
+/data/MNIST/raw
+/cosmo_ai/share/man/man1
+/cosmo_ai/Scripts
+/cosmo_ai/pyvenv.cfg
+/cosmo_ai/Lib/site-packages
