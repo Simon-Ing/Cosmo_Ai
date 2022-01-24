@@ -400,3 +400,5 @@ FodyWeavers.xsd
 /cosmo_ai/Scripts
 /cosmo_ai/pyvenv.cfg
 /cosmo_ai/Lib/site-packages
+/cmake-build-debug/
+/cmake-build-release/
