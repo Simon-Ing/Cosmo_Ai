@@ -27,10 +27,12 @@ void point_mass_funct( int thread_begin, int thread_end) {
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
+            int R_in_lens_plane = 1 * R_e;
+
             // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
             // Find the point from the source corresponding to the point evaluated
-            double frac = (R_e * R_e * r) / (r * r + R * R + 2 * r * R * cos(theta));
-            double x_ = dist_ratio * (x + frac * (r / R + cos(theta)));
+            double frac = (R_e * R_e * r) / (r * r + R_in_lens_plane * R_in_lens_plane + 2 * r * R_in_lens_plane * cos(theta));
+            double x_ = dist_ratio * (x + frac * (r / R_in_lens_plane + cos(theta)));
             double y_ = dist_ratio * (y + frac * (-sin(theta)));
 
             // Translate to array index
