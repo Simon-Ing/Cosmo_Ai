@@ -402,3 +402,4 @@ FodyWeavers.xsd
 /cosmo_ai/Lib/site-packages
 /cmake-build-debug/
 /cmake-build-release/
+/venv/

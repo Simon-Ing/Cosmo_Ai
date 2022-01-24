@@ -1,3 +1,0 @@
-/home/simon/CLionProjects/CosmoAi/cmake-build-release/CMakeFiles/rebuild_cache.dir
-/home/simon/CLionProjects/CosmoAi/cmake-build-release/CMakeFiles/edit_cache.dir
-/home/simon/CLionProjects/CosmoAi/cmake-build-release/CMakeFiles/main.dir
