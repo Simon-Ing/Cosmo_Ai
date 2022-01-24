@@ -2,15 +2,14 @@
 #include <iostream>
 #include <thread>
 
-int window_size = 501;  // Size of source and lens image
+int window_size = 600;  // Size of source and lens image
 int source_size = window_size/20;   // size of source "Blob"
 int einsteinR = window_size/20;
-double R;
+int R;
 int xPos = window_size/2;
 int yPos = window_size/2;
 cv::Mat source;
 cv::Mat image;
-cv::Mat pointSource;
 
 
 void drawGaussian(cv::Mat& img) {
@@ -26,9 +25,8 @@ void drawGaussian(cv::Mat& img) {
     }
 }
 
-
 // Find the corresponding (X', y') for a given (x, y)
-std::vector<int> pointMass(double R_, double r, double theta) {
+void pointMass(int (&target)[2], double R_, double r, double theta) {
     // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
     // Find the point from the source corresponding to the point evaluated
     double frac = (einsteinR * einsteinR * r) / (r * r + R_ * R_ + 2 * r * R_ * cos(theta));
@@ -36,37 +34,8 @@ std::vector<int> pointMass(double R_, double r, double theta) {
     double y_ = r * sin(theta) - frac * sin(theta);
 
     // Translate to array index
-    int source_row = window_size / 2 - (int)round(y_);
-    int source_col = (int)round(x_) + window_size / 2;
-    return {source_row, source_col};
-}
-
-// Find the center of the distorted source
-double findR() {
-    // Evaluate each point in image plane ~ lens plane
-    for (int i = 0; i < window_size; i++) {
-        for (int j = 0; j <= source.cols; j++) {
-
-            // set coordinate system with origin in middle and x right and y up
-            int x = j - window_size / 2;
-            int y = window_size / 2 - i;
-
-            // calculate distance and angle of the point evaluated relative to center of lens (origin)
-            double r = sqrt(x * x + y * y);
-            double theta = atan2(y, x);
-
-            // Calculate the corresponding (x', y')
-            std::vector<int> sourcePos = pointMass(r, r, theta);
-
-            // If index within source, check if value is > 0, if so we have found R
-            if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 100) {
-                    return r;
-                }
-            }
-        }
-    }
-    return 0;
+    target[0] = window_size / 2 - (int)round(y_);
+    target[1] = (int)round(x_) + window_size / 2 + R;
 }
 
 // Distort the image
@@ -75,15 +44,17 @@ void distort( int thread_begin, int thread_end) {
     for (int i = thread_begin; i < thread_end; i++) {
         for (int j = 0; j <= source.cols; j++) {
 
-            // set coordinate system with origin in middle and x right and y up
-            int x = j - window_size / 2;
+            // set coordinate system with origin at x=R
+            int x = j - window_size/2 - R;
             int y = window_size / 2 - i;
 
             // calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
-            std::vector<int> sourcePos = pointMass(R, r, theta);
+            int sourcePos[2];
+
+            pointMass(sourcePos, R, r, theta);
 
             // If index within source , copy value to image
             if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
@@ -121,18 +92,7 @@ static void parallel() {
 // This function is called each time a slider is updated
 static void update(int, void*){
 
-    // Find R by iterating through lens plane, and find the point that the center of the source maps to
-//    pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-//    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
-//    R = findR();
-
-    // Questionable solution to R
-//    R = 1.3*einsteinR;
-
-    // Another questionable solution to R
-    R = (xPos - sqrt(xPos*xPos + 4*einsteinR*einsteinR)) / 2;
-
-//    std::cout << "xPos: " << xPos - window_size/2 << " R: " << R << std::endl;
+    R = xPos;
 
     // Make the undistorted image by making a black background and add a gaussian light source
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -170,3 +130,45 @@ int main()
     return 0;
 }
 
+
+//// Find the center of the distorted source NOT CURRENTLY IN USE
+//double findR() {
+//    // Evaluate each point in image plane ~ lens plane
+//    for (int i = 0; i < window_size; i++) {
+//        for (int j = 0; j <= source.cols; j++) {
+//
+//            // set coordinate system with origin in middle and x right and y up
+//            int x = j - window_size / 2;
+//            int y = window_size / 2 - i;
+//
+//            // calculate distance and angle of the point evaluated relative to center of lens (origin)
+//            double r = sqrt(x * x + y * y);
+//            double theta = atan2(y, x);
+//
+//            // Calculate the corresponding (x', y')
+//            std::vector<int> sourcePos = pointMass(r, r, theta);
+//
+//            // If index within source, check if value is > 0, if so we have found R
+//            if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
+//                if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 100) {
+//                    return r;
+//                }
+//            }
+//        }
+//    }
+//    return 0;
+//}
+
+
+// Some questionable solutions to R:
+
+// Find R by iterating through lens plane, and find the point that the center of the source maps to
+//    pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+//    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
+//    R = findR();
+
+
+//    R = 1.3*einsteinR;
+
+
+//    R = (xPos - sqrt(xPos*xPos + 4*einsteinR*einsteinR)) / 2;
