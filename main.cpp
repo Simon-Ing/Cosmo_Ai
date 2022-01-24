@@ -3,8 +3,8 @@
 #include <thread>
 
 int window_size = 501;  // Size of source and lens image
-int source_size = window_size/10;   // size of source "Blob"
-int einsteinR = 0;
+int source_size = window_size/20;   // size of source "Blob"
+int einsteinR = window_size/20;
 double R;
 int xPos = window_size/2;
 int yPos = window_size/2;
@@ -32,12 +32,12 @@ std::vector<int> pointMass(double R_, double r, double theta) {
     // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
     // Find the point from the source corresponding to the point evaluated
     double frac = (einsteinR * einsteinR * r) / (r * r + R_ * R_ + 2 * r * R_ * cos(theta));
-    double x_ = r*cos(theta) + frac*(r / R_ + cos(theta));
-    double y_ = r*sin(theta) - frac*sin(theta);
+    double x_ = r * cos(theta) + frac * (r / R_ + cos(theta));
+    double y_ = r * sin(theta) - frac * sin(theta);
 
     // Translate to array index
-    int source_row = window_size - (int)round(y_);
-    int source_col = (int)round(x_);
+    int source_row = window_size / 2 - (int)round(y_);
+    int source_col = (int)round(x_) + window_size / 2;
     return {source_row, source_col};
 }
 
@@ -65,10 +65,14 @@ double findR() {
 }
 
 // Distort the image
-void distort( int begin, int end) {
+void distort( int thread_begin, int thread_end) {
     // Evaluate each point in image plane ~ lens plane
-    for (int y = end-1; y >= begin; y--) {
-        for (int x = 0; x <= source.cols; x++) {
+    for (int i = thread_begin; i < thread_end; i++) {
+        for (int j = 0; j <= source.cols; j++) {
+
+            // set coordinate system with origin in middle and x right and y up
+            int x = j - window_size / 2;
+            int y = window_size / 2 - i;
 
             // calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
@@ -78,7 +82,7 @@ void distort( int begin, int end) {
 
             // If index within source , copy value to image
             if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                image.at<uchar>(window_size-y, x) = source.at<uchar>(sourcePos[0], sourcePos[1]);
+                image.at<uchar>(i, j) = source.at<uchar>(sourcePos[0], sourcePos[1]);
             }
         }
     }
@@ -115,13 +119,9 @@ static void update(int, void*){
     // Find R by iterating through lens plane, and find the point that the center of the source maps to
     pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
-    R = findR();
-
+    R = 1.3*einsteinR;
     // Make the undistorted image by making a black background and add a gaussian light source placed at xSource, ySource and radius R
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-//    cv::circle(source, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), source_size);
-//    int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
-//    cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
 
     drawGaussian(source);
     refLines();
@@ -143,7 +143,6 @@ static void update(int, void*){
     matRoi = matDst(cv::Rect(source.cols, 0, source.cols, source.rows));
     image.copyTo(matRoi);
     cv::imshow("Window", matDst);
-
 }
 
 int main()
@@ -151,9 +150,8 @@ int main()
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
-    cv::createTrackbar("source y pos", "Window", &yPos, window_size, update);
-    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size, update);
-    cv::createTrackbar("Source Size", "Window", &source_size, window_size/4, update);
+    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size/10, update);
+    cv::createTrackbar("Source Size", "Window", &source_size, window_size/10, update);
     cv::waitKey(0);
     return 0;
 }
