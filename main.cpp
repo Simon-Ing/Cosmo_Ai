@@ -3,14 +3,28 @@
 #include <thread>
 
 int window_size = 501;  // Size of source and lens image
-int source_size = 50;   // size of source "Blob"
-int einsteinR = 30;
+int source_size = window_size/10;   // size of source "Blob"
+int einsteinR = 0;
 double R;
-int xPos = 20;
-int yPos = 20;
+int xPos = window_size/2;
+int yPos = window_size/2;
 cv::Mat source;
 cv::Mat image;
 cv::Mat pointSource;
+
+
+void drawGaussian(cv::Mat& img) {
+    for (int row = 0; row < window_size; row++) {
+        for (int col = 0; col < window_size; col++) {
+
+            double x = (1.0*(col - xPos)) / source_size;
+            double y = (window_size - 1.0*(row + yPos)) / source_size;
+
+            uchar val = 255 * std::exp(-x*x - y*y);
+            img.at<uchar>(row, col) = val;
+        }
+    }
+}
 
 
 // Find the corresponding (X', y') for a given (x, y)
@@ -105,18 +119,20 @@ static void update(int, void*){
 
     // Make the undistorted image by making a black background and add a gaussian light source placed at xSource, ySource and radius R
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    cv::circle(source, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), source_size);
-    int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
-    cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
+//    cv::circle(source, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), source_size);
+//    int kSize = (source_size / 2) * 2 + 1; // make sure kernel size is odd
+//    cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), source_size);
+
+    drawGaussian(source);
     refLines();
     // Make black background to draw the distorted image to
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run with single thread:
-    distort(0, window_size);  //for single thread
+//    distort(0, window_size);  //for single thread
 
     // ..or parallel:
-//    parallel();
+    parallel();
 
     // Scale, format and show on screen
     cv::resize(source, source, cv::Size_<int>(701, 701));
@@ -136,8 +152,8 @@ int main()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
     cv::createTrackbar("source y pos", "Window", &yPos, window_size, update);
-    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, 1000, update);
-    cv::createTrackbar("Source Radius", "Window", &source_size, window_size, update);
+    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size, update);
+    cv::createTrackbar("Source Size", "Window", &source_size, window_size/4, update);
     cv::waitKey(0);
     return 0;
 }
