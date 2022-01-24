@@ -43,8 +43,13 @@ std::vector<int> pointMass(double R_, double r, double theta) {
 
 // Find the center of the distorted source
 double findR() {
-    for (int y = window_size -1; y >= 0; y--) {
-        for (int x = 0; x < window_size; x++) {
+    // Evaluate each point in image plane ~ lens plane
+    for (int i = 0; i < window_size; i++) {
+        for (int j = 0; j <= source.cols; j++) {
+
+            // set coordinate system with origin in middle and x right and y up
+            int x = j - window_size / 2;
+            int y = window_size / 2 - i;
 
             // calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
@@ -55,7 +60,7 @@ double findR() {
 
             // If index within source, check if value is > 0, if so we have found R
             if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 0) {
+                if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 100) {
                     return r;
                 }
             }
@@ -117,19 +122,28 @@ static void parallel() {
 static void update(int, void*){
 
     // Find R by iterating through lens plane, and find the point that the center of the source maps to
-    pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
-    R = 1.3*einsteinR;
-    // Make the undistorted image by making a black background and add a gaussian light source placed at xSource, ySource and radius R
-    source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+//    pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+//    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
+//    R = findR();
 
+    // Questionable solution to R
+//    R = 1.3*einsteinR;
+
+    // Another questionable solution to R
+    R = (xPos - sqrt(xPos*xPos + 4*einsteinR*einsteinR)) / 2;
+
+//    std::cout << "xPos: " << xPos - window_size/2 << " R: " << R << std::endl;
+
+    // Make the undistorted image by making a black background and add a gaussian light source
+    source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     drawGaussian(source);
-    refLines();
+//    refLines();
+
     // Make black background to draw the distorted image to
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run with single thread:
-//    distort(0, window_size);  //for single thread
+//    distort(0, window_size);
 
     // ..or parallel:
     parallel();
