@@ -397,3 +397,4 @@ FodyWeavers.xsd
 /CMakeSettings.json
 /cmake-build-debug/
 /cmake-build-release/
+/venv/
