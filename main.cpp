@@ -27,13 +27,15 @@ void point_mass_funct( int thread_begin, int thread_end) {
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
-            int R_in_lens_plane = 1 * R_e;
+            int R_in_lens_plane = 1.3 * R_e;
 
             // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
             // Find the point from the source corresponding to the point evaluated
             double frac = (R_e * R_e * r) / (r * r + R_in_lens_plane * R_in_lens_plane + 2 * r * R_in_lens_plane * cos(theta));
-            double x_ = dist_ratio * (x + frac * (r / R_in_lens_plane + cos(theta)));
-            double y_ = dist_ratio * (y + frac * (-sin(theta)));
+            //double x_ = dist_ratio * (x + frac * (r / R_in_lens_plane + cos(theta)));
+            //double y_ = dist_ratio * (y + frac * (-sin(theta)));
+            double x_ = r * cos(theta) + frac * (r / R_in_lens_plane + cos(theta));
+            double y_ = r * sin(theta) - frac * sin(theta);
 
             // Translate to array index
             int source_row = window_size / 2 - (int)round(y_);
@@ -69,7 +71,7 @@ static void update(int, void*){
     cv::circle(source, cv::Point(x_pos, y_pos), 0, cv::Scalar(254, 254, 254), R);
     int kSize = (R / 2) * 2 + 1; // make sure kernel size is odd
     cv::GaussianBlur(source, source, cv::Size_<int>(kSize, kSize), R);
-    refLines();
+    //refLines();
 
     // Init a black image
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
