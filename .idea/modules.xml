@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CosmoAi.iml" filepath="$PROJECT_DIR$/.idea/CosmoAi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Cosmo_Ai.iml" filepath="$PROJECT_DIR$/.idea/Cosmo_Ai.iml" />
     </modules>
   </component>
 </project>
