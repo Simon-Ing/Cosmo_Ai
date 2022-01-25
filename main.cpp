@@ -2,11 +2,11 @@
 #include <iostream>
 #include <thread>
 
-int window_size = 600;  // Size of source and lens image
-int source_size = window_size/20;   // size of source "Blob"
-int einsteinR = window_size/20;
+int window_size = 400;  // Size of source and lens image
+int source_size = window_size/10;   // size of source "Blob"
+int einsteinR = window_size/10;
 int R;
-int xPos = window_size/2;
+int xPos = einsteinR;
 int yPos = window_size/2;
 cv::Mat source;
 cv::Mat image;
@@ -16,7 +16,7 @@ void drawGaussian(cv::Mat& img) {
     for (int row = 0; row < window_size; row++) {
         for (int col = 0; col < window_size; col++) {
 
-            double x = (1.0*(col - xPos)) / source_size;
+            double x = (1.0*(col - xPos - window_size/2)) / source_size;
             double y = (window_size - 1.0*(row + yPos)) / source_size;
 
             uchar val = 255 * std::exp(-x*x - y*y);
@@ -65,12 +65,14 @@ void distort( int thread_begin, int thread_end) {
 }
 
 // Add som lines to the image for reference
-void refLines(){
+void refLines(cv::Mat& target){
     for (int i = 0; i < window_size; i++) {
-        source.at<uchar>(i, window_size - 1) = 255;
-        source.at<uchar>(i, 0) = 255;
-        source.at<uchar>(window_size - 1, i) = 255;
-        source.at<uchar>(0, i) = 255;
+        target.at<uchar>(i, window_size/2) = 100;
+        target.at<uchar>(window_size/2 - 1, i) = 100;
+        target.at<uchar>(i, window_size - 1) = 255;
+        target.at<uchar>(i, 0) = 255;
+        target.at<uchar>(window_size - 1, i) = 255;
+        target.at<uchar>(0, i) = 255;
     }
 }
 
@@ -92,12 +94,13 @@ static void parallel() {
 // This function is called each time a slider is updated
 static void update(int, void*){
 
-    R = xPos;
+    R = std::abs(xPos - window_size/2);
+
+    std::cout << R << std::endl;
 
     // Make the undistorted image by making a black background and add a gaussian light source
     source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     drawGaussian(source);
-//    refLines();
 
     // Make black background to draw the distorted image to
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -107,6 +110,10 @@ static void update(int, void*){
 
     // ..or parallel:
     parallel();
+
+    // Add some lines for reference
+    refLines(source);
+    refLines(image);
 
     // Scale, format and show on screen
     cv::resize(source, source, cv::Size_<int>(701, 701));
@@ -124,8 +131,8 @@ int main()
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
-    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size/10, update);
-    cv::createTrackbar("Source Size", "Window", &source_size, window_size/10, update);
+    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size/4, update);
+    cv::createTrackbar("Source Size", "Window", &source_size, window_size/4, update);
     cv::waitKey(0);
     return 0;
 }
