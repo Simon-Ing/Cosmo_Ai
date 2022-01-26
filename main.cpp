@@ -5,7 +5,7 @@
 int window_size = 600;  // Size of source and lens image
 int source_size = window_size/10;   // size of source "Blob"
 int einsteinR = window_size/10;
-int xPos = einsteinR + window_size/2;
+int xPos = 0;
 cv::Mat apparentSource;
 cv::Mat image;
 
@@ -33,9 +33,6 @@ void distort( int thread_begin, int thread_end, int R) {
 
             // How it should be, but looks weird (alt 1 and 2)
             int x = col - xPos;
-
-            // Wrong but looks good (alt 3)
-//            int x = col - xPos - window_size/2;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
@@ -95,18 +92,11 @@ static void parallel(int R) {
 static void update(int, void*){
 
     int apparentPos = xPos - window_size/2;
+    if (apparentPos == 0) apparentPos = 1;
 
-    // How it should be, but looks weird (alt 1)
-    int R = std::abs(apparentPos);
+    int R = apparentPos; // Should be absolute value but that looks weird
 
     int actualPos = apparentPos - einsteinR*einsteinR/R;
-    std::cout << "Actual: " << actualPos << " Apparent: " << apparentPos << std::endl;
-
-    // Almost how it should be but looks a little weird (alt 2)
-//    R = xPos - window_size/2;
-
-    // Wrong but looks good :D (alt 3)
-//    R = xPos;
 
     // Make the undistorted image at the apparent position by making a black background and add a gaussian light source
     apparentSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
