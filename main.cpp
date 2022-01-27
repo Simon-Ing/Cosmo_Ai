@@ -8,6 +8,7 @@ int einsteinR = window_size/10;
 int xPos = 0;
 cv::Mat apparentSource;
 cv::Mat image;
+bool actualMode = true; // true for actual pos false for apparent
 
 void drawGaussian(cv::Mat& img, int& pos) {
     for (int row = 0; row < window_size; row++) {
@@ -32,7 +33,7 @@ void distort( int thread_begin, int thread_end, int R) {
             int y = window_size/2 - row;
 
             // How it should be, but looks weird (alt 1 and 2)
-            int x = col - xPos;
+            int x = col - window_size/2 - R;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
@@ -51,7 +52,7 @@ void distort( int thread_begin, int thread_end, int R) {
 
             // Translate to array index
             int row_ = window_size/2 - (int)round(y_);
-            int col_ = xPos + (int)round(x_);
+            int col_ = window_size/2 + R + (int)round(x_);
 
             // If (x', y') within source, copy value to image
             if (row_ < window_size && col_ < window_size && row_ > 0 && col_ >= 0) {
@@ -91,16 +92,26 @@ static void parallel(int R) {
 // This function is called each time a slider is updated
 static void update(int, void*){
 
-    int apparentPos = xPos - window_size/2;
-    if (apparentPos == 0) apparentPos = 1;
+    int apparentPos1, apparentPos2, actualPos, R;
 
-    int R = apparentPos; // Should be absolute value but that looks weird
+    if (actualMode) {
+        actualPos = (xPos - window_size/2);
+//        int sign = 1 - 2*(actualPos < 0);
+        apparentPos1 = (int)(actualPos + sqrt(actualPos*actualPos + 4*einsteinR*einsteinR)) / 2;
+        apparentPos2 = (int)(actualPos - sqrt(actualPos*actualPos + 4*einsteinR*einsteinR)) / 2;
+        R = apparentPos1;
+    }
 
-    int actualPos = apparentPos - einsteinR*einsteinR/R;
+    else {
+        apparentPos1 = xPos - window_size/2;
+        if (apparentPos1 == 0) apparentPos1 = 1;
+        R = apparentPos1; // Should be absolute value but that looks weird
+        actualPos = apparentPos1 - einsteinR*einsteinR/R;
+    }
 
     // Make the undistorted image at the apparent position by making a black background and add a gaussian light source
     apparentSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawGaussian(apparentSource, apparentPos);
+    drawGaussian(apparentSource, apparentPos1);
 
     // Make black background to draw the distorted image to
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -115,16 +126,20 @@ static void update(int, void*){
     cv::Mat actualSource(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
     drawGaussian(actualSource, actualPos);
 
-    // Add some lines for reference
+    // Add some lines for reference, a circle showing einstein radius, a circle at apparent po and a rectangle at actual pos
     refLines(actualSource);
     refLines(image);
     cv::circle(image, cv::Point(window_size/2, window_size/2), einsteinR, 100, window_size/400);
-    cv::circle(image, cv::Point(xPos, window_size/2), 10, 100, window_size/400);
-    cv::circle(image, cv::Point(actualPos + window_size/2, window_size/2), 10, 100, window_size/400);
+    cv::circle(image, cv::Point(apparentPos1 + window_size/2, window_size/2), 10, 100, window_size/400);
+    if (actualMode) {
+        cv::circle(image, cv::Point(apparentPos2 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
+    }
+    cv::rectangle(image, cv::Point(actualPos + window_size/2 - 10, window_size/2 - 10), cv::Point(actualPos + window_size/2 + 10, window_size/2 + 10), 100, window_size/400);
 
     // Scale, format and show on screen
-    cv::resize(actualSource, actualSource, cv::Size_<int>(700, 700));
-    cv::resize(image, image, cv::Size_<int>(700, 700));
+    int outputSize = 800;
+    cv::resize(actualSource, actualSource, cv::Size_<int>(outputSize, outputSize));
+    cv::resize(image, image, cv::Size_<int>(outputSize, outputSize));
     cv::Mat matDst(cv::Size(actualSource.cols * 2, actualSource.rows), actualSource.type(), cv::Scalar::all(0));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, actualSource.cols, actualSource.rows));
     actualSource.copyTo(matRoi);
@@ -137,12 +152,21 @@ int main()
 {
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
-    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size/4, update);
-    cv::createTrackbar("Source Size", "Window", &source_size, window_size/4, update);
+    cv::createTrackbar("Einstein Radius:", "Window", &einsteinR, window_size/4, update);
+    cv::createTrackbar("Source Size        :", "Window", &source_size, window_size/4, update);
+
+    if (actualMode) {
+        cv::createTrackbar("Actual Pos    :", "Window", &xPos, window_size, update);
+    }
+    else{
+        cv::createTrackbar("Apparent Pos   :", "Window", &xPos, window_size, update);
+    }
+
+
     bool running = true;
     while(running) {
-        running = (cv::waitKey(0) != 27);
+        running = (cv::waitKey(30) != 27);
     }
+    cv::destroyAllWindows();
     return 0;
 }
