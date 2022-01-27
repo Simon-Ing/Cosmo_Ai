@@ -1,116 +1,88 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <thread>
+#include <nlohmann/json.hpp>
 
-int window_size = 501;  // Size of source and lens image
-int source_size = window_size/20;   // size of source "Blob"
-int einsteinR = window_size/20;
-double R;
-int xPos = window_size/2;
-int yPos = window_size/2;
-cv::Mat source;
+int window_size = 500;  // Size of source and lens image
+int source_size = window_size/10;   // size of source "Blob"
+int einsteinR = window_size/10;
+int xPos = 0;
+cv::Mat apparentSource;
 cv::Mat image;
-cv::Mat pointSource;
+bool actualMode = true; // true for actual pos false for apparent
 
-
-void drawGaussian(cv::Mat& img) {
+void drawGaussian(cv::Mat& img, int& pos) {
     for (int row = 0; row < window_size; row++) {
         for (int col = 0; col < window_size; col++) {
 
-            double x = (1.0*(col - xPos)) / source_size;
-            double y = (window_size - 1.0*(row + yPos)) / source_size;
+            double x = (1.0*(col - (pos + window_size/2.0))) / source_size;
+            double y = (window_size - 1.0*(row + window_size/2.0)) / source_size;
 
-            uchar val = 255 * std::exp(-x*x - y*y);
+            auto val = (uchar)std::round(255 * std::exp(-x*x - y*y));
             img.at<uchar>(row, col) = val;
         }
     }
 }
 
-
-// Find the corresponding (X', y') for a given (x, y)
-std::vector<int> pointMass(double R_, double r, double theta) {
-    // Split the equation into three parts for simplicity. (eqn. 9 from "Gravitational lensing")
-    // Find the point from the source corresponding to the point evaluated
-    double frac = (einsteinR * einsteinR * r) / (r * r + R_ * R_ + 2 * r * R_ * cos(theta));
-    double x_ = r * cos(theta) + frac * (r / R_ + cos(theta));
-    double y_ = r * sin(theta) - frac * sin(theta);
-
-    // Translate to array index
-    int source_row = window_size / 2 - (int)round(y_);
-    int source_col = (int)round(x_) + window_size / 2;
-    return {source_row, source_col};
-}
-
-// Find the center of the distorted source
-double findR() {
-    // Evaluate each point in image plane ~ lens plane
-    for (int i = 0; i < window_size; i++) {
-        for (int j = 0; j <= source.cols; j++) {
-
-            // set coordinate system with origin in middle and x right and y up
-            int x = j - window_size / 2;
-            int y = window_size / 2 - i;
-
-            // calculate distance and angle of the point evaluated relative to center of lens (origin)
-            double r = sqrt(x * x + y * y);
-            double theta = atan2(y, x);
-
-            // Calculate the corresponding (x', y')
-            std::vector<int> sourcePos = pointMass(r, r, theta);
-
-            // If index within source, check if value is > 0, if so we have found R
-            if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                if (pointSource.at<uchar>(sourcePos[0], sourcePos[1]) > 100) {
-                    return r;
-                }
-            }
-        }
-    }
-    return 0;
-}
-
 // Distort the image
-void distort( int thread_begin, int thread_end) {
+void distort( int thread_begin, int thread_end, int R) {
     // Evaluate each point in image plane ~ lens plane
-    for (int i = thread_begin; i < thread_end; i++) {
-        for (int j = 0; j <= source.cols; j++) {
+    for (int row = thread_begin; row < thread_end; row++) {
+        for (int col = 0; col <= apparentSource.cols; col++) {
 
-            // set coordinate system with origin in middle and x right and y up
-            int x = j - window_size / 2;
-            int y = window_size / 2 - i;
+            // Set coordinate system with origin at x=R
+            int y = window_size/2 - row;
 
-            // calculate distance and angle of the point evaluated relative to center of lens (origin)
+            // How it should be, but looks weird (alt 1 and 2)
+            int x = col - window_size/2 - R;
+
+            // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
-            std::vector<int> sourcePos = pointMass(R, r, theta);
 
-            // If index within source , copy value to image
-            if (std::max(sourcePos[0], sourcePos[1]) < window_size && std::min(sourcePos[0], sourcePos[1]) >= 0) {
-                image.at<uchar>(i, j) = source.at<uchar>(sourcePos[0], sourcePos[1]);
+            // Point mass lens equation
+            double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
+            double x_ = x + frac * (r / R + cos(theta));
+            double y_ = y - frac * sin(theta);
+
+//            // Print some data when evaluating the point at the origin (for debugging)
+//            if (row == window_size/2 && col == window_size/2){
+//                std::cout << "x:  " << x << " y: " << y << " R: " << R << " r: " << r << " theta: " << theta << " EinsteinR: " << einsteinR << std::endl;
+//            }
+
+            // Translate to array index
+            int row_ = window_size/2 - (int)round(y_);
+            int col_ = window_size/2 + R + (int)round(x_);
+
+            // If (x', y') within source, copy value to image
+            if (row_ < window_size && col_ < window_size && row_ > 0 && col_ >= 0) {
+                image.at<uchar>(row, col) = apparentSource.at<uchar>(row_, col_);
             }
         }
     }
 }
 
-// Add som lines to the image for reference
-void refLines(){
+// Add some lines to the image for reference
+void refLines(cv::Mat& target){
     for (int i = 0; i < window_size; i++) {
-        source.at<uchar>(i, window_size - 1) = 255;
-        source.at<uchar>(i, 0) = 255;
-        source.at<uchar>(window_size - 1, i) = 255;
-        source.at<uchar>(0, i) = 255;
+        target.at<uchar>(i, window_size/2) = 150;
+        target.at<uchar>(window_size/2 - 1, i) = 150;
+        target.at<uchar>(i, window_size - 1) = 255;
+        target.at<uchar>(i, 0) = 255;
+        target.at<uchar>(window_size - 1, i) = 255;
+        target.at<uchar>(0, i) = 255;
     }
 }
 
 // Split the image into n pieces where n is number of threads available and distort the pieces in parallel
-static void parallel() {
+static void parallel(int R) {
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
-        unsigned int thread_begin = (source.rows / num_threads) * k;
-        unsigned int thread_end = (source.rows / num_threads) * (k + 1);
-        std::thread t(distort, thread_begin, thread_end);
+        unsigned int thread_begin = (apparentSource.rows / num_threads) * k;
+        unsigned int thread_end = (apparentSource.rows / num_threads) * (k + 1);
+        std::thread t(distort, thread_begin, thread_end, R);
         threads_vec.push_back(std::move(t));
         }
     for (auto& thread : threads_vec) {
@@ -121,23 +93,26 @@ static void parallel() {
 // This function is called each time a slider is updated
 static void update(int, void*){
 
-    // Find R by iterating through lens plane, and find the point that the center of the source maps to
-//    pointSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-//    cv::circle(pointSource, cv::Point(xPos, window_size - yPos), 0, cv::Scalar(254, 254, 254), 2);
-//    R = findR();
+    int apparentPos1, apparentPos2, actualPos, R;
 
-    // Questionable solution to R
-//    R = 1.3*einsteinR;
+    if (actualMode) {
+        actualPos = (xPos - window_size/2);
+//        int sign = 1 - 2*(actualPos < 0);
+        apparentPos1 = (int)(actualPos + sqrt(actualPos*actualPos + 4*einsteinR*einsteinR)) / 2;
+        apparentPos2 = (int)(actualPos - sqrt(actualPos*actualPos + 4*einsteinR*einsteinR)) / 2;
+        R = apparentPos1;
+    }
 
-    // Another questionable solution to R
-    R = (xPos - sqrt(xPos*xPos + 4*einsteinR*einsteinR)) / 2;
+    else {
+        apparentPos1 = xPos - window_size/2;
+        if (apparentPos1 == 0) apparentPos1 = 1;
+        R = apparentPos1; // Should be absolute value but that looks weird
+        actualPos = apparentPos1 - einsteinR*einsteinR/R;
+    }
 
-//    std::cout << "xPos: " << xPos - window_size/2 << " R: " << R << std::endl;
-
-    // Make the undistorted image by making a black background and add a gaussian light source
-    source = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawGaussian(source);
-//    refLines();
+    // Make the undistorted image at the apparent position by making a black background and add a gaussian light source
+    apparentSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+    drawGaussian(apparentSource, apparentPos1);
 
     // Make black background to draw the distorted image to
     image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -146,15 +121,30 @@ static void update(int, void*){
 //    distort(0, window_size);
 
     // ..or parallel:
-    parallel();
+    parallel(R);
+
+    // Make the undistorted image at the ACTUAL position by making a black background and add a gaussian light source
+    cv::Mat actualSource(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+    drawGaussian(actualSource, actualPos);
+
+    // Add some lines for reference, a circle showing einstein radius, a circle at apparent po and a rectangle at actual pos
+    refLines(actualSource);
+    refLines(image);
+    cv::circle(image, cv::Point(window_size/2, window_size/2), einsteinR, 100, window_size/400);
+    cv::circle(image, cv::Point(apparentPos1 + window_size/2, window_size/2), 10, 100, window_size/400);
+    if (actualMode) {
+        cv::circle(image, cv::Point(apparentPos2 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
+    }
+    cv::rectangle(image, cv::Point(actualPos + window_size/2 - 10, window_size/2 - 10), cv::Point(actualPos + window_size/2 + 10, window_size/2 + 10), 100, window_size/400);
 
     // Scale, format and show on screen
-    cv::resize(source, source, cv::Size_<int>(701, 701));
-    cv::resize(image, image, cv::Size_<int>(701, 701));
-    cv::Mat matDst(cv::Size(source.cols * 2, source.rows), source.type(), cv::Scalar::all(0));
-    cv::Mat matRoi = matDst(cv::Rect(0, 0, source.cols, source.rows));
-    source.copyTo(matRoi);
-    matRoi = matDst(cv::Rect(source.cols, 0, source.cols, source.rows));
+    int outputSize = 800;
+    cv::resize(actualSource, actualSource, cv::Size_<int>(outputSize, outputSize));
+    cv::resize(image, image, cv::Size_<int>(outputSize, outputSize));
+    cv::Mat matDst(cv::Size(actualSource.cols * 2, actualSource.rows), actualSource.type(), cv::Scalar::all(0));
+    cv::Mat matRoi = matDst(cv::Rect(0, 0, actualSource.cols, actualSource.rows));
+    actualSource.copyTo(matRoi);
+    matRoi = matDst(cv::Rect(actualSource.cols, 0, actualSource.cols, actualSource.rows));
     image.copyTo(matRoi);
     cv::imshow("Window", matDst);
 }
@@ -163,10 +153,21 @@ int main()
 {
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("source x pos", "Window", &xPos, window_size, update);
-    cv::createTrackbar("Einstein Radius", "Window", &einsteinR, window_size/10, update);
-    cv::createTrackbar("Source Size", "Window", &source_size, window_size/10, update);
-    cv::waitKey(0);
+    cv::createTrackbar("Einstein Radius:", "Window", &einsteinR, window_size/4, update);
+    cv::createTrackbar("Source Size        :", "Window", &source_size, window_size/4, update);
+
+    if (actualMode) {
+        cv::createTrackbar("Actual Pos    :", "Window", &xPos, window_size, update);
+    }
+    else{
+        cv::createTrackbar("Apparent Pos   :", "Window", &xPos, window_size, update);
+    }
+
+
+    bool running = true;
+    while(running) {
+        running = (cv::waitKey(30) != 27);
+    }
+    cv::destroyAllWindows();
     return 0;
 }
-

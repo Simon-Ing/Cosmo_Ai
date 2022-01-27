@@ -403,3 +403,4 @@ FodyWeavers.xsd
 /cmake-build-debug/
 /cmake-build-release/
 /venv/
+/.idea/CosmoAi.iml
