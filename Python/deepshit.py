@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as func
 from torch.utils.data import Dataset
 import json
+import numpy as np
 
 class ConvNet(nn.Module):
     def __init__(self):
@@ -30,7 +31,7 @@ class ConvNet(nn.Module):
         x = self.pool4(x)
         x = self.conv4(x)
         x = func.relu(x)
-        x = self.pool2(x).view(-1, 128)
+        x = self.pool4(x).view(-1, 128)
 
         # After convolving and pooling we end up with a 1D array, we feed this into the neural net
         x = self.fc1(x)
@@ -43,15 +44,22 @@ class ConvNet(nn.Module):
 
 class CosmoDataset(Dataset):
     def __init__(self, path):
-        with open(path, "r") as infile:
-            in_data = json.load(infile)
-        self.x = torch.tensor(in_data["images"], dtype=torch.float)
-        self.y = torch.tensor(in_data["params"], dtype=torch.float)
+        x = []
+        y = []
+        n_samples = 500
+        for i in range(n_samples):
+            path = "/home/simon/CLionProjects/CosmoAi/data/cosmo_data/datapoint" + str(i) + ".json"
+            with open(path, "r") as infile:
+                indata = json.load(infile)
+            x.append(indata["image"])
+            params = [indata["actualPos"], indata["einsteinR"], indata["source_size"]]
+            y.append(params)
+        self.x = torch.tensor(x, dtype=torch.float).view(-1, 1, 600, 600)
+        self.y = torch.tensor(y, dtype=torch.float)
         self.n_samples = self.x.shape[0]
 
     def __getitem__(self, index):
-        ret_x = self.x[index]
-        return torch.reshape(ret_x, (1, ret_x.shape[0], ret_x.shape[1])), self.y[index]
+        return self.x[index], self.y[index]
 
     def __len__(self):
         return self.n_samples

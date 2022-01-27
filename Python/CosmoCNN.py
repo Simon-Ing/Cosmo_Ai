@@ -10,9 +10,9 @@ import time
 timer = time.time()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-num_epochs = 1000
-batch_size = 10  # 100: 98.94
-learning_rate = 0.0002
+num_epochs = 200
+batch_size = 100  # 100: 98.94
+learning_rate = 0.00001
 
 train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
 test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
@@ -36,8 +36,8 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
-        print(f'Output: {output[0].tolist()}epoch: {epoch+1} / {num_epochs}, step: {i+1} / {n_total_steps} loss: {loss.item():.10f} time: {(time.time() - timer)}')
+        print(f'params: {params[0].tolist()}')
+        print(f'Output: {output[0].tolist()}Epoch: {epoch+1} / {num_epochs}, step: {i+1} / {n_total_steps} loss: {loss.item():.10f} time: {(time.time() - timer)}')
 
 
 with torch.no_grad():
