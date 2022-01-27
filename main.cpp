@@ -1,14 +1,18 @@
 #include <opencv2/opencv.hpp>
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <thread>
 #include <random>
 #include <fstream>
 #include <string>
 
+using json = nlohmann::json;
+
 int window_size = 600;  // Size of source and lens image
 int source_size = window_size / 10;   // size of source "Blob"
 int einsteinR = window_size / 10;
 int xPos = 0;
+int actualPos;
 cv::Mat apparentSource;
 cv::Mat image;
 static const bool actualMode = true; // true for actual pos false for apparent
@@ -97,6 +101,36 @@ void writeToPngFiles() {
 	std::cout << filename.str() << " generated and saved on drive" << std::endl;
 }
 
+void writeToJson() {
+	json j;
+
+	std::vector<uchar> array;
+	if (image.isContinuous()) {
+		array.assign(image.data, image.data + image.total() * image.channels());
+	}
+	else {
+		for (int i = 0; i < image.rows; ++i) {
+			array.insert(array.end(), image.ptr<uchar>(i), image.ptr<uchar>(i) + image.cols * image.channels());
+		}
+	}
+
+	j["einsteinR"] = einsteinR;
+	j["source_size"] = source_size;
+	j["actualPos"] = actualPos;
+	j["image"] = array;
+
+	std::ostringstream filename_path;
+	std::ostringstream filename;
+	// for this to work, make a folder called "cosmo_data" in same folder as the main executable
+
+	filename << "datapoint" << iteration_counter << ".json";
+	filename_path << "cosmo_data" << "/" << filename.str();
+	iteration_counter++;
+	std::ofstream file(filename_path.str());
+	file << j;
+	std::cout << filename.str() << " generated and saved on drive" << std::endl;
+}
+
 // Split the image into n pieces where n is number of threads available and distort the pieces in parallel
 static void parallel(int R) {
 	unsigned int num_threads = std::thread::hardware_concurrency();
@@ -114,7 +148,7 @@ static void parallel(int R) {
 
 // This function is called each time a slider is updated
 static void update(int, void*) {
-	int apparentPos1, apparentPos2, actualPos, R;
+	int apparentPos1, apparentPos2, R;
 
 	if (actualMode) {
 		actualPos = (xPos - window_size / 2);
@@ -149,19 +183,16 @@ static void update(int, void*) {
 	drawGaussian(actualSource, actualPos);
 
 	if (!dataGenMode) {
-	// Add some lines for reference, a circle showing einstein radius, a circle at apparent po and a rectangle at actual pos
-	refLines(actualSource);
-	refLines(image);
-	cv::circle(image, cv::Point(window_size / 2, window_size / 2), einsteinR, 100, window_size / 400);
-	cv::circle(image, cv::Point(apparentPos1 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
-	if (actualMode) {
-		cv::circle(image, cv::Point(apparentPos2 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
-	}
-	cv::rectangle(image, cv::Point(actualPos + window_size / 2 - 10, window_size / 2 - 10), cv::Point(actualPos + window_size / 2 + 10, window_size / 2 + 10), 100, window_size / 400);
+		// Add some lines for reference, a circle showing einstein radius, a circle at apparent po and a rectangle at actual pos
+		refLines(actualSource);
+		refLines(image);
+		cv::circle(image, cv::Point(window_size / 2, window_size / 2), einsteinR, 100, window_size / 400);
+		cv::circle(image, cv::Point(apparentPos1 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
+		if (actualMode) {
+			cv::circle(image, cv::Point(apparentPos2 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
+		}
+		cv::rectangle(image, cv::Point(actualPos + window_size / 2 - 10, window_size / 2 - 10), cv::Point(actualPos + window_size / 2 + 10, window_size / 2 + 10), 100, window_size / 400);
 
-	
-
-	
 		//Scale, format and show on screen
 		int outputSize = 800;
 		cv::resize(actualSource, actualSource, cv::Size_<int>(outputSize, outputSize));
@@ -175,7 +206,8 @@ static void update(int, void*) {
 		cv::imshow("Window", matDst);
 	}
 	else {
-		writeToPngFiles();  //this creates .csv file also
+		//writeToPngFiles();  //this creates .csv file also
+		writeToJson();
 	}
 }
 int main()
@@ -200,8 +232,8 @@ int main()
 	}
 	else {
 		// Generate dataset:
-		fout.open("cosmo_data/cosmo_data.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
-		fout << "filename" << "," << "einsteinR" << "," << "source_size" << "," << "xPos" << " \n";  // Writes the first line to .csv file
+		//fout.open("cosmo_data/cosmo_data.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
+		//fout << "filename" << "," << "einsteinR" << "," << "source_size" << "," << "xPos" << " \n";  // Writes the first line to .csv file
 
 		std::random_device dev;
 		std::mt19937 rng(dev());
