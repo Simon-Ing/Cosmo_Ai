@@ -1,8 +1,9 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <thread>
+#include <nlohmann/json.hpp>
 
-int window_size = 600;  // Size of source and lens image
+int window_size = 500;  // Size of source and lens image
 int source_size = window_size/10;   // size of source "Blob"
 int einsteinR = window_size/10;
 int xPos = 0;
