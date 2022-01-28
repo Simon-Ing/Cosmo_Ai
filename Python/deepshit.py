@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as func
 from torch.utils.data import Dataset
 import json
+import numpy as np
 
 class ConvNet(nn.Module):
     def __init__(self):
@@ -43,16 +44,17 @@ class ConvNet(nn.Module):
 
 class CosmoDataset(Dataset):
     def __init__(self, path):
-        x = []
-        y = []
         n_samples = 100
+        x = np.zeros((n_samples, 600*600))
+        y = np.zeros((n_samples, 3))
         for i in range(n_samples):
             path = "data/cosmo_data/datapoint" + str(i + 900) + ".json"
             with open(path, "r") as infile:
                 indata = json.load(infile)
-            x.append(indata["image"])
-            params = [indata["actualPos"], indata["einsteinR"], indata["source_size"]]
-            y.append(params)
+            x[i] = (indata["image"])
+            y[i, 0] = indata["actualPos"]
+            y[i, 1] = indata["einsteinR"]
+            y[i, 2] = indata["source_size"]
         self.x = torch.tensor(x, dtype=torch.float).view(-1, 1, 600, 600)
         self.y = torch.tensor(y, dtype=torch.float)
         self.n_samples = self.x.shape[0]

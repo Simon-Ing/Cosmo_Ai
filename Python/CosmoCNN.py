@@ -5,6 +5,14 @@ import deepshit
 import time
 
 
+def cuda_if_available():
+    if torch.cuda.is_available():
+        print("Running Cuda!")
+        return torch.device('cuda')
+    print("Running on cpu")
+    return torch.device("cpu")
+
+
 def load_model():
     ans = ""
     while ans not in ("y", "Y", "N", "n"):
@@ -46,7 +54,7 @@ def train_network(loader, model_, lossfunc_, optimizer_):
             optimizer_.zero_grad()
             loss_.backward()
             optimizer_.step()
-            print(f'Epoch: {epoch+1} / {num_epochs}, step: {i+1} / {n_total_steps} loss: {loss_.item():.10f} time: {(time.time() - timer)}')
+            print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_total_steps}\tloss: {loss_.item():.10f}\ttime: {(time.time() - timer)}')
 
 
 def test_network(loader, model_, lossfunc_):
@@ -70,12 +78,7 @@ num_epochs = 1000
 batch_size = 100
 # learning_rate = 0.001
 
-if torch.cuda.is_available():
-    device = torch.device('cuda')
-    print("Running Cuda!")
-else:
-    device = torch.device("cpu")
-    print("Running on cpu")
+device = cuda_if_available()
 
 # (train_loader, test_loader) = dataset_from_json()
 # torch.save(train_loader, "test_loader.pt")
