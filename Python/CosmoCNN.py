@@ -1,51 +1,112 @@
-
 import torch
 import torch.nn as nn
-import torchvision
-import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import deepshit
 import time
 
-timer = time.time()
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-num_epochs = 200
-batch_size = 100  # 100: 98.94
-learning_rate = 0.00001
+def load_model():
+    ans = ""
+    while ans not in ("y", "Y", "N", "n"):
+        ans = input("Load previous model? (y/n): ")
+    if ans == "y" or ans == "Y":
+        path = input("enter path: ")
+        model.load_state_dict(torch.load(path))
 
-train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
-test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
 
-train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+def save_model():
+    pass
+    ans = ""
+    while ans not in ("y", "Y", "N", "n"):
+        ans = input("Save model? (y/n): ")
+    if ans == "y" or ans == "Y":
+        path = "Models/" + input("Enter a name: ")
+        torch.save(model.state_dict(), path)
 
+
+def dataset_from_json():
+    pass
+    train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
+    test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
+    return (DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True),
+            DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False))
+
+
+def train_network(loader, model_, lossfunc_, optimizer_):
+    timer = time.time()
+    n_total_steps = len(loader)
+    for epoch in range(num_epochs):
+        for i, (images, params) in enumerate(loader):
+            images = images.to(device)
+            params = params.to(device)
+            # Forward pass
+            output = model_(images)
+            loss_ = lossfunc_(output, params)
+            # Backward pass
+            optimizer_.zero_grad()
+            loss_.backward()
+            optimizer_.step()
+            print(f'Epoch: {epoch+1} / {num_epochs}, step: {i+1} / {n_total_steps} loss: {loss_.item():.10f} time: {(time.time() - timer)}')
+
+
+def test_network(loader, model_, lossfunc_):
+    total_loss = 0
+    n_batches = 0
+    with torch.no_grad():
+        for images, params in loader:
+            images = images.to(device)
+            params = params.to(device)
+            output = model_(images)
+            loss_ = lossfunc_(output, params)
+            total_loss += loss_
+            n_batches += 1
+            for i, param in enumerate(params):
+                nice = [round(n) for n in output[i].tolist()]
+                print(f'Correct: {param.tolist()}, \tOutput: {nice}')
+        return total_loss / n_batches
+
+
+num_epochs = 1000
+batch_size = 100
+# learning_rate = 0.001
+
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+    print("Running Cuda!")
+else:
+    device = torch.device("cpu")
+    print("Running on cpu")
+
+# (train_loader, test_loader) = dataset_from_json()
+# torch.save(train_loader, "test_loader.pt")
+
+train_loader = torch.load("train_loader.pt")
+test_loader = torch.load("test_loader.pt")
 model = deepshit.ConvNet().to(device)
-criterion = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
-n_total_steps = len(train_loader)
-for epoch in range(num_epochs):
-    for i, (images, params) in enumerate(train_loader):
-        images = images.to(device)
-        params = params.to(device)
-        # Forward pass
-        output = model(images)
-        loss = criterion(output, params)
-        # Backward pass
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        print(f'params: {params[0].tolist()}')
-        print(f'Output: {output[0].tolist()}Epoch: {epoch+1} / {num_epochs}, step: {i+1} / {n_total_steps} loss: {loss.item():.10f} time: {(time.time() - timer)}')
+# load_model()
 
+for lr in range(1, 11):
+    learning_rate = lr/10000
+    lossfunc = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-with torch.no_grad():
-    for images, labels in test_loader:
-        images = images.to(device)
-        params = params.to(device)
-        output = model(images)
-        loss = criterion(output, labels)
-        print(f'Loss: {loss}')
+    loss_before = test_network(test_loader, model, lossfunc)
+    print(f'\nAverage loss over test data before training: {loss_before}\n')
 
+    try:
+        train_network(train_loader, model, lossfunc, optimizer)
+    except KeyboardInterrupt:
+        print("Keyboard interrupt, exit training loop")
+
+    loss_train = test_network(train_loader, model, lossfunc)
+    print(f'\nAverage loss over train data after training: {loss_train}\n')
+
+    loss_test = test_network(test_loader, model, lossfunc)
+    print(f'\nAverage loss over test data after training: {loss_test}\n')
+
+    # save_model()
+
+    with open("training_params.txt", "a") as outfile:
+        outfile.write(f'Epochs: {num_epochs}\tbatch size: {batch_size}\tlearning rate: {learning_rate}\taverage loss train data: {loss_train:.1f}\taverage loss test data: {loss_test:.1f}\n')
 

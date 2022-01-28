@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as func
 from torch.utils.data import Dataset
 import json
-import numpy as np
 
 class ConvNet(nn.Module):
     def __init__(self):
@@ -21,16 +20,16 @@ class ConvNet(nn.Module):
 
     def forward(self, x):
         x = self.conv1(x)
-        x = func.relu(x)  # non-linear activation function
+        x = func.leaky_relu(x)  # non-linear activation function
         x = self.pool4(x)
         x = self.conv2(x)
-        x = func.relu(x)
+        x = func.leaky_relu(x)
         x = self.pool4(x)
         x = self.conv3(x)
-        x = func.relu(x)
+        x = func.leaky_relu(x)
         x = self.pool4(x)
         x = self.conv4(x)
-        x = func.relu(x)
+        x = func.leaky_relu(x)
         x = self.pool4(x).view(-1, 128)
 
         # After convolving and pooling we end up with a 1D array, we feed this into the neural net
@@ -46,9 +45,9 @@ class CosmoDataset(Dataset):
     def __init__(self, path):
         x = []
         y = []
-        n_samples = 500
+        n_samples = 100
         for i in range(n_samples):
-            path = "/home/simon/CLionProjects/CosmoAi/data/cosmo_data/datapoint" + str(i) + ".json"
+            path = "data/cosmo_data/datapoint" + str(i + 900) + ".json"
             with open(path, "r") as infile:
                 indata = json.load(infile)
             x.append(indata["image"])
@@ -63,3 +62,5 @@ class CosmoDataset(Dataset):
 
     def __len__(self):
         return self.n_samples
+
+
