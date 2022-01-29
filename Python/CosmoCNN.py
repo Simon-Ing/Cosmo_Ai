@@ -1,9 +1,17 @@
+import cv2
+import numpy as np
 import torch
 import torch.nn as nn
+import torchvision
 from torch.utils.data import DataLoader
+from torchvision.transforms import transforms
+
 import deepshit
 import time
 import torch.optim.lr_scheduler as lr_scheduler
+import os
+import pandas as pd
+
 
 def cuda_if_available():
     if torch.cuda.is_available():
@@ -38,7 +46,23 @@ def dataset_from_json():
     test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
     return (DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True),
             DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False))
- 
+
+
+def dataset_from_png(n_samples, size, folder):
+    print("Started generating")
+    os.system('rm ' + str(folder) + '/*')
+    os.system('rm ' + str(folder) + '/images/*')
+    os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
+    print("Done generating, start loading")
+    dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
+    data = pd.read_csv(folder + "/params.csv")
+    einsteinR = data['einsteinR'].values
+    source_size = data['sourceSize'].values
+    xPos = data['xPos'].values
+    dataset.targets = (np.vstack((einsteinR, source_size, xPos)).T).astype(np.float32)
+    print("Done loading")
+    return dataset
+
 
 def test_network(loader, model_, lossfunc_, print_results=False):
     total_loss = 0
@@ -59,23 +83,31 @@ def test_network(loader, model_, lossfunc_, print_results=False):
 
 
 num_epochs = 1000
-batch_size = 300
-learning_rate = 0.01
+batch_size = 100
+learning_rate = 0.001
 
 device = cuda_if_available()
+
+# train_dataset = dataset_from_png(n_samples=10, size=600, folder="train")
+test_dataset = dataset_from_png(n_samples=100, size=600, folder="test")
+test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
+
+train_dataset = dataset_from_png(n_samples=1000, size=600, folder="train")
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size)
+
 
 # (train_loader, test_loader) = dataset_from_json()
 # torch.save(train_loader, "test_loader.pt")
 
-train_loader = torch.load("train_loader.pt")
-test_loader = torch.load("test_loader.pt")
+# train_loader = torch.load("train_loader.pt")
+# test_loader = torch.load("test_loader.pt")
 
 # load_model()
 
 model = deepshit.ConvNet().to(device)
 lossfunc = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)    
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
 
 loss_before = test_network(test_loader, model, lossfunc)
 print(f'\nAverage loss over test data before training: {loss_before}\n')
@@ -95,7 +127,7 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
         print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_total_steps}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
-        
+
     scheduler.step(loss)
     if (epoch+1) % 1 == 0:
         loss = test_network(test_loader, model, lossfunc, False)

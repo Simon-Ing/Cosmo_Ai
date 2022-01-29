@@ -79,43 +79,13 @@ void writeToPngFiles() {
     std::ostringstream filename;
     // for this to work, make a folder called "cosmo_data" in same folder as the main executable
 
-    filename << name << iteration_counter << ".png";
-    filename_path << name + "_data" << "/" << filename.str();
+    filename << iteration_counter << ".png";
+    filename_path << name + "/images/" + filename.str();
     iteration_counter++;
     cv::imwrite(filename_path.str(), image);
 
     // Writes new line in .csv file:
     fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
-    std::cout << filename.str() << " generated and saved on drive" << std::endl;
-}
-
-void writeToJson() {
-    json j;
-
-    std::vector<uchar> array;
-    if (image.isContinuous()) {
-        array.assign(image.data, image.data + image.total() * image.channels());
-    }
-    else {
-        for (int i = 0; i < image.rows; ++i) {
-            array.insert(array.end(), image.ptr<uchar>(i), image.ptr<uchar>(i) + image.cols * image.channels());
-        }
-    }
-
-    j["einsteinR"] = einsteinR;
-    j["source_size"] = source_size;
-    j["actualPos"] = actualPos;
-    j["image"] = array;
-
-    std::ostringstream filename_path;
-    std::ostringstream filename;
-    // for this to work, make a folder called "cosmo_data" in same folder as the main executable
-
-    filename << "datapoint" << iteration_counter << ".json";
-    filename_path << "data" << "/" << filename.str();
-    iteration_counter++;
-    std::ofstream file(filename_path.str());
-    file << j;
     std::cout << filename.str() << " generated and saved on drive" << std::endl;
 }
 
@@ -161,11 +131,11 @@ int main(int argc, char *argv[]) {
     window_size = atoi(argv[2]);
     name = std::string(argv[3]);
 
-    std::cout << DATAPOINTS_TO_GENERATE << " " << window_size << " " << name << std::endl;
+//    std::cout << DATAPOINTS_TO_GENERATE << " " << window_size << " " << name << std::endl;
 
     // Generate dataset:
-    fout.open(name + "_data/" + name + ".csv", fout.trunc | fout.in | fout.out);  // opens .csv file
-    fout << "filename" << "," << "einsteinR" << "," << "source_size" << "," << "xPos" << " \n";  // Writes the first line to .csv file
+    fout.open(name + "/params.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
+    fout << "filename" << "," << "einsteinR" << "," << "sourceSize" << "," << "xPos" << "\n";  // Writes the first line to .csv file
 
     std::random_device dev;
     std::mt19937 rng(dev());

@@ -18,7 +18,7 @@ cv::Mat image;
 static const bool actualMode = true; // true for actual pos false for apparent
 
 // **************  GENERATE DATA SETTINGS ****************************
-static const bool dataGenMode = true; // true for generating data
+static const bool dataGenMode = false; // true for generating data
 int iteration_counter = 0;
 int DATAPOINTS_TO_GENERATE = 1000;
 std::fstream fout;

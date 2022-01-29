@@ -1,15 +1,20 @@
-
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as func
 from torch.utils.data import Dataset
 import json
 import numpy as np
+from torchvision.datasets import ImageFolder
+from torchvision.datasets.folder import default_loader
+from torchvision.transforms import transforms
+
+
 
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (5, 5))  # one input (colors), six outputs, kernel(filter) of size 5x5
+        self.conv1 = nn.Conv2d(3, 4, (5, 5))  # one input (colors), six outputs, kernel(filter) of size 5x5
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 16, (5, 5))
         self.conv4 = nn.Conv2d(16, 20, (5, 5))
@@ -56,7 +61,7 @@ class ConvNet(nn.Module):
         return x
 
 
-class CosmoDataset(Dataset):
+class CosmoDatasetJson(Dataset):
     def __init__(self, path):
         n_samples = 100
         x = np.zeros((n_samples, 600*600))
@@ -79,6 +84,16 @@ class CosmoDataset(Dataset):
     def __len__(self):
         return self.n_samples
 
+
+
+class CosmoDatasetPng(ImageFolder):
+
+    def __getitem__(self, item):
+        path, _ = self.samples[item]
+        sample = self.loader(path)
+        if self.transform is not None:
+            sample = self.transform(sample)
+        return sample, self.targets[item]
 
         # x = self.conv1(x)
         # x = func.leaky_relu(x)  # non-linear activation function
