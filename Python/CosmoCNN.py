@@ -87,14 +87,25 @@ def test_network(loader, model_, lossfunc_, print_results=False):
         return total_loss / n_batches
 
 
-num_epochs = 1
-batch_size = 100
-learning_rate = 0.001
+def print_images(images, params):
+    for i, img in enumerate(images):
+        image = images[i].numpy().reshape(600, 600, 1)
+        image = cv2.putText(image, str(params[i]), (50,50), cv2.FONT_HERSHEY_SIMPLEX,
+                                    1, (255,255,255), 1, cv2.LINE_AA)
+        cv2.imshow("img", image)
+        cv2.waitKey(0)
+
+num_epochs = 100
+batch_size = 1
+learning_rate = 0.01
+
+n_train_samples = 500
+n_test_samples = 50
 
 device = cuda_if_available()
 
 # train_dataset = dataset_from_png(n_samples=10, size=600, folder="train")
-test_dataset = dataset_from_png(n_samples=10, size=600, folder="test")
+test_dataset = dataset_from_png(n_samples=n_test_samples, size=600, folder="test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
@@ -103,22 +114,19 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
 
 loss_before = test_network(test_loader, model, lossfunc)
-# print(f'\nAverage loss over test data before training: {loss_before}\n')
+print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
-n_train_samples = 100
 while True:
     train_dataset = dataset_from_png(n_samples=n_train_samples, size=600, folder="train")
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     for epoch in range(num_epochs):
         for i, (images, params) in enumerate(train_loader):
             images = images.to(device)
             params = params.to(device)
-            # for i, img in enumerate(images):
-            #     image = images[i].numpy().reshape(600, 600, 1)
-            #     # param = "im: " + str(i) + " RE: " + str(params[i, 0].item()) + "size: " + str(params[i, 1].item()) + "pos: " + str(params[i, 2].item())
-            #     cv2.imshow(str(params[i]), image)
-            #     cv2.waitKey(0)
+
+            # print_images(images, params)  # print the images with parameters to make sure data is correct
+
             # Forward pass
             output = model(images)
             loss = lossfunc(output, params)
@@ -126,13 +134,13 @@ while True:
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+            print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
 
         # print(model.state_dict())
         scheduler.step(loss)
-        # if (epoch+1) % 1 == 0:
-        #     loss = test_network(test_loader, model, lossfunc, print_results=True)
-        #     print(f"\nLoss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+        if (epoch+1) % 1 == 0:
+            loss = test_network(test_loader, model, lossfunc, print_results=True)
+            print(f"\nLoss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
 
 loss_train = test_network(train_loader, model, lossfunc)
