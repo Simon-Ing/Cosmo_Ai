@@ -100,8 +100,8 @@ num_epochs = 100
 batch_size = 10
 learning_rate = 0.01
 
-n_train_samples = 500
-n_test_samples = 50
+n_train_samples = 1000
+n_test_samples = 100
 img_size = 100
 
 device = cuda_if_available()
