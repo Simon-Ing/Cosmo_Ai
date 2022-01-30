@@ -96,9 +96,9 @@ def print_images(images, params):
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
-num_epochs = 100
+num_epochs = 50
 batch_size = 10
-learning_rate = 0.01
+learning_rate = 0.001
 
 n_train_samples = 1000
 n_test_samples = 100
@@ -112,8 +112,7 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
 lossfunc = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
+
 
 loss_before = test_network(test_loader, model, lossfunc)
 print(f'\nAverage loss over test data before training: {loss_before}\n')
@@ -122,6 +121,8 @@ timer = time.time()
 while True:
     train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
     train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
     for epoch in range(num_epochs):
         for i, (images, params) in enumerate(train_loader):
             images = images.to(device)
