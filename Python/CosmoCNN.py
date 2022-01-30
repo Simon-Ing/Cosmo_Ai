@@ -97,7 +97,7 @@ def print_images(images, params):
         cv2.waitKey(0)
 
 num_epochs = 100
-batch_size = 1
+batch_size = 10
 learning_rate = 0.01
 
 n_train_samples = 500
