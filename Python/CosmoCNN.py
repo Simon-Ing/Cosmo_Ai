@@ -9,10 +9,6 @@ import deepshit
 import time
 import torch.optim.lr_scheduler as lr_scheduler
 import os
-import pandas as pd
-
-sh = cv2.imread("Starship_SN9_Launch_Pad.jpg")
-
 
 def cuda_if_available():
     if torch.cuda.is_available():
@@ -50,8 +46,6 @@ def dataset_from_json():
 
 def dataset_from_png(n_samples, size, folder):
     print("Started generating")
-    os.system('rm ' + str(folder) + '/*')
-    os.system('rm ' + str(folder) + '/images/*')
     os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
     print("Done generating, start loading")
     dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
@@ -59,11 +53,6 @@ def dataset_from_png(n_samples, size, folder):
         name = img[0].lstrip(folder + "/images/").rstrip(".png")
         params = name.split(",")
         dataset.targets[i] = torch.tensor([int(n) for n in params], dtype=torch.float)
-    # data = pd.read_csv(folder + "/params.csv")
-    # einsteinR = data['einsteinR'].values
-    # source_size = data['sourceSize'].values
-    # xPos = data['xPos'].values
-    # dataset.targets = (np.vstack((einsteinR, source_size, xPos)).T).astype(np.float32)
     print("Done loading")
     return dataset
 
@@ -96,8 +85,8 @@ def print_images(images, params):
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
-num_epochs = 50
-batch_size = 10
+num_epochs = 40
+batch_size = 100
 learning_rate = 0.001
 
 n_train_samples = 1000
