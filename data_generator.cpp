@@ -79,14 +79,14 @@ void writeToPngFiles() {
     std::ostringstream filename;
     // for this to work, make a folder called "cosmo_data" in same folder as the main executable
 
-    filename << iteration_counter << ".png";
+    filename << einsteinR << "," << source_size << "," << xPos << ".png";
     filename_path << name + "/images/" + filename.str();
     iteration_counter++;
     cv::imwrite(filename_path.str(), image);
 
     // Writes new line in .csv file:
     fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
-    std::cout << filename.str() << " generated and saved on drive" << std::endl;
+//    std::cout << filename.str() << " generated and saved on drive" << std::endl;
 }
 
 // Split the image into n pieces where n is number of threads available and distort the pieces in parallel
@@ -108,7 +108,8 @@ static void parallel(int R) {
 static void update(int, void*) {
     int apparentPos1, apparentPos2, R;
     actualPos = (xPos - window_size / 2);
-    apparentPos1 = (int)(actualPos + sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)) / 2;
+    int sign = 1 - 2*(actualPos < 0);
+    apparentPos1 = (int)(actualPos + sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)*sign) / 2;
     R = apparentPos1;
 
     // Make the undistorted image at the apparent position by making a black background and add a gaussian light source

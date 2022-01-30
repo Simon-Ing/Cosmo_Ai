@@ -5,12 +5,13 @@ import torch.nn as nn
 import torchvision
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
-
 import deepshit
 import time
 import torch.optim.lr_scheduler as lr_scheduler
 import os
 import pandas as pd
+
+sh = cv2.imread("Starship_SN9_Launch_Pad.jpg")
 
 
 def cuda_if_available():
@@ -41,7 +42,6 @@ def save_model():
 
 
 def dataset_from_json():
-    pass
     train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
     test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
     return (DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True),
@@ -55,11 +55,15 @@ def dataset_from_png(n_samples, size, folder):
     os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
     print("Done generating, start loading")
     dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
-    data = pd.read_csv(folder + "/params.csv")
-    einsteinR = data['einsteinR'].values
-    source_size = data['sourceSize'].values
-    xPos = data['xPos'].values
-    dataset.targets = (np.vstack((einsteinR, source_size, xPos)).T).astype(np.float32)
+    for i, img in enumerate(dataset.imgs):
+        name = img[0].lstrip(folder + "/images/").rstrip(".png")
+        params = name.split(",")
+        dataset.targets[i] = torch.tensor([int(n) for n in params], dtype=torch.float)
+    # data = pd.read_csv(folder + "/params.csv")
+    # einsteinR = data['einsteinR'].values
+    # source_size = data['sourceSize'].values
+    # xPos = data['xPos'].values
+    # dataset.targets = (np.vstack((einsteinR, source_size, xPos)).T).astype(np.float32)
     print("Done loading")
     return dataset
 
@@ -77,32 +81,21 @@ def test_network(loader, model_, lossfunc_, print_results=False):
             n_batches += 1
             if print_results:
                 for i, param in enumerate(params):
-                    nice = [round(n) for n in output[i].tolist()]
-                    print(f'Correct: {param.tolist()}, \tOutput: {nice}')
+                    niceoutput = [round(n, 4) for n in output[i].tolist()]
+                    niceparam = [round(n, 4) for n in param.tolist()]
+                    print(f'Correct: {niceparam},\t\tOutput: {niceoutput}')
         return total_loss / n_batches
 
 
-num_epochs = 1000
+num_epochs = 1
 batch_size = 100
 learning_rate = 0.001
 
 device = cuda_if_available()
 
 # train_dataset = dataset_from_png(n_samples=10, size=600, folder="train")
-test_dataset = dataset_from_png(n_samples=100, size=600, folder="test")
+test_dataset = dataset_from_png(n_samples=10, size=600, folder="test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
-
-train_dataset = dataset_from_png(n_samples=1000, size=600, folder="train")
-train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size)
-
-
-# (train_loader, test_loader) = dataset_from_json()
-# torch.save(train_loader, "test_loader.pt")
-
-# train_loader = torch.load("train_loader.pt")
-# test_loader = torch.load("test_loader.pt")
-
-# load_model()
 
 model = deepshit.ConvNet().to(device)
 lossfunc = nn.MSELoss()
@@ -110,28 +103,36 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
 
 loss_before = test_network(test_loader, model, lossfunc)
-print(f'\nAverage loss over test data before training: {loss_before}\n')
+# print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
-n_total_steps = len(train_loader)
-prev_loss = 100000000000
-for epoch in range(num_epochs):
-    for i, (images, params) in enumerate(train_loader):
-        images = images.to(device)
-        params = params.to(device)
-        # Forward pass
-        output = model(images)
-        loss = lossfunc(output, params)
-        # Backward pass
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_total_steps}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+n_train_samples = 100
+while True:
+    train_dataset = dataset_from_png(n_samples=n_train_samples, size=600, folder="train")
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=False)
+    for epoch in range(num_epochs):
+        for i, (images, params) in enumerate(train_loader):
+            images = images.to(device)
+            params = params.to(device)
+            # for i, img in enumerate(images):
+            #     image = images[i].numpy().reshape(600, 600, 1)
+            #     # param = "im: " + str(i) + " RE: " + str(params[i, 0].item()) + "size: " + str(params[i, 1].item()) + "pos: " + str(params[i, 2].item())
+            #     cv2.imshow(str(params[i]), image)
+            #     cv2.waitKey(0)
+            # Forward pass
+            output = model(images)
+            loss = lossfunc(output, params)
+            # Backward pass
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
 
-    scheduler.step(loss)
-    if (epoch+1) % 1 == 0:
-        loss = test_network(test_loader, model, lossfunc, False)
-        print(f"\nLoss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+        # print(model.state_dict())
+        scheduler.step(loss)
+        # if (epoch+1) % 1 == 0:
+        #     loss = test_network(test_loader, model, lossfunc, print_results=True)
+        #     print(f"\nLoss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
 
 loss_train = test_network(train_loader, model, lossfunc)
@@ -144,4 +145,3 @@ print(f'\nAverage loss over test data after training: {loss_test}\n')
 
 with open("training_params.txt", "a") as outfile:
     outfile.write(f'Epochs: {num_epochs}\tbatch size: {batch_size}\tlearning rate: {learning_rate}\taverage loss train data: {loss_train:.1f}\taverage loss test data: {loss_test:.1f}\n')
-

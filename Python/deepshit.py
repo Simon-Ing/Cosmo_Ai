@@ -14,7 +14,7 @@ from torchvision.transforms import transforms
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 4, (5, 5))  # one input (colors), six outputs, kernel(filter) of size 5x5
+        self.conv1 = nn.Conv2d(1, 4, (5, 5))  # one input (colors), six outputs, kernel(filter) of size 5x5
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 16, (5, 5))
         self.conv4 = nn.Conv2d(16, 20, (5, 5))
@@ -29,35 +29,36 @@ class ConvNet(nn.Module):
     def forward(self, x):
 
         x = self.conv1(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.pool(x)
 
         x = self.conv2(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.pool(x)
 
         x = self.conv3(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.pool(x)
 
         x = self.conv4(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.pool(x)
 
         x = self.conv5(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.pool(x).view(-1, 3920)
 
         # After convolving and pooling we end up with a 1D array, we feed this into the neural net
         x = self.fc1(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.fc2(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.fc3(x)  # We end up with three values (x position, Einstein Radius and source size
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.fc4(x)
-        x = func.leaky_relu(x)
+        x = func.relu(x)
         x = self.fc5(x)
+        x = func.relu(x)
         return x
 
 
@@ -93,7 +94,9 @@ class CosmoDatasetPng(ImageFolder):
         sample = self.loader(path)
         if self.transform is not None:
             sample = self.transform(sample)
-        return sample, self.targets[item]
+        ret1 = sample[0].view(1, 600, 600).numpy()
+        ret2 = self.targets[item]
+        return ret1, ret2
 
         # x = self.conv1(x)
         # x = func.leaky_relu(x)  # non-linear activation function

@@ -152,9 +152,9 @@ static void update(int, void*) {
 
 	if (actualMode) {
 		actualPos = (xPos - window_size / 2);
-		//        int sign = 1 - 2*(actualPos < 0);
-		apparentPos1 = (int)(actualPos + sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)) / 2;
-		apparentPos2 = (int)(actualPos - sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)) / 2;
+        int sign = 1 - 2*(actualPos < 0);
+		apparentPos1 = (int)(actualPos + sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)*sign) / 2;
+		apparentPos2 = (int)(actualPos - sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)*sign) / 2;
 		R = apparentPos1;
 	}
 
