@@ -89,7 +89,8 @@ def test_network(loader, model_, lossfunc_, print_results=False):
 
 def print_images(images, params):
     for i, img in enumerate(images):
-        image = images[i].numpy().reshape(600, 600, 1)
+        image = images[i].numpy().reshape(28, 28, 1)
+        image = cv2.resize(image, (400,400))
         image = cv2.putText(image, str(params[i]), (50,50), cv2.FONT_HERSHEY_SIMPLEX,
                                     1, (255,255,255), 1, cv2.LINE_AA)
         cv2.imshow("img", image)
@@ -101,11 +102,12 @@ learning_rate = 0.01
 
 n_train_samples = 500
 n_test_samples = 50
+img_size = 100
 
 device = cuda_if_available()
 
 # train_dataset = dataset_from_png(n_samples=10, size=600, folder="train")
-test_dataset = dataset_from_png(n_samples=n_test_samples, size=600, folder="test")
+test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
@@ -118,7 +120,7 @@ print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
 while True:
-    train_dataset = dataset_from_png(n_samples=n_train_samples, size=600, folder="train")
+    train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
     train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     for epoch in range(num_epochs):
         for i, (images, params) in enumerate(train_loader):
@@ -134,13 +136,13 @@ while True:
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+            # print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
 
         # print(model.state_dict())
         scheduler.step(loss)
         if (epoch+1) % 1 == 0:
             loss = test_network(test_loader, model, lossfunc, print_results=True)
-            print(f"\nLoss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+            print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
 
 loss_train = test_network(train_loader, model, lossfunc)
