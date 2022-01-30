@@ -94,7 +94,7 @@ learning_rate = 0.001
 
 n_train_samples = 10000
 n_test_samples = 1000
-img_size = 100
+img_size = 600
 
 device = cuda_if_available()
 
