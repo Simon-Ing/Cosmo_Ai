@@ -50,8 +50,6 @@ def dataset_from_json():
 
 def dataset_from_png(n_samples, size, folder):
     print("Started generating")
-    os.system('rm ' + str(folder) + '/*')
-    os.system('rm ' + str(folder) + '/images/*')
     os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
     print("Done generating, start loading")
     dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
@@ -59,12 +57,6 @@ def dataset_from_png(n_samples, size, folder):
         name = img[0].lstrip(folder + "/images/").rstrip(".png")
         params = name.split(",")
         dataset.targets[i] = torch.tensor([int(n) for n in params], dtype=torch.float)
-    # data = pd.read_csv(folder + "/params.csv")
-    # einsteinR = data['einsteinR'].values
-    # source_size = data['sourceSize'].values
-    # xPos = data['xPos'].values
-    # dataset.targets = (np.vstack((einsteinR, source_size, xPos)).T).astype(np.float32)
-    print("Done loading")
     return dataset
 
 
@@ -81,8 +73,8 @@ def test_network(loader, model_, lossfunc_, print_results=False):
             n_batches += 1
             if print_results:
                 for i, param in enumerate(params):
-                    niceoutput = [round(n, 4) for n in output[i].tolist()]
-                    niceparam = [round(n, 4) for n in param.tolist()]
+                    niceoutput = [round(n, 2) for n in output[i].tolist()]
+                    niceparam = [round(n, 2) for n in param.tolist()]
                     print(f'Correct: {niceparam},\t\tOutput: {niceoutput}')
         return total_loss / n_batches
 
@@ -96,12 +88,12 @@ def print_images(images, params):
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
-num_epochs = 50
-batch_size = 10
+num_epochs = 40
+batch_size = 1000
 learning_rate = 0.001
 
-n_train_samples = 1000
-n_test_samples = 100
+n_train_samples = 10000
+n_test_samples = 1000
 img_size = 100
 
 device = cuda_if_available()
@@ -118,41 +110,43 @@ loss_before = test_network(test_loader, model, lossfunc)
 print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
-while True:
-    train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
-    for epoch in range(num_epochs):
-        for i, (images, params) in enumerate(train_loader):
-            images = images.to(device)
-            params = params.to(device)
+try:
+    while True:
+        train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
+        train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+        scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
+        for epoch in range(num_epochs):
+            for i, (images, params) in enumerate(train_loader):
+                images = images.to(device)
+                params = params.to(device)
 
-            # print_images(images, params)  # print the images with parameters to make sure data is correct
+                # print_images(images, params)  # print the images with parameters to make sure data is correct
 
-            # Forward pass
-            output = model(images)
-            loss = lossfunc(output, params)
-            # Backward pass
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            # print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+                # Forward pass
+                output = model(images)
+                loss = lossfunc(output, params)
+                # Backward pass
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                # print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
 
-        # print(model.state_dict())
-        scheduler.step(loss)
-        if (epoch+1) % 1 == 0:
-            loss = test_network(test_loader, model, lossfunc, print_results=True)
-            print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+            scheduler.step(loss)
+            if (epoch+1) % 1 == 0:
+                loss = test_network(test_loader, model, lossfunc, print_results=False)
+                print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+                
+except(KeyboardInterrupt):
+    print("Keyboard interrupt Broke training loop")
 
-
-loss_train = test_network(train_loader, model, lossfunc)
+loss_train = test_network(train_loader, model, lossfunc, print_results=False)
 print(f'\nAverage loss over train data after training: {loss_train}\n')
 
-loss_test = test_network(test_loader, model, lossfunc)
+loss_test = test_network(test_loader, model, lossfunc, print_results=True)
 print(f'\nAverage loss over test data after training: {loss_test}\n')
 
-# save_model()
+save_model()
 
-with open("training_params.txt", "a") as outfile:
-    outfile.write(f'Epochs: {num_epochs}\tbatch size: {batch_size}\tlearning rate: {learning_rate}\taverage loss train data: {loss_train:.1f}\taverage loss test data: {loss_test:.1f}\n')
+#with open("training_params.txt", "a") as outfile:
+#    outfile.write(f'Epochs: {num_epochs}\tbatch size: {batch_size}\tlearning rate: {learning_rate}\taverage loss train data: {loss_train:.1f}\taverage loss test data: {loss_test:.1f}\n')
