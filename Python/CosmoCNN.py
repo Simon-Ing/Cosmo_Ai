@@ -37,22 +37,22 @@ def save_model():
         torch.save(model.state_dict(), path)
 
 
-def dataset_from_json():
-    train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
-    test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
-    return (DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True),
-            DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False))
+# def dataset_from_json():
+#     train_dataset = deepshit.CosmoDataset(path='train_dataset.json')
+#     test_dataset = deepshit.CosmoDataset(path='test_dataset.json')
+#     return (DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True),
+#             DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False))
 
 
-def dataset_from_png(n_samples, size, folder):
-    print(f"Started generating {folder} data")
-    os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
-    print("Done generating, start loading")
-    dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
-    for i, img in enumerate(dataset.imgs):
-        name = img[0].lstrip(folder + "/images/").rstrip(".png")
-        params = name.split(",")
-        dataset.targets[i] = torch.tensor([int(n) for n in params], dtype=torch.float)
+def dataset_from_png(n_samples, size, folder, gen_new):
+    if gen_new:
+        print(f"Started generating {folder} data")
+        os.system(f'rm -r {folder}')
+        os.system(f'mkdir {folder}')
+        os.system(f'mkdir {folder}/images')
+        os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
+        print("Done generating, start loading")
+    dataset = deepshit.CosmoDatasetPng(str(folder))
     print("Done loading")
     return dataset
 
@@ -85,18 +85,20 @@ def print_images(images, params):
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
-num_epochs = 10
-batch_size = 100
-learning_rate = 0.0001
+num_epochs = 100
+batch_size = 10
+learning_rate = 0.01
 
 n_train_samples = 1000
 n_test_samples = 100
 img_size = 400
 
+gen_new_train = True
+gen_new_test = True
+
 device = cuda_if_available()
 
-# train_dataset = dataset_from_png(n_samples=10, size=600, folder="train")
-test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test")
+test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test", gen_new=gen_new_test)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
@@ -111,7 +113,7 @@ print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
 
-train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
+train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
 print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, train samples: {n_train_samples} test samples: {n_test_samples} img size: {img_size}')

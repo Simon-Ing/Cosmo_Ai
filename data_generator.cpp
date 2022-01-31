@@ -85,7 +85,7 @@ void writeToPngFiles() {
     cv::imwrite(filename_path.str(), image);
 
     // Writes new line in .csv file:
-    fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
+//    fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
 //    std::cout << filename.str() << " generated and saved on drive" << std::endl;
 }
 
@@ -135,8 +135,8 @@ int main(int argc, char *argv[]) {
 //    std::cout << DATAPOINTS_TO_GENERATE << " " << window_size << " " << name << std::endl;
 
     // Generate dataset:
-    fout.open(name + "/params.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
-    fout << "filename" << "," << "einsteinR" << "," << "sourceSize" << "," << "xPos" << "\n";  // Writes the first line to .csv file
+//    fout.open(name + "/params.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
+//    fout << "filename" << "," << "einsteinR" << "," << "sourceSize" << "," << "xPos" << "\n";  // Writes the first line to .csv file
 
     std::random_device dev;
     std::mt19937 rng(dev());

@@ -35,17 +35,18 @@ class CosmoDatasetJson(Dataset):
         return self.n_samples
 
 
-
 class CosmoDatasetPng(ImageFolder):
+    def __init__(self, root):
+        super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
+        self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
     def __getitem__(self, item):
         path, _ = self.samples[item]
         sample = self.loader(path)
         if self.transform is not None:
             sample = self.transform(sample)
-        ret1 = sample[0].view(1, sample.shape[1], sample.shape[2]).numpy()
-        ret2 = self.targets[item]
-        return ret1, ret2
+        return sample[0].view(1, sample.shape[1], sample.shape[2]), self.targets[item]
+
 
 
 class ConvNet(nn.Module):
