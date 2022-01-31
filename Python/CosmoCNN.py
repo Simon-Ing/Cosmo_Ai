@@ -23,7 +23,7 @@ def load_model():
     while ans not in ("y", "Y", "N", "n"):
         ans = input("Load previous model? (y/n): ")
     if ans == "y" or ans == "Y":
-        path = input("enter path: ")
+        path = "Models/" + input("enter path: ")
         model.load_state_dict(torch.load(path))
 
 
@@ -45,7 +45,7 @@ def dataset_from_json():
 
 
 def dataset_from_png(n_samples, size, folder):
-    print("Started generating")
+    print(f"Started generating {folder} data")
     os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
     print("Done generating, start loading")
     dataset = deepshit.CosmoDatasetPng(str(folder), transform=transforms.ToTensor())
@@ -85,9 +85,9 @@ def print_images(images, params):
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
-num_epochs = 40
+num_epochs = 10
 batch_size = 100
-learning_rate = 0.001
+learning_rate = 0.0001
 
 n_train_samples = 1000
 n_test_samples = 100
@@ -100,48 +100,51 @@ test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder=
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
+# load_model()
 lossfunc = nn.MSELoss()
-
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=10)
+        
 
 loss_before = test_network(test_loader, model, lossfunc)
 print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
-while True:
-    train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer)
-    for epoch in range(num_epochs):
-        for i, (images, params) in enumerate(train_loader):
-            images = images.to(device)
-            params = params.to(device)
 
-            # print_images(images, params)  # print the images with parameters to make sure data is correct
+train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train")
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-            # Forward pass
-            output = model(images)
-            loss = lossfunc(output, params)
-            # Backward pass
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            # print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, train samples: {n_train_samples} test samples: {n_test_samples} img size: {img_size}')
+for epoch in range(num_epochs):
+    for i, (images, params) in enumerate(train_loader):
+        images = images.to(device)
+        params = params.to(device)
 
-        # print(model.state_dict())
-        scheduler.step(loss)
-        if (epoch+1) % 1 == 0:
-            loss = test_network(test_loader, model, lossfunc, print_results=True)
-            print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+        # print_images(images, params)  # print the images with parameters to make sure data is correct
+
+        # Forward pass
+        output = model(images)
+        loss = lossfunc(output, params)
+        # Backward pass
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        # print(f'Epoch: {epoch+1} / {num_epochs}\tstep: {i+1} / {n_train_samples/batch_size}\tloss: {loss.item():.10f}\ttime: {(time.time() - timer)}')
+
+    # print(model.state_dict())
+    scheduler.step(loss)
+    if (epoch+1) % 1 == 0:
+        loss = test_network(test_loader, model, lossfunc, print_results=False)
+        print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
 
-loss_train = test_network(train_loader, model, lossfunc)
-print(f'\nAverage loss over train data after training: {loss_train}\n')
 
-loss_test = test_network(test_loader, model, lossfunc)
+# loss_train = test_network(train_loader, model, lossfunc, False)
+# print(f'\nAverage loss over train data after training: {loss_train}\n')
+
+loss_test = test_network(test_loader, model, lossfunc, True)
 print(f'\nAverage loss over test data after training: {loss_test}\n')
 
-# save_model()
+save_model()
 
-with open("training_params.txt", "a") as outfile:
-    outfile.write(f'Epochs: {num_epochs}\tbatch size: {batch_size}\tlearning rate: {learning_rate}\taverage loss train data: {loss_train:.1f}\taverage loss test data: {loss_test:.1f}\n')
+
