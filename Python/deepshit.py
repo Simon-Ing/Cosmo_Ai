@@ -41,7 +41,7 @@ class CosmoDatasetJson(Dataset):
 class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
-        if (platform.system = 'Windows'):
+        if (platform.system() == 'Windows'):
             self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
         else:
             self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
