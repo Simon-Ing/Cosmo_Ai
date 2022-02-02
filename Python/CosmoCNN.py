@@ -9,6 +9,7 @@ import deepshit
 import time
 import torch.optim.lr_scheduler as lr_scheduler
 import os
+import shutil
 
 def cuda_if_available():
     if torch.cuda.is_available():
@@ -56,6 +57,20 @@ def dataset_from_png(n_samples, size, folder, gen_new):
     print("Done loading")
     return dataset
 
+def dataset_from_png_win(n_samples, size, folder, gen_new):
+    if gen_new:
+        print(f"Started generating {folder} data")
+        _, current_folder = os.path.split(os.getcwd())
+        if (current_folder != "python"):
+            os.chdir('python') #comment this out if needed
+        shutil.rmtree(folder)
+        os.makedirs(f'{folder}/images')
+        os.system('Data.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
+        print("Done generating, start loading")
+    dataset = deepshit.CosmoDatasetPng(str(folder))
+    print("Done loading")
+    return dataset
+
 
 def test_network(loader, model_, lossfunc_, print_results=False):
     total_loss = 0
@@ -98,7 +113,7 @@ gen_new_test = True
 
 device = cuda_if_available()
 
-test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test", gen_new=gen_new_test)
+test_dataset = dataset_from_png_win(n_samples=n_test_samples, size=img_size, folder="test", gen_new=gen_new_test)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 model = deepshit.ConvNet().to(device)
@@ -113,7 +128,7 @@ print(f'\nAverage loss over test data before training: {loss_before}\n')
 
 timer = time.time()
 
-train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
+train_dataset = dataset_from_png_win(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
 print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, train samples: {n_train_samples} test samples: {n_test_samples} img size: {img_size}')
