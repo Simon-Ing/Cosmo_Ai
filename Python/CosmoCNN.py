@@ -2,14 +2,15 @@ from torch.utils.data import DataLoader
 from deepshit import *
 import time
 import torch.optim.lr_scheduler as lr_scheduler
+from tqdm import tqdm
 
 # Training parameters
-num_epochs = 100
-batch_size = 10
-learning_rate = 0.001
+num_epochs = 20
+batch_size = 50
+learning_rate = 0.0002
 
-n_train_samples = 1000
-n_test_samples = 100
+n_train_samples = 200000
+n_test_samples = 2000
 img_size = 400
 
 # set to true when you want new data points
@@ -20,7 +21,7 @@ device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
 model = ConvNet().to(device)
-# load_model(model)  # Load a saved model if you want to
+load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=4, factor=1/2)
@@ -41,8 +42,8 @@ print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: 
 
 # Training loop
 try:
-    for epoch in range(num_epochs):
-        for i, (images, params) in enumerate(train_loader):
+    for epoch in tqdm(range(num_epochs), desc="Total"):
+        for i, (images, params) in enumerate(tqdm(train_loader, desc='Epoch')):
             images = images.to(device)
             params = params.to(device)
 
@@ -59,7 +60,7 @@ try:
         scheduler.step(loss)
         # Test network for each epoch
         loss = test_network(test_loader, model, criterion, device, print_results=False)
-        print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+        print(f"\nEpoch: {epoch+1}, Loss: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}, time: {time.time() - timer}\n")
 
 except KeyboardInterrupt:
     print("Training aborted by keyboard interrupt.")
@@ -72,7 +73,7 @@ message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\nlearni
 print(message)
 
 
-# send_email('simon.ing.89@gmail.com', message)
+send_email('simon.ing.89@gmail.com', message)
 
 
 # Save your model if you want to
