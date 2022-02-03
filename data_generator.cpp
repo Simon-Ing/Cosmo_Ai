@@ -134,9 +134,9 @@ int main(int argc, char *argv[]) {
 
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(window_size * 0.03, window_size * 0.15);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, window_size * 0.1);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(window_size * 0.2, window_size * 0.8);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(window_size*0.05, window_size * 0.3);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(window_size*0.05, window_size * 0.3);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(window_size * 0.3, window_size * 0.7);
 
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         // Randomizes values for eatch iteration
