@@ -5,11 +5,11 @@ import torch.optim.lr_scheduler as lr_scheduler
 
 # Training parameters
 num_epochs = 10
-batch_size = 10
-learning_rate = 0.01
+batch_size = 400
+learning_rate = 0.0005
 
-n_train_samples = 1000
-n_test_samples = 100
+n_train_samples = 1
+n_test_samples = 1
 img_size = 400
 
 # set to true when you want new data points
@@ -20,10 +20,10 @@ device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
 model = ConvNet().to(device)
-load_model(model)  # Load a saved model if you want to
+# load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=10)
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=4, factor=1/2)
 
 # Load a dataset for training and one for verification
 train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
@@ -55,14 +55,20 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-    # scheduler.step(loss)
+    scheduler.step(loss)
     # Test network for each epoch
     loss = test_network(test_loader, model, criterion, device, print_results=False)
     print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
+message = f'Loss: {loss}, Epochs: {num_epochs}, batch_size: {batch_size}, learning_rate: {learning_rate}, n_train_samples: {n_train_samples}, img_size: {img_size}'
+
 # Test network after training
 loss_test = test_network(test_loader, model, criterion, device, True)
-print(f'\nAverage loss over test data after training: {loss_test}\n')
+print(message)
+
+
+# send_email('simon.ing.89@gmail.com', message)
+
 
 # Save your model if you want to
-# save_model(model)
+save_model(model)

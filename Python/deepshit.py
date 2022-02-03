@@ -1,12 +1,14 @@
+import os
+import platform
 import shutil
+import cv2
 import torch
 import torch.nn as nn
 import torch.nn.functional as func
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
-import os
-import platform
-import cv2
+import smtplib
+import ssl
 
 
 class ConvNet(nn.Module):
@@ -141,7 +143,22 @@ class CosmoDatasetPng(ImageFolder):
         return sample[0].view(1, sample.shape[1], sample.shape[2]), self.targets[item]
 
 
+def send_email(receiver_email, message):
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "simon.ing.dev@gmail.com"  # Enter your address
+    password = "developer69"
+    message = "Subject: Training finished\n\n" + message
 
+    message2 = """\
+    Subject: Hi there
+
+    This message is sent from Python."""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message)
 
 
 # class CosmoDatasetJson(Dataset):
