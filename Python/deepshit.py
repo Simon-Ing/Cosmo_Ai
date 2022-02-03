@@ -1,17 +1,35 @@
 import shutil
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as func
-from torch.utils.data import Dataset
-import json
-import numpy as np
 from torchvision.datasets import ImageFolder
-from torchvision.datasets.folder import default_loader
 from torchvision.transforms import transforms
 import os
 import platform
 import cv2
+
+
+class ConvNet(nn.Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.conv1 = nn.Conv2d(1, 4, (5, 5))
+        self.conv2 = nn.Conv2d(4, 7, (5, 5))
+        self.conv3 = nn.Conv2d(7, 10, (5, 5))
+        self.conv4 = nn.Conv2d(10, 10, (5, 5))
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(40, 12)
+        self.fc2 = nn.Linear(12, 3)
+
+    def forward(self, x):
+        x = self.pool(func.relu(self.conv1(x)))
+        x = self.pool(func.relu(self.conv2(x)))
+        x = self.pool(func.relu(self.conv3(x)))
+        x = self.pool(func.relu(self.conv4(x)))
+        x = self.pool(func.relu(self.conv4(x)))
+        x = self.pool(func.relu(self.conv4(x))).view(-1, 40)
+        x = self.fc2(func.relu((self.fc1(x))))
+        return x
+
 
 def cuda_if_available():
     if torch.cuda.is_available():
@@ -36,7 +54,7 @@ def load_model(model):
             except FileNotFoundError as e:
                 print(e)
                 ans = ""
-            except IsADirectoryError as e:
+            except IsADirectoryError:
                 print("You must enter a file name goddamnit!")
                 ans = ""
 
@@ -56,7 +74,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
         if gen_new:
             print(f"Started generating {folder} data")
             _, current_folder = os.path.split(os.getcwd())
-            if (current_folder != "python"):
+            if current_folder != "python":
                 os.chdir('python')
             shutil.rmtree(folder)
             os.makedirs(f'{folder}/images')
@@ -98,9 +116,9 @@ def test_network(loader, model_, criterion_, device, print_results=False):
 def print_images(images, params):
     for i, img in enumerate(images):
         image = images[i].numpy().reshape(28, 28, 1)
-        image = cv2.resize(image, (400,400))
-        image = cv2.putText(image, str(params[i]), (50,50), cv2.FONT_HERSHEY_SIMPLEX,
-                            1, (255,255,255), 1, cv2.LINE_AA)
+        image = cv2.resize(image, (400, 400))
+        image = cv2.putText(image, str(params[i]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
@@ -108,10 +126,13 @@ def print_images(images, params):
 class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
-        if (platform.system() == 'Windows'):
-            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+        if platform.system() == 'Windows':
+            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "\\images\\")
+                                        .rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
         else:
-            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "/images/")
+                                        .rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+
     def __getitem__(self, item):
         path, _ = self.samples[item]
         sample = self.loader(path)
@@ -120,28 +141,7 @@ class CosmoDatasetPng(ImageFolder):
         return sample[0].view(1, sample.shape[1], sample.shape[2]), self.targets[item]
 
 
-class ConvNet(nn.Module):
-    def __init__(self):
-        super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (5, 5))
-        self.conv2 = nn.Conv2d(4, 7, (5, 5))
-        self.conv3 = nn.Conv2d(7, 10, (5, 5))
-        self.conv4 = nn.Conv2d(10, 10, (5, 5))
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(40, 12)
-        self.fc2 = nn.Linear(12, 3)
 
-    def forward(self, x):
-        x = self.pool(func.relu(self.conv1(x)))
-        x = self.pool(func.relu(self.conv2(x)))
-        x = self.pool(func.relu(self.conv3(x)))#.view(-1, 324)
-        x = self.pool(func.relu(self.conv4(x)))#.view(-1, 144)
-        x = self.pool(func.relu(self.conv4(x)))#.view(-1, 144)
-        x = self.pool(func.relu(self.conv4(x))).view(-1, 40)
-        #x = self.pool2(func.relu(self.conv5(x))).view(-1, 176)
-        #print(x.shape)
-        x = self.fc2(func.relu((self.fc1(x))))
-        return x
 
 
 # class CosmoDatasetJson(Dataset):
