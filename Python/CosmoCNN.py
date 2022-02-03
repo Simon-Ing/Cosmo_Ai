@@ -4,17 +4,17 @@ import time
 import torch.optim.lr_scheduler as lr_scheduler
 
 # Training parameters
-num_epochs = 10
-batch_size = 400
-learning_rate = 0.0005
+num_epochs = 100
+batch_size = 10
+learning_rate = 0.001
 
-n_train_samples = 1
-n_test_samples = 1
+n_train_samples = 1000
+n_test_samples = 100
 img_size = 400
 
 # set to true when you want new data points
-gen_new_train = True
-gen_new_test = True
+gen_new_train = False
+gen_new_test = False
 
 device = cuda_if_available()  # Use cuda if available
 
@@ -40,30 +40,35 @@ print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: 
         train samples: {n_train_samples} test samples: {n_test_samples} img size: {img_size}')
 
 # Training loop
-for epoch in range(num_epochs):
-    for i, (images, params) in enumerate(train_loader):
-        images = images.to(device)
-        params = params.to(device)
+try:
+    for epoch in range(num_epochs):
+        for i, (images, params) in enumerate(train_loader):
+            images = images.to(device)
+            params = params.to(device)
 
-        # print_images(images, params)  # print the images with parameters to make sure data is correct
+            # print_images(images, params)  # print the images with parameters to make sure data is correct
 
-        # Forward pass
-        output = model(images)
-        loss = criterion(output, params)
-        # Backward pass
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            # Forward pass
+            output = model(images)
+            loss = criterion(output, params)
+            # Backward pass
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-    scheduler.step(loss)
-    # Test network for each epoch
-    loss = test_network(test_loader, model, criterion, device, print_results=False)
-    print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
+        scheduler.step(loss)
+        # Test network for each epoch
+        loss = test_network(test_loader, model, criterion, device, print_results=False)
+        print(f"\nEpoch: {epoch+1}, Loss test data: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}\n")
 
-message = f'Loss: {loss}, Epochs: {num_epochs}, batch_size: {batch_size}, learning_rate: {learning_rate}, n_train_samples: {n_train_samples}, img_size: {img_size}'
+except KeyboardInterrupt:
+    print("Training aborted by keyboard interrupt.")
+
 
 # Test network after training
-loss_test = test_network(test_loader, model, criterion, device, True)
+loss = test_network(test_loader, model, criterion, device, print_results=False)
+message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\nlearning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}'
+
 print(message)
 
 
