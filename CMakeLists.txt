@@ -21,5 +21,7 @@ conan_cmake_run(REQUIRES
 
 add_executable(main main.cpp)
 add_executable(Data data_generator.cpp)
+add_executable(All generate_all.cpp)
 target_link_libraries(main ${CONAN_LIBS} )
 target_link_libraries(Data ${CONAN_LIBS} )
+target_link_libraries(All ${CONAN_LIBS} )
