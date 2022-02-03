@@ -404,3 +404,5 @@ FodyWeavers.xsd
 /cmake-build-release/
 /venv/
 /.idea/CosmoAi.iml
+/Python/test/
+/Python/train/

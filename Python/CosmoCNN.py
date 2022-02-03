@@ -105,8 +105,8 @@ num_epochs = 100
 batch_size = 10
 learning_rate = 0.01
 
-n_train_samples = 1000
-n_test_samples = 100
+n_train_samples = 10
+n_test_samples = 10
 img_size = 400
 
 gen_new_train = True

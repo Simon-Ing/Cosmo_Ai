@@ -77,16 +77,12 @@ void distort(int thread_begin, int thread_end, int R) {
 void writeToPngFiles() {
     std::ostringstream filename_path;
     std::ostringstream filename;
-    // for this to work, make a folder called "cosmo_data" in same folder as the main executable
 
     filename << einsteinR << "," << source_size << "," << xPos << ".png";
     filename_path << name + "/images/" + filename.str();
     iteration_counter++;
     cv::imwrite(filename_path.str(), image);
 
-    // Writes new line in .csv file:
-    fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
-//    std::cout << filename.str() << " generated and saved on drive" << std::endl;
 }
 
 // Split the image into n pieces where n is number of threads available and distort the pieces in parallel
@@ -135,12 +131,10 @@ int main(int argc, char *argv[]) {
 //    std::cout << DATAPOINTS_TO_GENERATE << " " << window_size << " " << name << std::endl;
 
     // Generate dataset:
-    fout.open(name + "/params.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
-    fout << "filename" << "," << "einsteinR" << "," << "sourceSize" << "," << "xPos" << "\n";  // Writes the first line to .csv file
 
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, window_size * 0.15);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(window_size * 0.03, window_size * 0.15);
     std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, window_size * 0.1);
     std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(window_size * 0.2, window_size * 0.8);
 
