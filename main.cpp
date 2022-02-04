@@ -1,35 +1,19 @@
 #include <opencv2/opencv.hpp>
-#include <nlohmann/json.hpp>
-#include <iostream>
 #include <thread>
 #include <random>
-#include <fstream>
 #include <string>
 
-using json = nlohmann::json;
-
-int window_size = 600;  // Size of source and lens image
-int source_size = window_size / 10;   // size of source "Blob"
-int einsteinR = window_size / 10;
-int xPos = 0;
-int actualPos;
-cv::Mat apparentSource;
-cv::Mat image;
-static const bool actualMode = true; // true for actual pos false for apparent
-
-// **************  GENERATE DATA SETTINGS ****************************
-static const bool dataGenMode = false; // true for generating data
-int iteration_counter = 0;
-int DATAPOINTS_TO_GENERATE = 1000;
-std::fstream fout;
-
-// **********************************************************
+int size = 500;
+int sourceSize = size / 10;
+int einsteinR = size / 10;
+int xPos = size / 3;
+int KL_percent = 50;
 
 void drawGaussian(cv::Mat& img, int& pos) {
-	for (int row = 0; row < window_size; row++) {
-		for (int col = 0; col < window_size; col++) {
-			double x = (1.0 * (col - (pos + window_size / 2.0))) / source_size;
-			double y = (window_size - 1.0 * (row + window_size / 2.0)) / source_size;
+	for (int row = 0; row < size; row++) {
+		for (int col = 0; col < size; col++) {
+			double x = (1.0 * (col - (pos + size / 2.0))) / sourceSize;
+			double y = (size - 1.0 * (row + size / 2.0)) / sourceSize;
 
 			auto val = (uchar)std::round(255 * std::exp(-x * x - y * y));
 			img.at<uchar>(row, col) = val;
@@ -37,19 +21,30 @@ void drawGaussian(cv::Mat& img, int& pos) {
 	}
 }
 
-// Distort the image
-void distort(int thread_begin, int thread_end, int R) {
-	// Evaluate each point in image plane ~ lens plane
-	for (int row = thread_begin; row < thread_end; row++) {
-		for (int col = 0; col <= apparentSource.cols; col++) {
-			// Set coordinate system with origin at x=R
-			int y = window_size / 2 - row;
+// Add some lines to the image for reference
+void refLines(cv::Mat& target) {
+    for (int i = 0; i < size; i++) {
+        target.at<uchar>(i, size / 2) = 150;
+        target.at<uchar>(size / 2 - 1, i) = 150;
+        target.at<uchar>(i, size - 1) = 255;
+        target.at<uchar>(i, 0) = 255;
+        target.at<uchar>(size - 1, i) = 255;
+        target.at<uchar>(0, i) = 255;
+    }
+}
 
-			// How it should be, but looks weird (alt 1 and 2)
-			int x = col - window_size / 2 - R;
+// Distort the image
+void distort(int thread_begin, int thread_end, int R, int apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted) {
+	// Evaluate each point in imgDistorted plane ~ lens plane
+	for (int row = thread_begin; row < thread_end; row++) {
+		for (int col = 0; col <= imgApparent.cols; col++) {
+
+			// Set coordinate system with origin at x=R
+            int x = col - size / 2 - R;
+			int y = size / 2 - row;
 
 			// Calculate distance and angle of the point evaluated relative to center of lens (origin)
-			double r = sqrt(x * x + y * y);
+			double r = sqrt(x*x + y*y);
 			double theta = atan2(y, x);
 
 			// Point mass lens equation
@@ -57,88 +52,26 @@ void distort(int thread_begin, int thread_end, int R) {
 			double x_ = x + frac * (r / R + cos(theta));
 			double y_ = y - frac * sin(theta);
 
-			//            // Print some data when evaluating the point at the origin (for debugging)
-			//            if (row == window_size/2 && col == window_size/2){
-			//                std::cout << "x:  " << x << " y: " << y << " R: " << R << " r: " << r << " theta: " << theta << " EinsteinR: " << einsteinR << std::endl;
-			//            }
+            // Translate to array index
+			int row_ = size / 2 - (int)round(y_);
+			int col_ = size / 2 + apparentPos + (int)round(x_);
 
-						// Translate to array index
-			int row_ = window_size / 2 - (int)round(y_);
-			int col_ = window_size / 2 + R + (int)round(x_);
-
-			// If (x', y') within source, copy value to image
-			if (row_ < window_size && col_ < window_size && row_ > 0 && col_ >= 0) {
-				image.at<uchar>(row, col) = apparentSource.at<uchar>(row_, col_);
+			// If (x', y') within source, copy value to imgDistorted
+			if (row_ < size && col_ < size && row_ > 0 && col_ >= 0) {
+                imgDistorted.at<uchar>(row, col) = imgApparent.at<uchar>(row_, col_);
 			}
 		}
 	}
 }
 
-// Add some lines to the image for reference
-void refLines(cv::Mat& target) {
-	for (int i = 0; i < window_size; i++) {
-		target.at<uchar>(i, window_size / 2) = 150;
-		target.at<uchar>(window_size / 2 - 1, i) = 150;
-		target.at<uchar>(i, window_size - 1) = 255;
-		target.at<uchar>(i, 0) = 255;
-		target.at<uchar>(window_size - 1, i) = 255;
-		target.at<uchar>(0, i) = 255;
-	}
-}
-
-void writeToPngFiles() {
-	std::ostringstream filename_path;
-	std::ostringstream filename;
-	// for this to work, make a folder called "cosmo_data" in same folder as the main executable
-
-	filename << "datapoint" << iteration_counter << ".png";
-	filename_path << "cosmo_data" << "/" << filename.str();
-	iteration_counter++;
-	cv::imwrite(filename_path.str(), image);
-
-	// Writes new line in .csv file:
-	fout << filename.str() << "," << einsteinR << "," << source_size << "," << xPos << " \n";
-	std::cout << filename.str() << " generated and saved on drive" << std::endl;
-}
-
-void writeToJson() {
-	json j;
-
-	std::vector<uchar> array;
-	if (image.isContinuous()) {
-		array.assign(image.data, image.data + image.total() * image.channels());
-	}
-	else {
-		for (int i = 0; i < image.rows; ++i) {
-			array.insert(array.end(), image.ptr<uchar>(i), image.ptr<uchar>(i) + image.cols * image.channels());
-		}
-	}
-
-	j["einsteinR"] = einsteinR;
-	j["source_size"] = source_size;
-	j["actualPos"] = actualPos;
-	j["image"] = array;
-
-	std::ostringstream filename_path;
-	std::ostringstream filename;
-	// for this to work, make a folder called "cosmo_data" in same folder as the main executable
-
-	filename << "datapoint" << iteration_counter << ".json";
-	filename_path << "cosmo_data" << "/" << filename.str();
-	iteration_counter++;
-	std::ofstream file(filename_path.str());
-	file << j;
-	std::cout << filename.str() << " generated and saved on drive" << std::endl;
-}
-
-// Split the image into n pieces where n is number of threads available and distort the pieces in parallel
-static void parallel(int R) {
+// Split the image into (number of threads available) pieces and distort the pieces in parallel
+static void parallel(int R, int apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted) {
 	unsigned int num_threads = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads_vec;
 	for (int k = 0; k < num_threads; k++) {
-		unsigned int thread_begin = (apparentSource.rows / num_threads) * k;
-		unsigned int thread_end = (apparentSource.rows / num_threads) * (k + 1);
-		std::thread t(distort, thread_begin, thread_end, R);
+		unsigned int thread_begin = (imgApparent.rows / num_threads) * k;
+		unsigned int thread_end = (imgApparent.rows / num_threads) * (k + 1);
+		std::thread t(distort, thread_begin, thread_end, R, apparentPos, imgApparent, std::ref(imgDistorted));
 		threads_vec.push_back(std::move(t));
 	}
 	for (auto& thread : threads_vec) {
@@ -148,107 +81,61 @@ static void parallel(int R) {
 
 // This function is called each time a slider is updated
 static void update(int, void*) {
-	int apparentPos1, apparentPos2, R;
+    double KL = KL_percent/100.0;
+    int actualPos = (xPos - size / 2);
+    int sign = actualPos/abs(actualPos);
+    int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
+    int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
+    int R = (int)round(apparentPos * KL);
+    int R2 = (int)round(apparentPos2 * KL);
 
-	if (actualMode) {
-		actualPos = (xPos - window_size / 2);
-        int sign = 1 - 2*(actualPos < 0);
-		apparentPos1 = (int)(actualPos + sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)*sign) / 2;
-		apparentPos2 = (int)(actualPos - sqrt(actualPos * actualPos + 4 * einsteinR * einsteinR)*sign) / 2;
-		R = apparentPos1;
-	}
+	// make an image with light source at APPARENT position
+	cv::Mat imgApparent(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+	drawGaussian(imgApparent, apparentPos);
 
-	else {
-		apparentPos1 = xPos - window_size / 2;
-		if (apparentPos1 == 0) apparentPos1 = 1;
-		R = apparentPos1; // Should be absolute value but that looks weird
-		actualPos = apparentPos1 - einsteinR * einsteinR / R;
-	}
+	// Make empty matrix to draw the distorted image to
+	cv::Mat imgDistorted(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
 
-	// Make the undistorted image at the apparent position by making a black background and add a gaussian light source
-	apparentSource = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-	drawGaussian(apparentSource, apparentPos1);
+    // Run distortion in parallel
+	parallel(R, apparentPos, imgApparent, imgDistorted);
 
-	// Make black background to draw the distorted image to
-	image = cv::Mat(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
+    // make an image with light source at ACTUAL position
+	cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+	drawGaussian(imgActual, actualPos);
 
-	// Run with single thread:
-//    distort(0, window_size);
+    // Add some lines for reference, a circle showing einstein radius, a circle at apparent pos and a rectangle at actual pos
+    refLines(imgActual);
+    refLines(imgDistorted);
+    cv::circle(imgDistorted, cv::Point(size / 2, size / 2), einsteinR, 100, size / 400);
+    cv::circle(imgDistorted, cv::Point(R + size / 2, size / 2), 10, 100, size / 400);
+    cv::circle(imgDistorted, cv::Point(R2 + size / 2, size / 2), 10, 100, size / 400);
+    cv::rectangle(imgDistorted, cv::Point((int)(actualPos*KL) + size / 2 - 10, size / 2 - 10), cv::Point((int)(actualPos*KL) + size / 2 + 10, size / 2 + 10), 100, size / 400);
 
-	// ..or parallel:
-	parallel(R);
-
-	// Make the undistorted image at the ACTUAL position by making a black background and add a gaussian light source
-	cv::Mat actualSource(window_size, window_size, CV_8UC1, cv::Scalar(0, 0, 0));
-	drawGaussian(actualSource, actualPos);
-
-	if (!dataGenMode) {
-		// Add some lines for reference, a circle showing einstein radius, a circle at apparent po and a rectangle at actual pos
-		refLines(actualSource);
-		refLines(image);
-		cv::circle(image, cv::Point(window_size / 2, window_size / 2), einsteinR, 100, window_size / 400);
-		cv::circle(image, cv::Point(apparentPos1 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
-		if (actualMode) {
-			cv::circle(image, cv::Point(apparentPos2 + window_size / 2, window_size / 2), 10, 100, window_size / 400);
-		}
-		cv::rectangle(image, cv::Point(actualPos + window_size / 2 - 10, window_size / 2 - 10), cv::Point(actualPos + window_size / 2 + 10, window_size / 2 + 10), 100, window_size / 400);
-
-		//Scale, format and show on screen
-		int outputSize = 800;
-		cv::resize(actualSource, actualSource, cv::Size_<int>(outputSize, outputSize));
-		cv::resize(image, image, cv::Size_<int>(outputSize, outputSize));
-		cv::Mat matDst(cv::Size(actualSource.cols * 2, actualSource.rows), actualSource.type(), cv::Scalar::all(0));
-		cv::Mat matRoi = matDst(cv::Rect(0, 0, actualSource.cols, actualSource.rows));
-
-		actualSource.copyTo(matRoi);
-		matRoi = matDst(cv::Rect(actualSource.cols, 0, actualSource.cols, actualSource.rows));
-		image.copyTo(matRoi);
-		cv::imshow("Window", matDst);
-	}
-	else {
-		//writeToPngFiles();  //this creates .csv file also
-		writeToJson();
-	}
+    //Scale, format and show on screen
+    int outputSize = 800;
+    cv::resize(imgActual, imgActual, cv::Size_<int>(outputSize, outputSize));
+    cv::resize(imgDistorted, imgDistorted, cv::Size_<int>(outputSize, outputSize));
+    cv::Mat matDst(cv::Size(imgActual.cols * 2, imgActual.rows), imgActual.type(), cv::Scalar::all(0));
+    cv::Mat matRoi = matDst(cv::Rect(0, 0, imgActual.cols, imgActual.rows));
+    imgActual.copyTo(matRoi);
+    matRoi = matDst(cv::Rect(imgActual.cols, 0, imgActual.cols, imgActual.rows));
+    imgDistorted.copyTo(matRoi);
+    cv::imshow("Window", matDst);
+//    cv::imshow("apparent", imgApparent);
 }
 int main()
 {
-	if (!dataGenMode) {
-		// Make the user interface and specify the function to be called when moving the sliders: update()
-		cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-		cv::createTrackbar("Einstein Radius:", "Window", &einsteinR, window_size / 4, update);
-		cv::createTrackbar("Source Size        :", "Window", &source_size, window_size / 4, update);
+    // Make the user interface and specify the function to be called when moving the sliders: update()
+    cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
+    cv::createTrackbar("Einstein Radius:", "Window", &einsteinR, size / 4, update);
+    cv::createTrackbar("Source Size        :", "Window", &sourceSize, size / 4, update);
+    cv::createTrackbar("Lens dist %        :", "Window", &KL_percent, 100, update);
+    cv::createTrackbar("Actual Pos    :", "Window", &xPos, size, update);
 
-		if (actualMode) {
-			cv::createTrackbar("Actual Pos    :", "Window", &xPos, window_size, update);
-		}
-		else {
-			cv::createTrackbar("Apparent Pos   :", "Window", &xPos, window_size, update);
-		}
-		bool running = true;
-		while (running) {
-			running = (cv::waitKey(30) != 27);
-		}
-		cv::destroyAllWindows();
-	}
-	else {
-		// Generate dataset:
-		//fout.open("cosmo_data/cosmo_data.csv", fout.trunc | fout.in | fout.out);  // opens .csv file
-		//fout << "filename" << "," << "einsteinR" << "," << "source_size" << "," << "xPos" << " \n";  // Writes the first line to .csv file
-
-		std::random_device dev;
-		std::mt19937 rng(dev());
-		std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, window_size * 0.15);
-		std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, window_size * 0.1);
-		std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(window_size * 0.2, window_size * 0.8);
-
-		for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
-			// Randomizes values for eatch iteration
-			einsteinR = rand_einsteinR(rng);
-			source_size = rand_source_size(rng);
-			xPos = rand_xSlider(rng);
-			update(0, nullptr);
-		}
-	}
-
+    bool running = true;
+    while (running) {
+        running = (cv::waitKey(30) != 27);
+    }
+    cv::destroyAllWindows();
 	return 0;
 }
