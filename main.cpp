@@ -120,7 +120,7 @@ static void update(int, void*) {
 
     cv::putText(imgActual, "Actual position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     cv::putText(imgApparentDisplay, "Apparent position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
-    cv::putText(imgDistorted, "Distorted projection", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, KL, cv::Scalar::all(255));
+    cv::putText(imgDistorted, "Distorted projection", cv::Point(10,30*sizeAtLens/size), cv::FONT_HERSHEY_COMPLEX, KL, cv::Scalar::all(255));
     cv::putText(imgDistortedResized, "Distorted resized", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     refLines(imgActual);
     refLines(imgApparentDisplay);
@@ -137,7 +137,7 @@ static void update(int, void*) {
     imgActual.copyTo(matRoi);
     matRoi = matDst(cv::Rect(size, 0, size, size));
     imgApparentDisplay.copyTo(matRoi);
-    matRoi = matDst(cv::Rect(2*size, 0, imgDistorted.cols, imgDistorted.rows));
+    matRoi = matDst(cv::Rect(2*size, size/2 - sizeAtLens/2, sizeAtLens, sizeAtLens));
     imgDistorted.copyTo(matRoi);
     matRoi = matDst(cv::Rect(3*size, 0, size, size));
     imgDistortedResized.copyTo(matRoi);
