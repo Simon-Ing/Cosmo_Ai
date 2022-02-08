@@ -85,7 +85,7 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 // This function is called each time a slider is updated
 static void update(int, void*) {
 
-    double KL = std::max(KL_percent/100.0, 0.001);
+    double KL = std::max(KL_percent/100.0, 0.01);
     int sizeAtLens = (int)round(KL*size);
     int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     int R = (int)round(apparentPos * KL);
@@ -111,12 +111,12 @@ static void update(int, void*) {
     cv::resize(imgDistorted, imgDistortedResized, cv::Size(size, size));
 
     cv::circle(imgDistorted, cv::Point(0, imgDistorted.rows/2), einsteinR, 100, size / 400);
-    cv::circle(imgDistorted, cv::Point(R, imgDistorted.rows/2), 10, 100, size / 400);
-    cv::rectangle(imgDistorted, cv::Point((int)(actualPos*KL) - 10, imgDistorted.rows/2 - 10), cv::Point((int)(actualPos*KL) + 10, imgDistorted.rows/2 + 10), 100, size / 400);
+    cv::circle(imgDistorted, cv::Point(R, imgDistorted.rows/2), 5, 100, size / 400);
+    cv::rectangle(imgDistorted, cv::Point((int)(actualPos*KL) - 5, imgDistorted.rows/2 - 5), cv::Point((int)(actualPos*KL) + 5, imgDistorted.rows/2 + 5), 100, size / 400);
 
     cv::circle(imgDistortedResized, cv::Point(0, size/2), (int)round(einsteinR/KL), 100, size / 400);
-    cv::circle(imgDistortedResized, cv::Point(apparentPos, size/2), 10, 100, size / 400);
-    cv::rectangle(imgDistortedResized, cv::Point(actualPos - 10, size/2 - 10), cv::Point(actualPos + 10, size/2 + 10), 100, size / 400);
+    cv::circle(imgDistortedResized, cv::Point(apparentPos, size/2), 5, 100, size / 400);
+    cv::rectangle(imgDistortedResized, cv::Point(actualPos - 5, size/2 - 5), cv::Point(actualPos + 5, size/2 + 5), 100, size / 400);
 
 
     refLines(imgActual);
