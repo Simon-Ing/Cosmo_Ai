@@ -60,7 +60,6 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 
 			// If (x', y') within source, copy value to imgDistorted
 			if (row_ < imgApparent.rows && col_ < imgApparent.cols && row_ >= 0 && col_ >= 0) {
-//                std::cout << "row': " << row_ << " col': " << col_ << std::endl;
                 imgDistorted.at<uchar>(row, col) = imgApparent.at<uchar>(row_, col_);
 			}
 		}
@@ -143,6 +142,7 @@ static void update(int, void*) {
     imgDistortedResized.copyTo(matRoi);
     cv::imshow("Window", matDst);
 }
+
 int main()
 {
     // Make the user interface and specify the function to be called when moving the sliders: update()
@@ -154,7 +154,10 @@ int main()
 
     bool running = true;
     while (running) {
-        running = (cv::waitKey(30) != 27);
+        int k = cv::waitKey(30);
+        if ((cv::getWindowProperty("Window", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
+            running = false;
+        }
     }
     cv::destroyAllWindows();
 	return 0;
