@@ -86,7 +86,6 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 
 // This function is called each time a slider is updated
 static void update(int, void*) {
-    int sign;
     int xPos = xPosSlider - size/2;
     int yPos = yPosSlider - size/2;
 
@@ -95,10 +94,8 @@ static void update(int, void*) {
     int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
     double KL = std::max(KL_percent/100.0, 0.01);
     int sizeAtLens = (int)round(KL*size);
-    if (actualPos == 0) { sign = 1; }
-    else{ sign = actualPos / abs(actualPos); }
-	int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
-    int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
+	int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+    int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     int R = (int)round(apparentPos * KL);
 
 	// make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
