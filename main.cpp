@@ -2,6 +2,8 @@
 #include <thread>
 #include <random>
 #include <string>
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
 
 int size = 400;
 int sourceSize = size / 10;
@@ -84,7 +86,7 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 
 // This function is called each time a slider is updated
 static void update(int, void*) {
-
+    int sign;
     int xPos = xPosSlider - size/2;
     int yPos = yPosSlider - size/2;
 
@@ -93,8 +95,9 @@ static void update(int, void*) {
     int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
     double KL = std::max(KL_percent/100.0, 0.01);
     int sizeAtLens = (int)round(KL*size);
-    int sign = actualPos / abs(actualPos);
-    int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
+    if (actualPos == 0) { sign = 0; }
+    else{ sign = actualPos / abs(actualPos); }
+	int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
     int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
     int R = (int)round(apparentPos * KL);
 
@@ -118,7 +121,7 @@ static void update(int, void*) {
     auto imgApparentDisplay = imgApparent(cv::Rect(size/2,0,size,size));
 
     cv::Mat imgDistortedResizedRotated;
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size/2, size/2), phi*180/M_PI, 1);
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size/2, size/2), phi*180/3.145, 1);
     cv::warpAffine(imgDistortedResized, imgDistortedResizedRotated, rot, cv::Size(size, size));
 
     int actualX = (int)round(actualPos*cos(phi));
