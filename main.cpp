@@ -6,7 +6,8 @@
 int size = 400;
 int sourceSize = size / 10;
 int einsteinR = size / 10;
-int xPos = size / 3;
+int xPosSlider = size/2;
+int yPosSlider = size/2;
 int KL_percent = 50;
 
 // Add some lines to the image for reference
@@ -84,15 +85,18 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 // This function is called each time a slider is updated
 static void update(int, void*) {
 
-    int actualPos = xPos - size/2;
+    int xPos = xPosSlider - size/2;
+    int yPos = yPosSlider - size/2;
+
+    double phi = atan2(yPos, xPos);
+
+    int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
     double KL = std::max(KL_percent/100.0, 0.01);
     int sizeAtLens = (int)round(KL*size);
     int sign = actualPos / abs(actualPos);
     int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
     int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)*sign) / 2.0);
     int R = (int)round(apparentPos * KL);
-
-//    std::cout << "Actual pos: " << actualPos << " apparent pos: " << apparentPos << " KL: " << KL << std::endl;
 
 	// make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
 	cv::Mat imgApparent(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -117,19 +121,30 @@ static void update(int, void*) {
     // Make a sliced version of apparent to display
     auto imgApparentDisplay = imgApparent(cv::Rect(size/2,0,size,size));
 
+    cv::Mat imgDistortedResizedRotated;
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size/2, size/2), phi*180/M_PI, 1);
+    cv::warpAffine(imgDistortedResized, imgDistortedResizedRotated, rot, cv::Size(size, size));
+
+    int actualX = (int)round(actualPos*cos(phi));
+    int actualY = (int)round(actualPos*sin(phi));
+    int apparentX = (int)round(apparentPos*cos(phi));
+    int apparentY = (int)round(apparentPos*sin(phi));
+    int apparentX2 = (int)round(apparentPos2*cos(phi));
+    int apparentY2 = (int)round(apparentPos2*sin(phi));
+
     cv::putText(imgActual, "Actual position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     cv::putText(imgApparentDisplay, "Apparent position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     cv::putText(imgDistorted, "Distorted projection", cv::Point(10,30*sizeAtLens/size), cv::FONT_HERSHEY_COMPLEX, KL, cv::Scalar::all(255));
-    cv::putText(imgDistortedResized, "Distorted resized", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
+    cv::putText(imgDistortedResizedRotated, "Distorted resized", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     refLines(imgActual);
     refLines(imgApparentDisplay);
     refLines(imgDistorted);
-    refLines(imgDistortedResized);
+    refLines(imgDistortedResizedRotated);
     cv::circle(imgDistorted, cv::Point(sizeAtLens/2, sizeAtLens/2), einsteinR, cv::Scalar::all(100));
-    cv::circle(imgDistortedResized, cv::Point(size/2, size/2), (int)round(einsteinR/KL), cv::Scalar::all(100));
-    cv::circle(imgDistortedResized, cv::Point(size/2 + apparentPos, size/2), size/50, cv::Scalar::all(150), size/200);
-    cv::circle(imgDistortedResized, cv::Point(size/2 + apparentPos2, size/2), size/50, cv::Scalar::all(150), size/200);
-    cv::rectangle(imgDistortedResized, cv::Point(size/2 + actualPos - size/50, size/2 - size/50), cv::Point(size/2 + actualPos + size/50, size/2 + size/50), cv::Scalar::all(150), size/200);
+    cv::circle(imgDistortedResizedRotated, cv::Point(size/2, size/2), (int)round(einsteinR/KL), cv::Scalar::all(100));
+    cv::circle(imgDistortedResizedRotated, cv::Point(size/2 + apparentX, size/2 - apparentY), size/50, cv::Scalar::all(150), size/200);
+    cv::circle(imgDistortedResizedRotated, cv::Point(size/2 + apparentX2, size/2 - apparentY2), size/50, cv::Scalar::all(150), size/200);
+    cv::rectangle(imgDistortedResizedRotated, cv::Point(size/2 + actualX - size/50, size/2 - actualY - size/50), cv::Point(size/2 + actualX + size/50, size/2 - actualY + size/50), cv::Scalar::all(150), size/200);
 
     cv::Mat matDst(cv::Size(4*size, size), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
@@ -139,7 +154,7 @@ static void update(int, void*) {
     matRoi = matDst(cv::Rect(2*size, size/2 - sizeAtLens/2, sizeAtLens, sizeAtLens));
     imgDistorted.copyTo(matRoi);
     matRoi = matDst(cv::Rect(3*size, 0, size, size));
-    imgDistortedResized.copyTo(matRoi);
+    imgDistortedResizedRotated.copyTo(matRoi);
     cv::imshow("Window", matDst);
 }
 
@@ -150,7 +165,8 @@ int main()
     cv::createTrackbar("Einstein Radius:", "Window", &einsteinR, size / 4, update);
     cv::createTrackbar("Source Size        :", "Window", &sourceSize, size / 4, update);
     cv::createTrackbar("Lens dist %        :", "Window", &KL_percent, 100, update);
-    cv::createTrackbar("Actual Pos    :", "Window", &xPos, size, update);
+    cv::createTrackbar("x Pos    :", "Window", &xPosSlider, size, update);
+    cv::createTrackbar("y Pos    :", "Window", &yPosSlider, size, update);
 
     bool running = true;
     while (running) {
