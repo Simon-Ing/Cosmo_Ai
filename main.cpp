@@ -24,11 +24,11 @@ void refLines(cv::Mat& target) {
 }
 
 
-void drawSource(cv::Mat& img, int& pos) {
+void drawSource(cv::Mat& img, int xPos, int yPos) {
 	for (int row = 0; row < img.rows; row++) {
 		for (int col = 0; col < img.cols; col++) {
-			double x = 1.0 * (col - pos - img.cols/2.0) / sourceSize;
-			double y = (size - 1.0 * (row + size / 2.0)) / sourceSize;
+			double x = 1.0 * (col - xPos - img.cols/2.0) / sourceSize;
+			double y = (size - 1.0 * (row + yPos + size / 2.0)) / sourceSize;
 			img.at<uchar>(row, col) = (uchar)round(255 * exp(-x * x - y * y));
 		}
 	}
@@ -100,7 +100,7 @@ static void update(int, void*) {
 
 	// make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
 	cv::Mat imgApparent(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgApparent, apparentPos);
+    drawSource(imgApparent, apparentPos, 0);
 
 	// Make empty matrix to draw the distorted image to
 	cv::Mat imgDistorted(sizeAtLens, sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
@@ -109,10 +109,6 @@ static void update(int, void*) {
 //	parallel(R, apparentPos, imgApparent, imgDistorted);
 
     distort(0, sizeAtLens, R, apparentPos, imgApparent, imgDistorted, KL);
-
-    // make an image with light source at ACTUAL position
-	cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgActual, actualPos);
 
     //Make a scaled version of the distorted image
     cv::Mat imgDistortedResized;
@@ -131,6 +127,10 @@ static void update(int, void*) {
     int apparentY = (int)round(apparentPos*sin(phi));
     int apparentX2 = (int)round(apparentPos2*cos(phi));
     int apparentY2 = (int)round(apparentPos2*sin(phi));
+
+    // make an image with light source at ACTUAL position
+    cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    drawSource(imgActual, actualX, actualY);
 
     cv::putText(imgActual, "Actual position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
     cv::putText(imgApparentDisplay, "Apparent position", cv::Point(10,30), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
