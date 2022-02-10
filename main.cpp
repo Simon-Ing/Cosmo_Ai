@@ -132,15 +132,14 @@ static void update(int, void*) {
 
     cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
 
-
     int displaySize = 600;
 
     refLines(imgActual);
     refLines(imgDistortedDisplay);
     cv::circle(imgDistortedDisplay, cv::Point(size/2, size/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX, size/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_DIAMOND, displaySize/30, displaySize/300);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX2, size/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_DIAMOND, displaySize/30, displaySize/300);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + actualX, size/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_DIAMOND, displaySize/30, displaySize/300);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX, size/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX2, size/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + actualX, size/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
     cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
     cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
 
@@ -150,23 +149,23 @@ static void update(int, void*) {
     imgActual.copyTo(matRoi);
     matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
     imgDistortedDisplay.copyTo(matRoi);
-    cv::imshow("Window", matDst);
+    cv::imshow("GL Simulator", matDst);
 }
 
 int main()
 {
     // Make the user interface and specify the function to be called when moving the sliders: update()
-    cv::namedWindow("Window", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Einstein radius:", "Window", &einsteinR, size / 4, update);
-    cv::createTrackbar("Source sigma   :", "Window", &sigma, size / 4, update);
-    cv::createTrackbar("Lens dist %    :", "Window", &KL_percent, 100, update);
-    cv::createTrackbar("X position     :", "Window", &xPosSlider, size, update);
-    cv::createTrackbar("Y position     :", "Window", &yPosSlider, size, update);
+    cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
+    cv::createTrackbar("Einstein radius:", "GL Simulator", &einsteinR, size / 4, update);
+    cv::createTrackbar("Source sigma   :", "GL Simulator", &sigma, size / 4, update);
+    cv::createTrackbar("Lens dist %    :", "GL Simulator", &KL_percent, 100, update);
+    cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, update);
+    cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, update);
 
     bool running = true;
     while (running) {
         int k = cv::waitKey(30);
-        if ((cv::getWindowProperty("Window", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
+        if ((cv::getWindowProperty("GL Simulator", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
             running = false;
         }
     }
