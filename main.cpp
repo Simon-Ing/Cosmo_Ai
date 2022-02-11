@@ -2,8 +2,8 @@
 #include <thread>
 #include <random>
 #include <string>
-#define _USE_MATH_DEFINES // for C++
-#include <math.h>
+#include <cmath>
+#define PI 3.14159265358979323846
 
 int size = 600;
 int sigma = size / 20;
@@ -88,12 +88,16 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 // This function is called each time a slider is updated
 static void update(int, void*) {
 
+    //set lower bound on lens distance
+    KL_percent = std::max(KL_percent, 30);
+    double KL = KL_percent/100.0;
+    cv::setTrackbarPos("Lens dist %    :", "GL Simulator", KL_percent);
+
     int xPos = xPosSlider - size/2;
     int yPos = yPosSlider - size/2;
     double phi = atan2(yPos, xPos);
 
     int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
-    double KL = std::max(KL_percent/100.0, 0.01);
     int sizeAtLens = (int)round(KL*size);
 	int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
@@ -114,7 +118,7 @@ static void update(int, void*) {
     // make a scaled, rotated and cropped version of the distorted image
     cv::Mat imgDistortedDisplay;
     cv::resize(imgDistorted, imgDistortedDisplay, cv::Size(2*size, size));
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/3.145, 1);
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
     cv::warpAffine(imgDistortedDisplay, imgDistortedDisplay, rot, cv::Size(2*size, size));
     imgDistortedDisplay =  imgDistortedDisplay(cv::Rect(size/2, 0, size, size));
     cv::cvtColor(imgDistortedDisplay, imgDistortedDisplay, cv::COLOR_GRAY2BGR);
@@ -156,9 +160,9 @@ int main()
 {
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Einstein radius:", "GL Simulator", &einsteinR, size / 4, update);
-    cv::createTrackbar("Source sigma   :", "GL Simulator", &sigma, size / 4, update);
     cv::createTrackbar("Lens dist %    :", "GL Simulator", &KL_percent, 100, update);
+    cv::createTrackbar("Einstein radius:", "GL Simulator", &einsteinR, size / 10, update);
+    cv::createTrackbar("Source sigma   :", "GL Simulator", &sigma, size / 10, update);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, update);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, update);
 
