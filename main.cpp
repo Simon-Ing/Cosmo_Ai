@@ -26,8 +26,8 @@ void refLines(cv::Mat& target) {
 }
 
 
-void drawSource(cv::Mat& img, int xPos, int yPos) {
-	for (int row = 0; row < img.rows; row++) {
+void drawSource(int begin, int end, cv::Mat& img, int xPos, int yPos) {
+	for (int row = begin; row < end; row++) {
 		for (int col = 0; col < img.cols; col++) {
 			int x = col - xPos - img.cols/2;
 			int y = row + yPos - img.rows/2;
@@ -37,6 +37,19 @@ void drawSource(cv::Mat& img, int xPos, int yPos) {
 	}
 }
 
+void drawParallel(cv::Mat& img, int xPos, int yPos){
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads_vec;
+    for (int k = 0; k < num_threads; k++) {
+        unsigned int thread_begin = (img.rows / num_threads) * k;
+        unsigned int thread_end = (img.rows / num_threads) * (k + 1);
+        std::thread t(drawSource, thread_begin, thread_end, std::ref(img), xPos, yPos);
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
 
 // Distort the image
 void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted, double KL) {
@@ -70,20 +83,20 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 	}
 }
 
-//// Split the image into (number of threads available) pieces and distort the pieces in parallel
-//static void parallel(int R, int apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted) {
-//	unsigned int num_threads = std::thread::hardware_concurrency();
-//	std::vector<std::thread> threads_vec;
-//	for (int k = 0; k < num_threads; k++) {
-//		unsigned int thread_begin = (imgApparent.rows / num_threads) * k;
-//		unsigned int thread_end = (imgApparent.rows / num_threads) * (k + 1);
-//		std::thread t(distort, thread_begin, thread_end, R, apparentPos, imgApparent, std::ref(imgDistorted));
-//		threads_vec.push_back(std::move(t));
-//	}
-//	for (auto& thread : threads_vec) {
-//		thread.join();
-//	}
-//}
+// Split the image into (number of threads available) pieces and distort the pieces in parallel
+static void parallel(int R, int apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted, double KL) {
+	unsigned int num_threads = std::thread::hardware_concurrency();
+	std::vector<std::thread> threads_vec;
+	for (int k = 0; k < num_threads; k++) {
+		unsigned int thread_begin = (imgDistorted.rows / num_threads) * k;
+		unsigned int thread_end = (imgDistorted.rows / num_threads) * (k + 1);
+		std::thread t(distort, thread_begin, thread_end, R, apparentPos, imgApparent, std::ref(imgDistorted), KL);
+		threads_vec.push_back(std::move(t));
+	}
+	for (auto& thread : threads_vec) {
+		thread.join();
+	}
+}
 
 // This function is called each time a slider is updated
 static void update(int, void*) {
@@ -105,15 +118,13 @@ static void update(int, void*) {
 
 	// make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
 	cv::Mat imgApparent(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgApparent, apparentPos, 0);
+    drawParallel(imgApparent, apparentPos, 0);
 
 	// Make empty matrix to draw the distorted image to
 	cv::Mat imgDistorted(sizeAtLens, 2*sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run distortion in parallel
-//	parallel(R, apparentPos, imgApparent, imgDistorted);
-
-    distort(0, sizeAtLens, R, apparentPos, imgApparent, imgDistorted, KL);
+	parallel(R, apparentPos, imgApparent, imgDistorted, KL);
 
     // make a scaled, rotated and cropped version of the distorted image
     cv::Mat imgDistortedDisplay;
@@ -132,7 +143,7 @@ static void update(int, void*) {
 
     // make an image with light source at ACTUAL position
     cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgActual, actualX, actualY);
+    drawParallel(imgActual, actualX, actualY);
 
     cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
 
@@ -141,12 +152,11 @@ static void update(int, void*) {
     refLines(imgActual);
     refLines(imgDistortedDisplay);
     cv::circle(imgDistortedDisplay, cv::Point(size/2, size/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX, size/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX2, size/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + actualX, size/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX, size/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size/30);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + apparentX2, size/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size/30);
+    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + actualX, size/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size/30);
     cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
     cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
-
 
     cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
@@ -154,6 +164,7 @@ static void update(int, void*) {
     matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
     imgDistortedDisplay.copyTo(matRoi);
     cv::imshow("GL Simulator", matDst);
+
 }
 
 int main()
@@ -168,7 +179,7 @@ int main()
 
     bool running = true;
     while (running) {
-        int k = cv::waitKey(30);
+        int k = cv::waitKey(1);
         if ((cv::getWindowProperty("GL Simulator", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
             running = false;
         }
