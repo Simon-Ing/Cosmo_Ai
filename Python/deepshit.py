@@ -20,7 +20,7 @@ class ConvNet(nn.Module):
         self.conv4 = nn.Conv2d(10, 10, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
         self.fc1 = nn.Linear(40, 12)
-        self.fc2 = nn.Linear(12, 3)
+        self.fc2 = nn.Linear(12, 5)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -88,7 +88,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
             os.system(f'rm -r {folder}')
             os.system(f'mkdir {folder}')
             os.system(f'mkdir {folder}/images')
-            os.system('./Data ' + str(n_samples) + " " + str(size) + " " + str(folder))
+            os.system('./new ' + str(n_samples) + " " + str(size) + " " + str(folder))
             print("Done generating, start loading")
 
     dataset = CosmoDatasetPng(str(folder))
@@ -117,10 +117,9 @@ def test_network(loader, model_, criterion_, device, print_results=False):
 
 def print_images(images, params):
     for i, img in enumerate(images):
-        image = images[i].numpy().reshape(28, 28, 1)
+        image = images[i].numpy().reshape(images[i].shape[1], images[i].shape[2], 1)
         image = cv2.resize(image, (400, 400))
-        image = cv2.putText(image, str(params[i]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
+        image = cv2.putText(image, f' dist: {str(params[i][0].item())} ein: {str(params[i][1].item())} sigma: {str(params[i][2].item())} x: {str(params[i][3].item())} y: {str(params[i][4].item())}', (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.imshow("img", image)
         cv2.waitKey(0)
 
@@ -129,11 +128,12 @@ class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
         if platform.system() == 'Windows':
-            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "\\images\\")
-                                        .rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
+                root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+
         else:
-            self.targets = torch.tensor([[int(a), int(b), int(c)] for (a, b, c) in [t[0].lstrip(root + "/images/")
-                                        .rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
+                root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
     def __getitem__(self, item):
         path, _ = self.samples[item]

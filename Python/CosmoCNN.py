@@ -5,12 +5,12 @@ import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
 
 # Training parameters
-num_epochs = 20
-batch_size = 50
-learning_rate = 0.0002
+num_epochs = 10
+batch_size = 100
+learning_rate = 0.001
 
-n_train_samples = 200000
-n_test_samples = 2000
+n_train_samples = 1000
+n_test_samples = 100
 img_size = 400
 
 # set to true when you want new data points
@@ -67,7 +67,7 @@ except KeyboardInterrupt:
 
 
 # Test network after training
-loss = test_network(test_loader, model, criterion, device, print_results=False)
+loss = test_network(test_loader, model, criterion, device, print_results=True)
 message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\nlearning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}'
 
 print(message)
