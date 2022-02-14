@@ -52,6 +52,25 @@ class ConvNetNew(nn.Module):
         x = self.fc2(func.relu((self.fc1(x))))
         return x
 
+class ConvNet3(nn.Module):
+    def __init__(self):
+        super(ConvNet3, self).__init__()
+        self.conv1 = nn.Conv2d(1, 4, (5, 5))
+        self.conv2 = nn.Conv2d(4, 8, (5, 5))
+        self.conv3 = nn.Conv2d(8, 8, (5, 5))
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(32, 5)
+
+    def forward(self, x):
+        x = self.pool(func.relu(self.conv1(x)))
+        x = self.pool(func.relu(self.conv2(x)))
+        x = self.pool(func.relu(self.conv3(x)))
+        x = self.pool(func.relu(self.conv3(x)))
+        x = self.pool(func.relu(self.conv3(x)))
+        x = self.pool(func.relu(self.conv3(x))).view(-1, 32)
+        # print(x.shape)
+        x = self.fc1(x)
+        return x
 
 
 def cuda_if_available():

@@ -20,7 +20,7 @@ gen_new_test = False
 device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
-model = ConvNetNew().to(device)
+model = ConvNet3().to(device)
 load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
