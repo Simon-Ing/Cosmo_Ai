@@ -111,7 +111,7 @@ def test_network(loader, model_, criterion_, device, print_results=False):
                 for i, param in enumerate(params):
                     niceoutput = [round(n, 4) for n in output[i].tolist()]
                     niceparam = [round(n, 4) for n in param.tolist()]
-                    print(f'Correct: {niceparam},\t\tOutput: {niceoutput}')
+                    print(f"{f'Correct: {niceparam}' : <50} {f'Output: {niceoutput}' : ^50}")
         return total_loss / n_batches
 
 
@@ -149,12 +149,6 @@ def send_email(receiver_email, message):
     sender_email = "simon.ing.dev@gmail.com"  # Enter your address
     password = "developer69"
     message = "Subject: Training finished\n\n" + message
-
-    message2 = """\
-    Subject: Hi there
-
-    This message is sent from Python."""
-
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)

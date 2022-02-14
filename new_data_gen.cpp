@@ -166,5 +166,8 @@ int main(int, char *argv[]) {
             update(0, nullptr);
             parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider});
         }
+        if (parameters.size() % (DATAPOINTS_TO_GENERATE/10) == 0){
+            std::cout << " Datapoints generated: " << parameters.size() << std::endl;
+        }
     }
 }

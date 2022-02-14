@@ -5,12 +5,12 @@ import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
 
 # Training parameters
-num_epochs = 10
-batch_size = 100
+num_epochs = 100
+batch_size = 400
 learning_rate = 0.001
 
-n_train_samples = 1000
-n_test_samples = 100
+n_train_samples = 100000
+n_test_samples = 1000
 img_size = 400
 
 # set to true when you want new data points
@@ -64,6 +64,8 @@ try:
 
 except KeyboardInterrupt:
     print("Training aborted by keyboard interrupt.")
+except TypeError:
+    print("Training aborted by keyboard interrupt.")
 
 
 # Test network after training
@@ -73,7 +75,7 @@ message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\nlearni
 print(message)
 
 
-send_email('simon.ing.89@gmail.com', message)
+# send_email('simon.ing.89@gmail.com', message)
 
 
 # Save your model if you want to
