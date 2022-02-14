@@ -11,6 +11,21 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+            "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+
+conan_cmake_run(REQUIRES
+        opencv/4.5.3
+        nlohmann_json/3.10.5
+        BASIC_SETUP)
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
@@ -44,7 +59,8 @@ else()
     endif()
 endif()
 
-target_link_libraries(CosmoGUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(CosmoGUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+    ${CONAN_LIBS})
 
 set_target_properties(CosmoGUI PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
