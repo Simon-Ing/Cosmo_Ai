@@ -6,6 +6,7 @@
 #include <string>
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
+#include<QDebug>
 
 
 bool grid = false;
@@ -46,10 +47,22 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     connect(ui->ySpinbox, SIGNAL(valueChanged(int)), ui->ySlider, SLOT(setValue(int)));
     connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
 
-
 }
+
 
 CosmoGUI::~CosmoGUI()
 {
+    getVariableValues();
     delete ui;
+
 }
+
+void CosmoGUI::getVariableValues(){
+    einsteinR = ui->einsteinSpinbox->value();
+    srcSize = ui->srcSizeSpinbox->value();
+    lensDist = ui->lensDistSpinbox->value();
+    xPos = ui->xSpinbox->value();
+    yPos = ui->ySpinbox->value();
+    qDebug() << einsteinR << srcSize << lensDist << xPos << yPos;
+}
+

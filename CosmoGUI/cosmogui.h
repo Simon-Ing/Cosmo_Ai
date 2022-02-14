@@ -17,5 +17,6 @@ public:
 
 private:
     Ui::CosmoGUI *ui;
+    void getVariableValues();
 };
 #endif // COSMOGUI_H
