@@ -5,7 +5,7 @@
 #include <cmath>
 #define PI 3.14159265358979323846
 
-int size = 256;
+int size = 600;
 int sigma = size / 20;
 int einsteinR = size / 20;
 int xPosSlider = size/2;
@@ -26,18 +26,18 @@ void refLines(cv::Mat& target) {
 }
 
 
-void drawSource(int begin, int end, cv::Mat& img, int xPos, int yPos) {
+void drawSource(int begin, int end, cv::Mat& img, double xPos, double yPos) {
 	for (int row = begin; row < end; row++) {
 		for (int col = 0; col < img.cols; col++) {
-			int x = col - xPos - img.cols/2;
-			int y = row + yPos - img.rows/2;
+			double x = col - xPos - img.cols/2.0;
+			double y = row + yPos - img.rows/2.0;
             auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0*sigma*sigma)));
 			img.at<uchar>(row, col) = value;
 		}
 	}
 }
 
-void drawParallel(cv::Mat& img, int xPos, int yPos){
+void drawParallel(cv::Mat& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
@@ -52,14 +52,14 @@ void drawParallel(cv::Mat& img, int xPos, int yPos){
 }
 
 // Distort the image
-void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted, double KL) {
+void distort(int begin, int end, double R, double apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted, double KL) {
 	// Evaluate each point in imgDistorted plane ~ lens plane
 	for (int row = begin; row < end; row++) {
 		for (int col = 0; col <= imgDistorted.cols; col++) {
 
 			// Set coordinate system with origin at x=R
-            int x = col - R - imgDistorted.cols/2;
-			int y = imgDistorted.rows/2 - row;
+            double x = (col - apparentPos - imgDistorted.cols/2.0) * KL;
+			double y = (imgDistorted.rows/2.0 - row) * KL;
 
 			// Calculate distance and angle of the point evaluated relative to center of lens (origin)
 			double r = sqrt(x*x + y*y);
@@ -71,8 +71,8 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 			double y_ = (y - frac * sin(theta)) / KL;
 
             // Translate to array index
-			int row_ = imgApparent.rows / 2 - (int)round(y_);
-			int col_ = apparentPos + imgApparent.cols/2 + (int)round(x_);
+			int row_ = (int)round(imgApparent.rows / 2.0 - y_);
+			int col_ = (int)round(apparentPos + imgApparent.cols/2.0 + x_);
 
 
 			// If (x', y') within source, copy value to imgDistorted
@@ -84,7 +84,7 @@ void distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv
 }
 
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
-static void parallel(int R, int apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted, double KL) {
+static void parallel(double R, double apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted, double KL) {
 	unsigned int num_threads = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads_vec;
 	for (int k = 0; k < num_threads; k++) {
@@ -106,22 +106,21 @@ static void update(int, void*) {
     double KL = KL_percent/100.0;
     cv::setTrackbarPos("Lens dist %    :", "GL Simulator", KL_percent);
 
-    int xPos = xPosSlider - size/2;
-    int yPos = yPosSlider - size/2;
+    double xPos = xPosSlider - size/2.0;
+    double yPos = yPosSlider - size/2.0;
     double phi = atan2(yPos, xPos);
 
-    int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
-    int sizeAtLens = (int)round(KL*size);
-	int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    int R = (int)round(apparentPos * KL);
+    double actualPos = sqrt(xPos*xPos + yPos*yPos);
+	double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
+    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+    double R = apparentPos * KL;
 
 	// make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
 	cv::Mat imgApparent(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
     drawParallel(imgApparent, apparentPos, 0);
 
 	// Make empty matrix to draw the distorted image to
-	cv::Mat imgDistorted(sizeAtLens, 2*sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
+	cv::Mat imgDistorted(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
 
     // Run distortion in parallel
 	parallel(R, apparentPos, imgApparent, imgDistorted, KL);
@@ -163,6 +162,7 @@ static void update(int, void*) {
     imgActual.copyTo(matRoi);
     matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
     imgDistortedDisplay.copyTo(matRoi);
+
     cv::imshow("GL Simulator", matDst);
 
 }
