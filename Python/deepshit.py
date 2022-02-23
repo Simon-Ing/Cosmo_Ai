@@ -52,6 +52,7 @@ class ConvNetNew(nn.Module):
         x = self.fc2(func.relu((self.fc1(x))))
         return x
 
+
 class ConvNet3(nn.Module):
     def __init__(self):
         super(ConvNet3, self).__init__()

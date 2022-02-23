@@ -406,3 +406,4 @@ FodyWeavers.xsd
 /.idea/CosmoAi.iml
 /Python/test/
 /Python/train/
+/Python/Models/

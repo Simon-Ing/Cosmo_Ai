@@ -13,7 +13,7 @@
 using namespace nlohmann;
 
 int size = 0;  // Size of source and lens imgDistorted
-unsigned long sourceSize = size / 10;   // size of source "Blob"
+unsigned long sigma = size / 10;   // size of source "Blob"
 unsigned long einsteinR = size / 10;
 unsigned long xPos = 0;
 int actualPos;
@@ -33,8 +33,8 @@ std::fstream fout;
 void drawGaussian(cv::Mat& img, int& pos) {
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
-            double x = (1.0 * (col - (pos + size / 2.0))) / sourceSize;
-            double y = (size - 1.0 * (row + size / 2.0)) / sourceSize;
+            double x = (1.0 * (col - (pos + size / 2.0))) / sigma;
+            double y = (size - 1.0 * (row + size / 2.0)) / sigma;
 
             auto val = (uchar)std::round(255 * std::exp(-x * x - y * y));
             img.at<uchar>(row, col) = val;
@@ -78,7 +78,7 @@ void writeToPngFiles() {
     std::ostringstream filename_path;
     std::ostringstream filename;
 
-    filename << einsteinR << "," << sourceSize << "," << xPos << ".png";
+    filename << einsteinR << "," << sigma << "," << xPos << ".png";
     filename_path << name + "/images/" + filename.str();
     iteration_counter++;
     cv::imwrite(filename_path.str(), imgDistorted);
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
     // Generate dataset:
 
     for (einsteinR = size * 0.0025; einsteinR <= size * 0.125; einsteinR++) {
-        for (sourceSize = size * 0.0025; sourceSize <= size * 0.125; sourceSize++) {
+        for (sigma = size * 0.0025; sigma <= size * 0.125; sigma++) {
             for (xPos = size * 0.25; xPos <= size * 0.75; xPos++) {
                 update(0, nullptr);
             }
@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 //    for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
 //        // Randomizes values for eatch iteration
 //        einsteinR = rand_einsteinR(rng);
-//        sourceSize = rand_source_size(rng);
+//        sigma = rand_source_size(rng);
 //        xPos = rand_xSlider(rng);
 //        update(0, nullptr);
 //    }

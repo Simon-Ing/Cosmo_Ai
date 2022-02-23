@@ -5,7 +5,7 @@
 #include <cmath>
 #define PI 3.14159265358979323846
 
-int size = 600;
+int size = 256;
 int sigma = size / 20;
 int einsteinR = size / 20;
 int xPosSlider = size/2;
