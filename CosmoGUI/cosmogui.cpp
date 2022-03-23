@@ -8,8 +8,8 @@
 #include <math.h>
 #include <QtCore>
 
-bool grid = false;
-bool markers = false;
+bool grid = true;
+bool markers = true;
 int wSize = 600;
 int einsteinR = wSize/20;
 int srcSize = wSize/20;
@@ -30,7 +30,7 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     connect(Timer, SIGNAL(timeout()), this, SLOT(updateValues()));
     connect(Timer, SIGNAL(timeout()), this, SLOT(updateImg()));
 
-    // Set max/min values for sliders and spinboxes
+    // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(wSize/4);
     ui->einsteinSpinbox->setMaximum(wSize/4);
     ui->srcSizeSlider->setMaximum(wSize/4);
@@ -42,7 +42,7 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     ui->ySlider->setMaximum(wSize);
     ui->ySpinbox->setMaximum(wSize);
 
-    // Set initial values for sliders and spinboxes
+    // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
     ui->einsteinSlider->setSliderPosition(einsteinR);
     ui->srcSizeSpinbox->setValue(sigma);
@@ -53,6 +53,8 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     ui->xSlider->setSliderPosition(xPosSlider);
     ui->ySpinbox->setValue(yPosSlider);
     ui->ySlider->setSliderPosition(yPosSlider);
+    ui->gridBox->setChecked(true);
+    ui->markerBox->setChecked(true);
 
 
     // Connect sliders and spinboxes
@@ -168,12 +170,18 @@ void CosmoGUI::updateImg() {
 
     int displaySize = 600;
 
-    refLines(imgActual);
-    refLines(imgDistortedDisplay);
-    cv::circle(imgDistortedDisplay, cv::Point(wSize/2, wSize/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
-    cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
+    if (grid == true) {
+        refLines(imgActual);
+        refLines(imgDistortedDisplay);
+    }
+
+    if (markers == true) {
+        cv::circle(imgDistortedDisplay, cv::Point(wSize/2, wSize/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
+        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
+    }
+
     cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
     cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
 
@@ -197,6 +205,8 @@ void CosmoGUI::updateValues() {
     lensDist = ui->lensDistSpinbox->value();
     xPosSlider = ui->xSpinbox->value();
     yPosSlider = ui->ySpinbox->value();
+    grid = ui->gridBox->isChecked();
+    markers = ui->markerBox->isChecked();
 }
 
 CosmoGUI::~CosmoGUI()
