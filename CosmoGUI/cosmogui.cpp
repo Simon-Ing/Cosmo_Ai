@@ -42,6 +42,9 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     ui->ySlider->setMaximum(wSize);
     ui->ySpinbox->setMaximum(wSize);
 
+//    ui->einsteinSlider->setMinimum(1);
+//    ui->einsteinSpinbox->setMinimum(1);
+
     // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
     ui->einsteinSlider->setSliderPosition(einsteinR);
@@ -125,76 +128,80 @@ void CosmoGUI::distort(int begin, int end, int R, int apparentPos, cv::Mat imgAp
 }
 
 void CosmoGUI::updateImg() {
-    int xPos = xPosSlider - wSize/2;
-    int yPos = yPosSlider - wSize/2;
-    double phi = atan2(yPos, xPos);
 
-    int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
-    double KL = std::max(lensDist/100.0, 0.01);
-    int sizeAtLens = (int)round(KL*wSize);
-    int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    int R = (int)round(apparentPos * KL);
+    try {
+        int xPos = xPosSlider - wSize/2;
+        int yPos = yPosSlider - wSize/2;
+        double phi = atan2(yPos, xPos);
 
-    // make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
-    cv::Mat imgApparent(wSize, 2*wSize, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgApparent, apparentPos, 0);
+        int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
+        double KL = std::max(lensDist/100.0, 0.01);
+        int sizeAtLens = (int)round(KL*wSize);
+        int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+        int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+        int R = (int)round(apparentPos * KL);
 
-    // Make empty matrix to draw the distorted image to
-    cv::Mat imgDistorted(sizeAtLens, 2*sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
+        // make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
+        cv::Mat imgApparent(wSize, 2*wSize, CV_8UC1, cv::Scalar(0, 0, 0));
+        drawSource(imgApparent, apparentPos, 0);
 
-    // Run distortion in parallel
+        // Make empty matrix to draw the distorted image to
+        cv::Mat imgDistorted(sizeAtLens, 2*sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
 
-    distort(0, sizeAtLens, R, apparentPos, imgApparent, imgDistorted, KL);
+        // Run distortion in parallel
 
-    // make a scaled, rotated and cropped version of the distorted image
-    cv::Mat imgDistortedDisplay;
-    cv::resize(imgDistorted, imgDistortedDisplay, cv::Size(2*wSize, wSize));
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(wSize, wSize/2), phi*180/3.145, 1);
-    cv::warpAffine(imgDistortedDisplay, imgDistortedDisplay, rot, cv::Size(2*wSize, wSize));
-    imgDistortedDisplay =  imgDistortedDisplay(cv::Rect(wSize/2, 0, wSize, wSize));
-    cv::cvtColor(imgDistortedDisplay, imgDistortedDisplay, cv::COLOR_GRAY2BGR);
+        distort(0, sizeAtLens, R, apparentPos, imgApparent, imgDistorted, KL);
 
-    int actualX = (int)round(actualPos*cos(phi));
-    int actualY = (int)round(actualPos*sin(phi));
-    int apparentX = (int)round(apparentPos*cos(phi));
-    int apparentY = (int)round(apparentPos*sin(phi));
-    int apparentX2 = (int)round(apparentPos2*cos(phi));
-    int apparentY2 = (int)round(apparentPos2*sin(phi));
+        // make a scaled, rotated and cropped version of the distorted image
+        cv::Mat imgDistortedDisplay;
+        cv::resize(imgDistorted, imgDistortedDisplay, cv::Size(2*wSize, wSize));
+        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(wSize, wSize/2), phi*180/3.145, 1);
+        cv::warpAffine(imgDistortedDisplay, imgDistortedDisplay, rot, cv::Size(2*wSize, wSize));
+        imgDistortedDisplay =  imgDistortedDisplay(cv::Rect(wSize/2, 0, wSize, wSize));
+        cv::cvtColor(imgDistortedDisplay, imgDistortedDisplay, cv::COLOR_GRAY2BGR);
 
-    // make an image with light source at ACTUAL position
-    cv::Mat imgActual(wSize, wSize, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawSource(imgActual, actualX, actualY);
+        int actualX = (int)round(actualPos*cos(phi));
+        int actualY = (int)round(actualPos*sin(phi));
+        int apparentX = (int)round(apparentPos*cos(phi));
+        int apparentY = (int)round(apparentPos*sin(phi));
+        int apparentX2 = (int)round(apparentPos2*cos(phi));
+        int apparentY2 = (int)round(apparentPos2*sin(phi));
 
-    cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
+        // make an image with light source at ACTUAL position
+        cv::Mat imgActual(wSize, wSize, CV_8UC1, cv::Scalar(0, 0, 0));
+        drawSource(imgActual, actualX, actualY);
 
-    int displaySize = 600;
+        cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
 
-    if (grid == true) {
-        refLines(imgActual);
-        refLines(imgDistortedDisplay);
+        int displaySize = 600;
+
+        if (grid == true) {
+            refLines(imgActual);
+            refLines(imgDistortedDisplay);
+        }
+
+        if (markers == true) {
+            cv::circle(imgDistortedDisplay, cv::Point(wSize/2, wSize/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
+        }
+
+        cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
+        cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
+
+
+        cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
+        cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
+        imgActual.copyTo(matRoi);
+        matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
+        imgDistortedDisplay.copyTo(matRoi);
+
+        // Convert opencv Mat to QImage and display on label
+        QImage imdisplay((uchar*)matDst.data, matDst.cols, matDst.rows, matDst.step, QImage::Format_RGB888);
+        ui->imgLabel->setPixmap(QPixmap::fromImage(imdisplay));
+    } catch (...) {
     }
-
-    if (markers == true) {
-        cv::circle(imgDistortedDisplay, cv::Point(wSize/2, wSize/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
-        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-        cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
-    }
-
-    cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
-    cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
-
-
-    cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
-    cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
-    imgActual.copyTo(matRoi);
-    matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
-    imgDistortedDisplay.copyTo(matRoi);
-
-    // Convert opencv Mat to QImage and display on label
-    QImage imdisplay((uchar*)matDst.data, matDst.cols, matDst.rows, matDst.step, QImage::Format_RGB888);
-    ui->imgLabel->setPixmap(QPixmap::fromImage(imdisplay));
 
 }
 
