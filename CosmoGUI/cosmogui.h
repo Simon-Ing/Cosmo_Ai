@@ -26,8 +26,10 @@ private:
 
 public slots:
     void refLines(cv::Mat&);
-    void drawSource(cv::Mat&, int, int);
-    void distort(int, int, int, int, cv::Mat, cv::Mat&, double);
+    void drawSource(int, int, cv::Mat&, double, double);
+    void drawParallel(cv::Mat&, double, double);
+    void distort(int, int, double, double, cv::Mat, cv::Mat&, double);
+    void parallel(double, double, cv::Mat&, cv::Mat&, double);
     void updateImg();
     void updateValues();
 

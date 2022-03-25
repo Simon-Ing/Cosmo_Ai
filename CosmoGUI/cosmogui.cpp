@@ -6,14 +6,16 @@
 #include <string>
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
+#include <cmath>
 #include <QtCore>
+#define PI 3.14159265358979323846
 
 bool grid = true;
 bool markers = true;
 int wSize = 600;
 int einsteinR = wSize/20;
 int srcSize = wSize/20;
-int lensDist = 50;
+int KL_percent = 50;
 int xPosSlider = wSize/2;
 int yPosSlider = wSize/2;
 int sigma = srcSize;
@@ -50,8 +52,8 @@ CosmoGUI::CosmoGUI(QWidget *parent)
     ui->einsteinSlider->setSliderPosition(einsteinR);
     ui->srcSizeSpinbox->setValue(sigma);
     ui->srcSizeSlider->setSliderPosition(sigma);
-    ui->lensDistSpinbox->setValue(lensDist);
-    ui->lensDistSlider->setSliderPosition(lensDist);
+    ui->lensDistSpinbox->setValue(KL_percent);
+    ui->lensDistSlider->setSliderPosition(KL_percent);
     ui->xSpinbox->setValue(xPosSlider);
     ui->xSlider->setSliderPosition(xPosSlider);
     ui->ySpinbox->setValue(yPosSlider);
@@ -85,25 +87,40 @@ void CosmoGUI::refLines(cv::Mat& target){
     }
 }
 
-void CosmoGUI::drawSource(cv::Mat& img, int xPos, int yPos) {
-    for (int row = 0; row < img.rows; row++) {
+void CosmoGUI::drawSource(int begin, int end, cv::Mat& img, double xPos, double yPos) {
+    for (int row = begin; row < end; row++) {
         for (int col = 0; col < img.cols; col++) {
-            int x = col - xPos - img.cols/2;
-            int y = row + yPos - img.rows/2;
+            double x = col - xPos - img.cols/2.0;
+            double y = row + yPos - img.rows/2.0;
             auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0*sigma*sigma)));
             img.at<uchar>(row, col) = value;
         }
     }
 }
 
-void CosmoGUI::distort(int begin, int end, int R, int apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted, double KL) {
+void CosmoGUI::drawParallel(cv::Mat& img, double xPos, double yPos){
+
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads_vec;
+    for (int k = 0; k < num_threads; k++) {
+        unsigned int thread_begin = (img.rows / num_threads) * k;
+        unsigned int thread_end = (img.rows / num_threads) * (k + 1);
+        std::thread t(&CosmoGUI::drawSource, this, thread_begin, thread_end, std::ref(img), xPos, yPos);
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
+
+void CosmoGUI::distort(int begin, int end, double R, double apparentPos, cv::Mat imgApparent, cv::Mat& imgDistorted, double KL) {
     // Evaluate each point in imgDistorted plane ~ lens plane
     for (int row = begin; row < end; row++) {
         for (int col = 0; col <= imgDistorted.cols; col++) {
 
             // Set coordinate system with origin at x=R
-            int x = col - R - imgDistorted.cols/2;
-            int y = imgDistorted.rows/2 - row;
+            double x = (col - apparentPos - imgDistorted.cols/2.0) * KL;
+            double y = (imgDistorted.rows/2.0 - row) * KL;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x*x + y*y);
@@ -115,8 +132,8 @@ void CosmoGUI::distort(int begin, int end, int R, int apparentPos, cv::Mat imgAp
             double y_ = (y - frac * sin(theta)) / KL;
 
             // Translate to array index
-            int row_ = imgApparent.rows / 2 - (int)round(y_);
-            int col_ = apparentPos + imgApparent.cols/2 + (int)round(x_);
+            int row_ = (int)round(imgApparent.rows / 2.0 - y_);
+            int col_ = (int)round(apparentPos + imgApparent.cols/2.0 + x_);
 
 
             // If (x', y') within source, copy value to imgDistorted
@@ -127,35 +144,51 @@ void CosmoGUI::distort(int begin, int end, int R, int apparentPos, cv::Mat imgAp
     }
 }
 
-void CosmoGUI::updateImg() {
+// Split the image into (number of threads available) pieces and distort the pieces in parallel
+void CosmoGUI::parallel(double R, double apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted, double KL) {
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads_vec;
+    for (int k = 0; k < num_threads; k++) {
+        unsigned int thread_begin = (imgDistorted.rows / num_threads) * k;
+        unsigned int thread_end = (imgDistorted.rows / num_threads) * (k + 1);
+        std::thread t(&CosmoGUI::distort, this, thread_begin, thread_end, R, apparentPos, imgApparent, std::ref(imgDistorted), KL);
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
 
+void CosmoGUI::updateImg() {
     try {
-        int xPos = xPosSlider - wSize/2;
-        int yPos = yPosSlider - wSize/2;
+        //set lower bound on lens distance
+        KL_percent = std::max(KL_percent, 30);
+        double KL = KL_percent/100.0;
+        ui->lensDistSlider->setValue(KL_percent);
+
+        double xPos = xPosSlider - wSize/2.0;
+        double yPos = yPosSlider - wSize/2.0;
         double phi = atan2(yPos, xPos);
 
-        int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
-        double KL = std::max(lensDist/100.0, 0.01);
-        int sizeAtLens = (int)round(KL*wSize);
-        int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-        int apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-        int R = (int)round(apparentPos * KL);
+        double actualPos = sqrt(xPos*xPos + yPos*yPos);
+        double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
+        double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+        double R = apparentPos * KL;
 
         // make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
         cv::Mat imgApparent(wSize, 2*wSize, CV_8UC1, cv::Scalar(0, 0, 0));
-        drawSource(imgApparent, apparentPos, 0);
+        drawParallel(imgApparent, apparentPos, 0);
 
         // Make empty matrix to draw the distorted image to
-        cv::Mat imgDistorted(sizeAtLens, 2*sizeAtLens, CV_8UC1, cv::Scalar(0, 0, 0));
+        cv::Mat imgDistorted(wSize, 2*wSize, CV_8UC1, cv::Scalar(0, 0, 0));
 
         // Run distortion in parallel
-
-        distort(0, sizeAtLens, R, apparentPos, imgApparent, imgDistorted, KL);
+        parallel(R, apparentPos, imgApparent, imgDistorted, KL);
 
         // make a scaled, rotated and cropped version of the distorted image
         cv::Mat imgDistortedDisplay;
         cv::resize(imgDistorted, imgDistortedDisplay, cv::Size(2*wSize, wSize));
-        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(wSize, wSize/2), phi*180/3.145, 1);
+        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(wSize, wSize/2), phi*180/PI, 1);
         cv::warpAffine(imgDistortedDisplay, imgDistortedDisplay, rot, cv::Size(2*wSize, wSize));
         imgDistortedDisplay =  imgDistortedDisplay(cv::Rect(wSize/2, 0, wSize, wSize));
         cv::cvtColor(imgDistortedDisplay, imgDistortedDisplay, cv::COLOR_GRAY2BGR);
@@ -169,7 +202,7 @@ void CosmoGUI::updateImg() {
 
         // make an image with light source at ACTUAL position
         cv::Mat imgActual(wSize, wSize, CV_8UC1, cv::Scalar(0, 0, 0));
-        drawSource(imgActual, actualX, actualY);
+        drawParallel(imgActual, actualX, actualY);
 
         cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
 
@@ -182,14 +215,13 @@ void CosmoGUI::updateImg() {
 
         if (markers == true) {
             cv::circle(imgDistortedDisplay, cv::Point(wSize/2, wSize/2), (int)round(einsteinR/KL), cv::Scalar::all(60));
-            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, displaySize/30);
-            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, displaySize/30);
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX, wSize/2 - apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, wSize/30);
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + apparentX2, wSize/2 - apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, wSize/30);
+            cv::drawMarker(imgDistortedDisplay, cv::Point(wSize/2 + actualX, wSize/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, wSize/30);
         }
 
         cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
         cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
-
 
         cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
         cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
@@ -209,7 +241,7 @@ void CosmoGUI::updateValues() {
     // Set variables to current spinbox values
     einsteinR = ui->einsteinSpinbox->value();
     sigma = ui->srcSizeSpinbox->value();
-    lensDist = ui->lensDistSpinbox->value();
+    KL_percent = ui->lensDistSpinbox->value();
     xPosSlider = ui->xSpinbox->value();
     yPosSlider = ui->ySpinbox->value();
     grid = ui->gridBox->isChecked();
