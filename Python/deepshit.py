@@ -40,8 +40,8 @@ class ConvNetNew(nn.Module):
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 8, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(512, 50)
-        self.fc2 = nn.Linear(50, 5)
+        self.fc1 = nn.Linear(512, 264)
+        self.fc2 = nn.Linear(264, 4)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -60,7 +60,7 @@ class ConvNet3(nn.Module):
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 8, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(32, 5)
+        self.fc1 = nn.Linear(32, 4)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -121,7 +121,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
                 os.chdir('python')
             shutil.rmtree(folder)
             os.makedirs(f'{folder}/images')
-            os.system('Data.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
+            os.system('new.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
             print("Done generating, start loading")
     else:
         if gen_new:
@@ -169,11 +169,11 @@ class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
         if platform.system() == 'Windows':
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d)] for (a, b, c, d) in [t[0].lstrip(
                 root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
         else:
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d)] for (a, b, c, d) in [t[0].lstrip(
                 root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
     def __getitem__(self, item):

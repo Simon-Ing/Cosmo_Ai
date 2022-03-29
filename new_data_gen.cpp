@@ -95,7 +95,7 @@ void writeToPngFiles(cv::Mat& image) {
     std::ostringstream filename_path;
     std::ostringstream filename;
 
-    filename << KL_percent << "," << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
+    filename  << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), image);
 //    cv::imshow(filename_path.str(), image);
@@ -152,15 +152,15 @@ int main(int, char *argv[]) {
     std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(0, size);
     std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(0, size);
 
-    std::vector<std::vector<long>> parameters;
+    std::vector<std::vector<unsigned int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         // Randomizes values for eatch iteration
-        KL_percent = rand_lens_dist(rng);
+        KL_percent = 50; //rand_lens_dist(rng);
         einsteinR = rand_einsteinR(rng);
         sigma = rand_source_size(rng);
         xPosSlider = rand_xSlider(rng);
         yPosSlider = rand_xSlider(rng);
-        std::vector<long> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider};
+        std::vector<unsigned int> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider};
 
         if ( !std::count(parameters.begin(), parameters.end(), params) ) {
             update(0, nullptr);

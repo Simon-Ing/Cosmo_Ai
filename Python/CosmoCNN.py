@@ -5,26 +5,29 @@ import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
 
 # Training parameters
-num_epochs = 100
-batch_size = 400
-learning_rate = 0.001
+num_epochs = 200
+batch_size = 256
+learning_rate = 0.01
 
-n_train_samples = 10000
+n_train_samples = 20000
 n_test_samples = 100
 img_size = 400
 
 # set to true when you want new data points
-gen_new_train = True
-gen_new_test = True
+gen_new_train = 1
+gen_new_test = 1
 
 device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
-model = ConvNet3().to(device)
-load_model(model)  # Load a saved model if you want to
+model = ConvNetNew().to(device)
+#model = torch.hub.load('pytorch/vision:v0.10.0', 'inception_v3', pretrained=False)
+#model.eval()
+#load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=4, factor=1/2)
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=7, factor=0.1)
+
 
 # Load a dataset for training and one for verification
 train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
