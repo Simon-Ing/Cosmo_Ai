@@ -14,8 +14,8 @@ n_test_samples = 100
 img_size = 400
 
 # set to true when you want new data points
-gen_new_train = True
-gen_new_test = True
+gen_new_train = False
+gen_new_test = False
 
 device = cuda_if_available()  # Use cuda if available
 
