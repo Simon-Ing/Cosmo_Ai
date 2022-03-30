@@ -60,7 +60,7 @@ class ConvNet3(nn.Module):
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 8, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(32, 4)
+        self.fc1 = nn.LazyLinear(32, 4)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -94,6 +94,7 @@ class ProConvNet(nn.Module):
         x = func.max_pool2d(func.relu(self.conv3(x)), 2)
         x = func.max_pool2d(func.relu(self.conv4(x)), 2)
         x = func.max_pool2d(func.relu(self.conv4(x)), 2)
+        
         
         #print(x.shape)
         x = torch.flatten(x, 1) # flatten all dimensions except the batch dimension

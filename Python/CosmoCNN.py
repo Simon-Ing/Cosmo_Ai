@@ -3,14 +3,15 @@ from deepshit import *
 import time
 import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
+from torch.cuda.amp import autocast
 
 # Training parameters
 num_epochs = 100
 batch_size = 128
 learning_rate = 0.001
 
-n_train_samples = 10000
-n_test_samples = n_train_samples/5
+n_train_samples = 200000
+n_test_samples = 1000
 img_size = 512
 
 # set to true when you want new data points
@@ -26,7 +27,7 @@ model = AlexNet().to(device)
 #load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=10, factor=0.1)
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
 
 
 # Load a dataset for training and one for verification
@@ -43,6 +44,8 @@ timer = time.time()
 print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, \
         train samples: {n_train_samples} test samples: {n_test_samples} img size: {img_size}')
 
+scaler = torch.cuda.amp.GradScaler()
+
 # Training loop
 try:
     for epoch in tqdm(range(num_epochs), desc="Total"):
@@ -50,17 +53,18 @@ try:
             images = images.to(device)
             params = params.to(device)
 
+            optimizer.zero_grad()
             # print_images(images, params)  # print the images with parameters to make sure data is correct
 
             # Forward pass
-            # Runs the forward pass with autocasting.
             
-            output = model(images)
-            loss = criterion(output, params)
+            with autocast():
+                output = model(images)
+                loss = criterion(output, params)
             # Backward pass
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
 
         scheduler.step(loss)
         # Test network for each epoch

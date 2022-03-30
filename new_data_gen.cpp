@@ -97,7 +97,7 @@ void writeToPngFiles(cv::Mat& image) {
     std::ostringstream filename_path;
     std::ostringstream filename;
 
-    filename  << einsteinR << "," << sigma << "," << lens_angle << "," << sourceDistFromCenter << ".png";
+    filename  << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), image);
 //    cv::imshow(filename_path.str(), image);
@@ -162,18 +162,18 @@ int main(int, char *argv[]) {
         sigma = rand_source_size(rng);
         xPosSlider = rand_xSlider(rng);
         yPosSlider = rand_ySlider(rng);
-        // Calculate polar coords:
-        int xPos_centered = (int)xPosSlider - size / 2;
-        int yPos_centered = (int)yPosSlider - size / 2;
-        double lens_angle_rad = std::atan2(yPos_centered, xPos_centered);
-        lens_angle = lens_angle_rad * 180 / PI;
-        sourceDistFromCenter = sqrt(xPos_centered * xPos_centered + yPos_centered * yPos_centered);
+        //// Calculate polar coords:
+        //int xPos_centered = (int)xPosSlider - size / 2;
+        //int yPos_centered = (int)yPosSlider - size / 2;
+        //double lens_angle_rad = std::atan2(yPos_centered, xPos_centered);
+        //lens_angle = lens_angle_rad * 180 / PI;
+        //sourceDistFromCenter = sqrt(xPos_centered * xPos_centered + yPos_centered * yPos_centered);
                 
-        std::vector<int> params = {KL_percent, einsteinR, sigma, lens_angle, sourceDistFromCenter };
+        std::vector<int> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider };
 
         if ( !std::count(parameters.begin(), parameters.end(), params) ) {
             update(0, nullptr);
-            parameters.push_back({KL_percent, einsteinR, sigma, lens_angle, sourceDistFromCenter });
+            parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider });
         }
         else{
             i--;
