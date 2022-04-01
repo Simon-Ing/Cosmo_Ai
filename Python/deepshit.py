@@ -187,8 +187,8 @@ def dataset_from_png(n_samples, size, folder, gen_new):
         if gen_new:
             print(f"Started generating {folder} data")
             _, current_folder = os.path.split(os.getcwd())
-            if current_folder != "python":
-                os.chdir('python')
+            if current_folder != "Python":
+                os.chdir('Python')
             shutil.rmtree(folder)
             os.makedirs(f'{folder}/images')
             os.system('new.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
