@@ -10,21 +10,20 @@ num_epochs = 100
 batch_size = 128
 learning_rate = 0.001
 
-n_train_samples = 200000
-n_test_samples = 1000
+n_train_samples = 100
+n_test_samples = 100
 img_size = 512
 
 # set to true when you want new data points
-gen_new_train = 1
-gen_new_test = 1
+gen_new_train = True
+gen_new_test = True
+load_checkpoint = True
+checkpoint_path = "Models/autosave/autosave_epoch40"
 
 device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
 model = AlexNet().to(device)
-#model = torch.hub.load('pytorch/vision:v0.10.0', 'inception_v3', pretrained=False)
-#model.eval()
-#load_model(model)  # Load a saved model if you want to
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
@@ -35,6 +34,14 @@ train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folde
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test", gen_new=gen_new_test)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
+
+# Load from checkpoint if desired:
+if (load_checkpoint):
+    checkpoint = torch.load(checkpoint_path)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    epoch = checkpoint['epoch']
+    loss = checkpoint['loss']
         
 # Test network prior to training
 loss = test_network(test_loader, model, criterion, device)
@@ -70,6 +77,16 @@ try:
         # Test network for each epoch
         loss = test_network(test_loader, model, criterion, device, print_results=False)
         print(f"\nEpoch: {epoch+1}, Loss: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}, time: {time.time() - timer}\n")
+
+        # Save checpoint
+        if (epoch % 20 == 0) and (epoch > 0):
+            autosave_path = "Models/autosave/" + "autosave_epoch" + str(epoch)
+            torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': loss,
+            }, autosave_path)
 
 except KeyboardInterrupt:
     print("Training aborted by keyboard interrupt.")

@@ -132,7 +132,7 @@ class AlexNet(nn.Module):
             nn.Dropout(p=dropout),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
-            nn.Linear(4096, 4),
+            nn.Linear(4096, 5),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -169,6 +169,7 @@ def load_model(model):
             except IsADirectoryError:
                 print("You must enter a file name goddamnit!")
                 ans = ""
+
 
 
 def save_model(model):
@@ -238,11 +239,11 @@ class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
         if platform.system() == 'Windows':
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d)] for (a, b, c, d) in [t[0].lstrip(
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
                 root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
         else:
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d)] for (a, b, c, d) in [t[0].lstrip(
+            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
                 root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
 
     def __getitem__(self, item):

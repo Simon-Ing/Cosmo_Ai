@@ -97,7 +97,7 @@ void writeToPngFiles(cv::Mat& image) {
     std::ostringstream filename_path;
     std::ostringstream filename;
 
-    filename  << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
+    filename << KL_percent << "," << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), image);
 //    cv::imshow(filename_path.str(), image);
@@ -157,7 +157,7 @@ int main(int, char *argv[]) {
     std::vector<std::vector<int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         // Randomizes values for eatch iteration
-        KL_percent = 50; //rand_lens_dist(rng);
+        KL_percent = rand_lens_dist(rng);
         einsteinR = rand_einsteinR(rng);
         sigma = rand_source_size(rng);
         xPosSlider = rand_xSlider(rng);
