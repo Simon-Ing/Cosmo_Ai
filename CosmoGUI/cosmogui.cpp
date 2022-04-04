@@ -100,7 +100,7 @@ void CosmoGUI::drawSource(int begin, int end, cv::Mat& img, double xPos, double 
 
 void CosmoGUI::drawParallel(cv::Mat& img, double xPos, double yPos){
 
-    unsigned int num_threads = std::thread::hardware_concurrency();
+    unsigned int num_threads = std::thread::hardware_concurrency()/4;
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (img.rows / num_threads) * k;
@@ -146,7 +146,7 @@ void CosmoGUI::distort(int begin, int end, double R, double apparentPos, cv::Mat
 
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void CosmoGUI::parallel(double R, double apparentPos, cv::Mat& imgApparent, cv::Mat& imgDistorted, double KL) {
-    unsigned int num_threads = std::thread::hardware_concurrency();
+    unsigned int num_threads = std::thread::hardware_concurrency()/4;
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (imgDistorted.rows / num_threads) * k;

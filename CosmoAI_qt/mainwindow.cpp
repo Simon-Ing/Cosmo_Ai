@@ -78,10 +78,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
 }
 
-void MainWindow::drawSource(QImage& img, double xPos, double yPos) {
+void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double yPos) {
     int rows = img.height();
     int cols = img.width();
-    for (int row = 0; row < rows; row++) {
+    for (int row = begin; row < end; row++) {
         for (int col = 0; col < cols; col++) {
             double x = col - xPos - cols/2;
             double y = -yPos - row + rows/2;
@@ -91,11 +91,11 @@ void MainWindow::drawSource(QImage& img, double xPos, double yPos) {
     }
 }
 
-void MainWindow::distort(QImage imgApparent, QImage& imgDistorted, double R, double apparentPos, double KL) {
+void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDistorted, double R, double apparentPos, double KL) {
     int rows = imgDistorted.height();
     int cols = imgDistorted.width();
     // Evaluate each point in imgDistorted plane ~ lens plane
-    for (int row = 0; row < rows; row++) {
+    for (int row = begin; row < end; row++) {
         for (int col = 0; col <= cols; col++) { // <= ???????????????????????????????????????
 
             // Set coordinate system with origin at x=R
@@ -124,6 +124,49 @@ void MainWindow::distort(QImage imgApparent, QImage& imgDistorted, double R, dou
     }
 }
 
+void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
+    unsigned int num_threads = std::thread::hardware_concurrency();
+
+    if (num_threads % 2 != 0) {
+        num_threads = 1;
+    } else {
+        num_threads = 1;
+    }
+
+    std::vector<std::thread> threads_vec;
+    for (unsigned int k = 0; k < num_threads; k++) {
+        unsigned int thread_begin = (img.height() / num_threads) * k;
+        unsigned int thread_end = (img.height() / num_threads) * (k + 1);
+        std::thread t(&MainWindow::drawSource, this, thread_begin, thread_end, std::ref(img), xPos, yPos);
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
+
+// Split the image into (number of threads available) pieces and distort the pieces in parallel
+void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgApparent, QImage& imgDistorted, double KL) {
+    unsigned int num_threads = std::thread::hardware_concurrency();
+
+    if (num_threads % 2 != 0) {
+        num_threads = 1;
+    } else {
+        num_threads = num_threads/2;
+    }
+
+    std::vector<std::thread> threads_vec;
+    for (unsigned int k = 0; k < num_threads; k++) {
+        unsigned int thread_begin = (imgDistorted.height() / num_threads) * k;
+        unsigned int thread_end = (imgDistorted.height() / num_threads) * (k + 1);
+        std::thread t(&MainWindow::distort, this, thread_begin, thread_end, imgApparent, std::ref(imgDistorted), R, apparentPos, KL);
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
+
 void MainWindow::updateImg() {
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
@@ -137,9 +180,8 @@ void MainWindow::updateImg() {
     double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     double R = apparentPos * KL;
 
-    drawSource(imgApparent, apparentPos, 0);
-
-    distort(imgApparent, imgDistorted, R, apparentPos, KL);
+    drawSourceThreaded(imgApparent, apparentPos, 0);
+    distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
     // Rotatation of pixmap
     QPixmap pix = QPixmap::fromImage(imgDistorted);
@@ -201,7 +243,7 @@ void MainWindow::updateImg() {
 
     // make an image with light source at ACTUAL position
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    drawSource(imgActual, actualX, actualY);
+    drawSourceThreaded(imgActual, actualX, actualY);
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(QPixmap::fromImage(imgActual));

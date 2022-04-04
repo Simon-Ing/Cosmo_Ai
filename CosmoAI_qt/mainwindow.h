@@ -22,13 +22,15 @@ private:
     QImage imgDistorted;
 
 private slots:
-//    void refLines(QImage&);
-    void drawSource(QImage&, double, double);
-//    void drawParallel(cv::Mat&, double, double);
-    void distort(QImage, QImage&, double, double, double);
-//    void parallel(double, double, cv::Mat&, cv::Mat&, double);
+//    void drawSource(QImage&, double, double);
+//    void distort(QImage, QImage&, double, double, double);
     void updateImg();
     void updateValues();
+
+    void drawSourceThreaded(QImage&, double, double);
+    void drawSource(int, int, QImage&, double, double);
+    void distort(int, int, QImage, QImage&, double, double, double);
+    void distortThreaded(double, double, QImage&, QImage&, double);
 
     void on_einsteinSpinbox_valueChanged();
     void on_srcSizeSpinbox_valueChanged();
