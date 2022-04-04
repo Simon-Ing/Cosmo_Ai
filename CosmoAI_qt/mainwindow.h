@@ -20,7 +20,6 @@ private:
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
-    QTimer* Timer;
 
 private slots:
 //    void refLines(QImage&);
@@ -31,5 +30,10 @@ private slots:
     void updateImg();
     void updateValues();
 
+    void on_einsteinSpinbox_valueChanged();
+    void on_srcSizeSpinbox_valueChanged();
+    void on_lensDistSpinbox_valueChanged();
+    void on_xSpinbox_valueChanged();
+    void on_ySpinbox_valueChanged();
 };
 #endif // MAINWINDOW_H

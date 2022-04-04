@@ -31,19 +31,15 @@ MainWindow::MainWindow(QWidget *parent)
     imgApparent = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
 
-    // Timer to update values and image
-    Timer = new QTimer(this);
-    Timer->start(10);
-    connect(Timer, SIGNAL(timeout()), this, SLOT(updateValues()));
-    connect(Timer, SIGNAL(timeout()), this, SLOT(updateImg()));
-
     // Set max/min values for UI elements
-    ui->einsteinSlider->setMaximum(wSize/4);
-    ui->einsteinSpinbox->setMaximum(wSize/4);
-    ui->srcSizeSlider->setMaximum(wSize/4);
-    ui->srcSizeSpinbox->setMaximum(wSize/4);
+    ui->einsteinSlider->setMaximum(0.1*wSize);
+    ui->einsteinSpinbox->setMaximum(0.1*wSize);
+    ui->srcSizeSlider->setMaximum(0.1*wSize);
+    ui->srcSizeSpinbox->setMaximum(0.1*wSize);
     ui->lensDistSlider->setMaximum(100);
     ui->lensDistSpinbox->setMaximum(100);
+    ui->lensDistSlider->setMinimum(30);
+    ui->lensDistSpinbox->setMinimum(30);
     ui->xSlider->setMaximum(wSize/2);
     ui->xSpinbox->setMaximum(wSize/2);
     ui->xSlider->setMinimum(-wSize/2);
@@ -53,8 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->ySlider->setMinimum(-wSize/2);
     ui->ySpinbox->setMinimum(-wSize/2);
 
-//    ui->einsteinSlider->setMinimum(1);
-//    ui->einsteinSpinbox->setMinimum(1);
 
     // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
@@ -83,18 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ySpinbox, SIGNAL(valueChanged(int)), ui->ySlider, SLOT(setValue(int)));
     connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
 }
-
-//void MainWindow::refLines(cv::Mat& target){
-//    int size_ = target.rows;
-//    for (int i = 0; i < size_; i++) {
-//        target.at<cv::Vec3b>(i, size_ / 2) = {60, 60, 60};
-//        target.at<cv::Vec3b>(size_ / 2 - 1, i) = {60, 60, 60};
-//        target.at<cv::Vec3b>(i, size_ - 1) = {255, 255, 255};
-//        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
-//        target.at<cv::Vec3b>(size_ - 1, i) = {255, 255, 255};
-//        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
-//    }
-//}
 
 void MainWindow::drawSource(QImage& img, double xPos, double yPos) {
     int rows = img.height();
@@ -241,3 +223,39 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_einsteinSpinbox_valueChanged()
+{
+    // Set variables to current spinbox values
+    einsteinR = ui->einsteinSpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_srcSizeSpinbox_valueChanged()
+{
+    srcSize = ui->srcSizeSpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_lensDistSpinbox_valueChanged()
+{
+    KL_percent = ui->lensDistSpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_xSpinbox_valueChanged()
+{
+    xPos = ui->xSpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_ySpinbox_valueChanged()
+{
+    yPos = ui->ySpinbox->value();
+    updateImg();
+}
+
