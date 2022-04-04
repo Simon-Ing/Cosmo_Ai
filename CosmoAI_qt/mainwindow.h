@@ -20,6 +20,7 @@ private:
     int KL_percent;
     int xPos;
     int yPos;
+    double phi;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -33,6 +34,7 @@ private:
     QString source;
 
     void init_values();
+    void drawGrid(QPixmap &img);
 private slots:
 //    void drawSource(QImage&, double, double);
 //    void distort(QImage, QImage&, double, double, double);

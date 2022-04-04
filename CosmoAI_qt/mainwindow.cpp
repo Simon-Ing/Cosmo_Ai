@@ -98,14 +98,16 @@ void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double
             int val;
             if (source == "Gauss"){
                 val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
+                img.setPixel(col, row, qRgb(val, val, val));
             }
             else if (source == "Circle"){
                 val = 255 * (x*x + y*y < srcSize*srcSize);
+                img.setPixel(col, row, qRgb(val, val, val));
             }
             else{
                 val = 255*(abs(x) < srcSize && abs(y) < srcSize);
+                img.setPixel(col, row, qRgb(val, val, val));
             }
-            img.setPixel(col, row, qRgb(val, val, val));
         }
     }
 }
@@ -186,13 +188,29 @@ void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgAppare
     }
 }
 
+void MainWindow::drawGrid(QPixmap& img){
+    QPainter painter(&img);
+    QPen pen(Qt::gray, 2, Qt::DashLine);
+    painter.setPen(pen);
+    painter.setOpacity(0.3);
+
+    QLineF lineVert(wSize/2, 0, wSize/2, wSize);
+    QLineF lineHor(0, wSize/2, wSize, wSize/2);
+    painter.drawLine(lineVert);
+    painter.drawLine(lineHor);
+}
+
 void MainWindow::updateImg() {
+
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
     imgDistorted.fill(Qt::black);
 
     double KL = KL_percent/100.0;
-    double phi = atan2(yPos, xPos);
+    phi = atan2(yPos, xPos);
+    if (phi < 0){
+        phi += 2*PI;
+    }
 
     double actualPos = sqrt(xPos*xPos + yPos*yPos);
     double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
@@ -205,6 +223,25 @@ void MainWindow::updateImg() {
 
     drawSourceThreaded(imgApparent, apparentPos, 0);
 
+    QPixmap imgAppDisp;
+
+    // Rotatation of pixmap
+    QPixmap p = QPixmap::fromImage(imgApparent);
+    QPixmap r(p.size());
+    QSize s = p.size();
+    r.fill(QColor::fromRgb(Qt::black));
+    QPainter m(&r);
+    m.setRenderHint(QPainter::SmoothPixmapTransform);
+    m.translate(s.width()/2 + apparentPos, s.height()/2);
+    m.rotate(phi*180/PI);
+    m.translate(-s.width()/2 - apparentPos, -s.height()/2);
+    m.drawPixmap(0,0, p);
+    imgApparent = r.toImage();
+
+    // Crop rotated pixmap to correct display size
+    QRect rect2(wSize/2, 0, wSize, wSize);
+    imgAppDisp = r.copy(rect2);
+
     // make an image with light source at ACTUAL position
     drawSourceThreaded(imgActual, actualX, actualY);
 
@@ -214,7 +251,6 @@ void MainWindow::updateImg() {
     QPixmap pix = QPixmap::fromImage(imgDistorted);
     QPixmap distRot(pix.size());
     QSize pixSize = pix.size();
-
     distRot.fill(QColor::fromRgb(Qt::black));
     QPainter painter(&distRot);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
@@ -227,6 +263,8 @@ void MainWindow::updateImg() {
     QRect rect(wSize/2, 0, wSize, wSize);
     QPixmap distRotCrop = distRot.copy(rect);
 
+
+
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
 //    qDebug(qUtf8Printable(sizeString));
 
@@ -236,17 +274,11 @@ void MainWindow::updateImg() {
     int apparentX2 = (int)round(apparentPos2*cos(phi));
     int apparentY2 = (int)round(apparentPos2*sin(phi));
 
+    auto imgActPix = QPixmap::fromImage(imgActual);
     if (grid == true) {
-        QPainter painter(&distRotCrop);
-        QPen pen(Qt::gray, 2, Qt::DashLine);
-        painter.setPen(pen);
-        painter.setOpacity(0.3);
-
-        QLineF lineVert(wSize/2, 0, wSize/2, wSize);
-        QLineF lineHor(0, wSize/2, wSize, wSize/2);
-        painter.drawLine(lineVert);
-        painter.drawLine(lineHor);
-
+        drawGrid(distRotCrop);
+        drawGrid(imgAppDisp);
+        drawGrid(imgActPix);
         QPointF center(wSize/2, wSize/2);
         painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
     }
@@ -268,10 +300,10 @@ void MainWindow::updateImg() {
     }
 
     // Draw pixmaps on QLabels
-    ui->actLabel->setPixmap(QPixmap::fromImage(imgActual));
+    ui->actLabel->setPixmap(imgActPix);
+    ui->appLabel->setPixmap(imgAppDisp);
     ui->distLabel->setPixmap(distRotCrop);
 }
-
 
 MainWindow::~MainWindow()
 {
