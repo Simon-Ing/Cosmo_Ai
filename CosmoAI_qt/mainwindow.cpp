@@ -70,6 +70,8 @@ void MainWindow::init_values() {
     KL_percent = 65;
     xPos = 0;
     yPos = 0;
+    source = ui->srcTypeComboBox->currentText();
+    std::cout << "Source: " << source.toStdString() << std::endl;
 
     // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
@@ -93,7 +95,16 @@ void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double
         for (int col = 0; col < cols; col++) {
             double x = col - xPos - cols/2;
             double y = -yPos - row + rows/2;
-            auto val = (uchar)round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
+            int val;
+            if (source == "Gauss"){
+                val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
+            }
+            else if (source == "Circle"){
+                val = 255 * (x*x + y*y < srcSize*srcSize);
+            }
+            else{
+                val = 255*(abs(x) < srcSize && abs(y) < srcSize);
+            }
             img.setPixel(col, row, qRgb(val, val, val));
         }
     }
@@ -188,7 +199,15 @@ void MainWindow::updateImg() {
     double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     double R = apparentPos * KL;
 
+    int actualX = (int)round(actualPos*cos(phi));
+    int actualY = (int)round(actualPos*sin(phi));
+    imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
+
     drawSourceThreaded(imgApparent, apparentPos, 0);
+
+    // make an image with light source at ACTUAL position
+    drawSourceThreaded(imgActual, actualX, actualY);
+
     distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
     // Rotatation of pixmap
@@ -211,8 +230,7 @@ void MainWindow::updateImg() {
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
 //    qDebug(qUtf8Printable(sizeString));
 
-    int actualX = (int)round(actualPos*cos(phi));
-    int actualY = (int)round(actualPos*sin(phi));
+
     int apparentX = (int)round(apparentPos*cos(phi));
     int apparentY = (int)round(apparentPos*sin(phi));
     int apparentX2 = (int)round(apparentPos2*cos(phi));
@@ -248,10 +266,6 @@ void MainWindow::updateImg() {
         painter.setPen(redPen);
         painter.drawPoint(actualPoint);
     }
-
-    // make an image with light source at ACTUAL position
-    imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    drawSourceThreaded(imgActual, actualX, actualY);
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(QPixmap::fromImage(imgActual));
@@ -317,6 +331,13 @@ void MainWindow::on_markerBox_stateChanged(int arg1)
 void MainWindow::on_pushButton_clicked()
 {
     init_values();
+    updateImg();
+}
+
+
+void MainWindow::on_srcTypeComboBox_currentTextChanged(const QString &arg1)
+{
+    source = arg1;
     updateImg();
 }
 

@@ -30,6 +30,7 @@ private:
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
+    QString source;
 
     void init_values();
 private slots:
@@ -51,5 +52,6 @@ private slots:
     void on_gridBox_stateChanged(int arg1);
     void on_markerBox_stateChanged(int arg1);
     void on_pushButton_clicked();
+    void on_srcTypeComboBox_currentTextChanged(const QString &arg1);
 };
 #endif // MAINWINDOW_H
