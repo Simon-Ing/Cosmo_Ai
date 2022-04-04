@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
+    rocket = QPixmap("/home/simon/Pictures/rocket-png-40811.png");
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -104,7 +105,7 @@ void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double
                 val = 255 * (x*x + y*y < srcSize*srcSize);
                 img.setPixel(col, row, qRgb(val, val, val));
             }
-            else{
+            else if (source == "Square"){
                 val = 255*(abs(x) < srcSize && abs(y) < srcSize);
                 img.setPixel(col, row, qRgb(val, val, val));
             }
@@ -219,9 +220,21 @@ void MainWindow::updateImg() {
 
     int actualX = (int)round(actualPos*cos(phi));
     int actualY = (int)round(actualPos*sin(phi));
-    imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
+//    imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
 
-    drawSourceThreaded(imgApparent, apparentPos, 0);
+
+    if (source == "Rocket"){
+        rocket = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QPainter p1(&imgApparent);
+        p1.drawPixmap(apparentPos + wSize - rocket.width()/2, wSize/2 - rocket.height()/2, rocket);
+        QPainter p2(&imgActual);
+        p2.drawPixmap(actualX + wSize/2 - rocket.width()/2, wSize/2 - actualY - rocket.height()/2, rocket);
+    }
+
+    else{
+        drawSourceThreaded(imgApparent, apparentPos, 0);
+        drawSourceThreaded(imgActual, actualX, actualY);
+    }
 
     QPixmap imgAppDisp;
 
@@ -241,9 +254,6 @@ void MainWindow::updateImg() {
     // Crop rotated pixmap to correct display size
     QRect rect2(wSize/2, 0, wSize, wSize);
     imgAppDisp = r.copy(rect2);
-
-    // make an image with light source at ACTUAL position
-    drawSourceThreaded(imgActual, actualX, actualY);
 
     distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
@@ -298,6 +308,7 @@ void MainWindow::updateImg() {
         painter.setPen(redPen);
         painter.drawPoint(actualPoint);
     }
+
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPix);

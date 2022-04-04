@@ -31,6 +31,7 @@ private:
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
+    QPixmap rocket;
     QString source;
 
     void init_values();
