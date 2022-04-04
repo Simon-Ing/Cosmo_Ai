@@ -220,15 +220,14 @@ void MainWindow::updateImg() {
 
     int actualX = (int)round(actualPos*cos(phi));
     int actualY = (int)round(actualPos*sin(phi));
-//    imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
 
 
     if (source == "Rocket"){
-        rocket = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         QPainter p1(&imgApparent);
-        p1.drawPixmap(apparentPos + wSize - rocket.width()/2, wSize/2 - rocket.height()/2, rocket);
+        p1.drawPixmap(apparentPos + wSize - rocket1.width()/2, wSize/2 - rocket1.height()/2, rocket1);
         QPainter p2(&imgActual);
-        p2.drawPixmap(actualX + wSize/2 - rocket.width()/2, wSize/2 - actualY - rocket.height()/2, rocket);
+        p2.drawPixmap(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2, rocket1);
     }
 
     else{
