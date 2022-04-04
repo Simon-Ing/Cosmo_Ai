@@ -26,9 +26,9 @@ private:
 
 private slots:
 //    void refLines(QImage&);
-    void drawSource(int, int, QImage&, double, double);
+    void drawSource(QImage&, double, double);
 //    void drawParallel(cv::Mat&, double, double);
-    void distort(int, int, double, double, QImage, QImage&, double);
+    void distort(QImage, QImage&, double, double, double);
 //    void parallel(double, double, cv::Mat&, cv::Mat&, double);
     void updateImg();
     void updateValues();

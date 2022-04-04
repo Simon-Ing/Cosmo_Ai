@@ -18,8 +18,8 @@ int wSize = 600;
 int einsteinR = wSize/20;
 int srcSize = wSize/20;
 int KL_percent = 50;
-int xPosSlider = wSize/2;
-int yPosSlider = wSize/2;
+int xPos = 0;
+int yPos = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgApparent = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgDistorted = QImage(wSize, wSize, QImage::Format_RGB32);
+    imgApparent = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
+    imgDistorted = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
 
     // Timer to update values and image
     Timer = new QTimer(this);
@@ -44,10 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->srcSizeSpinbox->setMaximum(wSize/4);
     ui->lensDistSlider->setMaximum(100);
     ui->lensDistSpinbox->setMaximum(100);
-    ui->xSlider->setMaximum(wSize);
-    ui->xSpinbox->setMaximum(wSize);
-    ui->ySlider->setMaximum(wSize);
-    ui->ySpinbox->setMaximum(wSize);
+    ui->xSlider->setMaximum(wSize/2);
+    ui->xSpinbox->setMaximum(wSize/2);
+    ui->xSlider->setMinimum(-wSize/2);
+    ui->xSpinbox->setMinimum(-wSize/2);
+    ui->ySlider->setMaximum(wSize/2);
+    ui->ySpinbox->setMaximum(wSize/2);
+    ui->ySlider->setMinimum(-wSize/2);
+    ui->ySpinbox->setMinimum(-wSize/2);
 
 //    ui->einsteinSlider->setMinimum(1);
 //    ui->einsteinSpinbox->setMinimum(1);
@@ -59,10 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->srcSizeSlider->setSliderPosition(srcSize);
     ui->lensDistSpinbox->setValue(KL_percent);
     ui->lensDistSlider->setSliderPosition(KL_percent);
-    ui->xSpinbox->setValue(xPosSlider);
-    ui->xSlider->setSliderPosition(xPosSlider);
-    ui->ySpinbox->setValue(yPosSlider);
-    ui->ySlider->setSliderPosition(yPosSlider);
+    ui->xSpinbox->setValue(xPos);
+    ui->xSlider->setSliderPosition(xPos);
+    ui->ySpinbox->setValue(yPos);
+    ui->ySlider->setSliderPosition(yPos);
     ui->gridBox->setChecked(true);
     ui->markerBox->setChecked(true);
 
@@ -92,25 +96,29 @@ MainWindow::MainWindow(QWidget *parent)
 //    }
 //}
 
-void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double yPos) {
-    for (int row = begin; row < end; row++) {
-        for (int col = begin; col < end; col++) {
-            double x = col - xPos - end/2.0;
-            double y = row + yPos - end/2.0;
+void MainWindow::drawSource(QImage& img, double xPos, double yPos) {
+    int rows = img.height();
+    int cols = img.width();
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            double x = col - xPos - cols/2;
+            double y = -yPos - row + rows/2;
             auto val = (uchar)round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
             img.setPixel(col, row, qRgb(val, val, val));
         }
     }
 }
 
-void MainWindow::distort(int begin, int end, double R, double apparentPos, QImage imgApparent, QImage& imgDistorted, double KL) {
+void MainWindow::distort(QImage imgApparent, QImage& imgDistorted, double R, double apparentPos, double KL) {
+    int rows = imgDistorted.height();
+    int cols = imgDistorted.width();
     // Evaluate each point in imgDistorted plane ~ lens plane
-    for (int row = begin; row < end; row++) {
-        for (int col = begin; col <= end; col++) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col <= cols; col++) { // <= ???????????????????????????????????????
 
             // Set coordinate system with origin at x=R
-            double x = (col - apparentPos - end/2.0) * KL;
-            double y = (end/2.0 - row) * KL;
+            double x = (col - apparentPos - cols/2.0) * KL;
+            double y = (rows/2.0 - row) * KL;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x*x + y*y);
@@ -122,38 +130,35 @@ void MainWindow::distort(int begin, int end, double R, double apparentPos, QImag
             double y_ = (y - frac * sin(theta)) / KL;
 
             // Translate to array index
-            int row_ = (int)round(end / 2.0 - y_);
-            int col_ = (int)round(apparentPos + end/2.0 + x_);
+            int row_ = (int)round(rows/2.0 - y_);
+            int col_ = (int)round(apparentPos + cols/2.0 + x_);
 
 
             // If (x', y') within source, copy value to imgDistorted
-            if (row_ < wSize && col_ < wSize && row_ > 0 && col_ >= 0 && row < wSize && col < wSize && row > 0 && col >= 0) {
-                imgDistorted.setPixel(col, row, imgApparent.pixel(col_, row_));
+            if (row_ < rows && col_ < cols && row_ > 0 && col_ >= 0) {
+            imgDistorted.setPixel(col, row, imgApparent.pixel(col_, row_));
             }
         }
     }
 }
+
 
 void MainWindow::updateImg() {
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
     imgDistorted.fill(Qt::black);
 
-    KL_percent = std::max(KL_percent, 30);
     double KL = KL_percent/100.0;
-    ui->lensDistSlider->setValue(KL_percent);
-    double xPos = xPosSlider - wSize/2.0;
-    double yPos = yPosSlider - wSize/2.0;
     double phi = atan2(yPos, xPos);
 
     double actualPos = sqrt(xPos*xPos + yPos*yPos);
     double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+//    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     double R = apparentPos * KL;
 
-    drawSource(0, wSize, imgApparent, apparentPos, 0);
+    drawSource(imgApparent, apparentPos, 0);
 
-    distort(0, wSize, R, apparentPos, imgApparent, imgDistorted, KL);
+    distort(imgApparent, imgDistorted, R, apparentPos, KL);
 
     // Rotatation of pixmap
     QPixmap pix = QPixmap::fromImage(imgDistorted);
@@ -162,21 +167,21 @@ void MainWindow::updateImg() {
     distRot.fill(QColor::fromRgb(0, 0, 0, 0));
     QPainter painter(&distRot);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.translate(pixSize.height()/2, pixSize.height()/2);
+    painter.translate(pixSize.width()/2, pixSize.height()/2);
     painter.rotate(-phi*180/PI);
-    painter.translate(-pixSize.height()/2, -pixSize.height()/2);
+    painter.translate(-pixSize.width()/2, -pixSize.height()/2);
     painter.drawPixmap(0,0, pix);
 
     int actualX = (int)round(actualPos*cos(phi));
     int actualY = (int)round(actualPos*sin(phi));
-    int apparentX = (int)round(apparentPos*cos(phi));
-    int apparentY = (int)round(apparentPos*sin(phi));
-    int apparentX2 = (int)round(apparentPos2*cos(phi));
-    int apparentY2 = (int)round(apparentPos2*sin(phi));
+//    int apparentX = (int)round(apparentPos*cos(phi));
+//    int apparentY = (int)round(apparentPos*sin(phi));
+//    int apparentX2 = (int)round(apparentPos2*cos(phi));
+//    int apparentY2 = (int)round(apparentPos2*sin(phi));
 
     // make an image with light source at ACTUAL position
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    drawSource(0, wSize, imgActual, actualX, actualY);
+    drawSource(imgActual, actualX, actualY);
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(QPixmap::fromImage(imgActual));
@@ -188,8 +193,8 @@ void MainWindow::updateValues() {
     einsteinR = ui->einsteinSpinbox->value();
     srcSize = ui->srcSizeSpinbox->value();
     KL_percent = ui->lensDistSpinbox->value();
-    xPosSlider = ui->xSpinbox->value();
-    yPosSlider = ui->ySpinbox->value();
+    xPos = ui->xSpinbox->value();
+    yPos = ui->ySpinbox->value();
     grid = ui->gridBox->isChecked();
     markers = ui->markerBox->isChecked();
 }
