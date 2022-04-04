@@ -22,8 +22,6 @@ private:
     QImage imgDistorted;
     QTimer* Timer;
 
-
-
 private slots:
 //    void refLines(QImage&);
     void drawSource(QImage&, double, double);

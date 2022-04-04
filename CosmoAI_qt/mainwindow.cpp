@@ -142,7 +142,6 @@ void MainWindow::distort(QImage imgApparent, QImage& imgDistorted, double R, dou
     }
 }
 
-
 void MainWindow::updateImg() {
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
@@ -153,7 +152,7 @@ void MainWindow::updateImg() {
 
     double actualPos = sqrt(xPos*xPos + yPos*yPos);
     double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-//    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     double R = apparentPos * KL;
 
     drawSource(imgApparent, apparentPos, 0);
@@ -164,7 +163,8 @@ void MainWindow::updateImg() {
     QPixmap pix = QPixmap::fromImage(imgDistorted);
     QPixmap distRot(pix.size());
     QSize pixSize = pix.size();
-    distRot.fill(QColor::fromRgb(0, 0, 0, 0));
+
+    distRot.fill(QColor::fromRgb(Qt::black));
     QPainter painter(&distRot);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.translate(pixSize.width()/2, pixSize.height()/2);
@@ -172,12 +172,50 @@ void MainWindow::updateImg() {
     painter.translate(-pixSize.width()/2, -pixSize.height()/2);
     painter.drawPixmap(0,0, pix);
 
+    // Crop rotated pixmap to correct display size
+    QRect rect(wSize/4, 0, wSize, wSize);
+    QPixmap distRotCrop = distRot.copy(rect);
+
+//    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
+//    qDebug(qUtf8Printable(sizeString));
+
     int actualX = (int)round(actualPos*cos(phi));
     int actualY = (int)round(actualPos*sin(phi));
-//    int apparentX = (int)round(apparentPos*cos(phi));
-//    int apparentY = (int)round(apparentPos*sin(phi));
-//    int apparentX2 = (int)round(apparentPos2*cos(phi));
-//    int apparentY2 = (int)round(apparentPos2*sin(phi));
+    int apparentX = (int)round(apparentPos*cos(phi));
+    int apparentY = (int)round(apparentPos*sin(phi));
+    int apparentX2 = (int)round(apparentPos2*cos(phi));
+    int apparentY2 = (int)round(apparentPos2*sin(phi));
+
+    if (grid == true) {
+        QPainter painter(&distRotCrop);
+        QPen pen(Qt::gray, 2, Qt::DashLine);
+        painter.setPen(pen);
+        painter.setOpacity(0.3);
+
+        QLineF lineVert(wSize/2, 0, wSize/2, wSize);
+        QLineF lineHor(0, wSize/2, wSize, wSize/2);
+        painter.drawLine(lineVert);
+        painter.drawLine(lineHor);
+
+        QPointF center(wSize/2, wSize/2);
+        painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
+    }
+
+    if (markers == true) {
+        QPointF apparentPoint1(wSize/2 + apparentX, wSize/2 - apparentY);
+        QPointF apparentPoint2(wSize/2 + apparentX2, wSize/2 - apparentY2);
+        QPointF actualPoint(wSize/2 + actualX, wSize/2 - actualY);
+
+        QPainter painter(&distRotCrop);
+        QPen bluePen(Qt::blue, 10);
+        QPen redPen(Qt::red, 10);
+        painter.setPen(bluePen);
+        painter.setOpacity(0.4);
+        painter.drawPoint(apparentPoint1);
+        painter.drawPoint(apparentPoint2);
+        painter.setPen(redPen);
+        painter.drawPoint(actualPoint);
+    }
 
     // make an image with light source at ACTUAL position
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
@@ -185,7 +223,7 @@ void MainWindow::updateImg() {
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(QPixmap::fromImage(imgActual));
-    ui->distLabel->setPixmap(distRot);
+    ui->distLabel->setPixmap(distRotCrop);
 }
 
 void MainWindow::updateValues() {
