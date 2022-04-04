@@ -37,5 +37,7 @@ private slots:
     void on_lensDistSpinbox_valueChanged();
     void on_xSpinbox_valueChanged();
     void on_ySpinbox_valueChanged();
+    void on_markerBox_toggled(bool checked);
+    void on_gridBox_toggled(bool checked);
 };
 #endif // MAINWINDOW_H

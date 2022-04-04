@@ -20,6 +20,7 @@ int srcSize = wSize/20;
 int KL_percent = 50;
 int xPos = 0;
 int yPos = 0;
+int wSizeWide = 2*wSize;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
+    imgApparent = QImage(wSizeWide, wSize, QImage::Format_RGB32);
+    imgDistorted = QImage(wSizeWide, wSize, QImage::Format_RGB32);
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -127,12 +128,6 @@ void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDist
 void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
 
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
-
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (img.height() / num_threads) * k;
@@ -148,12 +143,6 @@ void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgApparent, QImage& imgDistorted, double KL) {
     unsigned int num_threads = std::thread::hardware_concurrency();
-
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
 
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
@@ -197,7 +186,7 @@ void MainWindow::updateImg() {
     painter.drawPixmap(0,0, pix);
 
     // Crop rotated pixmap to correct display size
-    QRect rect(wSize/2, 0, wSize, wSize);
+    QRect rect((wSizeWide - wSize)/2, 0, wSize, wSize);
     QPixmap distRotCrop = distRot.copy(rect);
 
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
@@ -231,13 +220,13 @@ void MainWindow::updateImg() {
         QPointF actualPoint(wSize/2 + actualX, wSize/2 - actualY);
 
         QPainter painter(&distRotCrop);
-        QPen bluePen(Qt::blue, 10);
+        QPen bluePen(Qt::cyan, 10);
         QPen redPen(Qt::red, 10);
-        painter.setPen(bluePen);
-        painter.setOpacity(0.4);
+        painter.setPen(redPen);
+        painter.setOpacity(0.3);
         painter.drawPoint(apparentPoint1);
         painter.drawPoint(apparentPoint2);
-        painter.setPen(redPen);
+        painter.setPen(bluePen);
         painter.drawPoint(actualPoint);
     }
 
@@ -298,6 +287,20 @@ void MainWindow::on_xSpinbox_valueChanged()
 void MainWindow::on_ySpinbox_valueChanged()
 {
     yPos = ui->ySpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_markerBox_toggled(bool checked)
+{
+    markers = checked;
+    updateImg();
+}
+
+
+void MainWindow::on_gridBox_toggled(bool checked)
+{
+    grid = checked;
     updateImg();
 }
 
