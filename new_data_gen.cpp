@@ -11,11 +11,13 @@
 
 
 int size = 0;  // Size of source and lens imgDistorted
-unsigned int sigma = size / 10;   // size of source "Blob"
-unsigned int einsteinR = size / 10;
-unsigned int xPosSlider = 0;
-unsigned int yPosSlider = 0;
-unsigned int KL_percent = 0;
+ int sigma = size / 10;   // size of source "Blob"
+ int einsteinR = size / 10;
+ int xPosSlider = 0;
+ int yPosSlider = 0;
+ int KL_percent = 0;
+ int lens_angle;
+ int sourceDistFromCenter;
 std::string name;
 
 
@@ -147,24 +149,31 @@ int main(int, char *argv[]) {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> rand_lens_dist(30, 100);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, size/10);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, size/10);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, size/8);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, size/14);
     std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(0, size);
     std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(0, size);
 
-    std::vector<std::vector<long>> parameters;
+    std::vector<std::vector<int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         // Randomizes values for eatch iteration
         KL_percent = rand_lens_dist(rng);
         einsteinR = rand_einsteinR(rng);
         sigma = rand_source_size(rng);
         xPosSlider = rand_xSlider(rng);
-        yPosSlider = rand_xSlider(rng);
-        std::vector<long> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider};
+        yPosSlider = rand_ySlider(rng);
+        //// Calculate polar coords:
+        //int xPos_centered = (int)xPosSlider - size / 2;
+        //int yPos_centered = (int)yPosSlider - size / 2;
+        //double lens_angle_rad = std::atan2(yPos_centered, xPos_centered);
+        //lens_angle = lens_angle_rad * 180 / PI;
+        //sourceDistFromCenter = sqrt(xPos_centered * xPos_centered + yPos_centered * yPos_centered);
+                
+        std::vector<int> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider };
 
         if ( !std::count(parameters.begin(), parameters.end(), params) ) {
             update(0, nullptr);
-            parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider});
+            parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider });
         }
         else{
             i--;

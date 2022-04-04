@@ -36,12 +36,12 @@ class ConvNet(nn.Module):
 class ConvNetNew(nn.Module):
     def __init__(self):
         super(ConvNetNew, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (5, 5))
-        self.conv2 = nn.Conv2d(4, 8, (5, 5))
+        self.conv1 = nn.Conv2d(1, 4, (10, 10))
+        self.conv2 = nn.Conv2d(4, 8, (10, 10))
         self.conv3 = nn.Conv2d(8, 8, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(512, 50)
-        self.fc2 = nn.Linear(50, 5)
+        self.fc1 = nn.Linear(512, 64)
+        self.fc2 = nn.Linear(64, 4)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -60,7 +60,7 @@ class ConvNet3(nn.Module):
         self.conv2 = nn.Conv2d(4, 8, (5, 5))
         self.conv3 = nn.Conv2d(8, 8, (5, 5))
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(32, 5)
+        self.fc1 = nn.LazyLinear(32, 4)
 
     def forward(self, x):
         x = self.pool(func.relu(self.conv1(x)))
@@ -73,6 +73,75 @@ class ConvNet3(nn.Module):
         x = self.fc1(x)
         return x
 
+class ProConvNet(nn.Module):
+    def __init__(self):
+        super(ProConvNet, self).__init__()
+        self.conv1 = nn.Conv2d(1, 4, 3)
+        self.conv2 = nn.Conv2d(4, 8, 3)
+        self.conv3 = nn.Conv2d(8, 16, 2)
+        self.conv4 = nn.Conv2d(16, 16, 2)
+        
+        self.fc1 = nn.LazyLinear(1024)
+        self.fc2 = nn.Linear(1024, 1024)
+        self.fc3 = nn.Linear(1024, 128)
+        self.fc4 = nn.Linear(128, 4)
+
+    def forward(self, x):
+        # Max pooling over a (2, 2) window
+        
+        x = func.max_pool2d(func.relu(self.conv1(x)), 2)
+        x = func.max_pool2d(func.relu(self.conv2(x)), 2)
+        x = func.max_pool2d(func.relu(self.conv3(x)), 2)
+        x = func.max_pool2d(func.relu(self.conv4(x)), 2)
+        x = func.max_pool2d(func.relu(self.conv4(x)), 2)
+        
+        
+        #print(x.shape)
+        x = torch.flatten(x, 1) # flatten all dimensions except the batch dimension
+        x = func.relu(self.fc1(x))
+        x = func.relu(self.fc2(x))
+        x = func.relu(self.fc2(x))
+        x = func.relu(self.fc3(x))
+        x = self.fc4(x)
+        return x
+
+class AlexNet(nn.Module):
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5) -> None:
+        super().__init__()
+        
+        self.features = nn.Sequential(
+            nn.Conv2d(1, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(64, 192, kernel_size=5, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(192, 384, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+        )
+        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=dropout),
+            nn.Linear(256 * 6 * 6, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=dropout),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, 5),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        #print(x.shape)
+        x = self.classifier(x)
+        return x
 
 def cuda_if_available():
     if torch.cuda.is_available():
@@ -102,6 +171,7 @@ def load_model(model):
                 ans = ""
 
 
+
 def save_model(model):
     pass
     ans = ""
@@ -121,7 +191,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
                 os.chdir('Python')
             shutil.rmtree(folder)
             os.makedirs(f'{folder}/images')
-            os.system('Data.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
+            os.system('new.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
             print("Done generating, start loading")
     else:
         if gen_new:
