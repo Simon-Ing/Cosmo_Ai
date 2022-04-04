@@ -11,6 +11,16 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    bool grid;
+    bool markers;
+    int wSize;
+    int einsteinR;
+    int srcSize;
+    int KL_percent;
+    int xPos;
+    int yPos;
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -21,11 +31,12 @@ private:
     QImage imgActual;
     QImage imgDistorted;
 
+    void init_values();
 private slots:
 //    void drawSource(QImage&, double, double);
 //    void distort(QImage, QImage&, double, double, double);
     void updateImg();
-    void updateValues();
+//    void updateValues();
 
     void drawSourceThreaded(QImage&, double, double);
     void drawSource(int, int, QImage&, double, double);
@@ -37,5 +48,8 @@ private slots:
     void on_lensDistSpinbox_valueChanged();
     void on_xSpinbox_valueChanged();
     void on_ySpinbox_valueChanged();
+    void on_gridBox_stateChanged(int arg1);
+    void on_markerBox_stateChanged(int arg1);
+    void on_pushButton_clicked();
 };
 #endif // MAINWINDOW_H

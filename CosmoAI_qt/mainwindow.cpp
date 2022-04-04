@@ -12,20 +12,18 @@
 #include <QDebug>
 #define PI 3.14159265358979323846
 
-bool grid = true;
-bool markers = true;
-int wSize = 600;
-int einsteinR = wSize/20;
-int srcSize = wSize/20;
-int KL_percent = 50;
-int xPos = 0;
-int yPos = 0;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    grid = true;
+    markers = true;
+
+    init_values();
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
@@ -49,6 +47,29 @@ MainWindow::MainWindow(QWidget *parent)
     ui->ySlider->setMinimum(-wSize/2);
     ui->ySpinbox->setMinimum(-wSize/2);
 
+    // Connect sliders and spinboxes
+    connect(ui->einsteinSlider, SIGNAL(valueChanged(int)), ui->einsteinSpinbox, SLOT(setValue(int)));
+    connect(ui->einsteinSpinbox, SIGNAL(valueChanged(int)), ui->einsteinSlider, SLOT(setValue(int)));
+    connect(ui->srcSizeSpinbox, SIGNAL(valueChanged(int)), ui->srcSizeSlider, SLOT(setValue(int)));
+    connect(ui->srcSizeSlider, SIGNAL(valueChanged(int)), ui->srcSizeSpinbox, SLOT(setValue(int)));
+    connect(ui->lensDistSpinbox, SIGNAL(valueChanged(int)), ui->lensDistSlider, SLOT(setValue(int)));
+    connect(ui->lensDistSlider, SIGNAL(valueChanged(int)), ui->lensDistSpinbox, SLOT(setValue(int)));
+    connect(ui->xSpinbox, SIGNAL(valueChanged(int)), ui->xSlider, SLOT(setValue(int)));
+    connect(ui->xSlider, SIGNAL(valueChanged(int)), ui->xSpinbox, SLOT(setValue(int)));
+    connect(ui->ySpinbox, SIGNAL(valueChanged(int)), ui->ySlider, SLOT(setValue(int)));
+    connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
+
+    updateImg();
+}
+
+void MainWindow::init_values() {
+
+    wSize = 600;
+    einsteinR = wSize/20;
+    srcSize = wSize/20;
+    KL_percent = 65;
+    xPos = 0;
+    yPos = 0;
 
     // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
@@ -63,19 +84,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->ySlider->setSliderPosition(yPos);
     ui->gridBox->setChecked(true);
     ui->markerBox->setChecked(true);
-
-
-    // Connect sliders and spinboxes
-    connect(ui->einsteinSlider, SIGNAL(valueChanged(int)), ui->einsteinSpinbox, SLOT(setValue(int)));
-    connect(ui->einsteinSpinbox, SIGNAL(valueChanged(int)), ui->einsteinSlider, SLOT(setValue(int)));
-    connect(ui->srcSizeSpinbox, SIGNAL(valueChanged(int)), ui->srcSizeSlider, SLOT(setValue(int)));
-    connect(ui->srcSizeSlider, SIGNAL(valueChanged(int)), ui->srcSizeSpinbox, SLOT(setValue(int)));
-    connect(ui->lensDistSpinbox, SIGNAL(valueChanged(int)), ui->lensDistSlider, SLOT(setValue(int)));
-    connect(ui->lensDistSlider, SIGNAL(valueChanged(int)), ui->lensDistSpinbox, SLOT(setValue(int)));
-    connect(ui->xSpinbox, SIGNAL(valueChanged(int)), ui->xSlider, SLOT(setValue(int)));
-    connect(ui->xSlider, SIGNAL(valueChanged(int)), ui->xSpinbox, SLOT(setValue(int)));
-    connect(ui->ySpinbox, SIGNAL(valueChanged(int)), ui->ySlider, SLOT(setValue(int)));
-    connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
 }
 
 void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double yPos) {
@@ -250,16 +258,6 @@ void MainWindow::updateImg() {
     ui->distLabel->setPixmap(distRotCrop);
 }
 
-void MainWindow::updateValues() {
-    // Set variables to current spinbox values
-    einsteinR = ui->einsteinSpinbox->value();
-    srcSize = ui->srcSizeSpinbox->value();
-    KL_percent = ui->lensDistSpinbox->value();
-    xPos = ui->xSpinbox->value();
-    yPos = ui->ySpinbox->value();
-    grid = ui->gridBox->isChecked();
-    markers = ui->markerBox->isChecked();
-}
 
 MainWindow::~MainWindow()
 {
@@ -298,6 +296,27 @@ void MainWindow::on_xSpinbox_valueChanged()
 void MainWindow::on_ySpinbox_valueChanged()
 {
     yPos = ui->ySpinbox->value();
+    updateImg();
+}
+
+
+void MainWindow::on_gridBox_stateChanged(int arg1)
+{
+    grid = arg1;
+    updateImg();
+}
+
+
+void MainWindow::on_markerBox_stateChanged(int arg1)
+{
+    markers = arg1;
+    updateImg();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    init_values();
     updateImg();
 }
 

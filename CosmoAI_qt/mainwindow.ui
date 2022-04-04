@@ -38,6 +38,29 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="printButton">
+        <property name="text">
+         <string>Print</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Source type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="srcTypeComboBox">
+        <item>
+         <property name="text">
+          <string>Gauss</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="gridBox">
         <property name="text">
@@ -52,17 +75,17 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="printButton">
-        <property name="text">
-         <string>Print</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1">
        <widget class="QPushButton" name="fullscreenButton">
         <property name="text">
          <string>Fullscreen</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Lens type</string>
         </property>
        </widget>
       </item>
@@ -92,26 +115,10 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="srcTypeComboBox">
-        <item>
-         <property name="text">
-          <string>Gauss</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Lens type</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Source type</string>
+         <string>Reset</string>
         </property>
        </widget>
       </item>
@@ -214,7 +221,7 @@
      <x>0</x>
      <y>0</y>
      <width>842</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
