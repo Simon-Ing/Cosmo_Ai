@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgApparent = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
-    imgDistorted = QImage(1.5*wSize, wSize, QImage::Format_RGB32);
+    imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
+    imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -130,7 +130,7 @@ void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     if (num_threads % 2 != 0) {
         num_threads = 1;
     } else {
-        num_threads = 1;
+        num_threads = num_threads/2;
     }
 
     std::vector<std::thread> threads_vec;
@@ -197,7 +197,7 @@ void MainWindow::updateImg() {
     painter.drawPixmap(0,0, pix);
 
     // Crop rotated pixmap to correct display size
-    QRect rect(wSize/4, 0, wSize, wSize);
+    QRect rect(wSize/2, 0, wSize, wSize);
     QPixmap distRotCrop = distRot.copy(rect);
 
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
