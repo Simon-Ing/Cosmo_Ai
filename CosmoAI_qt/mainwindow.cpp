@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     init_values();
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
+    imgApparent = QImage(wSizeWide, wSize, QImage::Format_RGB32);
+    imgDistorted = QImage(wSizeWide, wSize, QImage::Format_RGB32);
     rocket = QPixmap(":/new/prefix1/rocket-png-40811.png");
 
     // Set max/min values for UI elements
@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::init_values() {
 
     wSize = 600;
+    wSizeWide = 2*wSize;
     einsteinR = wSize/20;
     srcSize = wSize/20;
     KL_percent = 65;
@@ -149,11 +150,6 @@ void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDist
 void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
 
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
 
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
@@ -170,12 +166,6 @@ void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgApparent, QImage& imgDistorted, double KL) {
     unsigned int num_threads = std::thread::hardware_concurrency();
-
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
 
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
@@ -235,24 +225,21 @@ void MainWindow::updateImg() {
         drawSourceThreaded(imgActual, actualX, actualY);
     }
 
-    QPixmap imgAppDisp;
-
     // Rotatation of pixmap
-    QPixmap p = QPixmap::fromImage(imgApparent);
-    QPixmap r(p.size());
-    QSize s = p.size();
-    r.fill(QColor::fromRgb(Qt::black));
-    QPainter m(&r);
-    m.setRenderHint(QPainter::SmoothPixmapTransform);
-    m.translate(s.width()/2 + apparentPos, s.height()/2);
-    m.rotate(phi*180/PI);
-    m.translate(-s.width()/2 - apparentPos, -s.height()/2);
-    m.drawPixmap(0,0, p);
-    imgApparent = r.toImage();
+    QPixmap pix2 = QPixmap::fromImage(imgApparent);
+    QPixmap appRot(pix2.size());
+    QSize pSize = pix2.size();
+    appRot.fill(QColor::fromRgb(Qt::black));
+    QPainter p(&appRot);
+    p.setRenderHint(QPainter::SmoothPixmapTransform);
+    p.translate(pSize.width()/2, pSize.height()/2);
+    p.rotate(-phi*180/PI);
+    p.translate(-pSize.width()/2, -pSize.height()/2);
+    p.drawPixmap(0,0, pix2);
 
     // Crop rotated pixmap to correct display size
-    QRect rect2(wSize/2, 0, wSize, wSize);
-    imgAppDisp = r.copy(rect2);
+    QRect rect2((wSizeWide - wSize)/2, 0, wSize, wSize);
+    QPixmap imgAppDisp = appRot.copy(rect2);
 
     distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
@@ -269,7 +256,7 @@ void MainWindow::updateImg() {
     painter.drawPixmap(0,0, pix);
 
     // Crop rotated pixmap to correct display size
-    QRect rect(wSize/2, 0, wSize, wSize);
+    QRect rect((wSizeWide - wSize)/2, 0, wSize, wSize);
     QPixmap distRotCrop = distRot.copy(rect);
 
 
