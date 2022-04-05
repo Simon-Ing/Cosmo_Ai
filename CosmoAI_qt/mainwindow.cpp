@@ -289,6 +289,10 @@ void MainWindow::updateImg() {
         drawGrid(imgAppDisp);
         drawGrid(imgActPix);
         QPointF center(wSize/2, wSize/2);
+        QPainter painter(&distRotCrop);
+        QPen pen(Qt::gray, 2, Qt::DashLine);
+        painter.setPen(pen);
+        painter.setOpacity(0.3);
         painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
     }
 
