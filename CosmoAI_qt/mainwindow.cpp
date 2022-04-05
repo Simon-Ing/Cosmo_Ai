@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    grid = false;
-    markers = false;
+    grid = true;
+    markers = true;
 
     init_values();
 
@@ -68,7 +68,7 @@ void MainWindow::init_values() {
     wSize = 600;
     einsteinR = wSize/20;
     srcSize = wSize/20;
-    KL_percent = 65;
+    KL = 0.65;
     xPos = 0;
     yPos = 0;
     source = ui->srcTypeComboBox->currentText();
@@ -78,8 +78,8 @@ void MainWindow::init_values() {
     ui->einsteinSlider->setSliderPosition(einsteinR);
     ui->srcSizeSpinbox->setValue(srcSize);
     ui->srcSizeSlider->setSliderPosition(srcSize);
-    ui->lensDistSpinbox->setValue(KL_percent);
-    ui->lensDistSlider->setSliderPosition(KL_percent);
+    ui->lensDistSpinbox->setValue(KL*100);
+    ui->lensDistSlider->setSliderPosition(KL*100);
     ui->xSpinbox->setValue(xPos);
     ui->xSlider->setSliderPosition(xPos);
     ui->ySpinbox->setValue(yPos);
@@ -147,13 +147,6 @@ void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDist
 
 void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
-
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
-
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (img.height() / num_threads) * k;
@@ -169,13 +162,6 @@ void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgApparent, QImage& imgDistorted, double KL) {
     unsigned int num_threads = std::thread::hardware_concurrency();
-
-    if (num_threads % 2 != 0) {
-        num_threads = 1;
-    } else {
-        num_threads = num_threads/2;
-    }
-
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (imgDistorted.height() / num_threads) * k;
@@ -186,6 +172,28 @@ void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgAppare
     for (auto& thread : threads_vec) {
         thread.join();
     }
+}
+
+QPixmap MainWindow::rotate(QPixmap src, double angle,int x, int y){
+    QPixmap r(src.size());
+//    QSize s = src.size();
+    r.fill(QColor::fromRgb(Qt::black));
+    QPainter m(&r);
+    m.setRenderHint(QPainter::SmoothPixmapTransform);
+    m.translate(src.width()/2 + x, src.height()/2 + y);
+    m.rotate(angle*180/PI);
+    m.translate(-src.width()/2 - x, -src.height()/2 - y);
+    m.drawPixmap(0,0, src);
+    return r;
+}
+
+void MainWindow::drawRadius(QPixmap& src){
+    QPointF center(src.width()/2, src.height()/2);
+    QPainter painter(&src);
+    QPen pen(Qt::gray, 2, Qt::DashLine);
+    painter.setPen(pen);
+    painter.setOpacity(0.3);
+    painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
 }
 
 void MainWindow::drawGrid(QPixmap& img){
@@ -200,26 +208,30 @@ void MainWindow::drawGrid(QPixmap& img){
     painter.drawLine(lineHor);
 }
 
+void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
+    QPointF point(wSize/2 + x, wSize/2 - y);
+    QPainter painter(&src);
+    QPen pen(color, 10);
+    painter.setPen(pen);
+    painter.setOpacity(0.4);
+    painter.drawPoint(point);
+}
+
+
+
 void MainWindow::updateImg() {
 
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
     imgDistorted.fill(Qt::black);
 
-    double KL = KL_percent/100.0;
     phi = atan2(yPos, xPos);
-    if (phi < 0){
-        phi += 2*PI;
-    }
-
     double actualPos = sqrt(xPos*xPos + yPos*yPos);
     double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
     double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     double R = apparentPos * KL;
-
     int actualX = (int)round(actualPos*cos(phi));
     int actualY = (int)round(actualPos*sin(phi));
-
 
     if (source == "Rocket"){
         QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -234,48 +246,29 @@ void MainWindow::updateImg() {
         drawSourceThreaded(imgActual, actualX, actualY);
     }
 
-    QPixmap imgAppDisp;
 
-    // Rotatation of pixmap
-    QPixmap p = QPixmap::fromImage(imgApparent);
-    QPixmap r(p.size());
-    QSize s = p.size();
-    r.fill(QColor::fromRgb(Qt::black));
-    QPainter m(&r);
-    m.setRenderHint(QPainter::SmoothPixmapTransform);
-    m.translate(s.width()/2 + apparentPos, s.height()/2);
-    m.rotate(phi*180/PI);
-    m.translate(-s.width()/2 - apparentPos, -s.height()/2);
-    m.drawPixmap(0,0, p);
-    imgApparent = r.toImage();
+    // Convert image to pixmap
+    QPixmap imgAppPixDisp = QPixmap::fromImage(imgApparent);
 
-    // Crop rotated pixmap to correct display size
+    // Pixmap with pre-rotation
+    auto imgAppPix = rotate(imgAppPixDisp, phi, apparentPos, 0);
+
+    // Crop pixmap to correct display size
     QRect rect2(wSize/2, 0, wSize, wSize);
-    imgAppDisp = r.copy(rect2);
+    imgAppPixDisp = imgAppPixDisp.copy(rect2);
 
+    // Convert pre-rotated pixmap to image and distort the image
+    imgApparent = imgAppPix.toImage();
     distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
-    // Rotatation of pixmap
-    QPixmap pix = QPixmap::fromImage(imgDistorted);
-    QPixmap distRot(pix.size());
-    QSize pixSize = pix.size();
-    distRot.fill(QColor::fromRgb(Qt::black));
-    QPainter painter(&distRot);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.translate(pixSize.width()/2, pixSize.height()/2);
-    painter.rotate(-phi*180/PI);
-    painter.translate(-pixSize.width()/2, -pixSize.height()/2);
-    painter.drawPixmap(0,0, pix);
-
-    // Crop rotated pixmap to correct display size
+    // Convert distorted image to pixmap, rotate and crop
+    QPixmap imgDistPix = QPixmap::fromImage(imgDistorted);
+    imgDistPix = rotate(imgDistPix, -phi, 0, 0);
     QRect rect(wSize/2, 0, wSize, wSize);
-    QPixmap distRotCrop = distRot.copy(rect);
-
-
+    imgDistPix = imgDistPix.copy(rect);
 
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
 //    qDebug(qUtf8Printable(sizeString));
-
 
     int apparentX = (int)round(apparentPos*cos(phi));
     int apparentY = (int)round(apparentPos*sin(phi));
@@ -284,38 +277,22 @@ void MainWindow::updateImg() {
 
     auto imgActPix = QPixmap::fromImage(imgActual);
     if (grid == true) {
-        drawGrid(distRotCrop);
-        drawGrid(imgAppDisp);
         drawGrid(imgActPix);
-        QPointF center(wSize/2, wSize/2);
-        QPainter painter(&distRotCrop);
-        QPen pen(Qt::gray, 2, Qt::DashLine);
-        painter.setPen(pen);
-        painter.setOpacity(0.3);
-        painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
+        drawGrid(imgAppPixDisp);
+        drawGrid(imgDistPix);
+        drawRadius(imgDistPix);
     }
 
     if (markers == true) {
-        QPointF apparentPoint1(wSize/2 + apparentX, wSize/2 - apparentY);
-        QPointF apparentPoint2(wSize/2 + apparentX2, wSize/2 - apparentY2);
-        QPointF actualPoint(wSize/2 + actualX, wSize/2 - actualY);
-
-        QPainter painter(&distRotCrop);
-        QPen bluePen(Qt::blue, 10);
-        QPen redPen(Qt::red, 10);
-        painter.setPen(bluePen);
-        painter.setOpacity(0.4);
-        painter.drawPoint(apparentPoint1);
-        painter.drawPoint(apparentPoint2);
-        painter.setPen(redPen);
-        painter.drawPoint(actualPoint);
+        drawMarker(imgDistPix, apparentX, apparentY, Qt::blue);
+        drawMarker(imgDistPix, apparentX2, apparentY2, Qt::blue);
+        drawMarker(imgDistPix, actualX, actualY, Qt::red);
     }
-
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPix);
-    ui->appLabel->setPixmap(imgAppDisp);
-    ui->distLabel->setPixmap(distRotCrop);
+    ui->appLabel->setPixmap(imgAppPixDisp);
+    ui->distLabel->setPixmap(imgDistPix);
 }
 
 MainWindow::~MainWindow()
@@ -338,9 +315,10 @@ void MainWindow::on_srcSizeSpinbox_valueChanged()
 }
 
 
-void MainWindow::on_lensDistSpinbox_valueChanged()
+void MainWindow::on_lensDistSpinbox_valueChanged(int arg1)
 {
-    KL_percent = ui->lensDistSpinbox->value();
+    KL = arg1/100.0;
+//    KL_percent = ui->lensDistSpinbox->value();
     updateImg();
 }
 

@@ -18,10 +18,10 @@ private:
     int wSizeWide;
     int einsteinR;
     int srcSize;
-    int KL_percent;
     int xPos;
     int yPos;
     double phi;
+    double KL;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -32,11 +32,18 @@ private:
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
+    QPixmap pixApp;
+    QPixmap pixAct;
+    QPixmap pixDist;
     QPixmap rocket;
     QString source;
 
     void init_values();
     void drawGrid(QPixmap &img);
+    QPixmap rotate(QPixmap src, double angle, int x, int y);
+    void drawRadius(QPixmap& src);
+
+    void drawMarker(QPixmap &src, int x, int y, QColor color);
 private slots:
 //    void drawSource(QImage&, double, double);
 //    void distort(QImage, QImage&, double, double, double);
@@ -50,7 +57,7 @@ private slots:
 
     void on_einsteinSpinbox_valueChanged();
     void on_srcSizeSpinbox_valueChanged();
-    void on_lensDistSpinbox_valueChanged();
+    void on_lensDistSpinbox_valueChanged(int);
     void on_xSpinbox_valueChanged();
     void on_ySpinbox_valueChanged();
     void on_gridBox_stateChanged(int arg1);
