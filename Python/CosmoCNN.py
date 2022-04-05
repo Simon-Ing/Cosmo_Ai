@@ -10,14 +10,14 @@ num_epochs = 100
 batch_size = 128
 learning_rate = 0.001
 
-n_train_samples = 500000
+n_train_samples = 200000
 n_test_samples = 5000
 img_size = 512
 
 # set to true when you want new data points
-gen_new_train = True
-gen_new_test = True
-load_checkpoint = True
+gen_new_train = 1
+gen_new_test = 1
+load_checkpoint = False
 checkpoint_path = "Models/autosave/autosave_epoch40"
 
 device = cuda_if_available()  # Use cuda if available
@@ -61,8 +61,7 @@ try:
             params = params.to(device)
 
             optimizer.zero_grad()
-            # print_images(images, params)  # print the images with parameters to make sure data is correct
-
+            
             # Forward pass
             
             with autocast():

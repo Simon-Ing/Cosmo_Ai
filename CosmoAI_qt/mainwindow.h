@@ -15,6 +15,7 @@ private:
     bool grid;
     bool markers;
     int wSize;
+    int wSizeWide;
     int einsteinR;
     int srcSize;
     int KL_percent;
