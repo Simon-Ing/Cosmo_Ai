@@ -1,11 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <random>
 #include <string>
 #include <iostream>
-#define _USE_MATH_DEFINES // for C++
-#include <math.h>
-#include <cmath>
 #include <QtCore>
 #include <QString>
 #include <QPainter>
@@ -13,18 +9,18 @@
 #define PI 3.14159265358979323846
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    grid = true;
-    markers = true;
-
     init_values();
+    setup();
+    updateImg();
+}
 
+
+void MainWindow::setup(){
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
@@ -59,12 +55,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->xSlider, SIGNAL(valueChanged(int)), ui->xSpinbox, SLOT(setValue(int)));
     connect(ui->ySpinbox, SIGNAL(valueChanged(int)), ui->ySlider, SLOT(setValue(int)));
     connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinbox, SLOT(setValue(int)));
-
-    updateImg();
 }
 
 void MainWindow::init_values() {
 
+    grid = true;
+    markers = true;
     wSize = 600;
     einsteinR = wSize/20;
     srcSize = wSize/20;
@@ -112,7 +108,8 @@ void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double
     }
 }
 
-void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDistorted, double R, double apparentPos, double KL) {
+
+void MainWindow::distort(int begin, int end) {
     int rows = imgDistorted.height();
     int cols = imgDistorted.width();
     // Evaluate each point in imgDistorted plane ~ lens plane
@@ -145,6 +142,7 @@ void MainWindow::distort(int begin, int end, QImage imgApparent, QImage& imgDist
     }
 }
 
+
 void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
@@ -159,20 +157,22 @@ void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
     }
 }
 
+
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
-void MainWindow::distortThreaded(double R, double apparentPos, QImage& imgApparent, QImage& imgDistorted, double KL) {
+void MainWindow::distortThreaded() {
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (imgDistorted.height() / num_threads) * k;
         unsigned int thread_end = (imgDistorted.height() / num_threads) * (k + 1);
-        std::thread t(&MainWindow::distort, this, thread_begin, thread_end, imgApparent, std::ref(imgDistorted), R, apparentPos, KL);
+        std::thread t(&MainWindow::distort, this, thread_begin, thread_end);
         threads_vec.push_back(std::move(t));
     }
     for (auto& thread : threads_vec) {
         thread.join();
     }
 }
+
 
 QPixmap MainWindow::rotate(QPixmap src, double angle,int x, int y){
     QPixmap r(src.size());
@@ -187,6 +187,7 @@ QPixmap MainWindow::rotate(QPixmap src, double angle,int x, int y){
     return r;
 }
 
+
 void MainWindow::drawRadius(QPixmap& src){
     QPointF center(src.width()/2, src.height()/2);
     QPainter painter(&src);
@@ -195,6 +196,7 @@ void MainWindow::drawRadius(QPixmap& src){
     painter.setOpacity(0.3);
     painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
 }
+
 
 void MainWindow::drawGrid(QPixmap& img){
     QPainter painter(&img);
@@ -208,6 +210,7 @@ void MainWindow::drawGrid(QPixmap& img){
     painter.drawLine(lineHor);
 }
 
+
 void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
     QPointF point(wSize/2 + x, wSize/2 - y);
     QPainter painter(&src);
@@ -218,21 +221,26 @@ void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
 }
 
 
-
 void MainWindow::updateImg() {
-
+    // Reset images
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
     imgDistorted.fill(Qt::black);
 
+    // Calculate positions and angles
     phi = atan2(yPos, xPos);
-    double actualPos = sqrt(xPos*xPos + yPos*yPos);
-    double apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    double apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    double R = apparentPos * KL;
-    int actualX = (int)round(actualPos*cos(phi));
-    int actualY = (int)round(actualPos*sin(phi));
+    actualPos = sqrt(xPos*xPos + yPos*yPos);
+    apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
+    apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+    R = apparentPos * KL;
+    actualX = (int)round(actualPos*cos(phi));
+    actualY = (int)round(actualPos*sin(phi));
+    apparentX = (int)round(apparentPos*cos(phi));
+    apparentY = (int)round(apparentPos*sin(phi));
+    apparentX2 = (int)round(apparentPos2*cos(phi));
+    apparentY2 = (int)round(apparentPos2*sin(phi));
 
+    // Draw source
     if (source == "Rocket"){
         QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         QPainter p1(&imgApparent);
@@ -240,26 +248,24 @@ void MainWindow::updateImg() {
         QPainter p2(&imgActual);
         p2.drawPixmap(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2, rocket1);
     }
-
     else{
         drawSourceThreaded(imgApparent, apparentPos, 0);
         drawSourceThreaded(imgActual, actualX, actualY);
     }
 
-
     // Convert image to pixmap
-    QPixmap imgAppPixDisp = QPixmap::fromImage(imgApparent);
+    QPixmap imgAppPix = QPixmap::fromImage(imgApparent);
 
-    // Pixmap with pre-rotation
-    auto imgAppPix = rotate(imgAppPixDisp, phi, apparentPos, 0);
+    // Pre rotate pixmap
+    imgAppPix = rotate(imgAppPix, phi, apparentPos, 0);
 
-    // Crop pixmap to correct display size
+    // Make a copy to display and crop it
     QRect rect2(wSize/2, 0, wSize, wSize);
-    imgAppPixDisp = imgAppPixDisp.copy(rect2);
+    auto imgAppPixDisp = imgAppPix.copy(rect2);
 
     // Convert pre-rotated pixmap to image and distort the image
     imgApparent = imgAppPix.toImage();
-    distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
+    distortThreaded();
 
     // Convert distorted image to pixmap, rotate and crop
     QPixmap imgDistPix = QPixmap::fromImage(imgDistorted);
@@ -267,14 +273,11 @@ void MainWindow::updateImg() {
     QRect rect(wSize/2, 0, wSize, wSize);
     imgDistPix = imgDistPix.copy(rect);
 
+    // What is this?
 //    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
 //    qDebug(qUtf8Printable(sizeString));
 
-    int apparentX = (int)round(apparentPos*cos(phi));
-    int apparentY = (int)round(apparentPos*sin(phi));
-    int apparentX2 = (int)round(apparentPos2*cos(phi));
-    int apparentY2 = (int)round(apparentPos2*sin(phi));
-
+    // Draw grids and markers
     auto imgActPix = QPixmap::fromImage(imgActual);
     if (grid == true) {
         drawGrid(imgActPix);
@@ -282,7 +285,6 @@ void MainWindow::updateImg() {
         drawGrid(imgDistPix);
         drawRadius(imgDistPix);
     }
-
     if (markers == true) {
         drawMarker(imgDistPix, apparentX, apparentY, Qt::blue);
         drawMarker(imgDistPix, apparentX2, apparentY2, Qt::blue);
@@ -294,6 +296,8 @@ void MainWindow::updateImg() {
     ui->appLabel->setPixmap(imgAppPixDisp);
     ui->distLabel->setPixmap(imgDistPix);
 }
+
+
 
 MainWindow::~MainWindow()
 {
@@ -318,7 +322,6 @@ void MainWindow::on_srcSizeSpinbox_valueChanged()
 void MainWindow::on_lensDistSpinbox_valueChanged(int arg1)
 {
     KL = arg1/100.0;
-//    KL_percent = ui->lensDistSpinbox->value();
     updateImg();
 }
 
@@ -351,7 +354,7 @@ void MainWindow::on_markerBox_stateChanged(int arg1)
 }
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_resetButton_clicked()
 {
     init_values();
     updateImg();

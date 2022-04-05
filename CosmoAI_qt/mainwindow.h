@@ -22,13 +22,16 @@ private:
     int yPos;
     double phi;
     double KL;
-
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private:
-    Ui::MainWindow *ui;
+    double actualPos;
+    double apparentPos;
+    double apparentPos2;
+    double R;
+    int actualX;
+    int actualY;
+    int apparentX;
+    int apparentY;
+    int apparentX2;
+    int apparentY2;    Ui::MainWindow *ui;
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
@@ -38,23 +41,24 @@ private:
     QPixmap rocket;
     QString source;
 
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private:
     void init_values();
     void drawGrid(QPixmap &img);
-    QPixmap rotate(QPixmap src, double angle, int x, int y);
     void drawRadius(QPixmap& src);
-
     void drawMarker(QPixmap &src, int x, int y, QColor color);
-private slots:
-//    void drawSource(QImage&, double, double);
-//    void distort(QImage, QImage&, double, double, double);
+    void setup();
     void updateImg();
-//    void updateValues();
-
     void drawSourceThreaded(QImage&, double, double);
     void drawSource(int, int, QImage&, double, double);
-    void distort(int, int, QImage, QImage&, double, double, double);
-    void distortThreaded(double, double, QImage&, QImage&, double);
+    void distort(int, int);
+    void distortThreaded();
+    QPixmap rotate(QPixmap src, double angle, int x, int y);
 
+private slots:
     void on_einsteinSpinbox_valueChanged();
     void on_srcSizeSpinbox_valueChanged();
     void on_lensDistSpinbox_valueChanged(int);
@@ -62,7 +66,8 @@ private slots:
     void on_ySpinbox_valueChanged();
     void on_gridBox_stateChanged(int arg1);
     void on_markerBox_stateChanged(int arg1);
-    void on_pushButton_clicked();
+    void on_resetButton_clicked();
     void on_srcTypeComboBox_currentTextChanged(const QString &arg1);
 };
+
 #endif // MAINWINDOW_H
