@@ -20,15 +20,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    grid = true;
-    markers = true;
+    grid = false;
+    markers = false;
 
     init_values();
 
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    rocket = QPixmap(":/new/prefix1/rocket-png-40811.png");
+    rocket = QPixmap(":/new/prefix1/Tintin.png");
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -72,7 +72,6 @@ void MainWindow::init_values() {
     xPos = 0;
     yPos = 0;
     source = ui->srcTypeComboBox->currentText();
-    std::cout << "Source: " << source.toStdString() << std::endl;
 
     // Set initial values for UI elements
     ui->einsteinSpinbox->setValue(einsteinR);
@@ -85,8 +84,8 @@ void MainWindow::init_values() {
     ui->xSlider->setSliderPosition(xPos);
     ui->ySpinbox->setValue(yPos);
     ui->ySlider->setSliderPosition(yPos);
-    ui->gridBox->setChecked(true);
-    ui->markerBox->setChecked(true);
+    ui->gridBox->setChecked(grid);
+    ui->markerBox->setChecked(markers);
 }
 
 void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double yPos) {
