@@ -10,13 +10,13 @@ num_epochs = 100
 batch_size = 128
 learning_rate = 0.001
 
-n_train_samples = 200000
-n_test_samples = 5000
+n_train_samples = 1000
+n_test_samples = 500
 img_size = 512
 
 # set to true when you want new data points
-gen_new_train = 1
-gen_new_test = 1
+gen_new_train = 0
+gen_new_test = 0
 load_checkpoint = False
 checkpoint_path = "Models/autosave/autosave_epoch40"
 
@@ -56,7 +56,7 @@ scaler = torch.cuda.amp.GradScaler()
 # Training loop
 try:
     for epoch in tqdm(range(num_epochs), desc="Total"):
-        for i, (images, params) in enumerate(tqdm(train_loader, desc='Epoch')):
+        for i, (images, params) in enumerate(train_loader):
             images = images.to(device)
             params = params.to(device)
 
