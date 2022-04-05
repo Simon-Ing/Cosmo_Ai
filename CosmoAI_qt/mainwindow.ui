@@ -78,6 +78,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Triangle</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Rocket</string>
          </property>
         </item>

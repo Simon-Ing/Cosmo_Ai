@@ -6,6 +6,7 @@
 #include <QString>
 #include <QPainter>
 #include <QDebug>
+#include <QPainterPath>
 #define PI 3.14159265358979323846
 
 
@@ -84,7 +85,7 @@ void MainWindow::init_values() {
     ui->markerBox->setChecked(markers);
 }
 
-void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double yPos) {
+void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, double yPos) {
     int rows = img.height();
     int cols = img.width();
     for (int row = begin; row < end; row++) {
@@ -108,6 +109,53 @@ void MainWindow::drawSource(int begin, int end, QImage& img, double xPos, double
     }
 }
 
+void MainWindow::drawSource(){
+    if (source == "Gauss"){
+        drawGaussianThreaded(imgActual, actualX, actualY);
+        drawGaussianThreaded(imgApparent, apparentPos, 0);
+    }
+    else{
+        QPainter pAct(&imgActual);
+        QPainter pApp(&imgApparent);
+        QPen pen(Qt::white, wSize/200);
+        pAct.setPen(pen);
+        pApp.setPen(pen);
+
+        if (source == "Rocket"){
+            QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            QPoint posApp(apparentPos + wSize - rocket1.width()/2, wSize/2 - rocket1.height()/2);
+            QPoint posAct(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2);
+            pAct.drawPixmap(posAct, rocket1);
+            pApp.drawPixmap(posApp, rocket1);
+        }
+        QRect rectApp(apparentPos + wSize - srcSize, wSize/2 - srcSize, 2*srcSize, 2*srcSize);
+        QRect rectAct(actualX + wSize/2 - srcSize, wSize/2 - actualY - srcSize, 2*srcSize, 2*srcSize);
+        if (source == "Circle"){
+            pAct.drawEllipse(rectAct);
+            pApp.drawEllipse(rectApp);
+        }
+        else if (source == "Square"){
+            pAct.drawRect(rectAct);
+            pApp.drawRect(rectApp);
+        }
+
+        else if (source == "Triangle"){
+            QPainterPath pathAct;
+            pathAct.moveTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
+            pathAct.lineTo(rectAct.bottomLeft());
+            pathAct.lineTo(rectAct.bottomRight());
+            pathAct.lineTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
+            pAct.fillPath(pathAct, QBrush(Qt::white));
+
+            QPainterPath pathApp;
+            pathApp.moveTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
+            pathApp.lineTo(rectApp.bottomLeft());
+            pathApp.lineTo(rectApp.bottomRight());
+            pathApp.lineTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
+            pApp.fillPath(pathApp, QBrush(Qt::white));
+        }
+    }
+}
 
 void MainWindow::distort(int begin, int end) {
     int rows = imgDistorted.height();
@@ -143,13 +191,13 @@ void MainWindow::distort(int begin, int end) {
 }
 
 
-void MainWindow::drawSourceThreaded(QImage& img, double xPos, double yPos){
+void MainWindow::drawGaussianThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
         unsigned int thread_begin = (img.height() / num_threads) * k;
         unsigned int thread_end = (img.height() / num_threads) * (k + 1);
-        std::thread t(&MainWindow::drawSource, this, thread_begin, thread_end, std::ref(img), xPos, yPos);
+        std::thread t(&MainWindow::drawGaussian, this, thread_begin, thread_end, std::ref(img), xPos, yPos);
         threads_vec.push_back(std::move(t));
     }
     for (auto& thread : threads_vec) {
@@ -240,18 +288,7 @@ void MainWindow::updateImg() {
     apparentX2 = (int)round(apparentPos2*cos(phi));
     apparentY2 = (int)round(apparentPos2*sin(phi));
 
-    // Draw source
-    if (source == "Rocket"){
-        QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        QPainter p1(&imgApparent);
-        p1.drawPixmap(apparentPos + wSize - rocket1.width()/2, wSize/2 - rocket1.height()/2, rocket1);
-        QPainter p2(&imgActual);
-        p2.drawPixmap(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2, rocket1);
-    }
-    else{
-        drawSourceThreaded(imgApparent, apparentPos, 0);
-        drawSourceThreaded(imgActual, actualX, actualY);
-    }
+    drawSource();
 
     // Convert image to pixmap
     QPixmap imgAppPix = QPixmap::fromImage(imgApparent);

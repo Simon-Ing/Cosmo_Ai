@@ -52,12 +52,13 @@ private:
     void drawMarker(QPixmap &src, int x, int y, QColor color);
     void setup();
     void updateImg();
-    void drawSourceThreaded(QImage&, double, double);
-    void drawSource(int, int, QImage&, double, double);
+    void drawGaussianThreaded(QImage&, double, double);
+    void drawGaussian(int, int, QImage&, double, double);
     void distort(int, int);
     void distortThreaded();
     QPixmap rotate(QPixmap src, double angle, int x, int y);
 
+    void drawSource();
 private slots:
     void on_einsteinSpinbox_valueChanged();
     void on_srcSizeSpinbox_valueChanged();
