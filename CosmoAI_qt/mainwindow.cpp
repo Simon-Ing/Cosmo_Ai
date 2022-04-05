@@ -226,20 +226,24 @@ void MainWindow::updateImg() {
     }
 
     // Rotatation of pixmap
-    QPixmap pix2 = QPixmap::fromImage(imgApparent);
-    QPixmap appRot(pix2.size());
-    QSize pSize = pix2.size();
-    appRot.fill(QColor::fromRgb(Qt::black));
-    QPainter p(&appRot);
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.translate(pSize.width()/2, pSize.height()/2);
-    p.rotate(-phi*180/PI);
-    p.translate(-pSize.width()/2, -pSize.height()/2);
-    p.drawPixmap(0,0, pix2);
+    QPixmap imgAppDisp;
+
+    // Rotatation of pixmap
+    QPixmap p = QPixmap::fromImage(imgApparent);
+    QPixmap r(p.size());
+    QSize s = p.size();
+    r.fill(QColor::fromRgb(Qt::black));
+    QPainter m(&r);
+    m.setRenderHint(QPainter::SmoothPixmapTransform);
+    m.translate(s.width()/2 + apparentPos, s.height()/2);
+    m.rotate(phi*180/PI);
+    m.translate(-s.width()/2 - apparentPos, -s.height()/2);
+    m.drawPixmap(0,0, p);
+    imgApparent = r.toImage();
 
     // Crop rotated pixmap to correct display size
-    QRect rect2((wSizeWide - wSize)/2, 0, wSize, wSize);
-    QPixmap imgAppDisp = appRot.copy(rect2);
+    QRect rect2(wSize/2, 0, wSize, wSize);
+    imgAppDisp = r.copy(rect2);
 
     distortThreaded(R, apparentPos, imgApparent, imgDistorted, KL);
 
