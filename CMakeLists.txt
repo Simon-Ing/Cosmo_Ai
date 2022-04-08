@@ -13,17 +13,19 @@ include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 
 conan_cmake_run(REQUIRES
+        symengine/0.9.0
         opencv/4.5.3
         nlohmann_json/3.10.5
         BASIC_SETUP)
 
 
-
+add_executable(Simulator_2 GL_Simulator_2.cpp)
+add_library(SimLib Simulator.cpp)
 add_executable(main main.cpp)
 add_executable(Data data_generator.cpp)
-add_executable(All generate_all.cpp)
 add_executable(new new_data_gen.cpp)
+target_link_libraries(Simulator_2 ${CONAN_LIBS} SimLib)
+target_link_libraries(SimLib ${CONAN_LIBS} )
 target_link_libraries(main ${CONAN_LIBS} )
 target_link_libraries(Data ${CONAN_LIBS} )
-target_link_libraries(All ${CONAN_LIBS} )
 target_link_libraries(new ${CONAN_LIBS} )

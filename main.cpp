@@ -156,7 +156,6 @@ static void update(int, void*) {
     cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + actualX, size/2 - actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size/30);
     cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
     cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
-
     cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
     imgActual.copyTo(matRoi);

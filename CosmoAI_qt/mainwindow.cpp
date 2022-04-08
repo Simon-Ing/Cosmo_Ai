@@ -122,7 +122,7 @@ void MainWindow::drawSource(){
         pApp.setPen(pen);
 
         if (source == "Rocket"){
-            QPixmap rocket1 = rocket.scaled(3*srcSize, 3*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            QPixmap rocket1 = rocket.scaled(6*srcSize, 6*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             QPoint posApp(apparentPos + wSize - rocket1.width()/2, wSize/2 - rocket1.height()/2);
             QPoint posAct(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2);
             pAct.drawPixmap(posAct, rocket1);
@@ -330,7 +330,7 @@ void MainWindow::updateImg() {
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPix);
-    ui->appLabel->setPixmap(imgAppPixDisp);
+//    ui->appLabel->setPixmap(imgAppPixDisp);
     ui->distLabel->setPixmap(imgDistPix);
 }
 
