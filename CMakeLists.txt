@@ -15,7 +15,6 @@ include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_cmake_run(REQUIRES
         symengine/0.9.0
         opencv/4.5.3
-        nlohmann_json/3.10.5
         BASIC_SETUP)
 
 

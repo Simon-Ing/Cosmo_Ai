@@ -9,11 +9,11 @@
 
 #define PI 3.14159265358979323846
 
-
 double factorial_(unsigned int n);
+class Timer;
 
 Simulator::Simulator() :
-    size(100),
+    size(60),
     CHI_percent(50),
     CHI(CHI_percent/100.0),
     einsteinR(size/20),
@@ -30,7 +30,7 @@ void Simulator::initGui(){
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, update_dummy, this);
-    cv::createTrackbar("Einstein radius:", "GL Simulator", &einsteinR, size / 10, update_dummy, this);
+    cv::createTrackbar("Einstein radius:", "GL Simulator", &einsteinR, size, update_dummy, this);
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, update_dummy, this);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, update_dummy, this);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, update_dummy, this);
@@ -39,7 +39,7 @@ void Simulator::initGui(){
 
 
 void Simulator::update_dummy(int, void* data){
-    auto* that = reinterpret_cast<Simulator*>(data);
+    auto* that = (Simulator*)(data);
     if (!that->mode){ // if point mass mode
         that->update();
     }
@@ -84,49 +84,78 @@ void Simulator::initAlphasBetas(std::array<std::array<LambdaRealDoubleVisitor, n
 
 void Simulator::update() {
 
+    auto startTime = std::chrono::system_clock::now();
+
     GAMMA = einsteinR;
     calculate();
     cv::Mat imgApparent(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-//    if (lens == "point"){
-    cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
-//    }
-//    else{
-//        cv::circle(imgApparent, cv::Point(size + (int)apparentX, size/2 - (int)apparentY), sourceSize, cv::Scalar::all(255), sourceSize/2);
-//    }
-    cv::Mat imgDistorted(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-    parallelDistort(imgApparent, imgDistorted);
-
-    // make a scaled, rotated and cropped version of the distorted image
-    cv::Mat imgDistortedDisplay;
-    cv::resize(imgDistorted, imgDistortedDisplay, cv::Size(2*size, size));
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
-    cv::warpAffine(imgDistortedDisplay, imgDistortedDisplay, rot, cv::Size(2*size, size));
-    imgDistortedDisplay =  imgDistortedDisplay(cv::Rect(size/2, 0, size, size));
-    cv::cvtColor(imgDistortedDisplay, imgDistortedDisplay, cv::COLOR_GRAY2BGR);
-
+    cv::Mat imgDistorted(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
     // make an image with light source at ACTUAL position
-    cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 
-    cv::cvtColor(imgActual, imgActual, cv::COLOR_GRAY2BGR);
+    // if point
+    if (mode == 0){
+        cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        parallelDistort(imgApparent, imgDistorted);
+        // rotate image
+        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
+        cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));
+    }
+    // if Spherical
+    else if (mode == 1){
+        cv::circle(imgApparent, cv::Point(size + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        parallelDistort(imgApparent, imgDistorted);
+//        distort(0, size, imgActual, imgDistorted);
+    }
+
+    // crop distorted image
+    imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
+    cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
+
 
     int displaySize = 600;
 
-//    refLines(imgActual);
-//    refLines(imgDistortedDisplay);
-    cv::circle(imgDistortedDisplay, cv::Point(size/2, size/2), (int)round(einsteinR/CHI), cv::Scalar::all(60));
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + (int)apparentX, size/2 - (int)apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + (int)apparentX2, size/2 - (int)apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size/30);
-    cv::drawMarker(imgDistortedDisplay, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size/30);
+    refLines(imgActual);
+    refLines(imgDistorted);
+
+    cv::Mat imgOutput;
+
+    cv::Mat matDst = formatImg(imgDistorted, imgActual, displaySize);
+
+    cv::imshow("GL Simulator", matDst);
+
+    auto endTime = std::chrono::system_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << std::endl;
+    // 6.5s 60 10 laptop
+}
+
+// Add some lines to the image for reference
+void Simulator::refLines(cv::Mat& target) {
+    int size_ = target.rows;
+    for (int i = 0; i < size_; i++) {
+        target.at<cv::Vec3b>(i, size_ / 2) = {60, 60, 60};
+        target.at<cv::Vec3b>(size_ / 2 - 1, i) = {60, 60, 60};
+        target.at<cv::Vec3b>(i, size_ - 1) = {255, 255, 255};
+        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
+        target.at<cv::Vec3b>(size_ - 1, i) = {255, 255, 255};
+        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
+    }
+}
+
+cv::Mat Simulator::formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const {
+    cv::circle(imgDistorted, cv::Point(size / 2, size / 2), (int)round(einsteinR / CHI), cv::Scalar::all(60));
+    cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX, size / 2 - (int) apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
+    cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX2, size / 2 - (int) apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
+    cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) actualX, size / 2 - (int) actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size / 30);
     cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
-    cv::resize(imgDistortedDisplay, imgDistortedDisplay, cv::Size(displaySize, displaySize));
+    cv::resize(imgDistorted, imgDistorted, cv::Size(displaySize, displaySize));
     cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
     imgActual.copyTo(matRoi);
     matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
-    imgDistortedDisplay.copyTo(matRoi);
-
-    cv::imshow("GL Simulator", matDst);
+    imgDistorted.copyTo(matRoi);
+    return matDst;
 }
 
 void Simulator::calculate() {
@@ -147,6 +176,7 @@ void Simulator::calculate() {
     apparentX2 = actualX * apparentAbs2 / actualAbs;
     apparentY2 = actualY * apparentAbs2 / actualAbs;
 
+
     // Projection of apparent position in lens plane
     R = apparentAbs * CHI;
     X = apparentX * CHI;
@@ -156,25 +186,13 @@ void Simulator::calculate() {
     phi = atan2(actualY, actualX);
 }
 
-
-void Simulator::drawSource(cv::Mat& img, double x_pos, double y_pos) const {
-    for (int row = 0; row < img.rows; row++) {
-        for (int col = 0; col < img.cols; col++) {
-            double x = col - x_pos - img.cols/2.0;
-            double y = row + y_pos - img.rows/2.0;
-            auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0 * sourceSize * sourceSize)));
-            img.at<uchar>(row, col) = value;
-        }
-    }
-}
-
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
     for (int k = 0; k < num_threads; k++) {
-        unsigned int thread_begin = (src.rows / num_threads) * k;
-        unsigned int thread_end = (src.rows / num_threads) * (k + 1);
+        int thread_begin = (int)(src.rows / num_threads) * k;
+        int thread_end = (int)(src.rows / num_threads) * (k + 1);
         std::thread t([thread_begin, thread_end, src, &dst, this](){distort(thread_begin, thread_end, src, dst);});
         threads_vec.push_back(std::move(t));
     }
@@ -183,32 +201,45 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
-void Simulator::distort(unsigned int begin, unsigned int end, const cv::Mat& src, cv::Mat& dst) {
+void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Evaluate each point in imgDistorted plane ~ lens plane
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
-            // Set coordinate system with origin at x=R
-            double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
-            double y = (dst.rows/2.0 - row) * CHI;
+            int row_, col_;
 
-            // Calculate distance and angle of the point evaluated relative to center of lens (origin)
-            double r = sqrt(x*x + y*y);
-            double theta = atan2(y, x);
-            std::pair<double, double> pos;
             // if point mass
             if (!mode){
-                pos = pointMass(r, theta);
+
+                // Set coordinate system with origin at x=R
+                double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+                double y = (dst.rows/2.0 - row) * CHI;
+
+                // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+                double r = sqrt(x*x + y*y);
+                double theta = atan2(y, x);
+                auto pos = pointMass(r, theta);
+
+                // Translate to array index
+                row_ = (int)round(src.rows / 2.0 - pos.second);
+                col_ = (int)round(apparentAbs + src.cols / 2.0 + pos.first);
             }
 
             // if sphere
             else{
-                pos = spherical(r, theta, alphas_l, betas_l);
+                // Set coordinate system with origin at x=R
+                double x = (col - actualX - dst.cols / 2.0) * CHI;
+                double y = (dst.rows/2.0 - row - actualY) * CHI;
+                // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+                double r = sqrt(x*x + y*y);
+                double theta = atan2(y, x);
+                auto pos = spherical(r, theta, alphas_l, betas_l);
+
+                // Translate to array index
+                row_ = (int)round(src.rows / 2.0 - pos.second - actualY);
+                col_ = (int)round(apparentAbs + src.cols / 2.0 + pos.first);
             }
 
-            // Translate to array index
-            int row_ = (int)round(src.rows / 2.0 - pos.first);
-            int col_ = (int)round(apparentAbs + src.cols / 2.0 + pos.second);
 
             // If (x', y') within source, copy value to imgDistorted
             if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
@@ -226,20 +257,38 @@ std::pair<double, double> Simulator::pointMass(double r, double theta) const {
 }
 
 std::pair<double, double> Simulator::spherical(double r, double theta, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& alphas_lambda, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& betas_lambda) const {
-    double ksi_1 = 0;
-    double ksi_2 = 0;
+    double ksi1 = 0;
+    double ksi2 = 0;
+
+    int count = 0;
+    double max1 = 0;
+    double max2 = 0;
+
     for (int m=1; m<n; m++){
         double frac = pow(r, m) / factorial_(m);
+        double subTerm1 = 0;
+        double subTerm2 = 0;
         for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
+            count ++;
             double alpha = GAMMA/(CHI) * alphas_lambda[m][s].call({X, Y, GAMMA, CHI});
             double beta = GAMMA/(CHI) * betas_lambda[m][s].call({X, Y, GAMMA, CHI});
             int c_p = 1 + s/(m + 1);
             int c_m = 1 - s/(m + 1);
-            ksi_1 += frac*theta*((alpha*cos(s-1) + beta*sin(s-1))*c_p + (alpha*cos(s+1) + beta*sin(s+1)*c_m));
-            ksi_2 += frac*theta*((-alpha*sin(s-1) + beta*cos(s-1))*c_p + (alpha*sin(s+1) - beta*cos(s+1)*c_m));
+            subTerm1 += theta*((alpha*cos(s-1) + beta*sin(s-1))*c_p + (alpha*cos(s+1) + beta*sin(s+1)*c_m));
+            subTerm2 += theta*((-alpha*sin(s-1) + beta*cos(s-1))*c_p + (alpha*sin(s+1) - beta*cos(s+1)*c_m));
+        }
+        double term1 = frac*subTerm1;
+        double term2 = frac*subTerm2;
+        ksi1 += term1;
+        ksi2 += term2;
+        max1 = std::max(std::abs(term1), max1);
+        max2 = std::max(std::abs(term2), max2);
+//        std::cout << "Count: " << count << " m: " << m << " term 1: " << term1 << " term 2 " << term2 << " max1: " << max1 << " max2: " << max2 << std::endl;
+        if ( std::abs(term1) < max1/100 && std::abs(term2) < max2/100){
+            break;
         }
     }
-    return {ksi_1, ksi_2};
+    return {ksi1, ksi2};
 }
 
 

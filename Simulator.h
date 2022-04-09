@@ -36,7 +36,7 @@ private:
     double apparentAbs{};
     double apparentAbs2{};
     double R{};
-    const static int n = 8;
+    const static int n = 10;
     RCP<const Symbol> xSym, ySym, gammaSym, chiSym;
     std::vector<std::vector<RCP<const Basic>>> alphas;
     std::vector<std::vector<RCP<const Basic>>> betas;
@@ -58,7 +58,7 @@ private:
 
     void parallelDistort(const cv::Mat& src, cv::Mat& dst);
 
-    void distort(unsigned int begin, unsigned int end, const cv::Mat& src, cv::Mat& dst);
+    void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst);
 
     [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
 
@@ -68,6 +68,9 @@ private:
 
     static void update_dummy(int, void*);
 
+    cv::Mat formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const;
+
+    static void refLines(cv::Mat &target);
 };
 
 
