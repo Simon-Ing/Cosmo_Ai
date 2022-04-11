@@ -57,6 +57,7 @@ private:
     void distort(int, int);
     void distortThreaded();
     QPixmap rotate(QPixmap src, double angle, int x, int y);
+    void resizeEvent(QResizeEvent *event);
 
     void drawSource();
 private slots:

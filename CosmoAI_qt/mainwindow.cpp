@@ -27,6 +27,8 @@ void MainWindow::setup(){
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
     rocket = QPixmap(":/new/prefix1/Tintin.png");
 
+    MainWindow::adjustSize();
+
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
     ui->einsteinSpinbox->setMaximum(0.1*wSize);
@@ -268,6 +270,11 @@ void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
     painter.drawPoint(point);
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event){
+    QMainWindow::resizeEvent(event);
+    updateImg();
+}
+
 
 void MainWindow::updateImg() {
     // Reset images
@@ -310,9 +317,6 @@ void MainWindow::updateImg() {
     QRect rect(wSize/2, 0, wSize, wSize);
     imgDistPix = imgDistPix.copy(rect);
 
-    // What is this?
-//    QString sizeString = QString("(%1,%2)").arg(distRot2.width()).arg(distRot2.height());
-//    qDebug(qUtf8Printable(sizeString));
 
     // Draw grids and markers
     auto imgActPix = QPixmap::fromImage(imgActual);
@@ -329,9 +333,9 @@ void MainWindow::updateImg() {
     }
 
     // Draw pixmaps on QLabels
-    ui->actLabel->setPixmap(imgActPix);
-//    ui->appLabel->setPixmap(imgAppPixDisp);
-    ui->distLabel->setPixmap(imgDistPix);
+    int labelH = ui->actLabel->height();
+    ui->actLabel->setPixmap(imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->distLabel->setPixmap(imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 
