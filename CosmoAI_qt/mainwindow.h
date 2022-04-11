@@ -39,6 +39,7 @@ private:
     QPixmap pixAct;
     QPixmap pixDist;
     QPixmap rocket;
+    QPixmap legend;
     QString source;
 
 public:
@@ -58,6 +59,8 @@ private:
     void distortThreaded();
     QPixmap rotate(QPixmap src, double angle, int x, int y);
     void resizeEvent(QResizeEvent *event);
+    void drawLegend(QPixmap&);
+    void drawText(QPixmap& img, int x, int y, QString text);
 
     void drawSource();
 private slots:

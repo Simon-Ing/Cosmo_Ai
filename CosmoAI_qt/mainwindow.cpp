@@ -262,7 +262,7 @@ void MainWindow::drawGrid(QPixmap& img){
 
 
 void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
-    QPointF point(wSize/2 + x, wSize/2 - y);
+    QPointF point(x, y);
     QPainter painter(&src);
     QPen pen(color, 10);
     painter.setPen(pen);
@@ -275,6 +275,38 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     updateImg();
 }
 
+void MainWindow::drawText(QPixmap& img, int x, int y, QString text){
+    QPointF point(x,y);
+    QPainter painter(&img);
+    painter.drawText(point, text);
+}
+
+void MainWindow::drawLegend(QPixmap& img){
+
+    // Create legend pixmap
+    int legendHeight = wSize/12;
+    int legendWidth = wSize/4.5;
+    QPixmap legend(legendWidth, legendHeight);
+
+    // Background color of legend
+    legend.fill(Qt::gray);
+
+    // Draw markers in legend
+    drawMarker(legend, 10, 10, Qt::red);
+    drawMarker(legend, 10, 30, Qt::blue);
+
+    // Add text to legend
+    drawText(legend, 20, 15, "Actual position");
+    drawText(legend, 20, 35, "Apparent positions");
+
+    // Set legend opacity and draw to main pixmap
+    QPainter painter(&img);
+    painter.setOpacity(0.6);
+    painter.drawPixmap(0, 0, legend);
+
+    //Check position of source and move legend??
+
+}
 
 void MainWindow::updateImg() {
     // Reset images
@@ -327,9 +359,12 @@ void MainWindow::updateImg() {
         drawRadius(imgDistPix);
     }
     if (markers == true) {
-        drawMarker(imgDistPix, apparentX, apparentY, Qt::blue);
-        drawMarker(imgDistPix, apparentX2, apparentY2, Qt::blue);
-        drawMarker(imgDistPix, actualX, actualY, Qt::red);
+
+        drawMarker(imgDistPix, wSize/2 + apparentX, wSize/2 - apparentY, Qt::blue);
+        drawMarker(imgDistPix, wSize/2 + apparentX2, wSize/2 - apparentY2, Qt::blue);
+        drawMarker(imgDistPix, wSize/2 + actualX, wSize/2 - actualY, Qt::red);
+
+        drawLegend(imgDistPix);
     }
 
     // Draw pixmaps on QLabels
