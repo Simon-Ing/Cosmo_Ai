@@ -15,11 +15,14 @@ def spherical(r, theta, X, Y, GAMMA, CHI):
     count = 0
     max1 = 0
     max2 = 0
-
+	
+    #print(f'\nr: {r}, theta: {theta}, X: {X}, Y: {Y}, GAMMA: {GAMMA}, CHI: {CHI}\n')
     for m in range(1, n):
         frac = pow(r, m) / factorial(m)
         sub_term1 = 0.0
         sub_term2 = 0.0
+        max1 = 0
+        max2 = 0
         for s in range((m+1)%2, min(m+1, n), 2):
             count += 1
             alpha = alphas[m][s](X, Y, GAMMA, CHI)
@@ -31,11 +34,17 @@ def spherical(r, theta, X, Y, GAMMA, CHI):
 
         term1 = frac*sub_term1
         term2 = frac*sub_term2
+        max1 = max(max1, term1)
+        max2 = max(max2, term2)
         ksi1 += term1
         ksi2 += term2
+        if abs(term1) < abs(ksi1)/100 or abs(term2) < abs(ksi2)/100:
+            print(f'Returned m:{m}, s: {s}, n: {n}, terms: {term1}, {term2}')
+            return ksi1, ksi2
 
-        print(f'm: {m}, term1: {term1}, term2: {term2} frac: {frac}')
-
+     #   print(f'm: {m}, term1: {term1}, term2: {term2} frac: {frac}')
+    
+    print(f'Returned m:{m}, s: {s}, n: {n}, terms: {term1}, {term2}')
     return ksi1, ksi2
 
 
@@ -44,21 +53,21 @@ if __name__ == "__main__":
     # gamma, chi = symbols("gamma chi", positive=True, real=True)
 
     print("Loading alphas")
-    with open("alphas_l_14", "rb") as fp:
+    with open("alphas_l_16", "rb") as fp:
         alphas = dill.load(fp)
 
     print("Loading betas")
-    with open("betas_l_14", "rb") as fp:
+    with open("betas_l_16", "rb") as fp:
         betas = dill.load(fp)
     print("Done loading")
 
     n = len(alphas)
     print(f'n: {n}')
 
-    size = 100
-    x_pos = 10
-    y_pos = 10
-    GAMMA = 100
+    size = 50
+    x_pos = -10
+    y_pos = 0
+    GAMMA = 1
     CHI = 0.5
     X = x_pos * CHI
     Y = y_pos * CHI
@@ -67,6 +76,8 @@ if __name__ == "__main__":
     dist = np.zeros((size, size))
 
     img = cv.circle(img, (int(size/2 + x_pos), int(size/2 - y_pos)), 0, (255, 255, 255), int(size/4))
+    
+    timer = time()    
 
     for row in range(0, size):
         print(f'{row} / {size}')
@@ -75,7 +86,6 @@ if __name__ == "__main__":
             y = (size/2.0 - row - y_pos) * CHI
             r = sqrt(x*x + y*y)
             theta = arctan2(y, x)
-
             x_, y_ = spherical(r, theta, X, Y, GAMMA, CHI)
 
             row_ = round(size/2.0 - y_ - y_pos)
@@ -93,6 +103,10 @@ if __name__ == "__main__":
     dist = cv.circle(dist, (int(size/2), int(size/2)), 0, (0, 0, 255), 4)
     img = cv.resize(img, (400, 400))
     dist = cv.resize(dist, (400, 400))
-    cv.imshow("img", img)
-    cv.imshow("dist", dist)
-    cv.waitKey(0)
+    cv.imshow("img2", img)
+    cv.imshow("dist2", dist)
+    print(f'time: {time() - timer}')
+    k = 0
+    while k != 113:
+        k = cv.waitKey(0)
+    cv.destroyAllWindows()
