@@ -6,8 +6,10 @@
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
 #include <thread>
+#include <fstream>
 
 #define PI 3.14159265358979323846
+
 
 double factorial_(unsigned int n);
 
@@ -20,7 +22,9 @@ Simulator::Simulator() :
     sourceSize(size/20),
     xPosSlider(size/2 + 1),
     yPosSlider(size/2),
-    mode(0) // 0 = point mass, 1 = sphere
+    X(0),
+    Y(0),
+    mode(1) // 0 = point mass, 1 = sphere
 {
 }
 
@@ -51,6 +55,7 @@ void Simulator::update() {
         parallelDistort(imgApparent, imgDistorted);
 //        distort(0, size, imgApparent, imgDistorted);
     }
+
     // crop distorted image
     imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
     cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
@@ -70,21 +75,25 @@ void Simulator::update() {
 
 void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     std::vector<std::thread> threads_vec;
+    std::mutex m;
     for (int row = 0; row < dst.rows; row++) {
         for (int col = 0; col < dst.cols; col++) {
             std::cout << (row*dst.cols + col + 1.0) / (dst.cols*dst.rows) * 100.0 << "%" << std::endl;
-            std::thread t([row, col, src, &dst, this]() { distort(row, col, src, dst); });
-            threads_vec.push_back(std::move(t));
+//            std::thread t([row, col, src, &dst, &m, this]() { distort(row, col, src, dst, m); });
+//            threads_vec.push_back(std::move(t));
+            distort(row, col, src, dst, m);
         }
     }
 
     for (auto& thread : threads_vec) {
+        std::cout << "9" << std::endl;
         thread.join();
     }
 }
 
 
-void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
+void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst, std::mutex& m) {
+    std::lock_guard<std::mutex> lock(m);
     // Evaluate each point in imgDistorted plane ~ lens plane
     int row_, col_;
     // Set coordinate system with origin at x=R
@@ -102,7 +111,7 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     }
         // if sphere
     else {
-        auto pos = spherical(r, theta, alphas_l, betas_l);
+        auto pos = spherical(r, theta);
         // Translate to array index
         row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
         col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
@@ -110,37 +119,54 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
 
     // If (x', y') within source, copy value to imgDistorted
     if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+//        std::cout << "row: " << row << " col: " << col << " row_: " << row_ << " col_: " << col_ << std::endl;
+        std::cout << "a" << std::endl;
         auto val = src.at<uchar>(row_, col_);
+        std::cout << "b" << std::endl;
         dst.at<uchar>(row, col) = val;
+        std::cout << "c" << std::endl;
     }
 }
 
 
-std::pair<double, double> Simulator::spherical(double r, double theta, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& alphas_lambda, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& betas_lambda) const {
+std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
     double ksi2 = 0;
-
 
     for (int m=1; m<n; m++){
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
         double subTerm2 = 0;
         for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
-            double alpha = alphas_lambda[m][s].call({X, Y, GAMMA, CHI});
-            double beta = betas_lambda[m][s].call({X, Y, GAMMA, CHI});
+//            double alpha = alphas_lambda[m][s].call({X, Y, GAMMA, CHI});
+//            double beta = betas_lambda[m][s].call({X, Y, GAMMA, CHI});
+            auto alpha = alphas[m][s];
+            auto beta = betas[m][s];
+            auto alpha_eval = evalf(alpha.subs(GiNaC::lst{x==X, y==Y, c==CHI, g==GAMMA}));
+            auto beta_eval = evalf(beta.subs(GiNaC::lst{x==X, y==Y, c==CHI, g==GAMMA}));
+            auto alpha_num = GiNaC::ex_to<GiNaC::numeric>(alpha_eval).to_double();
+            auto beta_num = GiNaC::ex_to<GiNaC::numeric>(beta_eval).to_double();
+//            std::cout << "\nm: " << m << " s: " << s << "\nalpha: " << alpha << " beta: " << beta <<"\nalpha: " << alpha << " beta: " << beta << std::endl;
             int c_p = 1 + s/(m + 1);
             int c_m = 1 - s/(m + 1);
-            subTerm1 += theta*((alpha*cos(s-1) + beta*sin(s-1))*c_p + (alpha*cos(s+1) + beta*sin(s+1)*c_m));
-            subTerm2 += theta*((-alpha*sin(s-1) + beta*cos(s-1))*c_p + (alpha*sin(s+1) - beta*cos(s+1)*c_m));
+            subTerm1 += theta*((alpha_num*cos(s-1) + beta_num*sin(s-1))*c_p + (alpha_num*cos(s+1) + beta_num*sin(s+1)*c_m));
+            subTerm2 += theta*((-alpha_num*sin(s-1) + beta_num*cos(s-1))*c_p + (alpha_num*sin(s+1) - beta_num*cos(s+1)*c_m));
         }
+
+//        std::cout << "1" << std::endl;
         double term1 = frac*subTerm1;
         double term2 = frac*subTerm2;
+//        std::cout << "2" << std::endl;
         ksi1 += term1;
         ksi2 += term2;
+//        std::cout << "3" << std::endl;
         if ( std::abs(term1) < std::abs(ksi1)/100 && std::abs(term2) < std::abs(ksi2)/100){
-            return {ksi1, ksi2};
+            break;
         }
+//        std::cout << "4" << std::endl;
     }
+//    std::cout << "5" << std::endl;
+//    std::cout << "ksi1: " << ksi1 << " ksi2: " << ksi2 << std::endl;
     return {ksi1, ksi2};
 }
 
@@ -229,7 +255,7 @@ void Simulator::refLines(cv::Mat& target) {
 
 
 void Simulator::initGui(){
-    initAlphasBetas(alphas_l, betas_l);
+    initAlphasBetas();
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, update_dummy, this);
@@ -249,50 +275,95 @@ void Simulator::update_dummy(int, void* data){
 }
 
 
-void Simulator::initAlphasBetas(std::array<std::array<LambdaRealDoubleVisitor, n>, n>& alphas_lambda, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& betas_lambda) {
+void Simulator::initAlphasBetas() {
+
+    x = GiNaC::symbol("x");
+    y = GiNaC::symbol("y");
+    c = GiNaC::symbol("c");
+    g = GiNaC::symbol("g");
+
+    syms = {x, y, c, g};
+
+    int n_ = 20;
+
+    alphas = std::vector<std::vector<GiNaC::ex>>(n_, std::vector<GiNaC::ex>(n_));
+    betas = std::vector<std::vector<GiNaC::ex>>(n_, std::vector<GiNaC::ex>(n_));
+
+    std::string filename("../../functions.txt");
+    std::ifstream input;
+    input.open(filename);
+
+    if(!input.is_open()){
+        std::cout << "Could not open functions.txt file" << std::endl;
+    }
+
+    while(input){
+        std::string m, s;
+        std::string alpha;
+        std::string beta;
+        std::getline(input, m, ':');
+        std::getline(input, s, ':');
+        std::getline(input, alpha, ':');
+        std::getline(input, beta);
+        if(input){
+//            std::cout << std::stoi(m) << " " << std::stoi(s) << " " << alpha << " " << beta << std::endl;
+            GiNaC::ex a(alpha, syms);
+            GiNaC::ex b(beta, syms);
+            alphas[std::stoi(m)][std::stoi(s)] = a;
+            betas[std::stoi(m)][std::stoi(s)] = b;
+//            std::cout << std::endl;
+        }
+    }
+    input.close();
+
     /*Make matrices containing the symbolic functions and numeric functions for all alpha_m_s and beta_m_s at index [m][s]*/
 
     // Symbolic variables
-    xSym = symbol("x");
-    ySym = symbol("y");
-    gammaSym = symbol("gamma");
-    chiSym = symbol("chi_l");
+//    xSym = symbol("x");
+//    ySym = symbol("y");
+//    gammaSym = symbol("gamma");
+//    chiSym = symbol("chi_l");
+
+
 
     // Symbolic functions
-    alphas = std::vector<std::vector<SymEngine::RCP<const Basic>>>(n, std::vector<SymEngine::RCP<const Basic>>(n));
-    betas = std::vector<std::vector<SymEngine::RCP<const Basic>>> (n, std::vector<SymEngine::RCP<const Basic>>(n));
-    auto psi = mul(div( mul(integer(2), gammaSym), mul(chiSym, chiSym)) , sqrt(add(mul(xSym, xSym), mul(ySym, ySym))));
+//    alphas = std::vector<std::vector<SymEngine::RCP<const Basic>>>(n, std::vector<SymEngine::RCP<const Basic>>(n));
+//    betas = std::vector<std::vector<SymEngine::RCP<const Basic>>> (n, std::vector<SymEngine::RCP<const Basic>>(n));
+//    auto psi = mul(div( mul(integer(2), gammaSym), mul(chiSym, chiSym)) , sqrt(add(mul(xSym, xSym), mul(ySym, ySym))));
 
-    // Calculate and insert the first alpha and beta
-    alphas[0][1] = mul(chiSym, diff(psi, xSym, false));
-    betas[0][1] = neg(mul(chiSym, diff(psi, ySym, false)));
 
-    // Calculate the symbolic and numeric functions and for the first diagonal using the first "recursion relation"
-    for (int m = 1; m<n-1; m++){
-        int s = m + 1;
-        double c_num = (m + 1.0)/(m + 1.0 + s)*(1 + (s == 1));
-        auto c = mul(real_double(c_num), chiSym);
-        // Symbolic
-        alphas[m][s] = mul(c, sub(diff(alphas[m-1][s-1], xSym, false), diff(betas[m-1][s-1], ySym, false)));
-        betas[m][s] = mul(c, add(diff(betas[m-1][s-1], xSym, false), diff(alphas[m-1][s-1], ySym, false)));
-        // Numeric
-        alphas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *alphas[m][s]);
-        betas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *betas[m][s]);
-    }
 
-    // Calculate the rest of the symbolic and numeric functions using the second "recursion relation"
-    for (int start = 1; start < n; start+=2){
-        for(int s=0; s<(n-start); s++){
-            int m = s + start;
-            double c_num = (m + 1.0)/(m + 1.0 - s)*(1.0 + (s != 0))/2.0;
-            auto c = mul(real_double(c_num), chiSym);
-            // Symbolic
-            alphas[m][s] = mul(c, add(diff(alphas[m-1][s+1], xSym, false), diff(betas[m-1][s+1], ySym, false)));
-            betas[m][s] = mul(c, sub(diff(betas[m-1][s+1], xSym, false), diff(alphas[m-1][s+1], ySym, false)));
-            // Numeric
-            alphas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *alphas[m][s]);
-            betas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *betas[m][s]);
 
-        }
-    }
+//    // Calculate and insert the first alpha and beta
+//    alphas[0][1] = mul(chiSym, diff(psi, xSym, false));
+//    betas[0][1] = neg(mul(chiSym, diff(psi, ySym, false)));
+//
+//    // Calculate the symbolic and numeric functions and for the first diagonal using the first "recursion relation"
+//    for (int m = 1; m<n-1; m++){
+//        int s = m + 1;
+//        double c_num = (m + 1.0)/(m + 1.0 + s)*(1 + (s == 1));
+//        auto c = mul(real_double(c_num), chiSym);
+//        // Symbolic
+//        alphas[m][s] = mul(c, sub(diff(alphas[m-1][s-1], xSym, false), diff(betas[m-1][s-1], ySym, false)));
+//        betas[m][s] = mul(c, add(diff(betas[m-1][s-1], xSym, false), diff(alphas[m-1][s-1], ySym, false)));
+//        // Numeric
+//        alphas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *alphas[m][s]);
+//        betas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *betas[m][s]);
+//    }
+//
+//    // Calculate the rest of the symbolic and numeric functions using the second "recursion relation"
+//    for (int start = 1; start < n; start+=2){
+//        for(int s=0; s<(n-start); s++){
+//            int m = s + start;
+//            double c_num = (m + 1.0)/(m + 1.0 - s)*(1.0 + (s != 0))/2.0;
+//            auto c = mul(real_double(c_num), chiSym);
+//            // Symbolic
+//            alphas[m][s] = mul(c, add(diff(alphas[m-1][s+1], xSym, false), diff(betas[m-1][s+1], ySym, false)));
+//            betas[m][s] = mul(c, sub(diff(betas[m-1][s+1], xSym, false), diff(alphas[m-1][s+1], ySym, false)));
+//            // Numeric
+//            alphas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *alphas[m][s]);
+//            betas_lambda[m][s].init({xSym, ySym, gammaSym, chiSym}, *betas[m][s]);
+//
+//        }
+//    }
 }
