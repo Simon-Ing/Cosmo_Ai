@@ -39,19 +39,15 @@ private:
     double apparentAbs{};
     double apparentAbs2{};
     double R{};
-    const static int n = 10;
+    const static int n = 20;
     GiNaC::symbol x, y, c, g;
     GiNaC::lst syms;
 
 //    RCP<const Symbol> xSym, ySym, gammaSym, chiSym;
 //    std::vector<std::vector<RCP<const Basic>>> alphas;
 //    std::vector<std::vector<RCP<const Basic>>> betas;
-    std::vector<std::vector<GiNaC::ex>> alphas;
-    std::vector<std::vector<GiNaC::ex>> betas;
-
-
-
-//    lst syms = {x, y, c, g};
+    std::array<std::array<GiNaC::ex, n>, n> alphas;
+    std::array<std::array<GiNaC::ex, n>, n> betas;
 
 
 //    std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
@@ -71,8 +67,6 @@ private:
 
     [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
 
-    std::pair<double, double> spherical(double r, double theta) const;
-
     void initAlphasBetas();
 
     static void update_dummy(int, void*);
@@ -84,6 +78,8 @@ private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst, std::mutex& m);
 
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
+
+    std::pair<double, double> spherical(double r, double theta, std::mutex &mut) const;
 };
 
 

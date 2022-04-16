@@ -14,7 +14,7 @@
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
-    size(100),
+    size(80),
     CHI_percent(50),
     CHI(CHI_percent/100.0),
     einsteinR(size/20),
@@ -78,22 +78,22 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     std::mutex m;
     for (int row = 0; row < dst.rows; row++) {
         for (int col = 0; col < dst.cols; col++) {
-            std::cout << (row*dst.cols + col + 1.0) / (dst.cols*dst.rows) * 100.0 << "%" << std::endl;
 //            std::thread t([row, col, src, &dst, &m, this]() { distort(row, col, src, dst, m); });
 //            threads_vec.push_back(std::move(t));
+            std::cout << (double)row / dst.rows << "% init" << std::endl;
             distort(row, col, src, dst, m);
         }
     }
-
+    double i = 0;
     for (auto& thread : threads_vec) {
-        std::cout << "9" << std::endl;
+        i++;
+        std::cout << i / (dst.cols*dst.rows) * 100.0 << "%" << std::endl;
         thread.join();
     }
 }
 
 
 void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst, std::mutex& m) {
-    std::lock_guard<std::mutex> lock(m);
     // Evaluate each point in imgDistorted plane ~ lens plane
     int row_, col_;
     // Set coordinate system with origin at x=R
@@ -111,7 +111,7 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst, std:
     }
         // if sphere
     else {
-        auto pos = spherical(r, theta);
+        auto pos = spherical(r, theta, m);
         // Translate to array index
         row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
         col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
@@ -120,16 +120,14 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst, std:
     // If (x', y') within source, copy value to imgDistorted
     if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
 //        std::cout << "row: " << row << " col: " << col << " row_: " << row_ << " col_: " << col_ << std::endl;
-        std::cout << "a" << std::endl;
         auto val = src.at<uchar>(row_, col_);
-        std::cout << "b" << std::endl;
         dst.at<uchar>(row, col) = val;
-        std::cout << "c" << std::endl;
     }
 }
 
 
-std::pair<double, double> Simulator::spherical(double r, double theta) const {
+std::pair<double, double> Simulator::spherical(double r, double theta, std::mutex& mut) const {
+
     double ksi1 = 0;
     double ksi2 = 0;
 
@@ -137,22 +135,27 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
         double subTerm2 = 0;
-        for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
-//            double alpha = alphas_lambda[m][s].call({X, Y, GAMMA, CHI});
-//            double beta = betas_lambda[m][s].call({X, Y, GAMMA, CHI});
-            auto alpha = alphas[m][s];
-            auto beta = betas[m][s];
-            auto alpha_eval = evalf(alpha.subs(GiNaC::lst{x==X, y==Y, c==CHI, g==GAMMA}));
-            auto beta_eval = evalf(beta.subs(GiNaC::lst{x==X, y==Y, c==CHI, g==GAMMA}));
+        for (int s=(m+1)%2; s<=m+1 && s<n; s+=2) {
+            GiNaC::ex alpha_eval, beta_eval;
+
+//                std::lock_guard<std::mutex> lock(mut);
+            alpha_eval = GiNaC::evalf(alphas[m][s].subs(GiNaC::lst{x == X, y == Y, c == CHI, g == GAMMA}));
+            beta_eval = GiNaC::evalf(betas[m][s].subs(GiNaC::lst{x == X, y == Y, c == CHI, g == GAMMA}));
+
+
             auto alpha_num = GiNaC::ex_to<GiNaC::numeric>(alpha_eval).to_double();
             auto beta_num = GiNaC::ex_to<GiNaC::numeric>(beta_eval).to_double();
-//            std::cout << "\nm: " << m << " s: " << s << "\nalpha: " << alpha << " beta: " << beta <<"\nalpha: " << alpha << " beta: " << beta << std::endl;
-            int c_p = 1 + s/(m + 1);
-            int c_m = 1 - s/(m + 1);
-            subTerm1 += theta*((alpha_num*cos(s-1) + beta_num*sin(s-1))*c_p + (alpha_num*cos(s+1) + beta_num*sin(s+1)*c_m));
-            subTerm2 += theta*((-alpha_num*sin(s-1) + beta_num*cos(s-1))*c_p + (alpha_num*sin(s+1) - beta_num*cos(s+1)*c_m));
-        }
 
+            //            std::cout << "\nm: " << m << " s: " << s << "\nalpha: " << alpha << " beta: " << beta <<"\nalpha: " << alpha << " beta: " << beta << std::endl;
+            auto c_p = 1 + s / (m + 1);
+            auto c_m = 1 - s / (m + 1);
+
+            subTerm1 += theta * ((alpha_num * cos(s - 1) + beta_num * sin(s - 1)) * c_p +
+                                 (alpha_num * cos(s + 1) + beta_num * sin(s + 1) * c_m));
+            subTerm2 += theta * ((-alpha_num * sin(s - 1) + beta_num * cos(s - 1)) * c_p +
+                                 (alpha_num * sin(s + 1) - beta_num * cos(s + 1) * c_m));
+
+        }
 //        std::cout << "1" << std::endl;
         double term1 = frac*subTerm1;
         double term2 = frac*subTerm2;
@@ -286,8 +289,8 @@ void Simulator::initAlphasBetas() {
 
     int n_ = 20;
 
-    alphas = std::vector<std::vector<GiNaC::ex>>(n_, std::vector<GiNaC::ex>(n_));
-    betas = std::vector<std::vector<GiNaC::ex>>(n_, std::vector<GiNaC::ex>(n_));
+//    alphas = std::array<std::array<GiNaC::ex>>(n_, std::array<GiNaC::ex>(n_));
+//    betas = std::array<std::array<GiNaC::ex>>(n_, std::array<GiNaC::ex>(n_));
 
     std::string filename("../../functions.txt");
     std::ifstream input;
