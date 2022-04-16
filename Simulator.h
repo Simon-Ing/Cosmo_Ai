@@ -6,13 +6,10 @@
 #define SPHERICAL_SIMULATOR_H
 
 #include "opencv2/opencv.hpp"
-//#include <symengine/expression.h>
-//#include <symengine/lambda_double.h>
-#include <ginac/ginac.h>
-#include <mutex>
+#include <symengine/expression.h>
+#include <symengine/lambda_double.h>
 
-//using namespace SymEngine;
-//using namespace GiNaC;
+using namespace SymEngine;
 
 
 class Simulator {
@@ -40,18 +37,9 @@ private:
     double apparentAbs2{};
     double R{};
     const static int n = 20;
-    GiNaC::symbol x, y, c, g;
-    GiNaC::lst syms;
 
-//    RCP<const Symbol> xSym, ySym, gammaSym, chiSym;
-//    std::vector<std::vector<RCP<const Basic>>> alphas;
-//    std::vector<std::vector<RCP<const Basic>>> betas;
-    std::array<std::array<GiNaC::ex, n>, n> alphas;
-    std::array<std::array<GiNaC::ex, n>, n> betas;
-
-
-//    std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
-//    std::array<std::array<LambdaRealDoubleVisitor, n>, n> betas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, n>, n> betas_l;
 
 public:
     Simulator();
@@ -67,7 +55,7 @@ private:
 
     [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
 
-    void initAlphasBetas();
+    std::pair<double, double> spherical(double r, double theta, std::array<std::array<LambdaRealDoubleVisitor, n>, n>&, std::array<std::array<LambdaRealDoubleVisitor, n>, n>&) const;
 
     static void update_dummy(int, void*);
 
@@ -75,11 +63,11 @@ private:
 
     static void refLines(cv::Mat &target);
 
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst, std::mutex& m);
+    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
-    std::pair<double, double> spherical(double r, double theta, std::mutex &mut) const;
+    void initAlphasBetas();
 };
 
 
