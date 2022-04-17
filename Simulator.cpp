@@ -282,7 +282,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../functions_sympy.txt");
+    std::string filename("../../functions_sympy_eng_16.txt");
     std::ifstream input;
     input.open(filename);
 
