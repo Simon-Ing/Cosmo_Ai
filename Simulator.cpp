@@ -14,16 +14,17 @@
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
-        size(110),
+        size(100),
         CHI_percent(50),
         CHI(CHI_percent/100.0),
         einsteinR(size/20),
-        GAMMA(einsteinR),
         sourceSize(size/20),
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
         mode(0) // 0 = point mass, 1 = sphere
 {
+
+    GAMMA = einsteinR/100.0;
 }
 
 
@@ -31,7 +32,7 @@ void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
 
-    GAMMA = einsteinR;
+    GAMMA = einsteinR/100.0;
     calculate();
     cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(100, 100, 100));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
@@ -41,7 +42,7 @@ void Simulator::update() {
 
     // if point
     if (mode == 0){
-        imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(100, 100, 100));
+        imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(50, 50, 50));
         imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         parallelDistort(imgApparent, imgDistorted);
@@ -53,7 +54,7 @@ void Simulator::update() {
 
         // if Spherical
     else if (mode == 1){
-        imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(100, 100, 100));
+        imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(50, 50, 50));
         imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size/2 + (int)apparentX, size/2 - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         cv::imshow("apparent", imgApparent);
@@ -80,12 +81,13 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     std::vector<std::thread> threads_vec;
     for (int row = 0; row < dst.rows; row++) {
         for (int col = 0; col < dst.cols; col++) {
-            std::thread t([row, col, src, &dst, this]() { distort(row, col, src, dst); });
-            threads_vec.push_back(std::move(t));
+//            std::thread t([row, col, src, &dst, this]() { distort(row, col, src, dst); });
+//            threads_vec.push_back(std::move(t));
+            distort(row, col, src, dst);
         }
-        if(mode){
-            std::cout << 100.0 * row / dst.rows << "%" << std::endl;
-        }
+//        if(mode){
+//            std::cout << 100.0 * row / dst.rows << "%" << std::endl;
+//        }
     }
 
     for (auto& thread : threads_vec) {
@@ -97,14 +99,15 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     // Evaluate each point in imgDistorted plane ~ lens plane
     int row_, col_;
-    // Set coordinate system with origin at x=R
-    double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
-    double y = (dst.rows / 2.0 - row) * CHI;
-    // Calculate distance and angle of the point evaluated relative to center of lens (origin)
-    double r = sqrt(x * x + y * y);
-    double theta = atan2(y, x);
+
     // if point mass
     if (!mode) {
+        // Set coordinate system with origin at x=R
+        double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+        double y = (dst.rows / 2.0 - row) * CHI;
+        // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+        double r = sqrt(x * x + y * y);
+        double theta = atan2(y, x);
         auto pos = pointMass(r, theta);
         // Translate to array index
         row_ = (int) round(src.rows / 2.0 - pos.second);
@@ -112,10 +115,16 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     }
         // if sphere
     else {
+        double x = (col - dst.cols / 2.0 - apparentX ) * CHI;
+        double y = (dst.rows / 2.0 - row - apparentY) * CHI;
+        // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+        double r = sqrt(x * x + y * y);
+        double theta = atan2(y, x);
         auto pos = spherical(r, theta, alphas_l, betas_l);
         // Translate to array index
-        row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
-        col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
+        col_ = (int) round(x + src.cols / 2.0 + pos.first);
+        row_ = (int) round(src.rows / 2.0 - pos.second - y);
+//        std::cout << "\nrow :\t" << row << " col :\t" << col << "\nx   :\t" << (int)x << " y   :\t" << (int)y << "\nrow_:\t" << row_ << " col_:\t" << col_ << std::endl;
     }
 
     // If (x', y') within source, copy value to imgDistorted
@@ -130,6 +139,7 @@ std::pair<double, double> Simulator::spherical(double r, double theta, std::arra
     double ksi1 = 0;
     double ksi2 = 0;
 
+
     for (int m=1; m<n; m++){
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
@@ -141,18 +151,23 @@ std::pair<double, double> Simulator::spherical(double r, double theta, std::arra
             int c_m = 1 - s/(m + 1);
             subTerm1 += theta*((alpha*cos(s-1) + beta*sin(s-1))*c_p + (alpha*cos(s+1) + beta*sin(s+1)*c_m));
             subTerm2 += theta*((-alpha*sin(s-1) + beta*cos(s-1))*c_p + (alpha*sin(s+1) - beta*cos(s+1)*c_m));
+//            std::cout << "\nm: " << m << " s: " << s << "\nsubterm1: " << subTerm1 << "\nsubterm2: " << subTerm2 << std::endl;
         }
         double term1 = frac*subTerm1;
         double term2 = frac*subTerm2;
+//        std::cout << "\nm: " << m << "\nterm1: " << term1 << "\nterm2: " << term2 << "\nksi1: " << ksi1 << "\nksi2: " << ksi2 << std::endl;
         ksi1 += term1;
         ksi2 += term2;
-        if ( std::abs(term1) < std::abs(ksi1)/100 && std::abs(term2) < std::abs(ksi2)/100){
-//            std::cout << "m: " << m << std::endl;
-            return {ksi1, ksi2};
+        // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
+        if ( ((std::abs(term1) < std::abs(ksi1)/100) && (std::abs(term2) < std::abs(ksi2)/100)) || ksi1 < -size || ksi1 > 2*size || ksi2 < -2*size || ksi2 > 2*size ){
+//            std::cout << m << std::endl;
+            break;
         }
     }
+//    return {0, 0};
     return {ksi1, ksi2};
 }
+
 
 
 std::pair<double, double> Simulator::pointMass(double r, double theta) const {

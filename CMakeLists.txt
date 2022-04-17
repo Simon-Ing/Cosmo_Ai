@@ -11,8 +11,8 @@ endif()
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GINAC REQUIRED ginac)
+#find_package(PkgConfig REQUIRED)
+#pkg_check_modules(GINAC REQUIRED ginac)
 
 
 
@@ -35,6 +35,7 @@ target_link_libraries(main ${CONAN_LIBS} )
 target_link_libraries(Data ${CONAN_LIBS} )
 target_link_libraries(new ${CONAN_LIBS} )
 
-target_include_directories(SimLib PRIVATE ${GINAC_INCLUDE_DIRS})
-target_include_directories(load PRIVATE ${GINAC_INCLUDE_DIRS})
-target_link_libraries(load PRIVATE ${GINAC_LIBRARIES} ${CONAN_LIBS})
+#target_include_directories(SimLib PRIVATE ${GINAC_INCLUDE_DIRS})
+#target_include_directories(load PRIVATE ${GINAC_INCLUDE_DIRS})
+#target_link_libraries(load PRIVATE ${GINAC_LIBRARIES} ${CONAN_LIBS})
+target_link_libraries(load PRIVATE ${CONAN_LIBS})
