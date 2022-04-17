@@ -54,9 +54,10 @@ void Simulator::update() {
 
         // if Spherical
     else if (mode == 1){
-        imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(50, 50, 50));
-        imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-        cv::circle(imgApparent, cv::Point(size/2 + (int)apparentX, size/2 - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        int scaled_size = (int)(size/CHI);
+        imgApparent = cv::Mat(scaled_size, scaled_size, CV_8UC1, cv::Scalar(50, 50, 50));
+        imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+        cv::circle(imgApparent, cv::Point(scaled_size/2 + (int)apparentX, scaled_size/2 - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
 //        distort(0, size, imgApparent, imgDistorted);
@@ -115,15 +116,15 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     }
         // if sphere
     else {
-        double x = (col - dst.cols / 2.0 - apparentX ) * CHI;
-        double y = (dst.rows / 2.0 - row - apparentY) * CHI;
+        double x = col - dst.cols / 2.0 - X;
+        double y = dst.rows / 2.0 - row - Y;
         // Calculate distance and angle of the point evaluated relative to center of lens (origin)
         double r = sqrt(x * x + y * y);
         double theta = atan2(y, x);
         auto pos = spherical(r, theta, alphas_l, betas_l);
         // Translate to array index
-        col_ = (int) round(x + src.cols / 2.0 + pos.first);
-        row_ = (int) round(src.rows / 2.0 - pos.second - y);
+        col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
+        row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
 //        std::cout << "\nrow :\t" << row << " col :\t" << col << "\nx   :\t" << (int)x << " y   :\t" << (int)y << "\nrow_:\t" << row_ << " col_:\t" << col_ << std::endl;
     }
 
