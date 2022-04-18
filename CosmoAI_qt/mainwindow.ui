@@ -164,6 +164,9 @@
         <property name="text">
          <string>Markers</string>
         </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="1">
@@ -279,11 +282,29 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionExport"/>
-    <addaction name="actionPrint"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menuGrid_2">
+     <property name="title">
+      <string>Grid</string>
+     </property>
+     <addaction name="actionOff"/>
+     <addaction name="action2x2"/>
+     <addaction name="action4x4"/>
+     <addaction name="action8x8"/>
+     <addaction name="action12x12"/>
+     <addaction name="action20x20"/>
+    </widget>
+    <addaction name="menuGrid_2"/>
+    <addaction name="actionMarkers"/>
+    <addaction name="actionLegend"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionReset">
@@ -304,6 +325,64 @@
   <action name="actionPrint">
    <property name="text">
     <string>Print</string>
+   </property>
+  </action>
+  <action name="actionMarkers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Markers</string>
+   </property>
+  </action>
+  <action name="actionLegend">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Legend</string>
+   </property>
+  </action>
+  <action name="actionOff">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Off</string>
+   </property>
+  </action>
+  <action name="action2x2">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>2x2</string>
+   </property>
+  </action>
+  <action name="action4x4">
+   <property name="text">
+    <string>4x4</string>
+   </property>
+  </action>
+  <action name="action8x8">
+   <property name="text">
+    <string>8x8</string>
+   </property>
+  </action>
+  <action name="action12x12">
+   <property name="text">
+    <string>12x12</string>
+   </property>
+  </action>
+  <action name="action20x20">
+   <property name="text">
+    <string>20x20</string>
    </property>
   </action>
  </widget>

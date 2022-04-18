@@ -12,8 +12,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    Ui::MainWindow *ui;
     bool grid;
     bool markers;
+    bool legendCheck;
+    int gridSize;
     int wSize;
     int wSizeWide;
     int einsteinR;
@@ -31,7 +34,7 @@ private:
     int apparentX;
     int apparentY;
     int apparentX2;
-    int apparentY2;    Ui::MainWindow *ui;
+    int apparentY2;
     QImage imgApparent;
     QImage imgActual;
     QImage imgDistorted;
@@ -73,6 +76,15 @@ private slots:
     void on_markerBox_stateChanged(int arg1);
     void on_resetButton_clicked();
     void on_srcTypeComboBox_currentTextChanged(const QString &arg1);
+    void on_actionReset_triggered();
+    void on_actionMarkers_toggled(bool arg1);
+    void on_actionLegend_toggled(bool arg1);
+    void on_actionOff_triggered();
+    void on_action2x2_triggered();
+    void on_action4x4_triggered();
+    void on_action8x8_triggered();
+    void on_action12x12_triggered();
+    void on_action20x20_triggered();
 };
 
 #endif // MAINWINDOW_H
