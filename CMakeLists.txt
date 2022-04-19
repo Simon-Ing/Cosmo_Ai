@@ -11,10 +11,6 @@ endif()
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GINAC REQUIRED ginac)
-
-
 
 conan_cmake_run(REQUIRES
         symengine/0.9.0
