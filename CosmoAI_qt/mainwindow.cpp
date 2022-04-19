@@ -133,7 +133,6 @@ void MainWindow::theme(){
 
     } else{
         qApp->setPalette(this->style()->standardPalette());
-
     }
 }
 
@@ -585,7 +584,6 @@ void MainWindow::on_actionCustom_triggered()
 void MainWindow::on_actionDark_mode_toggled(bool arg1)
 {
     darkMode = arg1;
-    std::cout << "dark:" << arg1 << std::endl;
     theme();
 }
 
