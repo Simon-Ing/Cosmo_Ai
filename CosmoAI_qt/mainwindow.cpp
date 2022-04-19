@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QPainterPath>
 #define PI 3.14159265358979323846
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -15,9 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("CosmoAI");
     init_values();
     setup();
-    updateImg();
+//    updateImg();
 }
 
 
@@ -64,6 +66,8 @@ void MainWindow::init_values() {
 
     grid = true;
     markers = true;
+    legendCheck = true;
+    gridSize = 2;
     wSize = 600;
     einsteinR = wSize/20;
     srcSize = wSize/20;
@@ -85,6 +89,8 @@ void MainWindow::init_values() {
     ui->ySlider->setSliderPosition(yPos);
     ui->gridBox->setChecked(grid);
     ui->markerBox->setChecked(markers);
+    ui->actionMarkers->setChecked(markers);
+    ui->actionLegend->setChecked(legendCheck);
 }
 
 void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, double yPos) {
@@ -250,14 +256,19 @@ void MainWindow::drawRadius(QPixmap& src){
 
 void MainWindow::drawGrid(QPixmap& img){
     QPainter painter(&img);
-    QPen pen(Qt::gray, 2, Qt::DashLine);
+    QPen pen(Qt::gray, 2, Qt::DotLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
 
-    QLineF lineVert(wSize/2, 0, wSize/2, wSize);
-    QLineF lineHor(0, wSize/2, wSize, wSize/2);
-    painter.drawLine(lineVert);
-    painter.drawLine(lineHor);
+    if (gridSize > 0) {
+        for (int var = wSize/gridSize; var < wSize;) {
+            QLineF lineVert(wSize-var, 0, wSize-var, wSize);
+            QLineF lineHor(0, wSize-var, wSize, wSize-var);
+            painter.drawLine(lineVert);
+            painter.drawLine(lineHor);
+            var+=wSize/gridSize;
+        }
+    }
 }
 
 
@@ -358,13 +369,15 @@ void MainWindow::updateImg() {
         drawGrid(imgDistPix);
         drawRadius(imgDistPix);
     }
-    if (markers == true) {
+    if (markers) {
 
         drawMarker(imgDistPix, wSize/2 + apparentX, wSize/2 - apparentY, Qt::blue);
         drawMarker(imgDistPix, wSize/2 + apparentX2, wSize/2 - apparentY2, Qt::blue);
         drawMarker(imgDistPix, wSize/2 + actualX, wSize/2 - actualY, Qt::red);
 
-        drawLegend(imgDistPix);
+        if (legendCheck) {
+          drawLegend(imgDistPix);
+        }
     }
 
     // Draw pixmaps on QLabels
@@ -426,6 +439,7 @@ void MainWindow::on_gridBox_stateChanged(int arg1)
 void MainWindow::on_markerBox_stateChanged(int arg1)
 {
     markers = arg1;
+    ui->actionMarkers->setChecked(arg1);
     updateImg();
 }
 
@@ -443,3 +457,68 @@ void MainWindow::on_srcTypeComboBox_currentTextChanged(const QString &arg1)
     updateImg();
 }
 
+
+void MainWindow::on_actionReset_triggered()
+{
+    init_values();
+    updateImg();
+}
+
+
+void MainWindow::on_actionMarkers_toggled(bool arg1)
+{
+    markers = arg1;
+    ui->markerBox->setChecked(arg1);
+}
+
+
+void MainWindow::on_actionLegend_toggled(bool arg1)
+{
+    legendCheck = arg1;
+    updateImg();
+}
+
+
+void MainWindow::on_actionOff_triggered()
+{
+    ui->gridBox->setChecked(false);
+    updateImg();
+}
+
+
+void MainWindow::on_action2x2_triggered()
+{
+    gridSize = 2;
+    ui->gridBox->setChecked(true);
+    updateImg();
+}
+
+void MainWindow::on_action4x4_triggered()
+{
+    gridSize = 4;
+    ui->gridBox->setChecked(true);
+    updateImg();
+}
+
+
+void MainWindow::on_action8x8_triggered()
+{
+    gridSize = 8;
+    ui->gridBox->setChecked(true);
+    updateImg();
+}
+
+void MainWindow::on_action12x12_triggered()
+{
+    gridSize = 12;
+    ui->gridBox->setChecked(true);
+    updateImg();
+}
+
+
+void MainWindow::on_action20x20_triggered()
+{
+    gridSize = 20;
+    ui->gridBox->setChecked(true);
+    updateImg();
+}
