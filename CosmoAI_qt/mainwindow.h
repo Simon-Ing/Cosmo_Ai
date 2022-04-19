@@ -17,7 +17,7 @@ private:
     bool markers;
     bool legendCheck;
     int gridSize;
-    int wSize;
+    int wSize = 800;
     int wSizeWide;
     int einsteinR;
     int srcSize;
@@ -51,7 +51,7 @@ private:
     void init_values();
     void drawGrid(QPixmap &img);
     void drawRadius(QPixmap& src);
-    void drawMarker(QPixmap &src, int x, int y, QColor color);
+    void drawMarker(QPixmap &src, int x, int y, int size, QColor color);
     void setup();
     void updateImg();
     void drawGaussianThreaded(QImage&, double, double);
@@ -61,7 +61,7 @@ private:
     QPixmap rotate(QPixmap src, double angle, int x, int y);
     void resizeEvent(QResizeEvent *event);
     void drawLegend(QPixmap&);
-    void drawText(QPixmap& img, int x, int y, QString text);
+    void drawText(QPixmap& img, int x, int y, int fontSize, QString text);
 
     void drawSource();
 private slots:
@@ -82,7 +82,8 @@ private slots:
     void on_action4x4_triggered();
     void on_action8x8_triggered();
     void on_action12x12_triggered();
-    void on_action20x20_triggered();
+    void on_actionChange_resolution_triggered();
+    void on_actionCustom_triggered();
 };
 
 #endif // MAINWINDOW_H
