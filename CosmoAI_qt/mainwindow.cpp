@@ -68,12 +68,12 @@ void MainWindow::init_values() {
     markers = true;
     legendCheck = true;
     gridSize = 2;
-    wSize = 600;
+    wSize = 800;
     einsteinR = wSize/20;
     srcSize = wSize/20;
     KL = 0.65;
-    xPos = 0;
-    yPos = 0;
+    actualX = 0;
+    actualY = 0;
     source = ui->srcTypeComboBox->currentText();
 
     // Set initial values for UI elements
@@ -83,10 +83,10 @@ void MainWindow::init_values() {
     ui->srcSizeSlider->setSliderPosition(srcSize);
     ui->lensDistSpinbox->setValue(KL*100);
     ui->lensDistSlider->setSliderPosition(KL*100);
-    ui->xSpinbox->setValue(xPos);
-    ui->xSlider->setSliderPosition(xPos);
-    ui->ySpinbox->setValue(yPos);
-    ui->ySlider->setSliderPosition(yPos);
+    ui->xSpinbox->setValue(actualX);
+    ui->xSlider->setSliderPosition(actualX);
+    ui->ySpinbox->setValue(actualY);
+    ui->ySlider->setSliderPosition(actualY);
     ui->gridBox->setChecked(grid);
     ui->markerBox->setChecked(markers);
     ui->actionMarkers->setChecked(markers);
@@ -100,19 +100,8 @@ void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, doub
         for (int col = 0; col < cols; col++) {
             double x = col - xPos - cols/2;
             double y = -yPos - row + rows/2;
-            int val;
-            if (source == "Gauss"){
-                val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
-                img.setPixel(col, row, qRgb(val, val, val));
-            }
-            else if (source == "Circle"){
-                val = 255 * (x*x + y*y < srcSize*srcSize);
-                img.setPixel(col, row, qRgb(val, val, val));
-            }
-            else if (source == "Square"){
-                val = 255*(abs(x) < srcSize && abs(y) < srcSize);
-                img.setPixel(col, row, qRgb(val, val, val));
-            }
+            int val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
+            img.setPixel(col, row, qRgb(val, val, val));
         }
     }
 }
@@ -120,7 +109,8 @@ void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, doub
 void MainWindow::drawSource(){
     if (source == "Gauss"){
         drawGaussianThreaded(imgActual, actualX, actualY);
-        drawGaussianThreaded(imgApparent, apparentPos, 0);
+//        std::cout << "actualX: " << actualX << " actualY: " << actualY << " apparentX: " << apparentX << " apparentY: " << apparentY << std::endl;
+        drawGaussianThreaded(imgApparent, apparentX, apparentY);
     }
     else{
         QPainter pAct(&imgActual);
@@ -131,12 +121,12 @@ void MainWindow::drawSource(){
 
         if (source == "Rocket"){
             QPixmap rocket1 = rocket.scaled(6*srcSize, 6*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            QPoint posApp(apparentPos + wSize - rocket1.width()/2, wSize/2 - rocket1.height()/2);
+            QPoint posApp(apparentX + wSize - rocket1.width()/2, -apparentY + wSize/2 - rocket1.height()/2);
             QPoint posAct(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2);
             pAct.drawPixmap(posAct, rocket1);
             pApp.drawPixmap(posApp, rocket1);
         }
-        QRect rectApp(apparentPos + wSize - srcSize, wSize/2 - srcSize, 2*srcSize, 2*srcSize);
+        QRect rectApp(apparentX + wSize - srcSize, -apparentY + wSize/2 - srcSize, 2*srcSize, 2*srcSize);
         QRect rectAct(actualX + wSize/2 - srcSize, wSize/2 - actualY - srcSize, 2*srcSize, 2*srcSize);
         if (source == "Circle"){
             pAct.drawEllipse(rectAct);
@@ -173,7 +163,7 @@ void MainWindow::distort(int begin, int end) {
         for (int col = 0; col <= cols; col++) { // <= ???????????????????????????????????????
 
             // Set coordinate system with origin at x=R
-            double x = (col - apparentPos - cols/2.0) * KL;
+            double x = (col - apparentAbs - cols/2.0) * KL;
             double y = (rows/2.0 - row) * KL;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
@@ -187,7 +177,7 @@ void MainWindow::distort(int begin, int end) {
 
             // Translate to array index
             int row_ = (int)round(rows/2.0 - y_);
-            int col_ = (int)round(apparentPos + cols/2.0 + x_);
+            int col_ = (int)round(apparentAbs + cols/2.0 + x_);
 
 
             // If (x', y') within source, copy value to imgDistorted
@@ -326,17 +316,17 @@ void MainWindow::updateImg() {
     imgDistorted.fill(Qt::black);
 
     // Calculate positions and angles
-    phi = atan2(yPos, xPos);
-    actualPos = sqrt(xPos*xPos + yPos*yPos);
-    apparentPos = (actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    apparentPos2 = (int)round((actualPos - sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
-    R = apparentPos * KL;
-    actualX = (int)round(actualPos*cos(phi));
-    actualY = (int)round(actualPos*sin(phi));
-    apparentX = (int)round(apparentPos*cos(phi));
-    apparentY = (int)round(apparentPos*sin(phi));
-    apparentX2 = (int)round(apparentPos2*cos(phi));
-    apparentY2 = (int)round(apparentPos2*sin(phi));
+    phi = atan2(actualY, actualX);
+    actualAbs = sqrt(actualX*actualX + actualY*actualY);
+    apparentAbs = (actualAbs + sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
+    apparentAbs2 = (actualAbs - sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
+    double ratio = apparentAbs / actualAbs;
+    double ratio2 = apparentAbs2 / actualAbs;
+    apparentX = actualX * ratio;
+    apparentY = actualY * ratio;
+    apparentX2 = actualX * ratio2;
+    apparentY2 = actualY * ratio2;
+    R = apparentAbs * KL;
 
     drawSource();
 
@@ -344,7 +334,7 @@ void MainWindow::updateImg() {
     QPixmap imgAppPix = QPixmap::fromImage(imgApparent);
 
     // Pre rotate pixmap
-    imgAppPix = rotate(imgAppPix, phi, apparentPos, 0);
+    imgAppPix = rotate(imgAppPix, phi, 0, 0);
 
     // Make a copy to display and crop it
     QRect rect2(wSize/2, 0, wSize, wSize);
@@ -417,14 +407,14 @@ void MainWindow::on_lensDistSpinbox_valueChanged(int arg1)
 
 void MainWindow::on_xSpinbox_valueChanged()
 {
-    xPos = ui->xSpinbox->value();
+    actualX = ui->xSpinbox->value();
     updateImg();
 }
 
 
 void MainWindow::on_ySpinbox_valueChanged()
 {
-    yPos = ui->ySpinbox->value();
+    actualY = ui->ySpinbox->value();
     updateImg();
 }
 
