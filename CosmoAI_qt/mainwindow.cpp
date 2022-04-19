@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("CosmoAI");
     init_values();
     setup();
-//    updateImg();
 }
 
 
@@ -191,10 +190,18 @@ void MainWindow::distort(int begin, int end) {
 
 void MainWindow::drawGaussianThreaded(QImage& img, double xPos, double yPos){
     unsigned int num_threads = std::thread::hardware_concurrency();
+    int tasks = img.height() / num_threads;
+    int remainder = img.height() % num_threads;
+
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
-        unsigned int thread_begin = (img.height() / num_threads) * k;
-        unsigned int thread_end = (img.height() / num_threads) * (k + 1);
+        unsigned int thread_begin = tasks * k;
+        unsigned int thread_end = tasks * (k + 1);
+
+        if (k == num_threads - 1 && remainder != 0) {
+            thread_end = thread_end + remainder;
+        }
+
         std::thread t(&MainWindow::drawGaussian, this, thread_begin, thread_end, std::ref(img), xPos, yPos);
         threads_vec.push_back(std::move(t));
     }
@@ -207,10 +214,18 @@ void MainWindow::drawGaussianThreaded(QImage& img, double xPos, double yPos){
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
 void MainWindow::distortThreaded() {
     unsigned int num_threads = std::thread::hardware_concurrency();
+    int tasks = imgDistorted.height() / num_threads;
+    int remainder = imgDistorted.height() % num_threads;
+
     std::vector<std::thread> threads_vec;
     for (unsigned int k = 0; k < num_threads; k++) {
-        unsigned int thread_begin = (imgDistorted.height() / num_threads) * k;
-        unsigned int thread_end = (imgDistorted.height() / num_threads) * (k + 1);
+        unsigned int thread_begin = tasks * k;
+        unsigned int thread_end = tasks * (k + 1);
+
+        if (k == num_threads - 1 && remainder != 0) {
+            thread_end = thread_end + remainder;
+        }
+
         std::thread t(&MainWindow::distort, this, thread_begin, thread_end);
         threads_vec.push_back(std::move(t));
     }
