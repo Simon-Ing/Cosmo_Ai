@@ -293,23 +293,30 @@ void MainWindow::drawLegend(QPixmap& img){
     legend.fill(Qt::gray);
 
     // Draw markers in legend
-    drawMarker(legend, 10, 10, Qt::red);
-    drawMarker(legend, 10, 30, Qt::blue);
+    drawMarker(legend, 10, 20, Qt::red);
+    drawMarker(legend, 10, 40, Qt::blue);
 
     // Add text to legend
-    drawText(legend, 20, 15, "Actual position");
-    drawText(legend, 20, 35, "Apparent positions");
+    drawText(legend, 20, 25, "Actual position");
+    drawText(legend, 20, 45, "Apparent positions");
 
     // Set legend opacity and draw to main pixmap
     QPainter painter(&img);
+    int xPos = 0;
+    if (apparentX < -wSize/6 && apparentY > wSize/6){
+        xPos += wSize - legendWidth;
+    }
     painter.setOpacity(0.6);
-    painter.drawPixmap(0, 0, legend);
+    painter.drawPixmap(xPos, 0, legend);
 
-    //Check position of source and move legend??
+    //Check position of source and move legend?? Yes!
 
 }
 
 void MainWindow::updateImg() {
+    if (actualX == 0){
+        actualX = 1; // a cheap trick
+    }
     // Reset images
     imgApparent.fill(Qt::black);
     imgActual.fill(Qt::black);
@@ -320,12 +327,12 @@ void MainWindow::updateImg() {
     actualAbs = sqrt(actualX*actualX + actualY*actualY);
     apparentAbs = (actualAbs + sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
     apparentAbs2 = (actualAbs - sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    double ratio = apparentAbs / actualAbs;
-    double ratio2 = apparentAbs2 / actualAbs;
-    apparentX = actualX * ratio;
-    apparentY = actualY * ratio;
-    apparentX2 = actualX * ratio2;
-    apparentY2 = actualY * ratio2;
+    double shiftRatio = apparentAbs / actualAbs;
+    double shiftRatio2 = apparentAbs2 / actualAbs;
+    apparentX = actualX * shiftRatio;
+    apparentY = actualY * shiftRatio;
+    apparentX2 = actualX * shiftRatio2;
+    apparentY2 = actualY * shiftRatio2;
     R = apparentAbs * KL;
 
     drawSource();
