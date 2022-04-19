@@ -303,6 +303,8 @@
     <addaction name="actionLegend"/>
     <addaction name="separator"/>
     <addaction name="actionChange_resolution"/>
+    <addaction name="separator"/>
+    <addaction name="actionDark_mode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -390,6 +392,17 @@
   <action name="actionCustom">
    <property name="text">
     <string>Custom</string>
+   </property>
+  </action>
+  <action name="actionDark_mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark mode</string>
    </property>
   </action>
  </widget>

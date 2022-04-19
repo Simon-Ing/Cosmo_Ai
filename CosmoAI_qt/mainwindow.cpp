@@ -7,8 +7,10 @@
 #include <QPainter>
 #include <QDebug>
 #include <QPainterPath>
-#define PI 3.14159265358979323846
 #include <QInputDialog>
+#include <QStyleFactory>
+#define PI 3.14159265358979323846
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("CosmoAI");
     init_values();
     setup();
+    theme();
     MainWindow::adjustSize();
 }
 
@@ -27,7 +30,7 @@ void MainWindow::setup(){
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    rocket = QPixmap(":/new/prefix1/Tintin.png");
+    rocket = QPixmap(":/images/Tintin.png");
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -61,12 +64,10 @@ void MainWindow::setup(){
 }
 
 void MainWindow::init_values() {
-
     grid = true;
     markers = true;
     legendCheck = true;
     gridSize = 2;
-//    wSize = 800;
     einsteinR = wSize/20;
     srcSize = wSize/20;
     KL = 0.65;
@@ -101,6 +102,38 @@ void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, doub
             int val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
             img.setPixel(col, row, qRgb(val, val, val));
         }
+    }
+}
+
+void MainWindow::theme(){
+    if (darkMode) {
+        qApp->setStyle(QStyleFactory::create("Fusion"));
+        QPalette darkPalette;
+        darkPalette.setColor(QPalette::Window,QColor(53,53,53));
+        darkPalette.setColor(QPalette::WindowText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::WindowText,QColor(127,127,127));
+        darkPalette.setColor(QPalette::Base,QColor(42,42,42));
+        darkPalette.setColor(QPalette::AlternateBase,QColor(66,66,66));
+        darkPalette.setColor(QPalette::ToolTipBase,Qt::white);
+        darkPalette.setColor(QPalette::ToolTipText,Qt::white);
+        darkPalette.setColor(QPalette::Text,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::Text,QColor(127,127,127));
+        darkPalette.setColor(QPalette::Dark,QColor(35,35,35));
+        darkPalette.setColor(QPalette::Shadow,QColor(20,20,20));
+        darkPalette.setColor(QPalette::Button,QColor(53,53,53));
+        darkPalette.setColor(QPalette::ButtonText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::ButtonText,QColor(127,127,127));
+        darkPalette.setColor(QPalette::BrightText,Qt::red);
+        darkPalette.setColor(QPalette::Link,QColor(42,130,218));
+        darkPalette.setColor(QPalette::Highlight,QColor(42,130,218));
+        darkPalette.setColor(QPalette::Disabled,QPalette::Highlight,QColor(80,80,80));
+        darkPalette.setColor(QPalette::HighlightedText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
+        qApp->setPalette(darkPalette);
+
+    } else{
+        qApp->setPalette(this->style()->standardPalette());
+
     }
 }
 
@@ -546,5 +579,13 @@ void MainWindow::on_actionCustom_triggered()
     unsigned int input = QInputDialog::getInt(this,"Custom grid size", "Current: " + currentSize + "x" + currentSize, gridSize, 2, 100);
     gridSize = input;
     updateImg();
+}
+
+
+void MainWindow::on_actionDark_mode_toggled(bool arg1)
+{
+    darkMode = arg1;
+    std::cout << "dark:" << arg1 << std::endl;
+    theme();
 }
 
