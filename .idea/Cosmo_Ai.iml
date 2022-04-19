@@ -7,5 +7,6 @@
   </component>
   <component name="NewModuleRootManager">
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Python 3.8 (Cosmo_Ai) interpreter library" level="application" />
   </component>
 </module>

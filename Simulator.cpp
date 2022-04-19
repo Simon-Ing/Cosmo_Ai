@@ -160,7 +160,7 @@ std::pair<double, double> Simulator::spherical(double r, double theta, std::arra
         ksi1 += term1;
         ksi2 += term2;
         // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
-        if ( ((std::abs(term1) < std::abs(ksi1)/100) && (std::abs(term2) < std::abs(ksi2)/100)) || ksi1 < -size || ksi1 > 2*size || ksi2 < -2*size || ksi2 > 2*size ){
+        if ( ((std::abs(term1) < std::abs(ksi1)/1000) && (std::abs(term2) < std::abs(ksi2)/100))){// || ksi1 < -100*size || ksi1 > 100*size || ksi2 < -100*size || ksi2 > 100*size ){
 //            std::cout << m << std::endl;
             break;
         }
@@ -282,7 +282,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../functions_sympy_eng_16.txt");
+    std::string filename("../../functions_16.txt");
     std::ifstream input;
     input.open(filename);
 
