@@ -296,11 +296,15 @@
      <addaction name="action4x4"/>
      <addaction name="action8x8"/>
      <addaction name="action12x12"/>
-     <addaction name="action20x20"/>
+     <addaction name="actionCustom"/>
     </widget>
     <addaction name="menuGrid_2"/>
     <addaction name="actionMarkers"/>
     <addaction name="actionLegend"/>
+    <addaction name="separator"/>
+    <addaction name="actionChange_resolution"/>
+    <addaction name="separator"/>
+    <addaction name="actionDark_mode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -380,9 +384,25 @@
     <string>12x12</string>
    </property>
   </action>
-  <action name="action20x20">
+  <action name="actionChange_resolution">
    <property name="text">
-    <string>20x20</string>
+    <string>Change resolution</string>
+   </property>
+  </action>
+  <action name="actionCustom">
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </action>
+  <action name="actionDark_mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark mode</string>
    </property>
   </action>
  </widget>

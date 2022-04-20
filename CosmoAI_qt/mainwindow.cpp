@@ -7,8 +7,10 @@
 #include <QPainter>
 #include <QDebug>
 #include <QPainterPath>
+#include <QInputDialog>
+#include <QStyleFactory>
 #define PI 3.14159265358979323846
-#include <QMessageBox>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("CosmoAI");
     init_values();
     setup();
+    theme();
+    MainWindow::adjustSize();
 }
 
 
@@ -26,9 +30,7 @@ void MainWindow::setup(){
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    rocket = QPixmap(":/new/prefix1/Tintin.png");
-
-    MainWindow::adjustSize();
+    rocket = QPixmap(":/images/Tintin.png");
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -62,12 +64,10 @@ void MainWindow::setup(){
 }
 
 void MainWindow::init_values() {
-
     grid = true;
     markers = true;
     legendCheck = true;
     gridSize = 2;
-    wSize = 800;
     einsteinR = wSize/20;
     srcSize = wSize/20;
     KL = 0.65;
@@ -102,6 +102,37 @@ void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, doub
             int val = round(255 * exp((-x * x - y * y) / (2.0*srcSize*srcSize)));
             img.setPixel(col, row, qRgb(val, val, val));
         }
+    }
+}
+
+void MainWindow::theme(){
+    if (darkMode) {
+        qApp->setStyle(QStyleFactory::create("Fusion"));
+        QPalette darkPalette;
+        darkPalette.setColor(QPalette::Window,QColor(53,53,53));
+        darkPalette.setColor(QPalette::WindowText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::WindowText,QColor(127,127,127));
+        darkPalette.setColor(QPalette::Base,QColor(42,42,42));
+        darkPalette.setColor(QPalette::AlternateBase,QColor(66,66,66));
+        darkPalette.setColor(QPalette::ToolTipBase,Qt::white);
+        darkPalette.setColor(QPalette::ToolTipText,Qt::white);
+        darkPalette.setColor(QPalette::Text,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::Text,QColor(127,127,127));
+        darkPalette.setColor(QPalette::Dark,QColor(35,35,35));
+        darkPalette.setColor(QPalette::Shadow,QColor(20,20,20));
+        darkPalette.setColor(QPalette::Button,QColor(53,53,53));
+        darkPalette.setColor(QPalette::ButtonText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::ButtonText,QColor(127,127,127));
+        darkPalette.setColor(QPalette::BrightText,Qt::red);
+        darkPalette.setColor(QPalette::Link,QColor(42,130,218));
+        darkPalette.setColor(QPalette::Highlight,QColor(42,130,218));
+        darkPalette.setColor(QPalette::Disabled,QPalette::Highlight,QColor(80,80,80));
+        darkPalette.setColor(QPalette::HighlightedText,Qt::white);
+        darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
+        qApp->setPalette(darkPalette);
+
+    } else{
+        qApp->setPalette(this->style()->standardPalette());
     }
 }
 
@@ -261,14 +292,16 @@ void MainWindow::drawRadius(QPixmap& src){
 
 void MainWindow::drawGrid(QPixmap& img){
     QPainter painter(&img);
-    QPen pen(Qt::gray, 2, Qt::DotLine);
+    QPen pen(Qt::gray, 2, Qt::SolidLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
 
+
     if (gridSize > 0) {
+        int remainder = (wSize%gridSize)/2;
         for (int var = wSize/gridSize; var < wSize;) {
-            QLineF lineVert(wSize-var, 0, wSize-var, wSize);
-            QLineF lineHor(0, wSize-var, wSize, wSize-var);
+            QLineF lineVert(wSize-var-remainder, 0, wSize-var-remainder, wSize-remainder);
+            QLineF lineHor(0, wSize-var-remainder, wSize-remainder, wSize-var-remainder);
             painter.drawLine(lineVert);
             painter.drawLine(lineHor);
             var+=wSize/gridSize;
@@ -277,10 +310,10 @@ void MainWindow::drawGrid(QPixmap& img){
 }
 
 
-void MainWindow::drawMarker(QPixmap& src, int x, int y, QColor color){
+void MainWindow::drawMarker(QPixmap& src, int x, int y, int size, QColor color){
     QPointF point(x, y);
     QPainter painter(&src);
-    QPen pen(color, 10);
+    QPen pen(color, size);
     painter.setPen(pen);
     painter.setOpacity(0.4);
     painter.drawPoint(point);
@@ -291,9 +324,12 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     updateImg();
 }
 
-void MainWindow::drawText(QPixmap& img, int x, int y, QString text){
+void MainWindow::drawText(QPixmap& img, int x, int y, int fontSize, QString text){
     QPointF point(x,y);
     QPainter painter(&img);
+    QFont font;
+    font.setPixelSize(fontSize);
+    painter.setFont(font);
     painter.drawText(point, text);
 }
 
@@ -301,19 +337,20 @@ void MainWindow::drawLegend(QPixmap& img){
 
     // Create legend pixmap
     int legendHeight = wSize/12;
-    int legendWidth = wSize/4.5;
+    int legendWidth = wSize/4;
     QPixmap legend(legendWidth, legendHeight);
 
     // Background color of legend
     legend.fill(Qt::gray);
 
     // Draw markers in legend
-    drawMarker(legend, 10, 20, Qt::red);
-    drawMarker(legend, 10, 40, Qt::blue);
+    int markerSize = legendWidth/16;
+    drawMarker(legend, legendWidth/10, legendHeight/2 - markerSize, markerSize, Qt::red);
+    drawMarker(legend, legendWidth/10, legendHeight/2 + markerSize, markerSize, Qt::blue);
 
-    // Add text to legend
-    drawText(legend, 20, 25, "Actual position");
-    drawText(legend, 20, 45, "Apparent positions");
+    int fontSize = legendWidth/12;
+    drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 - markerSize + markerSize/2, fontSize, "Actual position");
+    drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 + markerSize + markerSize/2, fontSize, "Apparent positions");
 
     // Set legend opacity and draw to main pixmap
     QPainter painter(&img);
@@ -321,11 +358,8 @@ void MainWindow::drawLegend(QPixmap& img){
     if (apparentX < -wSize/6 && apparentY > wSize/6){
         xPos += wSize - legendWidth;
     }
-    painter.setOpacity(0.6);
+//    painter.setOpacity(0.6);
     painter.drawPixmap(xPos, 0, legend);
-
-    //Check position of source and move legend?? Yes!
-
 }
 
 void MainWindow::updateImg() {
@@ -383,9 +417,9 @@ void MainWindow::updateImg() {
     }
     if (markers) {
 
-        drawMarker(imgDistPix, wSize/2 + apparentX, wSize/2 - apparentY, Qt::blue);
-        drawMarker(imgDistPix, wSize/2 + apparentX2, wSize/2 - apparentY2, Qt::blue);
-        drawMarker(imgDistPix, wSize/2 + actualX, wSize/2 - actualY, Qt::red);
+        drawMarker(imgDistPix, wSize/2 + apparentX, wSize/2 - apparentY, 10, Qt::blue);
+        drawMarker(imgDistPix, wSize/2 + apparentX2, wSize/2 - apparentY2, 10, Qt::blue);
+        drawMarker(imgDistPix, wSize/2 + actualX, wSize/2 - actualY, 10, Qt::red);
 
         if (legendCheck) {
           drawLegend(imgDistPix);
@@ -528,9 +562,28 @@ void MainWindow::on_action12x12_triggered()
 }
 
 
-void MainWindow::on_action20x20_triggered()
+void MainWindow::on_actionChange_resolution_triggered()
 {
-    gridSize = 20;
-    ui->gridBox->setChecked(true);
+    QString currentSize = QString::number(wSize);
+    unsigned int input = QInputDialog::getInt(this,"Change resolution", "Current: " + currentSize, wSize, 50, 2048);
+    wSize = input;
+    setup();
     updateImg();
 }
+
+
+void MainWindow::on_actionCustom_triggered()
+{
+    QString currentSize = QString::number(gridSize);
+    unsigned int input = QInputDialog::getInt(this,"Custom grid size", "Current: " + currentSize + "x" + currentSize, gridSize, 2, 100);
+    gridSize = input;
+    updateImg();
+}
+
+
+void MainWindow::on_actionDark_mode_toggled(bool arg1)
+{
+    darkMode = arg1;
+    theme();
+}
+
