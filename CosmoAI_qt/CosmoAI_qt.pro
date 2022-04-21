@@ -25,3 +25,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+win32:RC_ICONS += resources/icons/CosmoAI_win.ico
+macx: ICON += resources/icons/CosmoAI_osx.icns
