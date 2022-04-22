@@ -37,6 +37,7 @@ private:
     double apparentAbs2{};
     double R{};
     const static int n = 20;
+    bool optimMode;
 
     std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, n>, n> betas_l;

@@ -14,14 +14,15 @@
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
-        size(100),
+        size(200),
         CHI_percent(50),
         CHI(CHI_percent/100.0),
         einsteinR(size/20),
         sourceSize(size/20),
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
-        mode(0) // 0 = point mass, 1 = sphere
+        mode(0), // 0 = point mass, 1 = sphere
+        optimMode(true)
 {
 
     GAMMA = einsteinR/100.0;
@@ -32,7 +33,7 @@ void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
 
-    GAMMA = einsteinR/100.0;
+    GAMMA = einsteinR/10.0;
     calculate();
     cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(50, 50, 50));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
@@ -54,10 +55,9 @@ void Simulator::update() {
 
         // if Spherical
     else if (mode == 1){
-        int scaled_size = (int)(size/CHI);
-        imgApparent = cv::Mat(scaled_size, scaled_size, CV_8UC1, cv::Scalar(50, 50, 50));
+        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(50, 50, 50));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-        cv::circle(imgApparent, cv::Point(scaled_size/2 + (int)apparentX, scaled_size/2 - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
 //        distort(0, size, imgApparent, imgDistorted);
@@ -118,13 +118,15 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     else {
         double x = col - dst.cols / 2.0 - X;
         double y = dst.rows / 2.0 - row - Y;
-        // Calculate distance and angle of the point evaluated relative to center of lens (origin)
         double r = sqrt(x * x + y * y);
+
         double theta = atan2(y, x);
         auto pos = spherical(r, theta, alphas_l, betas_l);
         // Translate to array index
         col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
         row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
+
+
 //        std::cout << "\nrow :\t" << row << " col :\t" << col << "\nx   :\t" << (int)x << " y   :\t" << (int)y << "\nrow_:\t" << row_ << " col_:\t" << col_ << std::endl;
     }
 
@@ -160,10 +162,12 @@ std::pair<double, double> Simulator::spherical(double r, double theta, std::arra
         ksi1 += term1;
         ksi2 += term2;
         // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
-        if ( ((std::abs(term1) < std::abs(ksi1)/1000) && (std::abs(term2) < std::abs(ksi2)/100))){// || ksi1 < -100*size || ksi1 > 100*size || ksi2 < -100*size || ksi2 > 100*size ){
-//            std::cout << m << std::endl;
-            break;
+        if (optimMode){
+            if ( ((std::abs(term1) < std::abs(ksi1)/100) && (std::abs(term2) < std::abs(ksi2)/100)) || (ksi1 < -1*size || ksi1 > 10*size || ksi2 < -10*size || ksi2 > 1*size) ){
+                break;
+            }
         }
+
     }
 //    return {0, 0};
     return {ksi1, ksi2};
@@ -269,9 +273,7 @@ void Simulator::initGui(){
 
 void Simulator::update_dummy(int, void* data){
     auto* that = (Simulator*)(data);
-    if (!that->mode){ // if point mass mode
-        that->update();
-    }
+    that->update();
 }
 
 
@@ -282,7 +284,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../functions_16.txt");
+    std::string filename("../../functions_18.txt");
     std::ifstream input;
     input.open(filename);
 
