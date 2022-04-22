@@ -30,7 +30,7 @@ void MainWindow::setup(){
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
     imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
     imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    rocket = QPixmap(":/images/Tintin.png");
+    rocket = QPixmap(":/images/images/Tintin.png");
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);

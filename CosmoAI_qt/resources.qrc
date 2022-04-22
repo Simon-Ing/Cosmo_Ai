@@ -1,6 +1,11 @@
 <RCC>
     <qresource prefix="/images">
-        <file>rocket-png-40811.png</file>
-        <file>Tintin.png</file>
+        <file>images/rocket-png-40811.png</file>
+        <file>images/Tintin.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/CosmoAI_osx.icns</file>
+        <file>icons/CosmoAI_png.png</file>
+        <file>icons/CosmoAI_win.ico</file>
     </qresource>
 </RCC>
