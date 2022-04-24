@@ -284,7 +284,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../functions_18.txt");
+    std::string filename("../../functions_20.txt");
     std::ifstream input;
     input.open(filename);
 
