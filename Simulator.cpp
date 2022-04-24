@@ -142,6 +142,10 @@ std::pair<double, double> Simulator::spherical(double r, double theta, std::arra
     double ksi1 = 0;
     double ksi2 = 0;
 
+    std::array<std::array<double, n>, n> alphas_val{};
+    std::array<std::array<double, n>, n> betas_val{};
+
+
 
     for (int m=1; m<n; m++){
         double frac = pow(r, m) / factorial_(m);
