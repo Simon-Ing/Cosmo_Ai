@@ -22,10 +22,10 @@ Simulator::Simulator() :
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
         mode(0), // 0 = point mass, 1 = sphere
-        optimMode(true)
+        optimMode(false)
 {
 
-    GAMMA = einsteinR/100.0;
+    GAMMA = einsteinR/2.0;
 }
 
 
@@ -33,7 +33,7 @@ void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
 
-    GAMMA = einsteinR/10.0;
+    GAMMA = einsteinR/2.0;
     calculate();
     cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(50, 50, 50));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
@@ -53,14 +53,22 @@ void Simulator::update() {
         imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
     }
 
-        // if Spherical
+    // if Spherical
     else if (mode == 1){
+
+        // calculate all amplitudes for given X, Y, GAMMA, CHI
+        for (int m = 1; m < n; m++){
+            for (int s = (m+1)%2; s < std::min((m+2), n); s+=2){
+                alphas_val[m][s] = alphas_l[m][s].call({X, Y, GAMMA, CHI});
+                betas_val[m][s] = betas_l[m][s].call({X, Y, GAMMA, CHI});
+            }
+        }
+
         imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(50, 50, 50));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
-//        distort(0, size, imgApparent, imgDistorted);
     }
 
     cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
@@ -73,7 +81,7 @@ void Simulator::update() {
     cv::imshow("GL Simulator", matDst);
 
     auto endTime = std::chrono::system_clock::now();
-    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << std::endl;
+    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
 
 }
 
@@ -98,7 +106,6 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 
 
 void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
-    // Evaluate each point in imgDistorted plane ~ lens plane
     int row_, col_;
 
     // if point mass
@@ -116,18 +123,16 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
     }
         // if sphere
     else {
+
         double x = col - dst.cols / 2.0 - X;
         double y = dst.rows / 2.0 - row - Y;
         double r = sqrt(x * x + y * y);
 
         double theta = atan2(y, x);
-        auto pos = spherical(r, theta, alphas_l, betas_l);
+        auto pos = spherical(r, theta);
         // Translate to array index
         col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
         row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
-
-
-//        std::cout << "\nrow :\t" << row << " col :\t" << col << "\nx   :\t" << (int)x << " y   :\t" << (int)y << "\nrow_:\t" << row_ << " col_:\t" << col_ << std::endl;
     }
 
     // If (x', y') within source, copy value to imgDistorted
@@ -138,42 +143,33 @@ void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-std::pair<double, double> Simulator::spherical(double r, double theta, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& alphas_lambda, std::array<std::array<LambdaRealDoubleVisitor, n>, n>& betas_lambda) const {
+std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
     double ksi2 = 0;
-
-    std::array<std::array<double, n>, n> alphas_val{};
-    std::array<std::array<double, n>, n> betas_val{};
-
-
 
     for (int m=1; m<n; m++){
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
         double subTerm2 = 0;
         for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
-            double alpha = alphas_lambda[m][s].call({X, Y, GAMMA, CHI});
-            double beta = betas_lambda[m][s].call({X, Y, GAMMA, CHI});
+            double alpha = alphas_val[m][s];
+            double beta = betas_val[m][s];
             int c_p = 1 + s/(m + 1);
             int c_m = 1 - s/(m + 1);
-            subTerm1 += theta*((alpha*cos(s-1) + beta*sin(s-1))*c_p + (alpha*cos(s+1) + beta*sin(s+1)*c_m));
-            subTerm2 += theta*((-alpha*sin(s-1) + beta*cos(s-1))*c_p + (alpha*sin(s+1) - beta*cos(s+1)*c_m));
-//            std::cout << "\nm: " << m << " s: " << s << "\nsubterm1: " << subTerm1 << "\nsubterm2: " << subTerm2 << std::endl;
+            subTerm1 += 1.0/4*((alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m);
+            subTerm2 += 1.0/4*((-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
         }
         double term1 = frac*subTerm1;
         double term2 = frac*subTerm2;
-//        std::cout << "\nm: " << m << "\nterm1: " << term1 << "\nterm2: " << term2 << "\nksi1: " << ksi1 << "\nksi2: " << ksi2 << std::endl;
         ksi1 += term1;
         ksi2 += term2;
         // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
         if (optimMode){
-            if ( ((std::abs(term1) < std::abs(ksi1)/100) && (std::abs(term2) < std::abs(ksi2)/100)) || (ksi1 < -1*size || ksi1 > 10*size || ksi2 < -10*size || ksi2 > 1*size) ){
+            if ( ((std::abs(term1) < std::abs(ksi1)/100000) && (std::abs(term2) < std::abs(ksi2)/100000)) || (ksi1 < -100000*size || ksi1 > 100000*size || ksi2 < -100000*size || ksi2 > 100000*size) ){
                 break;
             }
         }
-
     }
-//    return {0, 0};
     return {ksi1, ksi2};
 }
 
@@ -224,9 +220,9 @@ void Simulator::calculate() {
     // Angle relative to x-axis
     phi = atan2(actualY, actualX);
 
-    std::cout << "actualX: " << actualX << " actualY: " << actualY << " actualAbs: " << actualAbs <<
-              " apparentX: " <<apparentX << " apparentY: " << apparentY << " apparentAbs: " << apparentAbs <<
-              " R:" << R << " X: " << X << " Y: " << Y << std::endl;
+//    std::cout << "actualX: " << actualX << " actualY: " << actualY << " actualAbs: " << actualAbs <<
+//              " apparentX: " <<apparentX << " apparentY: " << apparentY << " apparentAbs: " << apparentAbs <<
+//              " R:" << R << " X: " << X << " Y: " << Y << std::endl;
 }
 
 
@@ -307,7 +303,6 @@ void Simulator::initAlphasBetas() {
         if (input) {
             auto alpha_sym = SymEngine::parse(alpha);
             auto beta_sym = SymEngine::parse(alpha);
-            std::cout << "\nm: " << m << " s: " << s << "\nalpha:\t" << *alpha_sym << "\nbeta:\t" << *beta_sym << std::endl;
             SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
             alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *alpha_sym);
             betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *beta_sym);

@@ -41,6 +41,8 @@ private:
 
     std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, n>, n> betas_l;
+    std::array<std::array<double, n>, n> alphas_val;
+    std::array<std::array<double, n>, n> betas_val;
 
 public:
     Simulator();
@@ -56,8 +58,6 @@ private:
 
     [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
 
-    std::pair<double, double> spherical(double r, double theta, std::array<std::array<LambdaRealDoubleVisitor, n>, n>&, std::array<std::array<LambdaRealDoubleVisitor, n>, n>&) const;
-
     static void update_dummy(int, void*);
 
     cv::Mat formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const;
@@ -69,6 +69,8 @@ private:
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
     void initAlphasBetas();
+
+    std::pair<double, double> spherical(double r, double theta) const;
 };
 
 
