@@ -370,7 +370,7 @@ void MainWindow::saveImage() {
 
 
     QString defaultFileName = QDate::currentDate().toString("'cosmoai_'yyyy-MM-dd");
-    defaultFileName.append(QTime::currentTime().toString("-hh-mm-ss"));
+    defaultFileName.append(QTime::currentTime().toString("-hh-mm-ss'.png'"));
 
 
     QImage imageDist = imgDistPix.toImage();
