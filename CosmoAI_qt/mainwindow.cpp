@@ -9,6 +9,7 @@
 #include <QPainterPath>
 #include <QInputDialog>
 #include <QStyleFactory>
+#include <QFileDialog>
 #define PI 3.14159265358979323846
 
 
@@ -333,11 +334,11 @@ void MainWindow::drawText(QPixmap& img, int x, int y, int fontSize, QString text
     painter.drawText(point, text);
 }
 
-void MainWindow::drawLegend(QPixmap& img){
+void MainWindow::drawLegend(QPixmap& img, int refSize){
 
     // Create legend pixmap
-    int legendHeight = ui->distLabel->height()/12;
-    int legendWidth = ui->distLabel->height()/4;
+    int legendHeight = refSize/12;
+    int legendWidth = refSize/4;
     QPixmap legend(legendWidth, legendHeight);
 
     // Background color of legend
@@ -356,10 +357,37 @@ void MainWindow::drawLegend(QPixmap& img){
     QPainter painter(&img);
     int xPos = 0;
     if (apparentX < -wSize/6 && apparentY > wSize/6){
-        xPos += wSize - legendWidth;
+        xPos += refSize - legendWidth;
     }
     painter.setOpacity(0.6);
     painter.drawPixmap(xPos, 0, legend);
+}
+
+void MainWindow::saveImage() {
+    if (markers && legendCheck) {
+        drawLegend(imgDistPix, wSize);
+    }
+
+
+    QString defaultFileName = QDate::currentDate().toString("'cosmoai_'yyyy-MM-dd");
+    defaultFileName.append(QTime::currentTime().toString("-hh-mm-ss"));
+
+
+    QImage imageDist = imgDistPix.toImage();
+    QImage imageAct = imgActPix.toImage();
+
+    QImage combined(2*imageDist.width(), imageDist.height(), QImage::Format_RGB32);
+    QPainter painter(&combined);
+    painter.drawImage(0, 0, imageAct);
+    painter.drawImage(imageDist.width(), 0, imageDist);
+    painter.end();
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image"), QString(defaultFileName), tr("PNG (*.png)"));
+
+    if (!fileName.isEmpty())
+    {
+        combined.save(fileName);
+    }
 }
 
 void MainWindow::updateImg() {
@@ -387,7 +415,7 @@ void MainWindow::updateImg() {
     drawSource();
 
     // Convert image to pixmap
-    QPixmap imgAppPix = QPixmap::fromImage(imgApparent);
+    imgAppPix = QPixmap::fromImage(imgApparent);
 
     // Pre rotate pixmap
     imgAppPix = rotate(imgAppPix, phi, 0, 0);
@@ -401,12 +429,12 @@ void MainWindow::updateImg() {
     distortThreaded();
 
     // Convert distorted image to pixmap, rotate and crop
-    QPixmap imgDistPix = QPixmap::fromImage(imgDistorted);
+    imgDistPix = QPixmap::fromImage(imgDistorted);
     imgDistPix = rotate(imgDistPix, -phi, 0, 0);
     QRect rect(wSize/2, 0, wSize, wSize);
     imgDistPix = imgDistPix.copy(rect);
 
-    auto imgActPix = QPixmap::fromImage(imgActual);
+    imgActPix = QPixmap::fromImage(imgActual);
 
     // Draw grids and markers
     if (grid == true) {
@@ -424,17 +452,17 @@ void MainWindow::updateImg() {
 
     // Scale pixmaps to fit in labels
     int labelH = ui->actLabel->height();
-    imgDistPix = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    imgActPix = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap imgDistPixScaled = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap imgActPixScaled = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     // Draw legend after scaling to ensure text clarity
     if (legendCheck && markers) {
-      drawLegend(imgDistPix);
+      drawLegend(imgDistPixScaled, ui->distLabel->height());
     }
 
     // Draw pixmaps on QLabels
-    ui->actLabel->setPixmap(imgActPix);
-    ui->distLabel->setPixmap(imgDistPix);
+    ui->actLabel->setPixmap(imgActPixScaled);
+    ui->distLabel->setPixmap(imgDistPixScaled);
 }
 
 
@@ -591,3 +619,14 @@ void MainWindow::on_actionDark_mode_toggled(bool arg1)
     theme();
 }
 
+
+void MainWindow::on_saveButton_clicked()
+{
+    saveImage();
+}
+
+
+void MainWindow::on_actionSave_image_as_triggered()
+{
+    saveImage();
+}
