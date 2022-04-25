@@ -336,8 +336,8 @@ void MainWindow::drawText(QPixmap& img, int x, int y, int fontSize, QString text
 void MainWindow::drawLegend(QPixmap& img){
 
     // Create legend pixmap
-    int legendHeight = wSize/12;
-    int legendWidth = wSize/4;
+    int legendHeight = ui->distLabel->height()/12;
+    int legendWidth = ui->distLabel->height()/4;
     QPixmap legend(legendWidth, legendHeight);
 
     // Background color of legend
@@ -358,7 +358,7 @@ void MainWindow::drawLegend(QPixmap& img){
     if (apparentX < -wSize/6 && apparentY > wSize/6){
         xPos += wSize - legendWidth;
     }
-//    painter.setOpacity(0.6);
+    painter.setOpacity(0.6);
     painter.drawPixmap(xPos, 0, legend);
 }
 
@@ -406,9 +406,9 @@ void MainWindow::updateImg() {
     QRect rect(wSize/2, 0, wSize, wSize);
     imgDistPix = imgDistPix.copy(rect);
 
+    auto imgActPix = QPixmap::fromImage(imgActual);
 
     // Draw grids and markers
-    auto imgActPix = QPixmap::fromImage(imgActual);
     if (grid == true) {
         drawGrid(imgActPix);
         drawGrid(imgAppPixDisp);
@@ -420,18 +420,22 @@ void MainWindow::updateImg() {
         drawMarker(imgDistPix, wSize/2 + apparentX, wSize/2 - apparentY, 10, Qt::blue);
         drawMarker(imgDistPix, wSize/2 + apparentX2, wSize/2 - apparentY2, 10, Qt::blue);
         drawMarker(imgDistPix, wSize/2 + actualX, wSize/2 - actualY, 10, Qt::red);
+    }
 
-        if (legendCheck) {
-          drawLegend(imgDistPix);
-        }
+    // Scale pixmaps to fit in labels
+    int labelH = ui->actLabel->height();
+    imgDistPix = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    imgActPix = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    // Draw legend after scaling to ensure text clarity
+    if (legendCheck && markers) {
+      drawLegend(imgDistPix);
     }
 
     // Draw pixmaps on QLabels
-    int labelH = ui->actLabel->height();
-    ui->actLabel->setPixmap(imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    ui->distLabel->setPixmap(imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->actLabel->setPixmap(imgActPix);
+    ui->distLabel->setPixmap(imgDistPix);
 }
-
 
 
 MainWindow::~MainWindow()
