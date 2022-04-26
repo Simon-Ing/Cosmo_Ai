@@ -18,7 +18,7 @@ private:
     bool legendCheck;
     bool darkMode = true;
     int gridSize;
-    int wSize = 800;
+    int wSize = 600;
     int wSizeWide;
     int einsteinR;
     int srcSize;
@@ -46,6 +46,7 @@ private:
     QPixmap rocket;
     QPixmap legend;
     QString source;
+    QString lensType;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -69,6 +70,8 @@ private:
     void theme();
     void drawSource();
     void saveImage();
+    std::pair<double, double> pointMass(double r, double theta);
+    std::pair<double, double> spherical(double r, double theta) const;
 
 private slots:
     void on_einsteinSpinbox_valueChanged();

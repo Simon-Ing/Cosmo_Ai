@@ -29,9 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setup(){
     imgActual = QImage(wSize, wSize, QImage::Format_RGB32);
-    imgApparent = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    imgDistorted = QImage(2*wSize, wSize, QImage::Format_RGB32);
-    rocket = QPixmap(":/images/images/Tintin.png");
+    imgApparent = QImage(2*wSize, 2*wSize, QImage::Format_RGB32);
+    imgDistorted = QImage(2*wSize, 2*wSize, QImage::Format_RGB32);
+    rocket = QPixmap(":/images/images/tintin-rocket-removebg-preview.png");
+    lensType = "point";
 
     // Set max/min values for UI elements
     ui->einsteinSlider->setMaximum(0.1*wSize);
@@ -152,13 +153,13 @@ void MainWindow::drawSource(){
 
         if (source == "Rocket"){
             QPixmap rocket1 = rocket.scaled(6*srcSize, 6*srcSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            QPoint posApp(apparentX + wSize - rocket1.width()/2, -apparentY + wSize/2 - rocket1.height()/2);
-            QPoint posAct(actualX + wSize/2 - rocket1.width()/2, wSize/2 - actualY - rocket1.height()/2);
+            QPoint posApp(apparentX + imgApparent.width()/2 - rocket1.width()/2, -apparentY + imgApparent.height()/2 - rocket1.height()/2);
+            QPoint posAct(actualX + imgActual.width()/2 - rocket1.width()/2, imgActual.height()/2 - actualY - rocket1.height()/2);
             pAct.drawPixmap(posAct, rocket1);
             pApp.drawPixmap(posApp, rocket1);
         }
-        QRect rectApp(apparentX + wSize - srcSize, -apparentY + wSize/2 - srcSize, 2*srcSize, 2*srcSize);
-        QRect rectAct(actualX + wSize/2 - srcSize, wSize/2 - actualY - srcSize, 2*srcSize, 2*srcSize);
+        QRect rectApp(apparentX + imgApparent.width()/2 - srcSize, -apparentY + imgApparent.height()/2 - srcSize, 2*srcSize, 2*srcSize);
+        QRect rectAct(actualX + imgActual.width()/2 - srcSize, imgActual.height()/2 - actualY - srcSize, 2*srcSize, 2*srcSize);
         if (source == "Circle"){
             pAct.drawEllipse(rectAct);
             pApp.drawEllipse(rectApp);
@@ -193,7 +194,7 @@ void MainWindow::distort(int begin, int end) {
     for (int row = begin; row < end; row++) {
         for (int col = 0; col <= cols; col++) { // <= ???????????????????????????????????????
 
-            // Set coordinate system with origin at x=R
+
             double x = (col - apparentAbs - cols/2.0) * KL;
             double y = (rows/2.0 - row) * KL;
 
@@ -201,14 +202,11 @@ void MainWindow::distort(int begin, int end) {
             double r = sqrt(x*x + y*y);
             double theta = atan2(y, x);
 
-            // Point mass lens equation
-            double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
-            double x_ = (x + frac * (r / R + cos(theta))) / KL;
-            double y_ = (y - frac * sin(theta)) / KL;
+            auto pos = pointMass(r, theta);
 
             // Translate to array index
-            int row_ = (int)round(rows/2.0 - y_);
-            int col_ = (int)round(apparentAbs + cols/2.0 + x_);
+            int row_ = (int)round(rows/2.0 - pos.second);
+            int col_ = (int)round(apparentAbs + cols/2.0 + pos.first);
 
 
             // If (x', y') within source, copy value to imgDistorted
@@ -218,6 +216,44 @@ void MainWindow::distort(int begin, int end) {
         }
     }
 }
+
+
+std::pair<double, double> MainWindow::pointMass(double r, double theta){
+    // Point mass lens equation
+    double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
+    double x_ = (r*cos(theta) + frac * (r / R + cos(theta))) / KL;
+    double y_ = (r*sin(theta) - frac * sin(theta)) / KL;
+    return {x_, y_};
+}
+
+
+//std::pair<double, double> Simulator::spherical(double r, double theta) const {
+//    double ksi1 = 0;
+//    double ksi2 = 0;
+
+//    for (int m=1; m<n; m++){
+//        double frac = pow(r, m) / factorial_(m);
+//        double subTerm1 = 0;
+//        double subTerm2 = 0;
+//        for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
+//            double alpha = alphas_val[m][s];
+//            double beta = betas_val[m][s];
+//            int c_p = 1 + s/(m + 1);
+//            int c_m = 1 - s/(m + 1);
+//            subTerm1 += 1.0/4*((alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m);
+//            subTerm2 += 1.0/4*((-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
+//        }
+//        double term1 = frac*subTerm1;
+//        double term2 = frac*subTerm2;
+//        ksi1 += term1;
+//        ksi2 += term2;
+//        // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
+//        if ( ((std::abs(term1) < std::abs(ksi1)/100000) && (std::abs(term2) < std::abs(ksi2)/100000)) || (ksi1 < -100000*size || ksi1 > 100000*size || ksi2 < -100000*size || ksi2 > 100000*size) ){
+//            break;
+//        }
+//    }
+//    return {ksi1, ksi2};
+//}
 
 
 void MainWindow::drawGaussianThreaded(QImage& img, double xPos, double yPos){
@@ -416,13 +452,10 @@ void MainWindow::updateImg() {
 
     // Convert image to pixmap
     imgAppPix = QPixmap::fromImage(imgApparent);
+    std::cout << "height before " << imgAppPix.height() << "width before " << imgAppPix.width() << std::endl;
 
     // Pre rotate pixmap
     imgAppPix = rotate(imgAppPix, phi, 0, 0);
-
-    // Make a copy to display and crop it
-    QRect rect2(wSize/2, 0, wSize, wSize);
-    auto imgAppPixDisp = imgAppPix.copy(rect2);
 
     // Convert pre-rotated pixmap to image and distort the image
     imgApparent = imgAppPix.toImage();
@@ -431,7 +464,7 @@ void MainWindow::updateImg() {
     // Convert distorted image to pixmap, rotate and crop
     imgDistPix = QPixmap::fromImage(imgDistorted);
     imgDistPix = rotate(imgDistPix, -phi, 0, 0);
-    QRect rect(wSize/2, 0, wSize, wSize);
+    QRect rect(wSize/2, wSize/2, wSize, wSize);
     imgDistPix = imgDistPix.copy(rect);
 
     imgActPix = QPixmap::fromImage(imgActual);
@@ -439,7 +472,7 @@ void MainWindow::updateImg() {
     // Draw grids and markers
     if (grid == true) {
         drawGrid(imgActPix);
-        drawGrid(imgAppPixDisp);
+//        drawGrid(imgAppPixDisp);
         drawGrid(imgDistPix);
         drawRadius(imgDistPix);
     }
@@ -463,6 +496,7 @@ void MainWindow::updateImg() {
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPixScaled);
     ui->distLabel->setPixmap(imgDistPixScaled);
+//    ui->label_8->setPixmap(imgAppPix);
 }
 
 
