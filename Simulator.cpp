@@ -14,15 +14,14 @@
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
-        size(200),
+        size(300),
         CHI_percent(50),
         CHI(CHI_percent/100.0),
         einsteinR(size/20),
         sourceSize(size/20),
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
-        mode(0), // 0 = point mass, 1 = sphere
-        optimMode(false)
+        mode(0) // 0 = point mass, 1 = sphere
 {
 
     GAMMA = einsteinR/2.0;
@@ -35,7 +34,7 @@ void Simulator::update() {
 
     GAMMA = einsteinR/2.0;
     calculate();
-    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(50, 50, 50));
+    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 
     cv::Mat imgApparent;
@@ -43,7 +42,7 @@ void Simulator::update() {
 
     // if point
     if (mode == 0){
-        imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(50, 50, 50));
+        imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         parallelDistort(imgApparent, imgDistorted);
@@ -64,10 +63,10 @@ void Simulator::update() {
             }
         }
 
-        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(50, 50, 50));
+        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
-        cv::imshow("apparent", imgApparent);
+//        cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
     }
 
@@ -87,17 +86,18 @@ void Simulator::update() {
 
 
 void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
+    int n_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
-    for (int row = 0; row < dst.rows; row++) {
-        for (int col = 0; col < dst.cols; col++) {
-//            std::thread t([row, col, src, &dst, this]() { distort(row, col, src, dst); });
-//            threads_vec.push_back(std::move(t));
-            distort(row, col, src, dst);
+    for (int i = 0; i < n_threads; i++) {
+        int begin = dst.rows/n_threads*i;
+        int end = dst.rows/n_threads*(i+1);
+            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
+            threads_vec.push_back(std::move(t));
+//            distort(row, col, src, dst);
         }
 //        if(mode){
 //            std::cout << 100.0 * row / dst.rows << "%" << std::endl;
 //        }
-    }
 
     for (auto& thread : threads_vec) {
         thread.join();
@@ -105,40 +105,44 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void Simulator::distort(int row, int col, const cv::Mat& src, cv::Mat& dst) {
-    int row_, col_;
+void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
+    for (int row = begin; row < end; row++) {
+        for (int col = 0; col < dst.cols; col++) {
+            // if point mass
+            int row_, col_;
 
-    // if point mass
-    if (!mode) {
-        // Set coordinate system with origin at x=R
-        double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
-        double y = (dst.rows / 2.0 - row) * CHI;
-        // Calculate distance and angle of the point evaluated relative to center of lens (origin)
-        double r = sqrt(x * x + y * y);
-        double theta = atan2(y, x);
-        auto pos = pointMass(r, theta);
-        // Translate to array index
-        row_ = (int) round(src.rows / 2.0 - pos.second);
-        col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
-    }
-        // if sphere
-    else {
+            if (!mode) {
+                // Set coordinate system with origin at x=R
+                double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+                double y = (dst.rows / 2.0 - row) * CHI;
+                // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+                double r = sqrt(x * x + y * y);
+                double theta = atan2(y, x);
+                auto pos = pointMass(r, theta);
+                // Translate to array index
+                row_ = (int) round(src.rows / 2.0 - pos.second);
+                col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
+            }
+                // if sphere
+            else {
 
-        double x = col - dst.cols / 2.0 - X;
-        double y = dst.rows / 2.0 - row - Y;
-        double r = sqrt(x * x + y * y);
+                double x = col - dst.cols / 2.0 - X;
+                double y = dst.rows / 2.0 - row - Y;
+                double r = sqrt(x * x + y * y);
 
-        double theta = atan2(y, x);
-        auto pos = spherical(r, theta);
-        // Translate to array index
-        col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
-        row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
-    }
+                double theta = atan2(y, x);
+                auto pos = spherical(r, theta);
+                // Translate to array index
+                col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
+                row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
+            }
 
-    // If (x', y') within source, copy value to imgDistorted
-    if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
-        auto val = src.at<uchar>(row_, col_);
-        dst.at<uchar>(row, col) = val;
+            // If (x', y') within source, copy value to imgDistorted
+            if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+                auto val = src.at<uchar>(row_, col_);
+                dst.at<uchar>(row, col) = val;
+            }
+        }
     }
 }
 
@@ -164,15 +168,12 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
         ksi1 += term1;
         ksi2 += term2;
         // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
-        if (optimMode){
-            if ( ((std::abs(term1) < std::abs(ksi1)/100000) && (std::abs(term2) < std::abs(ksi2)/100000)) || (ksi1 < -100000*size || ksi1 > 100000*size || ksi2 < -100000*size || ksi2 > 100000*size) ){
-                break;
-            }
+        if ( ((std::abs(term1) < std::abs(ksi1)/100000) && (std::abs(term2) < std::abs(ksi2)/100000)) || (ksi1 < -100000*size || ksi1 > 100000*size || ksi2 < -100000*size || ksi2 > 100000*size) ){
+            break;
         }
     }
     return {ksi1, ksi2};
 }
-
 
 
 std::pair<double, double> Simulator::pointMass(double r, double theta) const {
@@ -284,7 +285,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../functions_20.txt");
+    std::string filename("../../20.txt");
     std::ifstream input;
     input.open(filename);
 
@@ -302,10 +303,11 @@ void Simulator::initAlphasBetas() {
         std::getline(input, beta);
         if (input) {
             auto alpha_sym = SymEngine::parse(alpha);
-            auto beta_sym = SymEngine::parse(alpha);
+            auto beta_sym = SymEngine::parse(beta);
             SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
             alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *alpha_sym);
             betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *beta_sym);
         }
     }
 }
+

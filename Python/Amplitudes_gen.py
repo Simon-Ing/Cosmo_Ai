@@ -4,14 +4,14 @@ import sys
 import time
 
 
-from sympy import simplify, symbols, sqrt#, diff
-from symengine import diff
+from sympy import simplify, symbols, sqrt, diff, factor
+
+# from symengine import diff
 
 
-n = int(sys.argv[1])
+n = 20#int(sys.argv[1])
 
 fn = str(n) + '.txt'
-
 
 def listener(q):
     '''listens for messages on the q, writes to file. '''
@@ -21,14 +21,14 @@ def listener(q):
             m = q.get()
             # print("got write job:", m)
             if m == 'kill':
-                f.write('killed')
+                print("Done")
                 break
             f.write(str(m) + '\n')
             f.flush()
 
 
 def simpl(x):
-    return (x)
+    return factor(x)
 
 
 def func(n, m, s, alpha, beta, x, y, g, chi, q):
