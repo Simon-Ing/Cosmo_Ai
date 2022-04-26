@@ -40,6 +40,9 @@ private:
     QPixmap pixApp;
     QPixmap pixAct;
     QPixmap pixDist;
+    QPixmap imgAppPix;
+    QPixmap imgActPix;
+    QPixmap imgDistPix;
     QPixmap rocket;
     QPixmap legend;
     QString source;
@@ -61,10 +64,11 @@ private:
     void distortThreaded();
     QPixmap rotate(QPixmap src, double angle, int x, int y);
     void resizeEvent(QResizeEvent *event);
-    void drawLegend(QPixmap&);
+    void drawLegend(QPixmap&, int refSize);
     void drawText(QPixmap& img, int x, int y, int fontSize, QString text);
     void theme();
     void drawSource();
+    void saveImage();
 
 private slots:
     void on_einsteinSpinbox_valueChanged();
@@ -87,6 +91,8 @@ private slots:
     void on_actionChange_resolution_triggered();
     void on_actionCustom_triggered();
     void on_actionDark_mode_toggled(bool arg1);
+    void on_saveButton_clicked();
+    void on_actionSave_image_as_triggered();
 };
 
 #endif // MAINWINDOW_H
