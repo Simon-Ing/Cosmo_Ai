@@ -202,7 +202,15 @@ void MainWindow::distort(int begin, int end) {
             double r = sqrt(x*x + y*y);
             double theta = atan2(y, x);
 
-            auto pos = pointMass(r, theta);
+            std::pair<double, double> pos;
+
+            if (mode == "infinite"){
+                pos = pointMass(r, theta);
+            }
+            else if (mode == "finite"){
+                pos = pointMassFinite(r, theta);
+            }
+
 
             // Translate to array index
             int row_ = (int)round(rows/2.0 - pos.second);
@@ -223,6 +231,20 @@ std::pair<double, double> MainWindow::pointMass(double r, double theta){
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
     double x_ = (r*cos(theta) + frac * (r / R + cos(theta))) / KL;
     double y_ = (r*sin(theta) - frac * sin(theta)) / KL;
+    return {x_, y_};
+}
+
+std::pair<double, double> MainWindow::pointMassFinite(double r, double theta){
+    double xTemp = 0;
+    double yTemp = 0;
+    for(int m = 1; m < terms; m++){
+        int sign = 1 - 2*(m%2);
+        double frac = std::pow((r/R), m);
+        xTemp += sign * frac * std::cos(m*theta);
+        yTemp -= sign * frac * std::sin(m*theta);
+    }
+    double x_ = (r * std::cos(theta) - einsteinR*einsteinR/R*xTemp)/KL;
+    double y_ = (r * std::sin(theta) - einsteinR*einsteinR/R*yTemp)/KL;
     return {x_, y_};
 }
 
@@ -452,8 +474,6 @@ void MainWindow::updateImg() {
 
     // Convert image to pixmap
     imgAppPix = QPixmap::fromImage(imgApparent);
-    std::cout << "height before " << imgAppPix.height() << "width before " << imgAppPix.width() << std::endl;
-
     // Pre rotate pixmap
     imgAppPix = rotate(imgAppPix, phi, 0, 0);
 
@@ -664,3 +684,16 @@ void MainWindow::on_actionSave_image_as_triggered()
 {
     saveImage();
 }
+
+void MainWindow::on_lensTypeComboBox_activated(int index)
+{
+    terms = index + 1;
+    if(terms == 21){
+        mode = "infinite";
+    }
+    else{
+        mode = "finite";
+    }
+    updateImg();
+}
+
