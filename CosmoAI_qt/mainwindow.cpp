@@ -54,20 +54,22 @@ void MainWindow::updateImg() {
 
     imgActPix = QPixmap::fromImage(imgActual);
 
-    // Draw grids and markers
-    if (grid == true) {
-        drawGrid(imgActPix);
-//        drawGrid(imgAppPixDisp);
-        drawGrid(imgDistPix);
-        drawRadius(imgDistPix);
-    }
+
 
     // Scale pixmaps to fit in labels
     int labelH = ui->actLabel->height();
     QPixmap imgDistPixScaled = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     QPixmap imgActPixScaled = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    double ratio = (double)labelH/wSize;
+    // Draw grids and markers
+    if (grid == true) {
+        drawGrid(imgActPixScaled);
+//        drawGrid(imgAppPixDisp);
+        drawGrid(imgDistPixScaled);
+        drawRadius(imgDistPixScaled, ratio);
+    }
     if (markers) {
-        double ratio = (double)labelH/wSize;
         drawMarker(imgDistPixScaled, ratio*(wSize/2 + apparentX), ratio*(wSize/2 - apparentY), 10, Qt::blue);
         drawMarker(imgDistPixScaled, ratio*(wSize/2 + apparentX2), ratio*(wSize/2 - apparentY2), 10, Qt::blue);
         drawMarker(imgDistPixScaled, ratio*(wSize/2 + actualX), ratio*(wSize/2 - actualY), 10, Qt::red);
@@ -263,13 +265,13 @@ void MainWindow::drawGaussian(int begin, int end, QImage& img, double xPos, doub
     }
 }
 
-void MainWindow::drawRadius(QPixmap& src){
+void MainWindow::drawRadius(QPixmap& src, double ratio){
     QPointF center(src.width()/2, src.height()/2);
     QPainter painter(&src);
     QPen pen(Qt::gray, 2, Qt::DashLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
-    painter.drawEllipse(center, (int)round(einsteinR/KL), (int)round(einsteinR/KL));
+    painter.drawEllipse(center, (int)round(einsteinR/KL*ratio), (int)round(einsteinR/KL*ratio));
 }
 
 void MainWindow::drawGrid(QPixmap& img){
@@ -277,19 +279,23 @@ void MainWindow::drawGrid(QPixmap& img){
     QPen pen(Qt::gray, 2, Qt::SolidLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
-
-
-    if (gridSize > 0) {
-        int remainder = (wSize%gridSize)/2;
-        for (int var = wSize/gridSize; var < wSize;) {
-            QLineF lineVert(wSize-var-remainder, 0, wSize-var-remainder, wSize-remainder);
-            QLineF lineHor(0, wSize-var-remainder, wSize-remainder, wSize-var-remainder);
-            painter.drawLine(lineVert);
-            painter.drawLine(lineHor);
-            var+=wSize/gridSize;
-        }
-    }
+    QLineF lineVert(img.width()/2, 0, img.width()/2, img.height());
+    QLineF lineHor(0, img.height()/2, img.width(), img.height()/2);
+    painter.drawLine(lineVert);
+    painter.drawLine(lineHor);
 }
+
+//    if (gridSize > 0) {
+//        int remainder = (wSize%gridSize)/2;
+//        for (int var = wSize/gridSize; var < wSize;) {
+//            QLineF lineVert(wSize-var-remainder, 0, wSize-var-remainder, wSize-remainder);
+//            QLineF lineHor(0, wSize-var-remainder, wSize-remainder, wSize-var-remainder);
+//            painter.drawLine(lineVert);
+//            painter.drawLine(lineHor);
+//            var+=wSize/gridSize;
+//        }
+//    }
+//}
 
 void MainWindow::drawMarker(QPixmap& src, int x, int y, int size, QColor color){
     QPointF point(x, y);

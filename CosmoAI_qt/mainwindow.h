@@ -57,7 +57,7 @@ public:
 private:
     void init_values();
     void drawGrid(QPixmap &img);
-    void drawRadius(QPixmap& src);
+    void drawRadius(QPixmap& src, double);
     void drawMarker(QPixmap &src, int x, int y, int size, QColor color);
     void setup();
     void updateImg();
