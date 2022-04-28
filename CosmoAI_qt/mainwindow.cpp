@@ -51,6 +51,8 @@ void MainWindow::setup(){
     ui->ySpinbox->setMaximum(wSize/2);
     ui->ySlider->setMinimum(-wSize/2);
     ui->ySpinbox->setMinimum(-wSize/2);
+    ui->termsSpinbox->setMinimum(1);
+    ui->termsSpinbox->setMaximum(100);
 
     // Connect sliders and spinboxes
     connect(ui->einsteinSlider, SIGNAL(valueChanged(int)), ui->einsteinSpinbox, SLOT(setValue(int)));
@@ -699,7 +701,7 @@ void MainWindow::on_infTermsCheckbox_toggled(bool checked)
 
 void MainWindow::on_termsSpinbox_valueChanged(int arg1)
 {
-    terms = arg1 + 1;
+    terms = arg1;
     updateImg();
 }
 
