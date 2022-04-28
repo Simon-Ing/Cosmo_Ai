@@ -21,7 +21,8 @@ Simulator::Simulator() :
         sourceSize(size/20),
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
-        mode(0) // 0 = point mass, 1 = sphere
+        mode(0), // 0 = point mass, 1 = sphere
+        n(10)
 {
 
     GAMMA = einsteinR/2.0;
@@ -34,7 +35,7 @@ void Simulator::update() {
 
     GAMMA = einsteinR/2.0;
     calculate();
-    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
+    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(100, 100, 100));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 
     cv::Mat imgApparent;
@@ -63,7 +64,7 @@ void Simulator::update() {
             }
         }
 
-        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
+        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(100, 100, 100));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 //        cv::imshow("apparent", imgApparent);
@@ -151,11 +152,13 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
     double ksi2 = 0;
 
-    for (int m=1; m<n; m++){
+    int num = 0;
+    for (int m=1; m<=n; m++){
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
         double subTerm2 = 0;
-        for (int s=(m+1)%2; s<=m+1 && s<n; s+=2){
+        for (int s=(m+1)%2; s<=m+1; s+=2){
+            num++;
             double alpha = alphas_val[m][s];
             double beta = betas_val[m][s];
             int c_p = 1 + s/(m + 1);
@@ -168,10 +171,11 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
         ksi1 += term1;
         ksi2 += term2;
         // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
-        if ( ((std::abs(term1) < std::abs(ksi1)/100000) && (std::abs(term2) < std::abs(ksi2)/100000)) || (ksi1 < -100000*size || ksi1 > 100000*size || ksi2 < -100000*size || ksi2 > 100000*size) ){
-            break;
-        }
+//        if ( ((std::abs(term1) < std::abs(ksi1)/1000) && (std::abs(term2) < std::abs(ksi2)/1000)) || (ksi1 < -1000*size || ksi1 > 1000*size || ksi2 < -1000*size || ksi2 > 1000*size) ){
+//            break;
+//        }
     }
+    std::cout << num << std::endl;
     return {ksi1, ksi2};
 }
 
@@ -268,7 +272,8 @@ void Simulator::initGui(){
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, update_dummy, this);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, update_dummy, this);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, update_dummy, this);
-    cv::createTrackbar("Mode, point/sphere (in sphere mode: set sliders, then hit space to run):", "GL Simulator", &mode, 1, update_dummy, this);
+    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 1, update_dummy, this);
+    cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &n, 49, update_dummy, this);
 }
 
 
@@ -285,7 +290,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../20.txt");
+    std::string filename("../../50.txt");
     std::ifstream input;
     input.open(filename);
 

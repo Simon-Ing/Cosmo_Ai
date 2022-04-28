@@ -36,12 +36,12 @@ private:
     double apparentAbs{};
     double apparentAbs2{};
     double R{};
-    const static int n = 20;
+    int n;
 
-    std::array<std::array<LambdaRealDoubleVisitor, n>, n> alphas_l;
-    std::array<std::array<LambdaRealDoubleVisitor, n>, n> betas_l;
-    std::array<std::array<double, n>, n> alphas_val;
-    std::array<std::array<double, n>, n> betas_val;
+    std::array<std::array<LambdaRealDoubleVisitor, 51>, 50> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, 51>, 50> betas_l;
+    std::array<std::array<double, 51>, 50> alphas_val;
+    std::array<std::array<double, 51>, 50> betas_val;
 
 public:
     Simulator();
@@ -71,11 +71,6 @@ private:
 
     std::pair<double, double> spherical(double r, double theta) const;
 
-    void parallelDraw(cv::Mat &dst);
-
-    void parallelDraw(cv::Mat &dst, int xPos, int yPos);
-
-    void drawSource(int begin, int end, cv::Mat &dst, int xPos, int yPos);
 };
 
 
