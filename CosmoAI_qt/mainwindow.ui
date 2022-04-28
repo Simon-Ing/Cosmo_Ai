@@ -109,21 +109,24 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="saveButton">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Save</string>
+         <string>Terms</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_5">
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="markerBox">
         <property name="text">
-         <string>Source type</string>
+         <string>Markers</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="srcTypeComboBox">
         <item>
          <property name="text">
@@ -152,157 +155,47 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QCheckBox" name="gridBox">
         <property name="text">
          <string>Grid</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="markerBox">
-        <property name="text">
-         <string>Markers</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Terms</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="lensTypeComboBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>5</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>7</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>10</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>11</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>12</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>13</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>14</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>15</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>16</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>17</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>18</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>19</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>20</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>infinite</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QPushButton" name="resetButton">
         <property name="text">
          <string>Reset</string>
         </property>
        </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Source type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QSpinBox" name="termsSpinbox"/>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="infTermsCheckbox">
+          <property name="text">
+           <string>Infinite terms</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -356,7 +249,7 @@
      <x>0</x>
      <y>0</y>
      <width>842</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

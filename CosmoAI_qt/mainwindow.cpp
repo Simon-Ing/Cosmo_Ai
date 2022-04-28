@@ -685,15 +685,21 @@ void MainWindow::on_actionSave_image_as_triggered()
     saveImage();
 }
 
-void MainWindow::on_lensTypeComboBox_activated(int index)
+
+void MainWindow::on_infTermsCheckbox_toggled(bool checked)
 {
-    terms = index + 1;
-    if(terms == 21){
+    if (checked) {
         mode = "infinite";
-    }
-    else{
+    } else {
         mode = "finite";
     }
+    updateImg();
+}
+
+
+void MainWindow::on_termsSpinbox_valueChanged(int arg1)
+{
+    terms = arg1 + 1;
     updateImg();
 }
 

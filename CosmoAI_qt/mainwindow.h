@@ -74,7 +74,6 @@ private:
     void saveImage();
     std::pair<double, double> pointMass(double r, double theta);
     std::pair<double, double> spherical(double r, double theta) const;
-
     std::pair<double, double> pointMassFinite(double r, double theta);
 
 private slots:
@@ -100,7 +99,8 @@ private slots:
     void on_actionDark_mode_toggled(bool arg1);
     void on_saveButton_clicked();
     void on_actionSave_image_as_triggered();
-    void on_lensTypeComboBox_activated(int index);
+    void on_infTermsCheckbox_toggled(bool checked);
+    void on_termsSpinbox_valueChanged(int arg1);
 };
 
 #endif // MAINWINDOW_H
