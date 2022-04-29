@@ -207,15 +207,14 @@ void Simulator::calculate() {
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY);
-    apparentAbs = (actualAbs + sqrt(actualAbs * actualAbs + 4 / (CHI * CHI) * einsteinR * einsteinR)) / 2.0;
-    apparentAbs2 = (actualAbs - sqrt(actualAbs * actualAbs + 4 / (CHI * CHI) * einsteinR * einsteinR)) / 2.0;
-
-    // Apparent position in source plane
-    apparentX = actualX * apparentAbs / actualAbs;
-    apparentY = actualY * apparentAbs / actualAbs;
-    apparentX2 = actualX * apparentAbs2 / actualAbs;
-    apparentY2 = actualY * apparentAbs2 / actualAbs;
-
+    double ratio1 = 0.5 + sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    apparentAbs = actualAbs*ratio1;
+    apparentAbs2 = actualAbs*ratio2;
+    apparentX = actualX*ratio1;
+    apparentX2 = actualX*ratio2;
+    apparentY = actualY*ratio1;
+    apparentY2 = actualY*ratio2;
 
     // Projection of apparent position in lens plane
     R = apparentAbs * CHI;
@@ -225,9 +224,6 @@ void Simulator::calculate() {
     // Angle relative to x-axis
     phi = atan2(actualY, actualX);
 
-//    std::cout << "actualX: " << actualX << " actualY: " << actualY << " actualAbs: " << actualAbs <<
-//              " apparentX: " <<apparentX << " apparentY: " << apparentY << " apparentAbs: " << apparentAbs <<
-//              " R:" << R << " X: " << X << " Y: " << Y << std::endl;
 }
 
 

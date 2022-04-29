@@ -2,6 +2,7 @@
     <qresource prefix="/images">
         <file>images/rocket-png-40811.png</file>
         <file>images/Tintin.png</file>
+        <file>images/HG.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/CosmoAI_osx.icns</file>

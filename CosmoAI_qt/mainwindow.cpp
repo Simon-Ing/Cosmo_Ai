@@ -22,18 +22,7 @@ void MainWindow::updateImg() {
     imgActual.fill(Qt::black);
     imgDistorted.fill(Qt::black);
 
-    // Calculate positions and angles
-    phi = atan2(actualY, actualX);
-    actualAbs = sqrt(actualX*actualX + actualY*actualY);
-    apparentAbs = (actualAbs + sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    apparentAbs2 = (actualAbs - sqrt(actualAbs*actualAbs + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0;
-    double shiftRatio = apparentAbs / actualAbs;
-    double shiftRatio2 = apparentAbs2 / actualAbs;
-    apparentX = actualX * shiftRatio;
-    apparentY = actualY * shiftRatio;
-    apparentX2 = actualX * shiftRatio2;
-    apparentY2 = actualY * shiftRatio2;
-    R = apparentAbs * KL;
+    calculateStuff();
 
     drawSource();
 
@@ -54,35 +43,33 @@ void MainWindow::updateImg() {
 
     imgActPix = QPixmap::fromImage(imgActual);
 
-
-
     // Scale pixmaps to fit in labels
     int labelH = ui->actLabel->height();
-    QPixmap imgDistPixScaled = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    QPixmap imgActPixScaled = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    imgDistPix = imgDistPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    imgActPix = imgActPix.scaled(labelH, labelH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     double ratio = (double)labelH/wSize;
     // Draw grids and markers
     if (grid == true) {
-        drawGrid(imgActPixScaled);
+        drawGrid(imgActPix);
 //        drawGrid(imgAppPixDisp);
-        drawGrid(imgDistPixScaled);
-        drawRadius(imgDistPixScaled, ratio);
+        drawGrid(imgDistPix);
+        drawRadius(imgDistPix, ratio);
     }
     if (markers) {
-        drawMarker(imgDistPixScaled, ratio*(wSize/2 + apparentX), ratio*(wSize/2 - apparentY), 10, Qt::blue);
-        drawMarker(imgDistPixScaled, ratio*(wSize/2 + apparentX2), ratio*(wSize/2 - apparentY2), 10, Qt::blue);
-        drawMarker(imgDistPixScaled, ratio*(wSize/2 + actualX), ratio*(wSize/2 - actualY), 10, Qt::red);
+        drawMarker(imgDistPix, ratio*(wSize/2 + apparentX), ratio*(wSize/2 - apparentY), 10, Qt::blue);
+        drawMarker(imgDistPix, ratio*(wSize/2 + apparentX2), ratio*(wSize/2 - apparentY2), 10, Qt::blue);
+        drawMarker(imgDistPix, ratio*(wSize/2 + actualX), ratio*(wSize/2 - actualY), 10, Qt::red);
     }
 
     // Draw legend after scaling to ensure text clarity
     if (legendCheck && markers) {
-      drawLegend(imgDistPixScaled, ui->distLabel->height());
+      drawLegend(imgDistPix, ui->distLabel->height());
     }
 
     // Draw pixmaps on QLabels
-    ui->actLabel->setPixmap(imgActPixScaled);
-    ui->distLabel->setPixmap(imgDistPixScaled);
+    ui->actLabel->setPixmap(imgActPix);
+    ui->distLabel->setPixmap(imgDistPix);
 }
 
 // Split the image into (number of threads available) pieces and distort the pieces in parallel
@@ -116,8 +103,8 @@ void MainWindow::distort(int begin, int end) {
         for (int col = 0; col <= cols; col++) { // <= ???????????????????????????????????????
 
 
-            double x = (col - apparentAbs - cols/2.0) * KL;
-            double y = (rows/2.0 - row) * KL;
+            double x = (col - apparentAbs - cols/2.0) * CHI;
+            double y = (rows/2.0 - row) * CHI;
 
             // Calculate distance and angle of the point evaluated relative to center of lens (origin)
             double r = sqrt(x*x + y*y);
@@ -149,8 +136,8 @@ void MainWindow::distort(int begin, int end) {
 std::pair<double, double> MainWindow::pointMass(double r, double theta){
     // Point mass lens equation
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
-    double x_ = (r*cos(theta) + frac * (r / R + cos(theta))) / KL;
-    double y_ = (r*sin(theta) - frac * sin(theta)) / KL;
+    double x_ = (r*cos(theta) + frac * (r / R + cos(theta))) / CHI;
+    double y_ = (r*sin(theta) - frac * sin(theta)) / CHI;
     return {x_, y_};
 }
 
@@ -163,8 +150,8 @@ std::pair<double, double> MainWindow::pointMassFinite(double r, double theta){
         xTemp += sign * frac * std::cos(m*theta);
         yTemp -= sign * frac * std::sin(m*theta);
     }
-    double x_ = (r * std::cos(theta) - einsteinR*einsteinR/R*xTemp)/KL;
-    double y_ = (r * std::sin(theta) - einsteinR*einsteinR/R*yTemp)/KL;
+    double x_ = (r * std::cos(theta) - einsteinR*einsteinR/R*xTemp)/CHI;
+    double y_ = (r * std::sin(theta) - einsteinR*einsteinR/R*yTemp)/CHI;
     return {x_, y_};
 }
 
@@ -271,7 +258,7 @@ void MainWindow::drawRadius(QPixmap& src, double ratio){
     QPen pen(Qt::gray, 2, Qt::DashLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
-    painter.drawEllipse(center, (int)round(einsteinR/KL*ratio), (int)round(einsteinR/KL*ratio));
+    painter.drawEllipse(center, (int)round(einsteinR/CHI*ratio), (int)round(einsteinR/CHI*ratio));
 }
 
 void MainWindow::drawGrid(QPixmap& img){
@@ -407,6 +394,25 @@ void MainWindow::saveImage() {
     }
 }
 
+void MainWindow::calculateStuff(){
+    // Calculate positions and angles
+    actualAbs = sqrt(actualX*actualX + actualY*actualY);
+    double ratio1 = 0.5 + sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    apparentAbs = actualAbs*ratio1;
+    apparentAbs2 = actualAbs*ratio2;
+    apparentX = actualX * ratio1;
+    apparentY = actualY * ratio1;
+    apparentX2 = actualX * ratio2;
+    apparentY2 = actualY * ratio2;
+    R = apparentAbs * CHI;
+    phi = atan2(actualY, actualX);
+
+    // Spherical
+    //    X = apparentX * CHI;
+    //    Y = apparentY * CHI;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -472,7 +478,7 @@ void MainWindow::init_values() {
     gridSize = 2;
     einsteinR = wSize/20;
     srcSize = wSize/20;
-    KL = 0.65;
+    CHI = 0.65;
     actualX = 0;
     actualY = 0;
     source = ui->srcTypeComboBox->currentText();
@@ -482,8 +488,8 @@ void MainWindow::init_values() {
     ui->einsteinSlider->setSliderPosition(einsteinR);
     ui->srcSizeSpinbox->setValue(srcSize);
     ui->srcSizeSlider->setSliderPosition(srcSize);
-    ui->lensDistSpinbox->setValue(KL*100);
-    ui->lensDistSlider->setSliderPosition(KL*100);
+    ui->lensDistSpinbox->setValue(CHI*100);
+    ui->lensDistSlider->setSliderPosition(CHI*100);
     ui->xSpinbox->setValue(actualX);
     ui->xSlider->setSliderPosition(actualX);
     ui->ySpinbox->setValue(actualY);
@@ -513,7 +519,7 @@ void MainWindow::on_srcSizeSpinbox_valueChanged()
 
 void MainWindow::on_lensDistSpinbox_valueChanged(int arg1)
 {
-    KL = arg1/100.0;
+    CHI = arg1/100.0;
     updateImg();
 }
 
