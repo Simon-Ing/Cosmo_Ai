@@ -9,8 +9,13 @@
 int main()
 {
     Simulator simulator;
-    simulator.initGui();
-
+    try{
+        simulator.initGui();
+    }
+    catch (std::exception &e){
+        std::cout << "initGui returned exception: " << e.what() << std::endl;
+        return 1;
+    }
 
     bool running = true;
     while (running) {

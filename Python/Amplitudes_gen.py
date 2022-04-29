@@ -9,7 +9,7 @@ from sympy import simplify, symbols, sqrt, diff, factor
 # from symengine import diff
 
 
-n = 20#int(sys.argv[1])
+n = 50#int(sys.argv[1])
 
 fn = str(n) + '.txt'
 
@@ -33,7 +33,7 @@ def simpl(x):
 
 def func(n, m, s, alpha, beta, x, y, g, chi, q):
     print(f'm: {m} s: {s}')# alpha: {alpha} beta: {beta}')
-    while s > 0 and m < n-1:
+    while s > 0 and m < n:
         m += 1
         s -= 1
         c = ((m + 1.0) / (m + 1.0 - s) * (1.0 + (s != 0.0)) / 2.0) * chi
@@ -69,7 +69,7 @@ def main():
         pool.apply_async(listener, (q,))
 
         jobs = []
-        for m in range(0, n-1):
+        for m in range(0, n+1):
             # print(m)
             s = m + 1
             # print(m, s)
