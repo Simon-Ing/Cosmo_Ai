@@ -25,7 +25,7 @@ private:
     int actualX;
     int actualY;
     double phi;
-    double KL;
+    double CHI;
     double actualAbs;
     double apparentAbs;
     double apparentX;
@@ -57,7 +57,7 @@ public:
 private:
     void init_values();
     void drawGrid(QPixmap &img);
-    void drawRadius(QPixmap& src);
+    void drawRadius(QPixmap& src, double);
     void drawMarker(QPixmap &src, int x, int y, int size, QColor color);
     void setup();
     void updateImg();
@@ -76,6 +76,7 @@ private:
     std::pair<double, double> spherical(double r, double theta) const;
     std::pair<double, double> pointMassFinite(double r, double theta);
 
+    void calculateStuff();
 private slots:
     void on_einsteinSpinbox_valueChanged();
     void on_srcSizeSpinbox_valueChanged();

@@ -35,7 +35,7 @@ void Simulator::update() {
 
     GAMMA = einsteinR/2.0;
     calculate();
-    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(100, 100, 100));
+    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
     cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 
     cv::Mat imgApparent;
@@ -57,14 +57,14 @@ void Simulator::update() {
     else if (mode == 1){
 
         // calculate all amplitudes for given X, Y, GAMMA, CHI
-        for (int m = 1; m < n; m++){
-            for (int s = (m+1)%2; s < std::min((m+2), n); s+=2){
+        for (int m = 1; m <= n; m++){
+            for (int s = (m+1)%2; s <= (m+1); s+=2){
                 alphas_val[m][s] = alphas_l[m][s].call({X, Y, GAMMA, CHI});
                 betas_val[m][s] = betas_l[m][s].call({X, Y, GAMMA, CHI});
             }
         }
 
-        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(100, 100, 100));
+        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
         cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
 //        cv::imshow("apparent", imgApparent);
@@ -147,18 +147,18 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
+//for (int m = 1; m <= n; m++){
+//for (int s = (m+1)%2; s <= (m+1); s+=2){
 
 std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
     double ksi2 = 0;
 
-    int num = 0;
     for (int m=1; m<=n; m++){
         double frac = pow(r, m) / factorial_(m);
         double subTerm1 = 0;
         double subTerm2 = 0;
-        for (int s=(m+1)%2; s<=m+1; s+=2){
-            num++;
+        for (int s = (m+1)%2; s <= (m+1); s+=2){
             double alpha = alphas_val[m][s];
             double beta = betas_val[m][s];
             int c_p = 1 + s/(m + 1);
@@ -175,7 +175,6 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
 //            break;
 //        }
     }
-    std::cout << num << std::endl;
     return {ksi1, ksi2};
 }
 
@@ -207,15 +206,14 @@ void Simulator::calculate() {
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY);
-    apparentAbs = (actualAbs + sqrt(actualAbs * actualAbs + 4 / (CHI * CHI) * einsteinR * einsteinR)) / 2.0;
-    apparentAbs2 = (actualAbs - sqrt(actualAbs * actualAbs + 4 / (CHI * CHI) * einsteinR * einsteinR)) / 2.0;
-
-    // Apparent position in source plane
-    apparentX = actualX * apparentAbs / actualAbs;
-    apparentY = actualY * apparentAbs / actualAbs;
-    apparentX2 = actualX * apparentAbs2 / actualAbs;
-    apparentY2 = actualY * apparentAbs2 / actualAbs;
-
+    double ratio1 = 0.5 + sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    apparentAbs = actualAbs*ratio1;
+    apparentAbs2 = actualAbs*ratio2;
+    apparentX = actualX*ratio1;
+    apparentX2 = actualX*ratio2;
+    apparentY = actualY*ratio1;
+    apparentY2 = actualY*ratio2;
 
     // Projection of apparent position in lens plane
     R = apparentAbs * CHI;
@@ -225,9 +223,6 @@ void Simulator::calculate() {
     // Angle relative to x-axis
     phi = atan2(actualY, actualX);
 
-//    std::cout << "actualX: " << actualX << " actualY: " << actualY << " actualAbs: " << actualAbs <<
-//              " apparentX: " <<apparentX << " apparentY: " << apparentY << " apparentAbs: " << apparentAbs <<
-//              " R:" << R << " X: " << X << " Y: " << Y << std::endl;
 }
 
 
@@ -295,7 +290,7 @@ void Simulator::initAlphasBetas() {
     input.open(filename);
 
     if (!input.is_open()) {
-        std::cout << "Could not open file: " << filename << std::endl;
+        throw std::runtime_error("Could not open file: " + filename);
     }
 
     while (input) {

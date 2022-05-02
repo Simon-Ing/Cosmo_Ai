@@ -38,10 +38,10 @@ private:
     double R{};
     int n;
 
-    std::array<std::array<LambdaRealDoubleVisitor, 51>, 50> alphas_l;
-    std::array<std::array<LambdaRealDoubleVisitor, 51>, 50> betas_l;
-    std::array<std::array<double, 51>, 50> alphas_val;
-    std::array<std::array<double, 51>, 50> betas_val;
+    std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> betas_l;
+    std::array<std::array<double, 52>, 51> alphas_val;
+    std::array<std::array<double, 52>, 51> betas_val;
 
 public:
     Simulator();
