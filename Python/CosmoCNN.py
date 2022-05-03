@@ -11,7 +11,7 @@ batch_size = 128
 learning_rate = 0.001
 
 n_train_samples = 200000
-n_test_samples = 5000
+n_test_samples = 10000
 img_size = 512
 
 # set to true when you want new data points
