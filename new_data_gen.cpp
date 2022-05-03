@@ -18,6 +18,7 @@ int size = 0;  // Size of source and lens imgDistorted
  int KL_percent = 0;
  int lens_angle;
  int sourceDistFromCenter;
+ int apparentPos;
 std::string name;
 
 
@@ -97,7 +98,7 @@ void writeToPngFiles(cv::Mat& image) {
     std::ostringstream filename_path;
     std::ostringstream filename;
 
-    filename << KL_percent << "," << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
+    filename /*<< KL_percent << ","*/ << einsteinR << "," << sigma << "," << xPosSlider << "," << yPosSlider << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), image);
 //    cv::imshow(filename_path.str(), image);
@@ -116,7 +117,7 @@ static void update(int, void*) {
 
     int actualPos = (int)round(sqrt(xPos*xPos + yPos*yPos));
     int sizeAtLens = (int)round(KL*size);
-    int apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
+    apparentPos = (int)round((actualPos + sqrt(actualPos*actualPos + 4 / (KL*KL) * einsteinR*einsteinR)) / 2.0);
     int R = (int)round(apparentPos * KL);
 
     // make an image with light source at APPARENT position, make it oversized in width to avoid "cutoff"
@@ -148,16 +149,16 @@ int main(int, char *argv[]) {
     // Generate dataset:
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> rand_lens_dist(30, 100);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, size/8);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, size/14);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(0, size);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(0, size);
+//    std::uniform_int_distribution<std::mt19937::result_type> rand_lens_dist(30, 100);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, size/10);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, size/10);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(100, size-100);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(100, size-100);
 
     std::vector<std::vector<int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         // Randomizes values for eatch iteration
-        KL_percent = rand_lens_dist(rng);
+        KL_percent = 50; // rand_lens_dist(rng);
         einsteinR = rand_einsteinR(rng);
         sigma = rand_source_size(rng);
         xPosSlider = rand_xSlider(rng);
@@ -171,9 +172,12 @@ int main(int, char *argv[]) {
                 
         std::vector<int> params = {KL_percent, einsteinR, sigma, xPosSlider, yPosSlider };
 
-        if ( !std::count(parameters.begin(), parameters.end(), params) ) {
+        if ( (!std::count(parameters.begin(), parameters.end(), params)) ) {
             update(0, nullptr);
-            parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider });
+            if (apparentPos < size/3){
+                parameters.push_back({KL_percent, einsteinR, sigma, xPosSlider, yPosSlider });
+            }
+//            else i--;
         }
         else{
             i--;
