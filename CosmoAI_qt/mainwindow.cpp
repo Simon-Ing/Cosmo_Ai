@@ -266,23 +266,18 @@ void MainWindow::drawGrid(QPixmap& img){
     QPen pen(Qt::gray, 2, Qt::SolidLine);
     painter.setPen(pen);
     painter.setOpacity(0.3);
-    QLineF lineVert(img.width()/2, 0, img.width()/2, img.height());
-    QLineF lineHor(0, img.height()/2, img.width(), img.height()/2);
-    painter.drawLine(lineVert);
-    painter.drawLine(lineHor);
-}
 
-//    if (gridSize > 0) {
-//        int remainder = (wSize%gridSize)/2;
-//        for (int var = wSize/gridSize; var < wSize;) {
-//            QLineF lineVert(wSize-var-remainder, 0, wSize-var-remainder, wSize-remainder);
-//            QLineF lineHor(0, wSize-var-remainder, wSize-remainder, wSize-var-remainder);
-//            painter.drawLine(lineVert);
-//            painter.drawLine(lineHor);
-//            var+=wSize/gridSize;
-//        }
-//    }
-//}
+    if (gridSize > 0) {
+        int remainder = (img.height()%gridSize)/2;
+        for (int var = img.height()/gridSize; var < img.height()*1.5;) {
+            QLineF lineVert(img.height()-var-remainder, 0, img.height()-var-remainder, img.height()-remainder);
+            QLineF lineHor(0, img.height()-var-remainder, img.height()-remainder, img.height()-var-remainder);
+            painter.drawLine(lineVert);
+            painter.drawLine(lineHor);
+            var+=img.height()/gridSize;
+        }
+    }
+}
 
 void MainWindow::drawMarker(QPixmap& src, int x, int y, int size, QColor color){
     QPointF point(x, y);
@@ -360,6 +355,7 @@ void MainWindow::theme(){
         darkPalette.setColor(QPalette::Disabled,QPalette::Highlight,QColor(80,80,80));
         darkPalette.setColor(QPalette::HighlightedText,Qt::white);
         darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
+        darkPalette.setColor(QPalette::ToolTipBase,QColor(42,42,42));
         qApp->setPalette(darkPalette);
 
     } else{
