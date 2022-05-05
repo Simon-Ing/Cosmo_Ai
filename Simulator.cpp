@@ -35,17 +35,17 @@ void Simulator::update() {
 
     GAMMA = einsteinR/2.0;
     calculate();
-    cv::Mat imgActual(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
-    cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
-
+    cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+//    cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+    drawParallel(imgActual, actualX, actualY);
     cv::Mat imgApparent;
-    cv::Mat imgDistorted;
 
     // if point
     if (mode == 0){
         imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-        cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+//        cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        drawParallel(imgApparent, apparentAbs, 0);
         parallelDistort(imgApparent, imgDistorted);
         // rotate image
         cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
@@ -71,17 +71,22 @@ void Simulator::update() {
         parallelDistort(imgApparent, imgDistorted);
     }
 
-    cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
+//    cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
 
-    const int displaySize = 500;
-    refLines(imgActual);
-    refLines(imgDistorted);
-    cv::Mat imgOutput;
-    cv::Mat matDst = formatImg(imgDistorted, imgActual, displaySize);
+//    const int displaySize = 500;
+//    refLines(imgActual);
+//    refLines(imgDistorted);
+//    cv::Mat matDst = formatImg(imgDistorted, imgActual, displaySize);
+    cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
+    cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
+    imgActual.copyTo(matRoi);
+    matRoi = matDst(cv::Rect(size, 0, size, size));
+    imgDistorted.copyTo(matRoi);
+
     cv::imshow("GL Simulator", matDst);
 
     auto endTime = std::chrono::system_clock::now();
-    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
+//    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
 
 }
 
@@ -187,6 +192,48 @@ std::pair<double, double> Simulator::pointMass(double r, double theta) const {
 }
 
 
+void Simulator::drawParallel(cv::Mat& dst, int xPos, int yPos){
+    int n_threads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads_vec;
+    for (int i = 0; i < n_threads; i++) {
+        int begin = dst.rows / n_threads * i;
+        int end = dst.rows / n_threads * (i + 1);
+        std::thread t([begin, end, &dst, xPos, yPos, this]() { drawSource(begin, end, dst, xPos, yPos); });
+        threads_vec.push_back(std::move(t));
+    }
+    for (auto& thread : threads_vec) {
+        thread.join();
+    }
+}
+
+
+void Simulator::drawSource(int begin, int end, cv::Mat& dst, int xPos, int yPos) {
+    for (int row = begin; row < end; row++) {
+        for (int col = 0; col < dst.cols; col++) {
+            int x = col - xPos - dst.cols/2;
+            int y = row + yPos - dst.rows/2;
+            auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0*sourceSize*sourceSize)));
+            dst.at<uchar>(row, col) = value;
+        }
+    }
+}
+
+
+void Simulator::writeToPngFiles(int n_params) {
+    std::ostringstream filename_path;
+    std::ostringstream filename;
+
+    if (n_params == 5){
+        filename << CHI_percent << ",";
+    }
+    filename << einsteinR << "," << sourceSize << "," << xPosSlider << "," << yPosSlider << ".png";
+    filename_path << name + "/images/" + filename.str();
+    cv::imwrite(filename_path.str(), imgDistorted);
+//    cv::imshow(filename_path.str(), image);
+//    cv::waitKey(0);
+}
+
+
 double factorial_(unsigned int n){
     double a = 1.0;
     for (int i = 2; i <= n; i++){
@@ -226,36 +273,36 @@ void Simulator::calculate() {
 }
 
 
-cv::Mat Simulator::formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const {
-    if (!mode){
-        cv::circle(imgDistorted, cv::Point(size / 2, size / 2), (int)round(einsteinR / CHI), cv::Scalar::all(60));
-        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX, size / 2 - (int) apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
-        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX2, size / 2 - (int) apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
-        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) actualX, size / 2 - (int) actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size / 30);
-    }
-    cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
-    cv::resize(imgDistorted, imgDistorted, cv::Size(displaySize, displaySize));
-    cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
-    cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
-    imgActual.copyTo(matRoi);
-    matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
-    imgDistorted.copyTo(matRoi);
-    return matDst;
-}
+//cv::Mat Simulator::formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const {
+//    if (!mode){
+//        cv::circle(imgDistorted, cv::Point(size / 2, size / 2), (int)round(einsteinR / CHI), cv::Scalar::all(60));
+//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX, size / 2 - (int) apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
+//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX2, size / 2 - (int) apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
+//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) actualX, size / 2 - (int) actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size / 30);
+//    }
+//    cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
+//    cv::resize(imgDistorted, imgDistorted, cv::Size(displaySize, displaySize));
+//    cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
+//    cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
+//    imgActual.copyTo(matRoi);
+//    matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
+//    imgDistorted.copyTo(matRoi);
+//    return matDst;
+//}
 
 
-// Add some lines to the image for reference
-void Simulator::refLines(cv::Mat& target) {
-    int size_ = target.rows;
-    for (int i = 0; i < size_; i++) {
-        target.at<cv::Vec3b>(i, size_ / 2) = {60, 60, 60};
-        target.at<cv::Vec3b>(size_ / 2 - 1, i) = {60, 60, 60};
-        target.at<cv::Vec3b>(i, size_ - 1) = {255, 255, 255};
-        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
-        target.at<cv::Vec3b>(size_ - 1, i) = {255, 255, 255};
-        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
-    }
-}
+//// Add some lines to the image for reference
+//void Simulator::refLines(cv::Mat& target) {
+//    int size_ = target.rows;
+//    for (int i = 0; i < size_; i++) {
+//        target.at<cv::Vec3b>(i, size_ / 2) = {60, 60, 60};
+//        target.at<cv::Vec3b>(size_ / 2 - 1, i) = {60, 60, 60};
+//        target.at<cv::Vec3b>(i, size_ - 1) = {255, 255, 255};
+//        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
+//        target.at<cv::Vec3b>(size_ - 1, i) = {255, 255, 255};
+//        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
+//    }
+//}
 
 
 void Simulator::initGui(){
