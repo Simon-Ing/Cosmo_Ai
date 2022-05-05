@@ -625,7 +625,7 @@ void MainWindow::on_action12x12_triggered()
 void MainWindow::on_actionChange_resolution_triggered()
 {
     QString currentSize = QString::number(wSize);
-    unsigned int input = QInputDialog::getInt(this,"Change resolution", "Current: " + currentSize, wSize, 50, 2048);
+    unsigned int input = QInputDialog::getInt(this,"Change resolution", "Current: " + currentSize, wSize, 50, 2048, 50);
     wSize = input;
     setup();
     updateImg();
