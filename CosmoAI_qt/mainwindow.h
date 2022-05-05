@@ -102,6 +102,7 @@ private slots:
     void on_actionSave_image_as_triggered();
     void on_infTermsCheckbox_toggled(bool checked);
     void on_termsSpinbox_valueChanged(int arg1);
+    void on_actionAbout_triggered();
 };
 
 #endif // MAINWINDOW_H
