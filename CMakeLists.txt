@@ -25,3 +25,5 @@ add_library(SimLib Simulator.cpp)
 target_link_libraries(Datagen ${CONAN_LIBS} SimLib)
 target_link_libraries(Simulator_2 ${CONAN_LIBS} SimLib)
 target_link_libraries(SimLib ${CONAN_LIBS})
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:10000000")

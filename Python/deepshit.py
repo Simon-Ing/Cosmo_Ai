@@ -198,7 +198,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
             print(f"Started generating {folder} data")
             shutil.rmtree(folder)
             os.makedirs(f'{folder}/images')
-            os.system('new.exe ' + str(n_samples) + " " + str(size) + " " + str(folder))
+            os.system('Datagen.exe ' + str(n_samples) + " " + str(size) + " " + str(folder)+ " " + str(5))
             print("Done generating, start loading")
     else:
         if gen_new:
@@ -206,7 +206,7 @@ def dataset_from_png(n_samples, size, folder, gen_new):
             os.system(f'rm -r {folder}')
             os.system(f'mkdir {folder}')
             os.system(f'mkdir {folder}/images')
-            os.system('./new ' + str(n_samples) + " " + str(size) + " " + str(folder))
+            os.system('./Datagen ' + str(n_samples) + " " + str(size) + " " + str(folder)+ " " + str(5))
             print("Done generating, start loading")
 
     dataset = CosmoDatasetPng(str(folder))
