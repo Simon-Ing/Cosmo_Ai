@@ -14,14 +14,8 @@ using namespace SymEngine;
 
 class Simulator {
 private:
-    int size;
-    int sourceSize;
     int mode;
-    int einsteinR;
     double GAMMA;
-    int xPosSlider;
-    int yPosSlider;
-    int CHI_percent;
     double CHI;
     double actualX{};
     double actualY{};
@@ -38,10 +32,22 @@ private:
     double R{};
     int n;
 
+    cv::Mat imgDistorted;
+
     std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> betas_l;
     std::array<std::array<double, 52>, 51> alphas_val;
     std::array<std::array<double, 52>, 51> betas_val;
+
+public:
+    int size;
+    std::string name;
+    int CHI_percent;
+    int sourceSize;
+    int einsteinR;
+    int xPosSlider;
+    int yPosSlider;
+
 
 public:
     Simulator();
@@ -49,6 +55,8 @@ public:
     void update();
 
     void initGui();
+
+    void writeToPngFiles(int);
 
 private:
     void calculate();
@@ -71,6 +79,10 @@ private:
 
     std::pair<double, double> spherical(double r, double theta) const;
 
+
+    void drawParallel(cv::Mat &img, int xPos, int yPos);
+
+    void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
 };
 
 
