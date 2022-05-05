@@ -145,7 +145,7 @@ std::pair<double, double> MainWindow::pointMass(double r, double theta){
 std::pair<double, double> MainWindow::pointMassFinite(double r, double theta){
     double xTemp = 0;
     double yTemp = 0;
-    for(int m = 1; m < terms; m++){
+    for(int m = 1; m <= terms; m++){
         int sign = 1 - 2*(m%2);
         double frac = std::pow((r/R), m);
         xTemp += sign * frac * std::cos(m*theta);
@@ -306,7 +306,7 @@ void MainWindow::drawText(QPixmap& img, int x, int y, int fontSize, QString text
 void MainWindow::drawLegend(QPixmap& img, int refSize){
 
     // Create legend pixmap
-    int legendHeight = refSize/12;
+    int legendHeight = refSize/14;
     int legendWidth = refSize/4;
     QPixmap legend(legendWidth, legendHeight);
 
@@ -318,14 +318,14 @@ void MainWindow::drawLegend(QPixmap& img, int refSize){
     drawMarker(legend, legendWidth/10, legendHeight/2 - markerSize, markerSize, Qt::red);
     drawMarker(legend, legendWidth/10, legendHeight/2 + markerSize, markerSize, Qt::blue);
 
-    int fontSize = legendWidth/12;
+    int fontSize = legendWidth/11.5;
     drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 - markerSize + markerSize/2, fontSize, "Actual position");
     drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 + markerSize + markerSize/2, fontSize, "Apparent positions");
 
     // Set legend opacity and draw to main pixmap
     QPainter painter(&img);
     int xPos = 0;
-    if (apparentX < -wSize/6 && apparentY > wSize/6){
+    if (apparentX < -wSize/8 && apparentY > wSize/8){
         xPos += refSize - legendWidth;
     }
     painter.setOpacity(0.6);
@@ -452,7 +452,6 @@ void MainWindow::setup(){
     ui->ySpinbox->setMaximum(wSize/2);
     ui->ySlider->setMinimum(-wSize/2);
     ui->ySpinbox->setMinimum(-wSize/2);
-    ui->termsSpinbox->setMinimum(1);
     ui->termsSpinbox->setMaximum(100);
 
     // Connect sliders and spinboxes
@@ -667,6 +666,7 @@ void MainWindow::on_infTermsCheckbox_toggled(bool checked)
     } else {
         mode = "finite";
     }
+    ui->termsSpinbox->setDisabled(checked);
     updateImg();
 }
 

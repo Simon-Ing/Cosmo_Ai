@@ -47,7 +47,7 @@ private:
     QPixmap legend;
     QString source;
     QString lensType;
-    int terms = 1;
+    int terms = 0;
     std::string mode = "finite";
 
 public:
