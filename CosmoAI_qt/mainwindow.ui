@@ -116,17 +116,24 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="markerBox">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="gridBox">
         <property name="text">
-         <string>Markers</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Grid</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="5" column="1">
+       <widget class="QPushButton" name="resetButton">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      </item>
+      <item row="3" column="1">
        <widget class="QComboBox" name="srcTypeComboBox">
         <item>
          <property name="text">
@@ -155,47 +162,39 @@
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="saveButton">
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="markerBox">
         <property name="text">
-         <string>Save</string>
+         <string>Markers</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QCheckBox" name="gridBox">
-        <property name="text">
-         <string>Grid</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="resetButton">
-        <property name="text">
-         <string>Reset</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Source type</string>
         </property>
        </widget>
       </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QSpinBox" name="termsSpinbox"/>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="infTermsCheckbox">
-          <property name="text">
-           <string>Infinite terms</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QSpinBox" name="termsSpinbox"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="infTermsCheckbox">
+        <property name="text">
+         <string>Infinite</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -249,7 +248,7 @@
      <x>0</x>
      <y>0</y>
      <width>842</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -258,11 +257,6 @@
     </property>
     <addaction name="actionReset"/>
     <addaction name="actionSave_image_as"/>
-   </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -288,7 +282,6 @@
     <addaction name="actionDark_mode"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuTools"/>
    <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
