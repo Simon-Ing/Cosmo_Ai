@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,6 +48,7 @@ private:
     QPixmap legend;
     QString source;
     QString lensType;
+    QMessageBox msgBox;
     int terms = 0;
     std::string mode = "finite";
 
@@ -103,6 +105,7 @@ private slots:
     void on_infTermsCheckbox_toggled(bool checked);
     void on_termsSpinbox_valueChanged(int arg1);
     void on_actionAbout_triggered();
+    void on_actionValues_triggered();
 };
 
 #endif // MAINWINDOW_H

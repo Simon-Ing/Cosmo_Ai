@@ -10,7 +10,6 @@
 #include <QInputDialog>
 #include <QStyleFactory>
 #include <QFileDialog>
-#include <QMessageBox>
 #define PI 3.14159265358979323846
 
 
@@ -51,7 +50,7 @@ void MainWindow::updateImg() {
 
     double ratio = (double)labelH/wSize;
     // Draw grids and markers
-    if (grid == true) {
+    if (grid) {
         drawGrid(imgActPix);
 //        drawGrid(imgAppPixDisp);
         drawGrid(imgDistPix);
@@ -67,6 +66,14 @@ void MainWindow::updateImg() {
     if (legendCheck && markers) {
       drawLegend(imgDistPix, ui->distLabel->height());
     }
+
+    // Set values of the value message box every loop
+    QString msg = QStringLiteral("Apparent 1 X: %1 \n"
+                                 "Apparent 1 Y: %2 \n"
+                                 "Apparent 2 X: %3 \n"
+                                 "Apparent 2 Y: %4 \n"
+                                 "").arg(apparentX).arg(apparentY).arg(apparentX2).arg(apparentY2);
+    msgBox.setText(msg);
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPix);
@@ -710,16 +717,24 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, "About CosmoAI",
                        "<h2>"
-                       "Test"
+                       "A simulation tool for gravitational lensing"
                        "</h2>"
                        "<br>"
-                       "List:"
+                       "A Bachelor of Science project by:"
                        "<ul>"
-                       "<li> Item 1 </li>"
-                       "<li> Item 2 </li>"
-                       "<li> Item 3 </li>"
+                       "<li> Simon Ingebrigtsen </li>"
+                       "<li> Sondre W. Remøy </li>"
+                       "<li> Einar L. Austnes </li>"
+                       "<li> Simon N. Runde </li>"
                        "</ul>"
-                       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                       "<p><a href='https://github.com/Simon-Ing/Cosmo_Ai'>Source code</a></p>"
                        );
+}
+
+void MainWindow::on_actionValues_triggered()
+{
+    msgBox.setWindowTitle("Simulator values");
+    msgBox.setWindowModality(Qt::WindowModal);
+    msgBox.exec();
 }
 
