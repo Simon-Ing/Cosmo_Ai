@@ -66,7 +66,8 @@ void Simulator::update() {
 
         imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-        cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+//        cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
+        drawParallel(imgApparent, apparentX, apparentY);
 //        cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
     }
