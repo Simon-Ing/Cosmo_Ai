@@ -34,7 +34,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="toolTip">
-         <string/>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Changes size of source&lt;/p&gt;&lt;p&gt;In the case of a Gaussian source, sets the value of &lt;span style=&quot; font-size:10pt;&quot;&gt;σ&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Source size</string>
@@ -62,6 +62,9 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Changes the actual X position of the source&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>X position</string>
         </property>
@@ -69,6 +72,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_2">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Changes the&lt;span style=&quot; font-size:10pt;&quot;&gt; χ&lt;/span&gt;&lt;span style=&quot; font-size:10pt; vertical-align:sub;&quot;&gt;L&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;/χ&lt;/span&gt;&lt;span style=&quot; font-size:10pt; vertical-align:sub;&quot;&gt;S  &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;ratio&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Lens distance</string>
         </property>
@@ -83,6 +89,9 @@
       </item>
       <item row="4" column="1">
        <widget class="QSlider" name="ySlider">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -90,6 +99,12 @@
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_6">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Changes the actual Y position of the source&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
         <property name="text">
          <string>Y position</string>
         </property>
@@ -100,6 +115,9 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_7">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Change the Einstein radius &lt;span style=&quot; font-size:10pt; font-weight:700; font-style:italic;&quot;&gt;R&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; font-style:italic; vertical-align:sub;&quot;&gt;E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Einstein radius</string>
         </property>
@@ -114,6 +132,9 @@
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set terms &lt;span style=&quot; font-weight:700; font-style:italic;&quot;&gt;m&lt;/span&gt; in Roulette&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Terms</string>
         </property>
@@ -121,6 +142,9 @@
       </item>
       <item row="4" column="0">
        <widget class="QCheckBox" name="gridBox">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="text">
          <string>Grid</string>
         </property>
@@ -128,6 +152,12 @@
       </item>
       <item row="5" column="1">
        <widget class="QPushButton" name="resetButton">
+        <property name="toolTip">
+         <string>Reset inputs to initial values</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>1</number>
+        </property>
         <property name="text">
          <string>Reset</string>
         </property>
@@ -167,6 +197,9 @@
       </item>
       <item row="4" column="1">
        <widget class="QCheckBox" name="markerBox">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="text">
          <string>Markers</string>
         </property>
@@ -177,6 +210,9 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_5">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="text">
          <string>Source type</string>
         </property>
@@ -184,16 +220,29 @@
       </item>
       <item row="5" column="0">
        <widget class="QPushButton" name="saveButton">
+        <property name="toolTip">
+         <string>Save images to computer</string>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QSpinBox" name="termsSpinbox"/>
+       <widget class="QSpinBox" name="termsSpinbox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="infTermsCheckbox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Infinite terms mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Infinite</string>
         </property>
@@ -217,6 +266,9 @@
           <height>300</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the actual image showing the undistorted source in its actual position&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -236,6 +288,9 @@
           <height>300</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the distorted image showing the source being distorted by the lens&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -251,7 +306,7 @@
      <x>0</x>
      <y>0</y>
      <width>842</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -279,6 +334,7 @@
     <addaction name="menuGrid_2"/>
     <addaction name="actionMarkers"/>
     <addaction name="actionLegend"/>
+    <addaction name="actionValues"/>
     <addaction name="separator"/>
     <addaction name="actionChange_resolution"/>
     <addaction name="separator"/>
@@ -392,6 +448,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionValues">
+   <property name="text">
+    <string>Show additional values</string>
    </property>
   </action>
  </widget>

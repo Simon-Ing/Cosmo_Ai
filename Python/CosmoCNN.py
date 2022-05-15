@@ -7,23 +7,23 @@ from torch.cuda.amp import autocast
 
 # Training parameters
 num_epochs = 100
-batch_size = 128
+batch_size = 32
 learning_rate = 0.001
 
-n_train_samples = 200000
-n_test_samples = 10000
+n_train_samples = 100000
+n_test_samples = 5000
 img_size = 512
 
 # set to true when you want new data points
-gen_new_train = 1
-gen_new_test = 1
+gen_new_train = 0
+gen_new_test = 0
 load_checkpoint = False
 checkpoint_path = "Models/autosave/autosave_epoch40"
 
 device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
-model = AlexNet().to(device)
+model = Inception3().to(device)
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
@@ -56,10 +56,11 @@ scaler = torch.cuda.amp.GradScaler()
 # Training loop
 try:
     for epoch in tqdm(range(num_epochs), desc="Total"):
+        model.train()
         for i, (images, params) in enumerate(tqdm(train_loader, desc='Epoch')):
             images = images.to(device)
             params = params.to(device)
-
+            
             optimizer.zero_grad()
             
             # Forward pass
@@ -74,9 +75,10 @@ try:
 
         scheduler.step(loss)
         # Test network for each epoch
+        model.eval()
         loss = test_network(test_loader, model, criterion, device, print_results=False)
         print(f"\nEpoch: {epoch+1}, Loss: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}, time: {time.time() - timer}\n")
-
+        
         # Save checpoint
         if (epoch % 20 == 0) and (epoch > 0):
             autosave_path = "Models/autosave/" + "autosave_epoch" + str(epoch)

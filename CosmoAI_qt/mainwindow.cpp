@@ -10,7 +10,6 @@
 #include <QInputDialog>
 #include <QStyleFactory>
 #include <QFileDialog>
-#include <QMessageBox>
 #define PI 3.14159265358979323846
 
 
@@ -51,7 +50,7 @@ void MainWindow::updateImg() {
 
     double ratio = (double)labelH/wSize;
     // Draw grids and markers
-    if (grid == true) {
+    if (grid) {
         drawGrid(imgActPix);
 //        drawGrid(imgAppPixDisp);
         drawGrid(imgDistPix);
@@ -67,6 +66,14 @@ void MainWindow::updateImg() {
     if (legendCheck && markers) {
       drawLegend(imgDistPix, ui->distLabel->height());
     }
+
+    // Set values of the value message box every loop
+    QString msg = QStringLiteral("Apparent 1 X: %1 \n"
+                                 "Apparent 1 Y: %2 \n"
+                                 "Apparent 2 X: %3 \n"
+                                 "Apparent 2 Y: %4 \n"
+                                 "").arg(apparentX).arg(apparentY).arg(apparentX2).arg(apparentY2);
+    msgBox.setText(msg);
 
     // Draw pixmaps on QLabels
     ui->actLabel->setPixmap(imgActPix);
@@ -145,7 +152,7 @@ std::pair<double, double> MainWindow::pointMass(double r, double theta){
 std::pair<double, double> MainWindow::pointMassFinite(double r, double theta){
     double xTemp = 0;
     double yTemp = 0;
-    for(int m = 1; m < terms; m++){
+    for(int m = 1; m <= terms; m++){
         int sign = 1 - 2*(m%2);
         double frac = std::pow((r/R), m);
         xTemp += sign * frac * std::cos(m*theta);
@@ -306,7 +313,7 @@ void MainWindow::drawText(QPixmap& img, int x, int y, int fontSize, QString text
 void MainWindow::drawLegend(QPixmap& img, int refSize){
 
     // Create legend pixmap
-    int legendHeight = refSize/12;
+    int legendHeight = refSize/14;
     int legendWidth = refSize/4;
     QPixmap legend(legendWidth, legendHeight);
 
@@ -318,14 +325,14 @@ void MainWindow::drawLegend(QPixmap& img, int refSize){
     drawMarker(legend, legendWidth/10, legendHeight/2 - markerSize, markerSize, Qt::red);
     drawMarker(legend, legendWidth/10, legendHeight/2 + markerSize, markerSize, Qt::blue);
 
-    int fontSize = legendWidth/12;
+    int fontSize = legendWidth/11.5;
     drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 - markerSize + markerSize/2, fontSize, "Actual position");
     drawText(legend, legendWidth/15 + markerSize*2, legendHeight/2 + markerSize + markerSize/2, fontSize, "Apparent positions");
 
     // Set legend opacity and draw to main pixmap
     QPainter painter(&img);
     int xPos = 0;
-    if (apparentX < -wSize/6 && apparentY > wSize/6){
+    if (apparentX < -wSize/8 && apparentY > wSize/8){
         xPos += refSize - legendWidth;
     }
     painter.setOpacity(0.6);
@@ -452,7 +459,6 @@ void MainWindow::setup(){
     ui->ySpinbox->setMaximum(wSize/2);
     ui->ySlider->setMinimum(-wSize/2);
     ui->ySpinbox->setMinimum(-wSize/2);
-    ui->termsSpinbox->setMinimum(1);
     ui->termsSpinbox->setMaximum(100);
 
     // Connect sliders and spinboxes
@@ -625,7 +631,7 @@ void MainWindow::on_action12x12_triggered()
 void MainWindow::on_actionChange_resolution_triggered()
 {
     QString currentSize = QString::number(wSize);
-    unsigned int input = QInputDialog::getInt(this,"Change resolution", "Current: " + currentSize, wSize, 50, 2048);
+    unsigned int input = QInputDialog::getInt(this,"Change resolution", "Current: " + currentSize, wSize, 50, 2048, 50);
     wSize = input;
     setup();
     updateImg();
@@ -667,6 +673,7 @@ void MainWindow::on_infTermsCheckbox_toggled(bool checked)
     } else {
         mode = "finite";
     }
+    ui->termsSpinbox->setDisabled(checked);
     updateImg();
 }
 
@@ -710,16 +717,24 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, "About CosmoAI",
                        "<h2>"
-                       "Test"
+                       "A simulation tool for gravitational lensing"
                        "</h2>"
                        "<br>"
-                       "List:"
+                       "A Bachelor of Science project by:"
                        "<ul>"
-                       "<li> Item 1 </li>"
-                       "<li> Item 2 </li>"
-                       "<li> Item 3 </li>"
+                       "<li> Simon Ingebrigtsen </li>"
+                       "<li> Sondre W. Remøy </li>"
+                       "<li> Einar L. Austnes </li>"
+                       "<li> Simon N. Runde </li>"
                        "</ul>"
-                       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                       "<p><a href='https://github.com/Simon-Ing/Cosmo_Ai'>Source code</a></p>"
                        );
+}
+
+void MainWindow::on_actionValues_triggered()
+{
+    msgBox.setWindowTitle("Simulator values");
+    msgBox.setWindowModality(Qt::WindowModal);
+    msgBox.exec();
 }
 
