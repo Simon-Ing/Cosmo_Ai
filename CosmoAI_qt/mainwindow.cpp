@@ -135,7 +135,7 @@ void MainWindow::distort(int begin, int end) {
 
             // If (x', y') within source, copy value to imgDistorted
             if (row_ < rows && col_ < cols && row_ > 0 && col_ >= 0) {
-            imgDistorted.setPixel(col, row, imgApparent.pixel(col_, row_));
+                imgDistorted.setPixel(col, row, imgApparent.pixel(col_, row_));
             }
         }
     }
@@ -207,21 +207,21 @@ void MainWindow::drawSource(){
             pApp.drawRect(rectApp);
         }
 
-        else if (source == "Triangle"){
-            QPainterPath pathAct;
-            pathAct.moveTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
-            pathAct.lineTo(rectAct.bottomLeft());
-            pathAct.lineTo(rectAct.bottomRight());
-            pathAct.lineTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
-            pAct.fillPath(pathAct, QBrush(Qt::white));
+//        else if (source == "Triangle"){
+//            QPainterPath pathAct;
+//            pathAct.moveTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
+//            pathAct.lineTo(rectAct.bottomLeft());
+//            pathAct.lineTo(rectAct.bottomRight());
+//            pathAct.lineTo(rectAct.left() + (rectAct.width() / 2), rectAct.top());
+//            pAct.fillPath(pathAct, QBrush(Qt::white));
 
-            QPainterPath pathApp;
-            pathApp.moveTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
-            pathApp.lineTo(rectApp.bottomLeft());
-            pathApp.lineTo(rectApp.bottomRight());
-            pathApp.lineTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
-            pApp.fillPath(pathApp, QBrush(Qt::white));
-        }
+//            QPainterPath pathApp;
+//            pathApp.moveTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
+//            pathApp.lineTo(rectApp.bottomLeft());
+//            pathApp.lineTo(rectApp.bottomRight());
+//            pathApp.lineTo(rectApp.left() + (rectApp.width() / 2), rectApp.top());
+//            pApp.fillPath(pathApp, QBrush(Qt::white));
+//        }
     }
 }
 
@@ -501,6 +501,7 @@ void MainWindow::init_values() {
     ui->markerBox->setChecked(markers);
     ui->actionMarkers->setChecked(markers);
     ui->actionLegend->setChecked(legendCheck);
+    ui->infTermsCheckbox->setChecked(false);
 }
 
 
