@@ -1,7 +1,3 @@
-//
-// Created by simon on 07.04.2022.
-//
-
 #include <opencv2/opencv.hpp>
 #include "Simulator.h"
 #include <fstream>

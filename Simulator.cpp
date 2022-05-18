@@ -1,7 +1,3 @@
-//
-// Created by simon on 07.04.2022.
-//
-
 #include "Simulator.h"
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>

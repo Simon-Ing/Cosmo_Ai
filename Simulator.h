@@ -1,7 +1,3 @@
-//
-// Created by simon on 07.04.2022.
-//
-
 #ifndef SPHERICAL_SIMULATOR_H
 #define SPHERICAL_SIMULATOR_H
 
