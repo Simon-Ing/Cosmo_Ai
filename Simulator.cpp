@@ -32,7 +32,6 @@ void Simulator::update() {
     GAMMA = einsteinR/2.0;
     calculate();
     cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-//    cv::circle(imgActual, cv::Point(size/2 + (int)actualX, size/2 - (int)actualY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
     drawParallel(imgActual, actualX, actualY);
     cv::Mat imgApparent;
 
@@ -40,7 +39,6 @@ void Simulator::update() {
     if (mode == 0){
         imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-//        cv::circle(imgApparent, cv::Point(size + (int)apparentAbs, size/2), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         drawParallel(imgApparent, apparentAbs, 0);
         parallelDistort(imgApparent, imgDistorted);
         // rotate image
@@ -62,22 +60,23 @@ void Simulator::update() {
 
         imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
         imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-//        cv::circle(imgApparent, cv::Point(size + (int)apparentX, size - (int)apparentY), sourceSize, cv::Scalar::all(255), 2*sourceSize);
         drawParallel(imgApparent, apparentX, apparentY);
-//        cv::imshow("apparent", imgApparent);
         parallelDistort(imgApparent, imgDistorted);
     }
 
+    // Copy both the actual and the distorted images into a new matDst array
     cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
     imgActual.copyTo(matRoi);
     matRoi = matDst(cv::Rect(size, 0, size, size));
     imgDistorted.copyTo(matRoi);
 
+    // Show the matDst array (i.e. both images) in the GUI window.
     cv::imshow("GL Simulator", matDst);
 
+    // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
-//    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
+    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
 
 }
 
@@ -213,8 +212,6 @@ void Simulator::writeToPngFiles(int n_params) {
     filename << einsteinR << "," << sourceSize << "," << xPosSlider << "," << yPosSlider << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), imgDistorted);
-//    cv::imshow(filename_path.str(), image);
-//    cv::waitKey(0);
 }
 
 
