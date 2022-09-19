@@ -15,7 +15,7 @@ sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxa
 Three source files are used
 
 + `./Simulator.cpp` for the library
-+ `./Data_generator.cpp` for the `Datagen` binary which does not work on Debian.  I get segmentation violation.
++ `./Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
 + `./GL_Simulator_2.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
 
 There is also code in the `CosmoAI_qt` directory, but this seems not to be used.  The build runs without error even if it is removed.
