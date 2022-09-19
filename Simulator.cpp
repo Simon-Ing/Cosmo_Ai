@@ -329,7 +329,7 @@ void Simulator::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("../../50.txt");
+    std::string filename("50.txt");
     std::ifstream input;
     input.open(filename);
 
