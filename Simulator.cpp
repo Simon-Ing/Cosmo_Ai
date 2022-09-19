@@ -68,12 +68,6 @@ void Simulator::update() {
         parallelDistort(imgApparent, imgDistorted);
     }
 
-//    cv::cvtColor(imgDistorted, imgDistorted, cv::COLOR_GRAY2BGR);
-
-//    const int displaySize = 500;
-//    refLines(imgActual);
-//    refLines(imgDistorted);
-//    cv::Mat matDst = formatImg(imgDistorted, imgActual, displaySize);
     cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
     imgActual.copyTo(matRoi);
@@ -96,11 +90,7 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
         int end = dst.rows/n_threads*(i+1);
             std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
             threads_vec.push_back(std::move(t));
-//            distort(row, col, src, dst);
         }
-//        if(mode){
-//            std::cout << 100.0 * row / dst.rows << "%" << std::endl;
-//        }
 
     for (auto& thread : threads_vec) {
         thread.join();
@@ -148,9 +138,6 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
         }
     }
 }
-
-//for (int m = 1; m <= n; m++){
-//for (int s = (m+1)%2; s <= (m+1); s+=2){
 
 std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
@@ -269,39 +256,6 @@ void Simulator::calculate() {
 
 }
 
-
-//cv::Mat Simulator::formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const {
-//    if (!mode){
-//        cv::circle(imgDistorted, cv::Point(size / 2, size / 2), (int)round(einsteinR / CHI), cv::Scalar::all(60));
-//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX, size / 2 - (int) apparentY), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
-//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) apparentX2, size / 2 - (int) apparentY2), cv::Scalar(0, 0, 255), cv::MARKER_TILTED_CROSS, size / 30);
-//        cv::drawMarker(imgDistorted, cv::Point(size / 2 + (int) actualX, size / 2 - (int) actualY), cv::Scalar(255, 0, 0), cv::MARKER_TILTED_CROSS, size / 30);
-//    }
-//    cv::resize(imgActual, imgActual, cv::Size(displaySize, displaySize));
-//    cv::resize(imgDistorted, imgDistorted, cv::Size(displaySize, displaySize));
-//    cv::Mat matDst(cv::Size(2*displaySize, displaySize), imgActual.type(), cv::Scalar::all(255));
-//    cv::Mat matRoi = matDst(cv::Rect(0, 0, displaySize, displaySize));
-//    imgActual.copyTo(matRoi);
-//    matRoi = matDst(cv::Rect(displaySize, 0, displaySize, displaySize));
-//    imgDistorted.copyTo(matRoi);
-//    return matDst;
-//}
-
-
-//// Add some lines to the image for reference
-//void Simulator::refLines(cv::Mat& target) {
-//    int size_ = target.rows;
-//    for (int i = 0; i < size_; i++) {
-//        target.at<cv::Vec3b>(i, size_ / 2) = {60, 60, 60};
-//        target.at<cv::Vec3b>(size_ / 2 - 1, i) = {60, 60, 60};
-//        target.at<cv::Vec3b>(i, size_ - 1) = {255, 255, 255};
-//        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
-//        target.at<cv::Vec3b>(size_ - 1, i) = {255, 255, 255};
-//        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
-//    }
-//}
-
-
 void Simulator::initGui(){
     initAlphasBetas();
     // Make the user interface and specify the function to be called when moving the sliders: update()
@@ -348,7 +302,8 @@ void Simulator::initAlphasBetas() {
         if (input) {
             auto alpha_sym = SymEngine::parse(alpha);
             auto beta_sym = SymEngine::parse(beta);
-            SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
+            // The following two variables are unused.
+            // SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
             alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *alpha_sym);
             betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *beta_sym);
         }
