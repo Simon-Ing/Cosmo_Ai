@@ -215,6 +215,7 @@ void Simulator::writeToPngFiles(int n_params) {
 }
 
 
+/* Calculate n! (n factorial) */
 double factorial_(unsigned int n){
     double a = 1.0;
     for (int i = 2; i <= n; i++){
@@ -224,32 +225,42 @@ double factorial_(unsigned int n){
 }
 
 
+/* Re-calculate co-ordinates using updated parameter settings from the GUI.
+ * This is called from the update() method.                                  */
 void Simulator::calculate() {
 
     CHI = CHI_percent/100.0;
 
-    // actual position in source plane
+    // Actual position in source plane
     actualX = xPosSlider - size / 2.0;
     actualY = yPosSlider - size / 2.0;
 
     // Absolute values in source plane
-    actualAbs = sqrt(actualX * actualX + actualY * actualY);
+    actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
+    // The two ratioes correspond to two roots of a quadratic equation.
     double ratio1 = 0.5 + sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
     double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    // Each ratio gives rise to one apparent galaxy.
     apparentAbs = actualAbs*ratio1;
     apparentAbs2 = actualAbs*ratio2;
+    // (X,Y) co-ordinates of first image
     apparentX = actualX*ratio1;
-    apparentX2 = actualX*ratio2;
     apparentY = actualY*ratio1;
+    // (X,Y) co-ordinates of second image
+    apparentX2 = actualX*ratio2;
     apparentY2 = actualY*ratio2;
+    // BDN: Is the calculation of apparent positions correct above?
 
     // Projection of apparent position in lens plane
+    // This corresponds to scaling the positions in the source plane by the relative distance.
     R = apparentAbs * CHI;
     X = apparentX * CHI;
     Y = apparentY * CHI;
 
     // Angle relative to x-axis
+    // Because of proportionality, the angle is the same for both images.
     phi = atan2(actualY, actualX);
+    // BDN: Is this theta in your notes?
 
 }
 

@@ -427,3 +427,6 @@ conanbuildinfo.txt
 conanfile.txt
 conaninfo.txt
 graph_info.json
+
+# Documentation and printout
+*.ps
