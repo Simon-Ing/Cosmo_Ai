@@ -113,22 +113,29 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
                 // Set coordinate system with origin at x=R
                 double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
                 double y = (dst.rows / 2.0 - row) * CHI;
+
                 // Calculate distance and angle of the point evaluated relative to center of lens (origin)
                 double r = sqrt(x * x + y * y);
                 double theta = atan2(y, x);
+
                 auto pos = pointMass(r, theta);
+
                 // Translate to array index
                 row_ = (int) round(src.rows / 2.0 - pos.second);
                 col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
 
             } else { // if sphere
 
+               // TODO: Why is this done completely differently for the two cases?
                 double x = col - dst.cols / 2.0 - X;
                 double y = dst.rows / 2.0 - row - Y;
-                double r = sqrt(x * x + y * y);
 
+                // Polar co-ordinates; same as point mass case
+                double r = sqrt(x * x + y * y);
                 double theta = atan2(y, x);
+
                 auto pos = spherical(r, theta);
+
                 // Translate to array index
                 col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
                 row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
@@ -143,6 +150,7 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
+// Calculate the main formula for the SIS model
 std::pair<double, double> Simulator::spherical(double r, double theta) const {
     double ksi1 = 0;
     double ksi2 = 0;
@@ -161,10 +169,8 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
             subTerm2 += 1.0/4*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 
                               + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
         }
-        double term1 = frac*subTerm1;
-        double term2 = frac*subTerm2;
-        ksi1 += term1;
-        ksi2 += term2;
+        ksi1 += frac*subTerm1;
+        ksi2 += frac*subTerm2;
     }
     return {ksi1, ksi2};
 }
