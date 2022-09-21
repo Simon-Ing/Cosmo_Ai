@@ -79,11 +79,14 @@ void Simulator::update() {
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
-    std::cout << "Time to update(): " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
+    std::cout << "Time to update(): " 
+              << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() 
+              << " milliseconds" << std::endl;
 
 }
 
 
+/* This just splits the image space in chunks and runs distort() in parallel */
 void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
@@ -106,7 +109,7 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // if point mass
             int row_, col_;
 
-            if (!mode) {
+            if ( 0 == mode ) { // if point mass
                 // Set coordinate system with origin at x=R
                 double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
                 double y = (dst.rows / 2.0 - row) * CHI;
@@ -117,9 +120,8 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
                 // Translate to array index
                 row_ = (int) round(src.rows / 2.0 - pos.second);
                 col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
-            }
-                // if sphere
-            else {
+
+            } else { // if sphere
 
                 double x = col - dst.cols / 2.0 - X;
                 double y = dst.rows / 2.0 - row - Y;
