@@ -4,7 +4,9 @@
 
 int main()
 {
+    std::cout << "GL Simulator starting ...\n" ;
     Window win;
+    std::cout << "GL Simulator ...\n" ;
     try{
         win.initGui();
     }

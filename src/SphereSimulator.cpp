@@ -61,7 +61,7 @@ void SphereSimulator::calculateAlphaBeta() {
 }
 
 // Calculate the main formula for the SIS model
-std::pair<double, double> Simulator::getDistortedPos(double r, double theta) const {
+std::pair<double, double> SphereSimulator::getDistortedPos(double r, double theta) const {
     double ksi1 = r*cos(theta) ;
     double ksi2 = r*sin(theta) ;
 

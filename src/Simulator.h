@@ -93,7 +93,7 @@ private:
     cv::Mat imgDistorted;
 
 public:
-    Simulator *sim ;
+    Simulator *sim = NULL ;
     int size;
     std::string name;
     int CHI_percent;
@@ -121,6 +121,9 @@ private:
     static void updateSize(int, void*);
     static void updateChi(int, void*);
     static void updateNterms(int, void*);
+    static void updateMode(int, void*);
+
+    void initSimulator();
 
     static void refLines(cv::Mat &target);
 
