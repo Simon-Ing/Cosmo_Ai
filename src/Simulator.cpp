@@ -156,17 +156,15 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
             double beta = betas_val[m][s];
             int c_p = 1 + s/(m + 1);
             int c_m = 1 - s/(m + 1);
-            subTerm1 += 1.0/4*((alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m);
-            subTerm2 += 1.0/4*((-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
+            subTerm1 += 1.0/4*( (alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p 
+                              + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m );
+            subTerm2 += 1.0/4*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 
+                              + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
         }
         double term1 = frac*subTerm1;
         double term2 = frac*subTerm2;
         ksi1 += term1;
         ksi2 += term2;
-        // Break summation if term is less than 1/100 of ksi or if ksi is well outside frame
-//        if ( ((std::abs(term1) < std::abs(ksi1)/1000) && (std::abs(term2) < std::abs(ksi2)/1000)) || (ksi1 < -1000*size || ksi1 > 1000*size || ksi2 < -1000*size || ksi2 > 1000*size) ){
-//            break;
-//        }
     }
     return {ksi1, ksi2};
 }
