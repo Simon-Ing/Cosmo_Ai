@@ -19,11 +19,6 @@ int main()
         if ((cv::getWindowProperty("GL Simulator", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
             running = false;
         }
-        /*
-        if (k == 32) {
-            win.update();
-        }
-        */
     }
     cv::destroyAllWindows();
     return 0;
