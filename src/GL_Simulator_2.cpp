@@ -4,9 +4,11 @@
 
 int main()
 {
-    Simulator simulator;
+    std::cout << "GL Simulator starting ...\n" ;
+    Window win;
+    std::cout << "GL Simulator ...\n" ;
     try{
-        simulator.initGui();
+        win.initGui();
     }
     catch (std::exception &e){
         std::cout << "initGui returned exception: " << e.what() << std::endl;

@@ -5,28 +5,21 @@
 #include <symengine/parser.h>
 #include <fstream>
 
-#define PI 3.14159265358979323846
 
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
         size(300),
-        CHI_percent(50),
-        CHI(CHI_percent/100.0),
+        CHI(0.5),
         einsteinR(size/20),
         sourceSize(size/20),
-        xPosSlider(size/2 + 1),
-        yPosSlider(size/2),
-        mode(0), // 0 = point mass, 1 = sphere
-        n(10)
-{ }
+        nterms(10)
+{ 
+}
 
 void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
-
-    double GAMMA = einsteinR/2.0;
-    calculate();
     
     // Draw the Actual (Source) Image
     // The source image has a Gaussian distribution with standard deviation
@@ -41,18 +34,7 @@ void Simulator::update() {
     // Not that the apparent image is rotated to lie on the x axis,
     // Thus x=r (distance from origin) and y=0.
 
-    // if Spherical
-    if (mode == 1){
-
-        // calculate all amplitudes for given X, Y, GAMMA, CHI
-        // This is done here to before the code is parallellised
-        for (int m = 1; m <= n; m++){
-            for (int s = (m+1)%2; s <= (m+1); s+=2){
-                alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
-                betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
-            }
-        }
-    }
+    this->calculateAlphaBeta() ;
 
     // Make Distorted Image
     imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
@@ -115,11 +97,7 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 
-            if ( 0 == mode ) { // if point mass
-                pos = pointMass(r, theta);
-            } else { // if sphere
-                pos = spherical(r, theta);
-            }
+            pos = this->getDistortedPos(r, theta);
 
             // Translate to array index
             row_ = (int) round(src.rows / 2.0 - pos.second);
@@ -134,33 +112,11 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
-// Calculate the main formula for the SIS model
-std::pair<double, double> Simulator::spherical(double r, double theta) const {
-    double ksi1 = r*cos(theta) ;
-    double ksi2 = r*sin(theta) ;
 
-    for (int m=1; m<=n; m++){
-        double frac = pow(r, m) / factorial_(m);
-        double subTerm1 = 0;
-        double subTerm2 = 0;
-        for (int s = (m+1)%2; s <= (m+1); s+=2){
-            double alpha = alphas_val[m][s];
-            double beta = betas_val[m][s];
-            int c_p = 1 + s/(m + 1);
-            int c_m = 1 - s/(m + 1);
-            subTerm1 += 0.5*( (alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p 
-                            + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m );
-            subTerm2 += 0.5*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 
-                            + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
-        }
-        ksi1 += frac*subTerm1;
-        ksi2 += frac*subTerm2;
-    }
-    return {ksi1, ksi2};
-}
-
-
-std::pair<double, double> Simulator::pointMass(double r, double theta) const {
+/* The following is a default implementation for the point mass lens. 
+ * It would be better to make the class abstract and move this definition to the 
+ * subclass. */
+std::pair<double, double> Simulator::getDistortedPos(double r, double theta) const {
     double R = apparentAbs * CHI ;
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
     double x_= (r*cos(theta) + frac * (r / R + cos(theta))) / CHI;
@@ -203,9 +159,9 @@ void Simulator::writeToPngFiles(int n_params) {
     std::ostringstream filename;
 
     if (n_params == 5){
-        filename << CHI_percent << ",";
+        filename << CHI << ",";
     }
-    filename << einsteinR << "," << sourceSize << "," << xPosSlider << "," << yPosSlider << ".png";
+    filename << einsteinR << "," << sourceSize << "," << actualX << "," << actualY << ".png";
     filename_path << name + "/images/" + filename.str();
     cv::imwrite(filename_path.str(), imgDistorted);
 }
@@ -220,16 +176,30 @@ double factorial_(unsigned int n){
     return a;
 }
 
+void Simulator::updateSize(double siz) {
+   sourceSize = siz ;
+   update() ;
+}
+void Simulator::updateNterms(int n) {
+   nterms = n ;
+   update() ;
+}
+void Simulator::updateAll( double X, double Y, double er, double siz, double chi, int n) {
+   sourceSize = siz ;
+   nterms = n ;
+   updateXY(X,Y,chi,er);
+}
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
-void Simulator::calculate() {
+void Simulator::updateXY( double X, double Y, double chi, double er ) {
 
-    CHI = CHI_percent/100.0;
+    CHI = chi ;
+    einsteinR = er ;
 
     // Actual position in source plane
-    actualX = xPosSlider - size / 2.0;
-    actualY = yPosSlider - size / 2.0;
+    actualX = X ;
+    actualY = Y ;
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
@@ -246,57 +216,8 @@ void Simulator::calculate() {
     // apparentY2 = actualY*ratio2;
     // BDN: Is the calculation of apparent positions correct above?
 
+   update() ;
 }
-
-void Simulator::initGui(){
-    initAlphasBetas();
-    // Make the user interface and specify the function to be called when moving the sliders: update()
-    cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, update_dummy, this);
-    cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator", &einsteinR, size, update_dummy, this);
-    cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, update_dummy, this);
-    cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, update_dummy, this);
-    cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, update_dummy, this);
-    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 1, update_dummy, this);
-    cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &n, 49, update_dummy, this);
-}
-
-void Simulator::update_dummy(int, void* data){
-    auto* that = (Simulator*)(data);
-    that->update();
-}
-
-void Simulator::initAlphasBetas() {
-
-    auto x = SymEngine::symbol("x");
-    auto y = SymEngine::symbol("y");
-    auto g = SymEngine::symbol("g");
-    auto c = SymEngine::symbol("c");
-
-    std::string filename("50.txt");
-    std::ifstream input;
-    input.open(filename);
-
-    if (!input.is_open()) {
-        throw std::runtime_error("Could not open file: " + filename);
-    }
-
-    while (input) {
-        std::string m, s;
-        std::string alpha;
-        std::string beta;
-        std::getline(input, m, ':');
-        std::getline(input, s, ':');
-        std::getline(input, alpha, ':');
-        std::getline(input, beta);
-        if (input) {
-            auto alpha_sym = SymEngine::parse(alpha);
-            auto beta_sym = SymEngine::parse(beta);
-            // The following two variables are unused.
-            // SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
-            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *alpha_sym);
-            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *beta_sym);
-        }
-    }
-}
-
+/* Default implementation doing nothing.
+ * This is correct for any subclass that does not need the alpha/beta tables. */
+void Simulator::calculateAlphaBeta() { }

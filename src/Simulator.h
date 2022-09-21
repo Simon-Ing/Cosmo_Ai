@@ -7,10 +7,11 @@
 
 using namespace SymEngine;
 
+#define PI 3.14159265358979323846
 
 class Simulator {
-private:
-    int mode;
+
+protected:
     double CHI;
     double actualX{};
     double actualY{};
@@ -18,7 +19,7 @@ private:
     double apparentY{};
     double actualAbs{};
     double apparentAbs{};
-    int n;
+    int nterms;
 
     cv::Mat imgDistorted;
 
@@ -30,44 +31,85 @@ private:
 public:
     int size;
     std::string name;
-    int CHI_percent;
     int sourceSize;
     int einsteinR;
-    int xPosSlider;
-    int yPosSlider;
-
 
 public:
     Simulator();
 
     void update();
 
-    void initGui();
-
     void writeToPngFiles(int);
+
+    void updateXY(double, double, double, double);
+    void updateSize(double);
+    void updateNterms(int);
+    void updateAll( double, double, double, double, double, int ) ;
+
+protected:
+    virtual void calculateAlphaBeta();
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+
 
 private:
     void calculate();
-
-    [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
-
-    static void update_dummy(int, void*);
-
-    cv::Mat formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const;
-
-    static void refLines(cv::Mat &target);
 
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
-    void initAlphasBetas();
-
-    std::pair<double, double> spherical(double r, double theta) const;
-
     void drawParallel(cv::Mat &img, int xPos, int yPos);
 
     void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
+
+};
+
+class PointMassSimulator : public Simulator { 
+  public:
+    PointMassSimulator();
+};
+class SphereSimulator : public Simulator { 
+  public:
+    SphereSimulator();
+  protected:
+    void calculateAlphaBeta();
+    std::pair<double, double> getDistortedPos(double r, double theta) const;
+  private:
+    void initAlphasBetas();
+};
+
+class Window {
+private:
+    int mode;
+
+    cv::Mat imgDistorted;
+
+public:
+    Simulator *sim = NULL ;
+    int size;
+    std::string name;
+    int CHI_percent;
+    int sourceSize;
+    int einsteinR;
+    int xPosSlider;
+    int yPosSlider;
+    int nterms;
+
+
+public:
+    Window();
+    void initGui();
+
+private:
+    static void updateXY(int, void*);
+    static void updateEinsteinR(int, void*);
+    static void updateSize(int, void*);
+    static void updateChi(int, void*);
+    static void updateNterms(int, void*);
+    static void updateMode(int, void*);
+
+    void initSimulator();
+
 };
 
 

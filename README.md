@@ -15,7 +15,7 @@ sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxa
 There are two branches.
 
 - release/0.1 is the original version, with simulator and GUI in the same class.
-- refactor-separate-io which separates the GUI from the simulator (this will become master)
+- master/refactor-separate-io which separates the GUI from the simulator 
 
 The original also had code in the `CosmoAI_qt` directory.  This was removed because
 it was unused, but it may prove a useful starting point for a better GUI based on QT.
