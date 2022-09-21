@@ -10,4 +10,5 @@ double factorial_(unsigned int n);
 PointMassSimulator::PointMassSimulator() :
    Simulator::Simulator()
 { 
+   std::cout << "Instantiating Point Mass Simulator ... \n" ;
 }

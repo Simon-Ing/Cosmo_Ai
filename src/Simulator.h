@@ -31,19 +31,13 @@ protected:
 public:
     int size;
     std::string name;
-    int CHI_percent;
     int sourceSize;
     int einsteinR;
-
-protected:
-    void calculateAlphaBeta();
 
 public:
     Simulator();
 
     void update();
-
-    void initGui();
 
     void writeToPngFiles(int);
 
@@ -52,13 +46,15 @@ public:
     void updateSize(double);
     void updateChi(double);
     void updateNterms(int);
+    void updateAll( double, double, double, double, double, int ) ;
+
+protected:
+    virtual void calculateAlphaBeta();
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+
 
 private:
     void calculate();
-
-    cv::Mat formatImg(cv::Mat &imgDistorted, cv::Mat &imgActual, int displaySize) const;
-
-    static void refLines(cv::Mat &target);
 
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
@@ -68,8 +64,6 @@ private:
 
     void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
 
-protected:
-    std::pair<double, double> getDistortedPos(double r, double theta) const;
 };
 
 class PointMassSimulator : public Simulator { 
@@ -106,16 +100,9 @@ public:
 
 public:
     Window();
-
-    void update();
-
     void initGui();
 
-    void writeToPngFiles(int);
-
 private:
-    void calculate();
-
     static void updateXY(int, void*);
     static void updateEinsteinR(int, void*);
     static void updateSize(int, void*);
@@ -125,11 +112,6 @@ private:
 
     void initSimulator();
 
-    static void refLines(cv::Mat &target);
-
-    void drawParallel(cv::Mat &img, int xPos, int yPos);
-
-    void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
 };
 
 

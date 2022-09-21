@@ -10,6 +10,7 @@ double factorial_(unsigned int n);
 SphereSimulator::SphereSimulator() :
    Simulator::Simulator()
 { 
+    std::cout << "Instantiating SphereSimulator ... \n" ;
     initAlphasBetas();
 }
 

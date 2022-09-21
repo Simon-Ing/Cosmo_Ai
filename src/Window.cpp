@@ -16,7 +16,8 @@ Window::Window() :
         sourceSize(size/20),
         xPosSlider(size/2 + 1),
         yPosSlider(size/2),
-        mode(0) // 0 = point mass, 1 = sphere
+        mode(0), // 0 = point mass, 1 = sphere
+        nterms(10)
 { 
 }
 
@@ -38,15 +39,12 @@ void Window::initGui(){
 }
 
 void Window::initSimulator(){
-    std::cout << "initSimulator\n" ;
+    std::cout << "initSimulator mode=" << mode << "\n" ;
     if ( NULL != sim ) delete sim ;
     if ( 0 == mode ) sim = new PointMassSimulator() ;
     else sim = new SphereSimulator() ;
-    sim->updateXY( xPosSlider - size/2.0, yPosSlider - size/2.0 );
-    sim->updateEinsteinR( einsteinR ) ;
-    sim->updateSize( sourceSize ) ;
-    sim->updateChi( CHI_percent / 100.0 ) ;
-    sim->updateNterms( nterms ) ;
+    sim->updateAll( xPosSlider - size/2.0, yPosSlider - size/2.0,
+         einsteinR, sourceSize, CHI_percent / 100.0, nterms ) ;
     std::cout << "initSimulator DONE\n" ;
 }
 void Window::updateMode(int, void* data){
