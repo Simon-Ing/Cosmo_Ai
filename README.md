@@ -10,7 +10,17 @@ sudo pip3 install conan
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev
 ```
 
-# Components
+# Versions
+
+There are two active branches.
+
+- master is the original version, with simulator and GUI in the same class.
+- refactor-separate-io which separates the GUI from the simulator
+
+The original also had code in the `CosmoAI_qt` directory.  This was removed because
+it was unused, but it may prove a useful starting point for a better GUI based on QT.
+
+## Master Branch Components
 
 Three source files are used
 
@@ -18,4 +28,19 @@ Three source files are used
 + `./Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
 + `./GL_Simulator_2.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
 
-There is also code in the `CosmoAI_qt` directory, but this seems not to be used.  The build runs without error even if it is removed.
+
+## Refactored Components
+
++ Simulators
+    + `Simulator.cpp` is the base class; in practice it also contains the code for the point mass model,
+      but this may change.
+    + `PointMassSimulator.cpp` simulates the point mass model
+    + `SphereSimulator.cpp` simulates the SIS model
++ `Window.cpp` is the GUI
++ `Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
++ `GL_Simulator_2.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
+
+The data generator has not been refactored and does not work at present.
+The code for file output has been retained in the simulator class, but will be moved when
+the data generator is repaired.
+
