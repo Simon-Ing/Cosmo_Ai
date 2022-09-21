@@ -17,8 +17,9 @@ There are two branches.
 - release/0.1 is the original version, with simulator and GUI in the same class.
 - master/refactor-separate-io which separates the GUI from the simulator 
 
-The original also had code in the `CosmoAI_qt` directory.  This was removed because
-it was unused, but it may prove a useful starting point for a better GUI based on QT.
+The original also had code in the `CosmoAI_qt` directory.  
+It is unused, and removing it, the code still works.
+Yet it may prove a useful starting point for a better GUI based on QT.
 
 The master branch is retained as a reference implementation. 
 
