@@ -246,7 +246,6 @@ void Simulator::calculate() {
     // apparentY2 = actualY*ratio2;
     // BDN: Is the calculation of apparent positions correct above?
 
-
 }
 
 void Simulator::initGui(){
@@ -262,12 +261,10 @@ void Simulator::initGui(){
     cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &n, 49, update_dummy, this);
 }
 
-
 void Simulator::update_dummy(int, void* data){
     auto* that = (Simulator*)(data);
     that->update();
 }
-
 
 void Simulator::initAlphasBetas() {
 
