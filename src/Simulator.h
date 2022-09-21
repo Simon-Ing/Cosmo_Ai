@@ -11,7 +11,6 @@ using namespace SymEngine;
 class Simulator {
 private:
     int mode;
-    double GAMMA;
     double CHI;
     double actualX{};
     double actualY{};

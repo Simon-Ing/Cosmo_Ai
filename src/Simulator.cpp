@@ -19,17 +19,13 @@ Simulator::Simulator() :
         yPosSlider(size/2),
         mode(0), // 0 = point mass, 1 = sphere
         n(10)
-{
-
-    GAMMA = einsteinR/2.0;
-}
-
+{ }
 
 void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
 
-    GAMMA = einsteinR/2.0;
+    double GAMMA = einsteinR/2.0;
     calculate();
     
     // Draw the Actual (Source) Image
