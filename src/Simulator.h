@@ -13,13 +13,18 @@ class Simulator {
 
 protected:
     double CHI;
+    int size;
+    std::string name;
+    int sourceSize;
+    int einsteinR;
+    int nterms;
+
     double actualX{};
     double actualY{};
     double apparentX{};
     double apparentY{};
     double actualAbs{};
     double apparentAbs{};
-    int nterms;
 
     cv::Mat imgDistorted;
 
@@ -28,11 +33,6 @@ protected:
     std::array<std::array<double, 52>, 51> alphas_val;
     std::array<std::array<double, 52>, 51> betas_val;
 
-public:
-    int size;
-    std::string name;
-    int sourceSize;
-    int einsteinR;
 
 public:
     Simulator();
@@ -50,16 +50,10 @@ protected:
     virtual void calculateAlphaBeta();
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
 
-
 private:
-    void calculate();
-
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
-
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
-
     void drawParallel(cv::Mat &img, int xPos, int yPos);
-
     void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
 
 };
@@ -81,10 +75,6 @@ class SphereSimulator : public Simulator {
 class Window {
 private:
     int mode;
-
-    cv::Mat imgDistorted;
-
-public:
     Simulator *sim = NULL ;
     int size;
     std::string name;
@@ -94,7 +84,6 @@ public:
     int xPosSlider;
     int yPosSlider;
     int nterms;
-
 
 public:
     Window();
