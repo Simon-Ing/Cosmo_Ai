@@ -52,8 +52,8 @@ void Simulator::update() {
         // This is done here to before the code is parallellised
         for (int m = 1; m <= n; m++){
             for (int s = (m+1)%2; s <= (m+1); s+=2){
-                alphas_val[m][s] = alphas_l[m][s].call({R, 0, GAMMA, CHI});
-                betas_val[m][s] = betas_l[m][s].call({R, 0, GAMMA, CHI});
+                alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
+                betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
             }
         }
     }
@@ -63,6 +63,7 @@ void Simulator::update() {
     parallelDistort(imgApparent, imgDistorted);
 
     // Correct the rotation applied to the source image
+    double phi = atan2(actualY, actualX); // Angle relative to x-axis
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
     cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));    // crop distorted image
     imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
@@ -159,11 +160,12 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
         ksi1 += frac*subTerm1;
         ksi2 += frac*subTerm2;
     }
-    return {ksi1/CHI, ksi2/CHI};
+    return {ksi1, ksi2};
 }
 
 
 std::pair<double, double> Simulator::pointMass(double r, double theta) const {
+    double R = apparentAbs * CHI ;
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
     double x_= (r*cos(theta) + frac * (r / R + cos(theta))) / CHI;
     double y_= (r*sin(theta) - frac * sin(theta)) / CHI;// Point mass lens equation
@@ -240,25 +242,14 @@ void Simulator::calculate() {
     double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
     // Each ratio gives rise to one apparent galaxy.
     apparentAbs = actualAbs*ratio1;
-    apparentAbs2 = actualAbs*ratio2;
     // (X,Y) co-ordinates of first image
     apparentX = actualX*ratio1;
     apparentY = actualY*ratio1;
     // (X,Y) co-ordinates of second image.  This is never used.
-    apparentX2 = actualX*ratio2;
-    apparentY2 = actualY*ratio2;
+    // apparentX2 = actualX*ratio2;
+    // apparentY2 = actualY*ratio2;
     // BDN: Is the calculation of apparent positions correct above?
 
-    // Projection of apparent position in lens plane
-    // This corresponds to scaling the positions in the source plane by the relative distance.
-    R = apparentAbs * CHI;
-    X = apparentX * CHI;
-    Y = apparentY * CHI;
-
-    // Angle relative to x-axis
-    // Because of proportionality, the angle is the same for both images.
-    phi = atan2(actualY, actualX);
-    // BDN: Is this theta in your notes?
 
 }
 

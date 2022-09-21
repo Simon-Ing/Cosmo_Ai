@@ -17,15 +17,8 @@ private:
     double actualY{};
     double apparentX{};
     double apparentY{};
-    double apparentX2{};
-    double apparentY2{};
-    double X{};
-    double Y{};
-    double phi{};
     double actualAbs{};
     double apparentAbs{};
-    double apparentAbs2{};
-    double R{};
     int n;
 
     cv::Mat imgDistorted;
