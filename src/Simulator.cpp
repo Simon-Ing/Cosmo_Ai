@@ -52,8 +52,8 @@ void Simulator::update() {
         // This is done here to before the code is parallellised
         for (int m = 1; m <= n; m++){
             for (int s = (m+1)%2; s <= (m+1); s+=2){
-                alphas_val[m][s] = alphas_l[m][s].call({X, Y, GAMMA, CHI});
-                betas_val[m][s] = betas_l[m][s].call({X, Y, GAMMA, CHI});
+                alphas_val[m][s] = alphas_l[m][s].call({R, 0, GAMMA, CHI});
+                betas_val[m][s] = betas_l[m][s].call({R, 0, GAMMA, CHI});
             }
         }
     }
@@ -108,38 +108,25 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
         for (int col = 0; col < dst.cols; col++) {
             // if point mass
             int row_, col_;
+            std::pair<double, double> pos ;
+
+            // Set coordinate system with origin at x=R
+            double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+            double y = (dst.rows / 2.0 - row) * CHI;
+
+            // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+            double r = sqrt(x * x + y * y);
+            double theta = atan2(y, x);
 
             if ( 0 == mode ) { // if point mass
-                // Set coordinate system with origin at x=R
-                double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
-                double y = (dst.rows / 2.0 - row) * CHI;
-
-                // Calculate distance and angle of the point evaluated relative to center of lens (origin)
-                double r = sqrt(x * x + y * y);
-                double theta = atan2(y, x);
-
-                auto pos = pointMass(r, theta);
-
-                // Translate to array index
-                row_ = (int) round(src.rows / 2.0 - pos.second);
-                col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
-
+                pos = pointMass(r, theta);
             } else { // if sphere
-
-               // TODO: Why is this done completely differently for the two cases?
-                double x = col - dst.cols / 2.0 - X;
-                double y = dst.rows / 2.0 - row - Y;
-
-                // Polar co-ordinates; same as point mass case
-                double r = sqrt(x * x + y * y);
-                double theta = atan2(y, x);
-
-                auto pos = spherical(r, theta);
-
-                // Translate to array index
-                col_ = (int) round(apparentX + src.cols / 2.0 + pos.first);
-                row_ = (int) round(src.rows / 2.0 - pos.second - apparentY);
+                pos = spherical(r, theta);
             }
+
+            // Translate to array index
+            row_ = (int) round(src.rows / 2.0 - pos.second);
+            col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
 
             // If (x', y') within source, copy value to imgDistorted
             if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
@@ -152,8 +139,8 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
 // Calculate the main formula for the SIS model
 std::pair<double, double> Simulator::spherical(double r, double theta) const {
-    double ksi1 = 0;
-    double ksi2 = 0;
+    double ksi1 = r*cos(theta) ;
+    double ksi2 = r*sin(theta) ;
 
     for (int m=1; m<=n; m++){
         double frac = pow(r, m) / factorial_(m);
@@ -172,7 +159,7 @@ std::pair<double, double> Simulator::spherical(double r, double theta) const {
         ksi1 += frac*subTerm1;
         ksi2 += frac*subTerm2;
     }
-    return {ksi1, ksi2};
+    return {ksi1/CHI, ksi2/CHI};
 }
 
 
@@ -257,7 +244,7 @@ void Simulator::calculate() {
     // (X,Y) co-ordinates of first image
     apparentX = actualX*ratio1;
     apparentY = actualY*ratio1;
-    // (X,Y) co-ordinates of second image
+    // (X,Y) co-ordinates of second image.  This is never used.
     apparentX2 = actualX*ratio2;
     apparentY2 = actualY*ratio2;
     // BDN: Is the calculation of apparent positions correct above?
