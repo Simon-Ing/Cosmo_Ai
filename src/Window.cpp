@@ -27,8 +27,8 @@ void Window::initGui(){
     std::cout << "initGui\n" ;
     // Make the user interface and specify the function to be called when moving the sliders: update()
     cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, updateChi, this);
-    cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator", &einsteinR, size, updateEinsteinR, this);
+    cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, updateXY, this);
+    cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator", &einsteinR, size, updateXY, this);
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, updateXY, this);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, updateXY, this);
@@ -53,21 +53,13 @@ void Window::updateMode(int, void* data){
 }
 void Window::updateXY(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->updateXY( that->xPosSlider - that->size/2.0, that->yPosSlider - that->size/2.0 );
+    that->sim->updateXY( that->xPosSlider - that->size/2.0, that->yPosSlider - that->size/2.0,
+                         that->CHI_percent / 100.0, that->einsteinR );
     /* The GUI has range 0..size; the simulator uses ±size/2. */
-}
-void Window::updateEinsteinR(int, void* data){
-    auto* that = (Window*)(data);
-    that->sim->updateEinsteinR( that->einsteinR ) ;
 }
 void Window::updateSize(int, void* data){
     auto* that = (Window*)(data);
     that->sim->updateSize( that->sourceSize ) ;
-}
-void Window::updateChi(int, void* data){
-    auto* that = (Window*)(data);
-    that->sim->updateChi( that->CHI_percent / 100.0 ) ;
-    /* The GUI gives CHI in percent.  The simulator uses the ratio in 0..1 range */
 }
 void Window::updateNterms(int, void* data){
     auto* that = (Window*)(data);

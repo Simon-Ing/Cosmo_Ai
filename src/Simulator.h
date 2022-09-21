@@ -41,10 +41,8 @@ public:
 
     void writeToPngFiles(int);
 
-    void updateXY(double, double);
-    void updateEinsteinR(double);
+    void updateXY(double, double, double, double);
     void updateSize(double);
-    void updateChi(double);
     void updateNterms(int);
     void updateAll( double, double, double, double, double, int ) ;
 

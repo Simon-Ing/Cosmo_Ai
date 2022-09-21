@@ -176,16 +176,8 @@ double factorial_(unsigned int n){
     return a;
 }
 
-void Simulator::updateChi(double chi) {
-   CHI = chi ;
-   update() ;
-}
 void Simulator::updateSize(double siz) {
    sourceSize = siz ;
-   update() ;
-}
-void Simulator::updateEinsteinR(double er) {
-   einsteinR = er ;
    update() ;
 }
 void Simulator::updateNterms(int n) {
@@ -193,16 +185,17 @@ void Simulator::updateNterms(int n) {
    update() ;
 }
 void Simulator::updateAll( double X, double Y, double er, double siz, double chi, int n) {
-   CHI = chi ;
    sourceSize = siz ;
-   einsteinR = er ;
    nterms = n ;
-   updateXY(X,Y);
+   updateXY(X,Y,chi,er);
 }
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
-void Simulator::updateXY( double X, double Y ) {
+void Simulator::updateXY( double X, double Y, double chi, double er ) {
+
+    CHI = chi ;
+    einsteinR = er ;
 
     // Actual position in source plane
     actualX = X ;
