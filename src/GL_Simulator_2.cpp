@@ -4,9 +4,9 @@
 
 int main()
 {
-    Simulator simulator;
+    Window win;
     try{
-        simulator.initGui();
+        win.initGui();
     }
     catch (std::exception &e){
         std::cout << "initGui returned exception: " << e.what() << std::endl;
@@ -19,9 +19,11 @@ int main()
         if ((cv::getWindowProperty("GL Simulator", cv::WND_PROP_AUTOSIZE) == -1) || (k == 27)) {
             running = false;
         }
+        /*
         if (k == 32) {
-            simulator.update();
+            win.update();
         }
+        */
     }
     cv::destroyAllWindows();
     return 0;
