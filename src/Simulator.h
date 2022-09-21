@@ -49,8 +49,6 @@ public:
 private:
     void calculate();
 
-//    void drawSource(cv::Mat& img, double xPos, double yPos) const;
-
     [[nodiscard]] std::pair<double, double> pointMass(double r, double theta) const;
 
     static void update_dummy(int, void*);
@@ -66,7 +64,6 @@ private:
     void initAlphasBetas();
 
     std::pair<double, double> spherical(double r, double theta) const;
-
 
     void drawParallel(cv::Mat &img, int xPos, int yPos);
 
