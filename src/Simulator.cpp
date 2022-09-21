@@ -31,40 +31,43 @@ void Simulator::update() {
 
     GAMMA = einsteinR/2.0;
     calculate();
+    
+    // Draw the Actual (Source) Image
+    // The source image has a Gaussian distribution with standard deviation
+    // equal to sourceSize.  See drawSource().
     cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
     drawParallel(imgActual, actualX, actualY);
     cv::Mat imgApparent;
 
-    // if point
-    if (mode == 0){
-        imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-        imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-        drawParallel(imgApparent, apparentAbs, 0);
-        parallelDistort(imgApparent, imgDistorted);
-        // rotate image
-        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
-        cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));    // crop distorted image
-        imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
-    }
+    // Make Apparent Image
+    imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
+    drawParallel(imgApparent, apparentAbs, 0);
+    // Not that the apparent image is rotated to lie on the x axis,
+    // Thus x=r (distance from origin) and y=0.
 
     // if Spherical
-    else if (mode == 1){
+    if (mode == 1){
 
         // calculate all amplitudes for given X, Y, GAMMA, CHI
+        // This is done here to before the code is parallellised
         for (int m = 1; m <= n; m++){
             for (int s = (m+1)%2; s <= (m+1); s+=2){
                 alphas_val[m][s] = alphas_l[m][s].call({X, Y, GAMMA, CHI});
                 betas_val[m][s] = betas_l[m][s].call({X, Y, GAMMA, CHI});
             }
         }
-
-        imgApparent = cv::Mat(2*size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-        imgDistorted = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-        drawParallel(imgApparent, apparentX, apparentY);
-        parallelDistort(imgApparent, imgDistorted);
     }
 
-    // Copy both the actual and the distorted images into a new matDst array
+    // Make Distorted Image
+    imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
+    parallelDistort(imgApparent, imgDistorted);
+
+    // Correct the rotation applied to the source image
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
+    cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));    // crop distorted image
+    imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
+
+    // Copy both the actual and the distorted images into a new matDst array for display
     cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
     cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
     imgActual.copyTo(matRoi);
@@ -76,7 +79,7 @@ void Simulator::update() {
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
-    std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
+    std::cout << "Time to update(): " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() << " milliseconds" << std::endl;
 
 }
 
@@ -175,6 +178,7 @@ std::pair<double, double> Simulator::pointMass(double r, double theta) const {
 }
 
 
+/* drawParallel() split the image into chunks to draw it in parallel using drawSource() */
 void Simulator::drawParallel(cv::Mat& dst, int xPos, int yPos){
     int n_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads_vec;
@@ -190,6 +194,7 @@ void Simulator::drawParallel(cv::Mat& dst, int xPos, int yPos){
 }
 
 
+/* Draw the source image.  The sourceSize is interpreted as the standard deviation in a Gaussian distribution */
 void Simulator::drawSource(int begin, int end, cv::Mat& dst, int xPos, int yPos) {
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
