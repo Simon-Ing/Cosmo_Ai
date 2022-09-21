@@ -20,6 +20,8 @@ There are two active branches.
 The original also had code in the `CosmoAI_qt` directory.  This was removed because
 it was unused, but it may prove a useful starting point for a better GUI based on QT.
 
+The master branch is retained as a reference implementation. 
+
 ## Master Branch Components
 
 Three source files are used
