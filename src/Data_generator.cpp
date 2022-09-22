@@ -44,7 +44,7 @@ int main(int, char *argv[]) {
         } else {
             CHI_percent = rand_lens_dist(rng);
         }
-        CHI = CHI_percent/100 ;
+        CHI = CHI_percent/100.0 ;
         einsteinR = rand_einsteinR(rng);
         sourceSize = rand_source_size(rng);
         X = rand_xSlider(rng);
