@@ -54,12 +54,11 @@ int main(int, char *argv[]) {
 
         if ( (!std::count(parameters.begin(), parameters.end(), params)) ) { // check for duplicate
             simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
-            std::ostringstream filename_path;
             std::ostringstream filename;
             filename << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-            filename_path << simname + "/images/" + filename.str();
             std::cout << "Writing file: " << filename_path.str() << "\n" ;
-            cv::imwrite(filename_path.str(), simulator.getDistorted());
+            cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());
+            cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
             std::cout << "File Written\n" ;
             parameters.push_back( params ) ;
         } else {
