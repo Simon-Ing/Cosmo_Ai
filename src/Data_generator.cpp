@@ -1,3 +1,8 @@
+/* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> *
+ * Building on code by Simon Ingebrigtsen, Sondre Westbø Remøy,
+ * Einar Leite Austnes, and Simon Nedreberg Runde
+ */
+
 #include <thread>
 #include <random>
 #include <string>
@@ -33,6 +38,7 @@ int main(int, char *argv[]) {
 
     std::vector<std::vector<int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
+        std::cout << "Iteration " << i << "\n" ;
         if (n_params == 0){
             CHI_percent = 50;
         } else {
@@ -52,15 +58,18 @@ int main(int, char *argv[]) {
             std::ostringstream filename;
             filename << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
             filename_path << simname + "/images/" + filename.str();
+            std::cout << "Writing file: " << filename_path.str() << "\n" ;
             cv::imwrite(filename_path.str(), simulator.getDistorted());
+            std::cout << "File Written\n" ;
             parameters.push_back( params ) ;
         } else {
             i--;
         }
-        if (parameters.size() % (DATAPOINTS_TO_GENERATE/10) == 0){
-            std::cout << " Datapoints generated: " << parameters.size() << std::endl;
+        if (parameters.size() % 100 == 0){
+            std::cout << "Datapoints generated: " << parameters.size() << std::endl;
         }
-        std::cout << " Datapoints generated: " << parameters.size() << std::endl;
+        std::cout << "Datapoints generated: " << parameters.size() << std::endl;
+        std::cout << "Done iteration " << i << "\n" ;
     }
 }
 
