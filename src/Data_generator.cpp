@@ -59,10 +59,9 @@ int main(int, char *argv[]) {
             cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
             parameters.push_back( params ) ;
         }
-        if (parameters.size() % 100 == 0){
+        if (parameters.size() % 25 == 0){
             std::cout << "Datapoints generated: " << parameters.size() << std::endl;
         }
-        std::cout << "Datapoints generated: " << parameters.size() << std::endl;
     }
 }
 
