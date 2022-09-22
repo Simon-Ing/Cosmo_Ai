@@ -173,3 +173,10 @@ nothing, but the `Simulator` superclass may be made abstract in the future.
 The `SphereSimulator` overrides the constructor and the two virtual functions.
 The constructor loads the formulæ for `\alpha` and `\beta` which are calculated
 by `calculateAlphaBeta()` when parameters change.
+
+# Contributors
+
++ **Idea and Current Maintainer** Hans Georg Schaathun <hasc@ntnu.no>
++ **Mathematical Models** Ben David Normann
++ **Initial Prototype** Simon Ingebrigtsen, Sondre Westbø Remøy,
+  Einar Leite Austnes, and Simon Nedreberg Runde
