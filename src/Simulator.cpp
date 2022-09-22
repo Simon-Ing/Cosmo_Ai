@@ -7,8 +7,8 @@
 
 double factorial_(unsigned int n);
 
-Simulator::Simulator() :
-        size(300),
+Simulator::Simulator(int s) :
+        size(s),
         CHI(0.5),
         einsteinR(size/20),
         sourceSize(size/20),
@@ -17,6 +17,7 @@ Simulator::Simulator() :
     imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
     imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
 }
+Simulator::Simulator() : Simulator(500) {};
 
 /* Getters for the images */
 cv::Mat Simulator::getActual() { return imgActual ; }

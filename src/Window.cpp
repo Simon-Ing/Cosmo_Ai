@@ -12,7 +12,7 @@
 double factorial_(unsigned int n);
 
 Window::Window() :
-        size(300),
+        size(512),
         CHI_percent(50),
         einsteinR(size/20),
         sourceSize(size/20),
@@ -43,8 +43,8 @@ void Window::initGui(){
 void Window::initSimulator(){
     std::cout << "initSimulator mode=" << mode << "\n" ;
     if ( NULL != sim ) delete sim ;
-    if ( 0 == mode ) sim = new PointMassSimulator() ;
-    else sim = new SphereSimulator() ;
+    if ( 0 == mode ) sim = new PointMassSimulator(size) ;
+    else sim = new SphereSimulator(size) ;
     sim->updateAll( xPosSlider - size/2.0, yPosSlider - size/2.0,
          einsteinR, sourceSize, CHI_percent / 100.0, nterms ) ;
     drawImages() ;

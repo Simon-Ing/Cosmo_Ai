@@ -37,6 +37,7 @@ protected:
 
 public:
     Simulator();
+    Simulator(int);
     void update();
 
     void writeToPngFiles(int);
@@ -64,11 +65,12 @@ private:
 
 class PointMassSimulator : public Simulator { 
   public:
-    PointMassSimulator();
+    using Simulator::Simulator ;
 };
 class SphereSimulator : public Simulator { 
   public:
     SphereSimulator();
+    SphereSimulator(int);
   protected:
     void calculateAlphaBeta();
     std::pair<double, double> getDistortedPos(double r, double theta) const;

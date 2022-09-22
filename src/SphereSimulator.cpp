@@ -15,6 +15,12 @@ SphereSimulator::SphereSimulator() :
     std::cout << "Instantiating SphereSimulator ... \n" ;
     initAlphasBetas();
 }
+SphereSimulator::SphereSimulator(int s) :
+   Simulator::Simulator(s)
+{ 
+    std::cout << "Instantiating SphereSimulator (size = " << s << ") ...\n" ;
+    initAlphasBetas();
+}
 
 void SphereSimulator::initAlphasBetas() {
 
