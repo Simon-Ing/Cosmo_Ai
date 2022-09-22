@@ -5,7 +5,6 @@
 #include <symengine/parser.h>
 #include <fstream>
 
-
 double factorial_(unsigned int n);
 
 Simulator::Simulator() :
@@ -15,24 +14,30 @@ Simulator::Simulator() :
         sourceSize(size/20),
         nterms(10)
 { 
+    imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
+
+    /* We should instantiate also imgDistorted here, but for some reason
+     * that results in a circularly shifted image.
+     * Now it is instantiated in update() and it appears to work. */
 }
+
+/* Getters for the images */
+cv::Mat Simulator::getActual() { return imgActual ; }
+cv::Mat Simulator::getApparent() { return imgApparent ; }
+cv::Mat Simulator::getDistorted() { return imgDistorted ; }
 
 void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
     
-    // Draw the Actual (Source) Image
+    // Draw the Actual (Source) and Apparent Image
+    drawParallel(imgActual, actualX, actualY);
+    drawParallel(imgApparent, apparentAbs, 0);
     // The source image has a Gaussian distribution with standard deviation
     // equal to sourceSize.  See drawSource().
-    cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawParallel(imgActual, actualX, actualY);
-    cv::Mat imgApparent;
-
-    // Make Apparent Image
-    imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-    drawParallel(imgApparent, apparentAbs, 0);
-    // Not that the apparent image is rotated to lie on the x axis,
-    // Thus x=r (distance from origin) and y=0.
+    // The apparent image is the source image translated to the apparent position 
+    // and to lie on the x axis, i.e. x=r (distance from origin) and y=0.
 
     this->calculateAlphaBeta() ;
 
@@ -45,16 +50,6 @@ void Simulator::update() {
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
     cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));    // crop distorted image
     imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
-
-    // Copy both the actual and the distorted images into a new matDst array for display
-    cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
-    cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
-    imgActual.copyTo(matRoi);
-    matRoi = matDst(cv::Rect(size, 0, size, size));
-    imgDistorted.copyTo(matRoi);
-
-    // Show the matDst array (i.e. both images) in the GUI window.
-    cv::imshow("GL Simulator", matDst);
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();

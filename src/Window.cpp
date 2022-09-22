@@ -47,23 +47,43 @@ void Window::initSimulator(){
     else sim = new SphereSimulator() ;
     sim->updateAll( xPosSlider - size/2.0, yPosSlider - size/2.0,
          einsteinR, sourceSize, CHI_percent / 100.0, nterms ) ;
+    drawImages() ;
     std::cout << "initSimulator DONE\n" ;
 }
 void Window::updateMode(int, void* data){
     auto* that = (Window*)(data);
     that->initSimulator() ;
+    that->drawImages() ;
 }
 void Window::updateXY(int, void* data){
     auto* that = (Window*)(data);
     that->sim->updateXY( that->xPosSlider - that->size/2.0, that->yPosSlider - that->size/2.0,
                          that->CHI_percent / 100.0, that->einsteinR );
     /* The GUI has range 0..size; the simulator uses ±size/2. */
+    that->drawImages() ;
 }
 void Window::updateSize(int, void* data){
     auto* that = (Window*)(data);
     that->sim->updateSize( that->sourceSize ) ;
+    that->drawImages() ;
 }
 void Window::updateNterms(int, void* data){
     auto* that = (Window*)(data);
     that->sim->updateNterms( that->nterms ) ;
+    that->drawImages() ;
+}
+
+void Window::drawImages() {
+   cv::Mat imgActual = sim->getActual() ;
+   cv::Mat imgDistorted = sim->getDistorted() ;
+
+   // Copy both the actual and the distorted images into a new matDst array for display
+   cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
+   cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
+   imgActual.copyTo(matRoi);
+   matRoi = matDst(cv::Rect(size, 0, size, size));
+   imgDistorted.copyTo(matRoi);
+
+   // Show the matDst array (i.e. both images) in the GUI window.
+   cv::imshow("GL Simulator", matDst);
 }

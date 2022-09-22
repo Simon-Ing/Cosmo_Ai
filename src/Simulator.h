@@ -26,6 +26,8 @@ protected:
     double actualAbs{};
     double apparentAbs{};
 
+    cv::Mat imgActual;
+    cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
     std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> alphas_l;
@@ -33,10 +35,8 @@ protected:
     std::array<std::array<double, 52>, 51> alphas_val;
     std::array<std::array<double, 52>, 51> betas_val;
 
-
 public:
     Simulator();
-
     void update();
 
     void writeToPngFiles(int);
@@ -45,6 +45,10 @@ public:
     void updateSize(double);
     void updateNterms(int);
     void updateAll( double, double, double, double, double, int ) ;
+
+    cv::Mat getActual() ;
+    cv::Mat getApparent() ;
+    cv::Mat getDistorted() ;
 
 protected:
     virtual void calculateAlphaBeta();
@@ -97,6 +101,7 @@ private:
     static void updateNterms(int, void*);
     static void updateMode(int, void*);
 
+    void drawImages() ;
     void initSimulator();
 
 };
