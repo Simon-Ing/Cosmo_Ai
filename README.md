@@ -47,3 +47,88 @@ The data generator has not been refactored and does not work at present.
 The code for file output has been retained in the simulator class, but will be moved when
 the data generator is repaired.
 
+# Technical Design
+
+## Window Class
+
+The `initGui` method sets up a window using the basic GUI functions from OpenCV.
+This is crude, partly because the OpenCV API is only really meant for debugging, and
+partly because some features are only available with QT and I have not yet figured out
+how to set up OpenCV with QT support.
+
+When the GUI is initialised, `initSimulator` is called to instantiate a `Simulator`.
+
+When a trackbar changes in the GUI, the corresponding callback function is called;
+either `updateXY`, `updateMode`, `updateSize`, or `updateNterms`.  Except for `updateMode`,
+each of these
+call corresponding update functions in the simulator before they call
+`drawImages()` to get updated images from the simulator and display them.
+When the mode changes, `updateMode` will instantiate the relevant subclass of `Simulator`.
+
+The instance variables correspond to the trackbars in the GUI, except for `size` which
+gives the image size.  This is constant, currently at 300, and has to be the same for
+the `Window` and `Simulator` objects.
+
+## Simulator Class
+
+### Virtual Functions
+
+The following virtual functions have to be overridden by most subclasses.
+They are called from the main update function and overriding them, the entire
+lens model changes.
+
++ `calculateAlphaBeta()`
+  pre-calculates $\alpha$ and $\beta$ in the distortion equation.
++ `getDistortedPos()`
+  calculates the distortion equation for a give pixel.
+
+The constructor typically has to be overridden as well, to load the formulæ for
+$\alpha$ and $\beta$.
+
+### Setters 
+
+Setters are provided for all of the control parameters.
+
++ `updateXY` to update the $(x,y)$ co-ordinates of the actual image, the
+  relative distance $\chi$ to the lens compared to the source, and the
+  Einstein radius $R_E$.
+  This has to update the apparent position which depends on all of these
+  variables.
++ `updateSize` to update the size or standard deviation of the source.
++ `updateNterms` to update the number of terms in the sum after truncation
++ `updateAll` to update all of the above
+
+### Getters
+
+Getters are provided for the three images.
+
++ `getActual()`
++ `getApparent()`
++ `getDistorted()`
+
+### Update
+
+The main routine of the `Simulator` is `update()` which recalculates the three images,
+actual, apparent, and distorted.  This is called by the setters.
+
+In addition to the virtual functions mentioned above, it depends on
+
++ `parallelDistort()` and `distort()` which runs the main steps in parallel.
++ `drawParallel()` and `drawSource()` which draws the source image.
+  Only a Gaussian image has been implemented.  When new source models are required,
+  this should be delegated to a separate class.
+
+## Auxiliaries
+
++ `factorial_()`
++ `writeToPngFiles()` should be moved to the CLI tool
+
+### Subclasses
+
+The `Simulator` class implements the point mass model as a default, but the 
+subclass `PointMassSimulator` should be used for instantiation.  It overrides
+nothing, but the `Simulator` superclass may be made abstract in the future.
+
+The `SphereSimulator` overrides the constructor and the two virtual functions.
+The constructor loads the formulæ for `\alpha` and `\beta` which are calculated
+by `calculateAlphaBeta()` when parameters change.
