@@ -56,10 +56,8 @@ int main(int, char *argv[]) {
             simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
             std::ostringstream filename;
             filename << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-            std::cout << "Writing file: " << filename_path.str() << "\n" ;
             cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());
             cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
-            std::cout << "File Written\n" ;
             parameters.push_back( params ) ;
         } else {
             i--;
