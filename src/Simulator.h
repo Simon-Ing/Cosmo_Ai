@@ -14,7 +14,6 @@ class Simulator {
 protected:
     double CHI;
     int size;
-    std::string name;
     int sourceSize;
     int einsteinR;
     int nterms;
@@ -39,8 +38,6 @@ public:
     Simulator();
     Simulator(int);
     void update();
-
-    void writeToPngFiles(int);
 
     void updateXY(double, double, double, double);
     void updateSize(double);
@@ -83,7 +80,6 @@ private:
     int mode;
     Simulator *sim = NULL ;
     int size;
-    std::string name;
     int CHI_percent;
     int sourceSize;
     int einsteinR;

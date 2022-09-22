@@ -13,7 +13,6 @@ int main(int, char *argv[]) {
     int CHI_percent ;
     int CHI, einsteinR, X, Y, sourceSize ;
 
-
     int DATAPOINTS_TO_GENERATE = atoi(argv[1]);
     int imgsize = atoi(argv[2]);
     std::string simname = std::string(argv[3]);
@@ -49,7 +48,11 @@ int main(int, char *argv[]) {
 
         if ( (!std::count(parameters.begin(), parameters.end(), params)) ) { // check for duplicate
             simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
-            simulator.writeToPngFiles(n_params);
+            std::ostringstream filename_path;
+            std::ostringstream filename;
+            filename << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
+            filename_path << simname + "/images/" + filename.str();
+            cv::imwrite(filename_path.str(), simulator.getDistorted());
             parameters.push_back( params ) ;
         }
         else{
@@ -60,3 +63,5 @@ int main(int, char *argv[]) {
         }
     }
 }
+
+

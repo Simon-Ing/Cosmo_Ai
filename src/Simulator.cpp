@@ -145,20 +145,6 @@ void Simulator::drawSource(int begin, int end, cv::Mat& dst, int xPos, int yPos)
     }
 }
 
-
-void Simulator::writeToPngFiles(int n_params) {
-    std::ostringstream filename_path;
-    std::ostringstream filename;
-
-    if (n_params == 5){
-        filename << CHI << ",";
-    }
-    filename << einsteinR << "," << sourceSize << "," << actualX << "," << actualY << ".png";
-    filename_path << name + "/images/" + filename.str();
-    cv::imwrite(filename_path.str(), imgDistorted);
-}
-
-
 /* Calculate n! (n factorial) */
 double factorial_(unsigned int n){
     double a = 1.0;
