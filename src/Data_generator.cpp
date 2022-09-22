@@ -40,9 +40,9 @@ int main(int, char *argv[]) {
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
         std::cout << "Iteration " << i << "\n" ;
         if (n_params == 0){
-            CHI_percent = 50;
-        } else {
             CHI_percent = rand_lens_dist(rng);
+        } else {
+            CHI_percent = 50;
         }
         CHI = CHI_percent/100.0 ;
         einsteinR = rand_einsteinR(rng);
@@ -55,7 +55,7 @@ int main(int, char *argv[]) {
         if ( (!std::count(parameters.begin(), parameters.end(), params)) ) { // check for duplicate
             simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
             std::ostringstream filename;
-            filename << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
+            filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
             cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());
             cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
             parameters.push_back( params ) ;

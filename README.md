@@ -2,13 +2,54 @@
 title: The CosmoAI project
 ---
 
-# Install Dependencies
+# Build and Run
+
+Provided a full C++ installation is available with cmake and conan, the system is built
+with
+
+```sh
+cmake -DCMAKE_BUILD_TYPE=Release .
+make
+```
+
+Binaries will be located under bin/.
+
+## Install Dependencies
+
+The following dependencies were required on Debian 11.
+The critical part is conan (as well as cmake and make).
+Depending on the platform, conan may or may not install other dependencies.
+On Debian it just gives an error message explaining what to install.
 
 ```sh
 sudo pip3 install conan
 
-sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev
+sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
+
+# Tools
+
+There are two tools, a GUI tool and a CLI tool
+
+## GUI Tool
+
+The GUI tool should be pretty self explanatory.  
+The images shown are the actual source on the left and the distorted (lensed)
+image on the right.
+
+## CLI Tool
+
+This can be run like this:
+
+```sh
+bin/Datagen 20 512 test 50
+```
++ Generate 20 images (first parameters)
++ Image size is $512\times512$
++ Images are place under the directory `test/images` and `test/actual`.
+  **Note** The directories must be exist.
++ The distance to the lens is half (50%) of the distance to the source.
+  If the last parameter is 0, the distance is drawn at random.
 
 # Versions
 
