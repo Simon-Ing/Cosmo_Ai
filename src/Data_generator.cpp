@@ -37,8 +37,7 @@ int main(int, char *argv[]) {
     std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(-xyrange, xyrange);
 
     std::vector<std::vector<int>> parameters;
-    for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
-        std::cout << "Iteration " << i << "\n" ;
+    while ( parameters.size() < DATAPOINTS_TO_GENERATE ) {
         if (n_params == 0){
             CHI_percent = rand_lens_dist(rng);
         } else {
@@ -59,14 +58,11 @@ int main(int, char *argv[]) {
             cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());
             cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
             parameters.push_back( params ) ;
-        } else {
-            i--;
         }
         if (parameters.size() % 100 == 0){
             std::cout << "Datapoints generated: " << parameters.size() << std::endl;
         }
         std::cout << "Datapoints generated: " << parameters.size() << std::endl;
-        std::cout << "Done iteration " << i << "\n" ;
     }
 }
 
