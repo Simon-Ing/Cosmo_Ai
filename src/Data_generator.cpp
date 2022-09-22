@@ -9,14 +9,14 @@
 #include <opencv2/opencv.hpp>
 #include "Simulator.h"
 
-
 int main(int, char *argv[]) {
 
     Simulator simulator;
 
     int nterms = 16 ;
     int CHI_percent ;
-    int CHI, einsteinR, X, Y, sourceSize ;
+    int einsteinR, X, Y, sourceSize ;
+    double CHI ;
 
     int DATAPOINTS_TO_GENERATE = atoi(argv[1]);
     int imgsize = atoi(argv[2]);
