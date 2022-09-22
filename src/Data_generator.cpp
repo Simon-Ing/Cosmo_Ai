@@ -28,8 +28,8 @@ int main(int, char *argv[]) {
     std::uniform_int_distribution<std::mt19937::result_type> rand_lens_dist(30, 100);
     std::uniform_int_distribution<std::mt19937::result_type> rand_einsteinR(1, imgsize/10);
     std::uniform_int_distribution<std::mt19937::result_type> rand_source_size(1, imgsize/10);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(-xyrange, -xyrange);
-    std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(-xyrange, -xyrange);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_xSlider(-xyrange, xyrange);
+    std::uniform_int_distribution<std::mt19937::result_type> rand_ySlider(-xyrange, xyrange);
 
     std::vector<std::vector<int>> parameters;
     for (int i = 0; i < DATAPOINTS_TO_GENERATE; i++) {
@@ -54,13 +54,13 @@ int main(int, char *argv[]) {
             filename_path << simname + "/images/" + filename.str();
             cv::imwrite(filename_path.str(), simulator.getDistorted());
             parameters.push_back( params ) ;
-        }
-        else{
+        } else {
             i--;
         }
         if (parameters.size() % (DATAPOINTS_TO_GENERATE/10) == 0){
             std::cout << " Datapoints generated: " << parameters.size() << std::endl;
         }
+        std::cout << " Datapoints generated: " << parameters.size() << std::endl;
     }
 }
 
