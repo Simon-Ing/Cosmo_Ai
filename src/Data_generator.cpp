@@ -23,7 +23,7 @@ int main(int, char *argv[]) {
     std::string simname = std::string(argv[3]);
     int n_params = atoi(argv[4]);
 
-    simulator = Simulator(imgsize) ;
+    simulator = PointMassSimulator(imgsize) ;
 
     double xyrange = imgsize/2.5 ;
 
