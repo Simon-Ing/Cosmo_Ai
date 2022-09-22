@@ -16,10 +16,6 @@ Simulator::Simulator() :
 { 
     imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
     imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
-
-    /* We should instantiate also imgDistorted here, but for some reason
-     * that results in a circularly shifted image.
-     * Now it is instantiated in update() and it appears to work. */
 }
 
 /* Getters for the images */
@@ -42,14 +38,14 @@ void Simulator::update() {
     this->calculateAlphaBeta() ;
 
     // Make Distorted Image
-    imgDistorted = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-    parallelDistort(imgApparent, imgDistorted);
+    cv::Mat imgD = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
+    parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
     double phi = atan2(actualY, actualX); // Angle relative to x-axis
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
-    cv::warpAffine(imgDistorted, imgDistorted, rot, cv::Size(2*size, size));    // crop distorted image
-    imgDistorted =  imgDistorted(cv::Rect(size/2, 0, size, size));
+    cv::warpAffine(imgD, imgD, rot, cv::Size(2*size, size));    // crop distorted image
+    imgDistorted =  imgD(cv::Rect(size/2, 0, size, size));
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
