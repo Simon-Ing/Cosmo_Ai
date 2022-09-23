@@ -80,17 +80,20 @@ void Simulator::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 
 
 void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
+    // Iterate over the pixels in the image distorted image.
+    // (row,col) are pixel co-ordinates
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
-            // if point mass
-            int row_, col_;
+
+            int row_, col_;  // pixel co-ordinates in the apparent image
             std::pair<double, double> pos ;
 
             // Set coordinate system with origin at x=R
             double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
             double y = (dst.rows / 2.0 - row) * CHI;
 
-            // Calculate distance and angle of the point evaluated relative to center of lens (origin)
+            // Calculate distance and angle of the point evaluated 
+            // relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
             double theta = atan2(y, x);
 

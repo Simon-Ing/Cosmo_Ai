@@ -1,5 +1,8 @@
 \documentclass{scrartcl}
 
+\usepackage{listings}
+\usepackage{amsmath}
+
 \title{CosmoAI model}
 \author{Hans Georg Schaathun}
 
@@ -47,5 +50,64 @@
 \hline
 \end{tabular}
 \end{center}
+
+\section{The \texttt{distort()} function}
+
+\begin{lstlisting}
+void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
+    // Iterate over the pixels in the image distorted image.
+    // (row,col) are pixel co-ordinates
+    for (int row = begin; row < end; row++) {
+        for (int col = 0; col < dst.cols; col++) {
+
+            int row_, col_;  // pixel co-ordinates in the apparent image
+            std::pair<double, double> pos ;
+
+            // Set coordinate system with origin at x=R
+            double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+            double y = (dst.rows / 2.0 - row) * CHI;
+
+            // Calculate distance and angle of the point evaluated 
+            // relative to center of lens (origin)
+            double r = sqrt(x * x + y * y);
+            double theta = atan2(y, x);
+
+            pos = this->getDistortedPos(r, theta);
+
+            // Translate to array index
+            row_ = (int) round(src.rows / 2.0 - pos.second);
+            col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
+
+            // If (x', y') within source, copy value to imgDistorted
+            if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+                auto val = src.at<uchar>(row_, col_);
+                dst.at<uchar>(row, col) = val;
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+Suppose the distorted image is an $m\times n$ matrix.
+We rewrite the pixel coordinates $(i,j)$ as $(x,y)$ to get
+a canonical Cartesian coordinate system centered at
+the apparent location of the source.
+\begin{align}
+     x &= (j - ||P_{APP}|| - n/2)\cdot\chi \\
+     y &= (-i + m/2)\cdot\chi 
+\end{align}
+Given the Cartesian coordinates $(x,y)$, we find Polar coordinates
+$(r,\theta)$ as
+\begin{align}
+   r &= \sqrt{x^2+y^2}\\
+   \theta &= 
+     \begin{cases}
+        \tan^{-1} \frac{y}{x}, \text{ if } x\ge0\\
+        \pi + \tan^{-1} \frac{y}{x}, \text{ if } x<0
+     \end{cases}
+\end{align}
+
+The \texttt{getDistortedPos} method implements the main coordinate distortion
+functions and map $(r, \theta) \mapsto \xi = (\xi_1,\xi_2)$.
 
 \end{document}
