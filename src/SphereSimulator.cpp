@@ -91,6 +91,9 @@ std::pair<double, double> SphereSimulator::getDistortedPos(double r, double thet
         xi1 += frac*subTerm1;
         xi2 += frac*subTerm2;
     }
+    // The return value (xi1,xi2) should be normalised coordinates in the source plane,
+    // and should probably be denoted as eta instead.  xi is usually used to denote
+    // location in the lens plane.  TODO Double check.
     return {xi1, xi2};
 }
 
