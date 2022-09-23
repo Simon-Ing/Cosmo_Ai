@@ -17,9 +17,10 @@ The simulator maintains three images.
 \begin{enumerate}
    \item The actual source.  This is an image of the remote galaxy drawn with
       the origin in the line of sight through the centre of the lens.
-   \item The apparent source.  This is the actual source translated so that
-      its centre of mass coincides with the line of sight through the distorted
-      image.
+      Its centre of mass is at $P_{\mathrm{ACT}}$.
+   \item The apparent source, used only as an intermediate calculation.  
+      It is the actual source, translated so that it lies behind the distorted
+      image as seen by the observer, and then rotated to fall on the $x$ axis.
    \item The distorted image.  This is the image seen.  It is drawn in a coordinate
       system in the lens plane, with the origin in the centre of mass of the lens.
 \end{enumerate}
@@ -45,11 +46,13 @@ The simulator maintains three images.
    \texttt{actualX}, \texttt{actualY} & $P_{\textrm{ACT}}$  & User Setting\\
 \hline
    \texttt{apparentX}, \texttt{apparentY} 
-         & $P_{\textrm{APP}}=\rho_1P_{\textrm{ACT}}$ & \texttt{updateXY()} \\
+         & $P_{\textrm{APP}}=\rho_1P_{\textrm{ACT}}$ 
+         & \texttt{updateXY()} -- not used \\
 \hline
    \texttt{actualAbs} & $||P_{\textrm{ACT}}||$ & \texttt{updateXY()} \\
 \hline
-   \texttt{apparentAbs} & $||P_{\textrm{APP}}||$ & \texttt{updateXY()} \\
+   \texttt{apparentAbs} & $||P_{\textrm{APP}}||=\rho_1||P_{\textrm{ACT}}||$
+      & \texttt{updateXY()} \\
 \hline
    \texttt{alphas\_val[m][s]},
    \texttt{betas\_val[m][s]}  & $\alpha,\beta$ \textbf{TODO}
