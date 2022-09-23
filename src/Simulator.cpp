@@ -88,9 +88,11 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             int row_, col_;  // pixel co-ordinates in the apparent image
             std::pair<double, double> pos ;
 
-            // Set coordinate system with origin at x=R
+            // Set coordinate system with origin at the centre of mass
+            // in the distorted image in the lens plane.
             double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
             double y = (dst.rows / 2.0 - row) * CHI;
+            // TODO Why do we multiply by CHI here?
 
             // Calculate distance and angle of the point evaluated 
             // relative to center of lens (origin)
