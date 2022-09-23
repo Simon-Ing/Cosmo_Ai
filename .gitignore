@@ -431,3 +431,5 @@ graph_info.json
 # Documentation and printout
 *.ps
 .*.swp
+*.aux
+*.pdf

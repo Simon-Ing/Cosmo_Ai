@@ -6,22 +6,46 @@
 \begin{document}
 \maketitle
 
-\begin{tabular}{l|l}
+\begin{center}
+\begin{tabular}{l|l|l}
 \hline
-  Class Variables & 
+  Class Variables & Mathematical Notation & Calculation \\
 \hline
 \hline
-  \texttt{CHI} & $$\chi=\frac{chi_L}{\chi_S}$$ \\
-  \texttt{size} & Image size (not part of the model) \\
-  \texttt{einsteinR} & $R_E$ \\
-  \texttt{sourceSize} & $\sigma$ \\
-  \texttt{nterms} & Number of terms after truncation \\
-  \texttt{actualX}, \texttt{actualY} & $P_{\textrm{ACT}}$ \\
-  \texttt{apparentX}, \texttt{apparentY} & $P_{\textrm{APP}}=\rho_1P_{\textrm{ACT}}$ \\
-  \texttt{actualAbs} & $||P_{\textrm{ACT}}||$ \\
-  \texttt{apparentAbs} & $||P_{\textrm{APP}}||$ \\
+   \texttt{CHI}       & $\chi=\frac{chi_L}{\chi_S}$      & User Setting \\
+   \texttt{size}      & Image size (not part of the model) & User Setting \\
+   \texttt{einsteinR} & $R_E$                              & User Setting \\
+   \texttt{sourceSize} & $\sigma$                          & User Setting \\
+   \texttt{nterms}    & Number of terms after truncation    & User Setting \\
+   \texttt{actualX}, \texttt{actualY} & $P_{\textrm{ACT}}$  & User Setting\\
+   \texttt{apparentX}, \texttt{apparentY} 
+         & $P_{\textrm{APP}}=\rho_1P_{\textrm{ACT}}$ & \texttt{updateXY()} \\
+   \texttt{actualAbs} & $||P_{\textrm{ACT}}||$ & \texttt{updateXY()} \\
+   \texttt{apparentAbs} & $||P_{\textrm{APP}}||$ & \texttt{updateXY()} \\
+   \texttt{alphas\_val[m][s]},
+   \texttt{betas\_val[m][s]}  & $\alpha,\beta$ \textbf{TODO}
+        (floating point values)
+        & \texttt{calculateAlphaBeta()} \\
+   \texttt{alphas\_v[m][s]},
+   \texttt{betas\_l[m][s]}  & $\alpha,\beta$ \textbf{TODO}
+        (algebraic expressions)
+        & \texttt{initAlphaBeta()} loading from \texttt{50.txt} \\
 \hline
 \end{tabular}
+\end{center}
 
+\begin{center}
+\begin{tabular}{l|l|l}
+\hline
+   Intermediate Variables & Mathematical Notation & Calculation \\
+\hline
+\hline
+   \texttt{xi1},\texttt{xi2}       & $\xi_1,\xi_2$     & \texttt{getDistortedPos} \\
+   \texttt{ratio1},\texttt{ratio2} & $\rho_1,\rho_2$   & \texttt{updateXY}        \\
+   \texttt{r}, \texttt{theta} & Polar coordinates &
+      Arguments to \texttt{getDistortedPos} \\
+\hline
+\end{tabular}
+\end{center}
 
 \end{document}
