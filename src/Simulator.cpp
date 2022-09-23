@@ -187,8 +187,8 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
     // The two ratioes correspond to two roots of a quadratic equation.
-    double ratio1 = 0.5 + sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
-    double ratio2 = 0.5 - sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    double ratio1 = 0.5 + 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
+    double ratio2 = 0.5 - 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
     // Each ratio gives rise to one apparent galaxy.
     apparentAbs = actualAbs*ratio1;
     // (X,Y) co-ordinates of first image

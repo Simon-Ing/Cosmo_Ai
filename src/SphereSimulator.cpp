@@ -71,8 +71,8 @@ void SphereSimulator::calculateAlphaBeta() {
 
 // Calculate the main formula for the SIS model
 std::pair<double, double> SphereSimulator::getDistortedPos(double r, double theta) const {
-    double ksi1 = r*cos(theta) ;
-    double ksi2 = r*sin(theta) ;
+    double xi1 = r*cos(theta) ;
+    double xi2 = r*sin(theta) ;
 
     for (int m=1; m<=nterms; m++){
         double frac = pow(r, m) / factorial_(m);
@@ -88,9 +88,9 @@ std::pair<double, double> SphereSimulator::getDistortedPos(double r, double thet
             subTerm2 += 0.5*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 
                             + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
         }
-        ksi1 += frac*subTerm1;
-        ksi2 += frac*subTerm2;
+        xi1 += frac*subTerm1;
+        xi2 += frac*subTerm2;
     }
-    return {ksi1, ksi2};
+    return {xi1, xi2};
 }
 
