@@ -5,6 +5,19 @@
 #include <opencv2/opencv.hpp>
 #include "Simulator.h"
 
+std::string convertToString(char*) ;
+
+std::string convertToString(char* a)
+{
+    std::string s = "";
+    while ( *a != 0 ) {
+        s = s + *(a++) ;
+    }
+    std::cout << "convertToString: " << s << "\n" ;
+    return s;
+}
+
+
 int main(int argc, char *argv[]) {
 
     Simulator simulator;
@@ -17,8 +30,14 @@ int main(int argc, char *argv[]) {
     double CHI ;
     std::string simname = "test" ;
     int mode = 0 ;
+    int opt ;
 
-    while ( int opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:") > -1 ) {
+    while ( (opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:")) > -1 ) {
+       if ( optarg ) {
+          std::cout << "Option " << opt << " - " << optarg << "\n" ;
+       } else {
+          std::cout << "Option " << opt << "\n" ;
+       }
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
@@ -27,10 +46,12 @@ int main(int argc, char *argv[]) {
           case 'E': einsteinR = atoi(optarg) ; break ;
           case 'n': nterms = atoi(optarg) ; break ;
           case 'I': imgsize = atoi(optarg) ; break ;
-          case 'N': simname = optarg ; break ;
+          case 'N': simname = convertToString( optarg ) ; break ;
           case 'S': ++mode ; break ;
        }
     }
+
+    std::cout << simname << "\n" ; 
 
     CHI = CHI_percent/100.0 ;
 
@@ -43,9 +64,9 @@ int main(int argc, char *argv[]) {
 
     std::ostringstream filename;
     filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-    cv::imwrite( "image- " + simname + filename.str(), simulator.getDistorted());
-    cv::imwrite( "actual- " + simname + filename.str(), simulator.getActual());
-    cv::imwrite( "secondary- " + simname + filename.str(), simulator.getSecondary());
+    cv::imwrite( "image-" + simname + filename.str(), simulator.getDistorted());
+    cv::imwrite( "actual-" + simname + filename.str(), simulator.getActual());
+    cv::imwrite( "secondary-" + simname + filename.str(), simulator.getSecondary());
 }
 
 
