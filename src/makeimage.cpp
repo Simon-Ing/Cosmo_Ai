@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
     filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
     cv::imwrite( "image- " + simname + filename.str(), simulator.getDistorted());
     cv::imwrite( "actual- " + simname + filename.str(), simulator.getActual());
+    cv::imwrite( "secondary- " + simname + filename.str(), simulator.getSecondary());
 }
 
 

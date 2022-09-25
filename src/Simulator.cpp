@@ -29,6 +29,11 @@ cv::Mat Simulator::getActual() { return imgActual ; }
 cv::Mat Simulator::getApparent() { return imgApparent ; }
 cv::Mat Simulator::getDistorted() { return imgDistorted ; }
 
+cv::Mat Simulator::getSecondary() { 
+   apparentAbs = apparentAbs2 ;
+   update() ;
+   return imgDistorted ; }
+
 void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
@@ -196,9 +201,10 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
     double ratio2 = 0.5 - 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
     // Each ratio gives rise to one apparent galaxy.
     apparentAbs = actualAbs*ratio1;
+    apparentAbs2 = actualAbs*ratio2;
     // (X,Y) co-ordinates of first image
-    apparentX = actualX*ratio1;
-    apparentY = actualY*ratio1;
+    // apparentX = actualX*ratio1;
+    // apparentY = actualY*ratio1;
     // (X,Y) co-ordinates of second image.  This is never used.
     // apparentX2 = actualX*ratio2;
     // apparentY2 = actualY*ratio2;

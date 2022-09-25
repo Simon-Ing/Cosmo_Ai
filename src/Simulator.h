@@ -20,10 +20,11 @@ protected:
 
     double actualX{};
     double actualY{};
-    double apparentX{};
-    double apparentY{};
+    // double apparentX{};
+    // double apparentY{};
     double actualAbs{};
     double apparentAbs{};
+    double apparentAbs2{};
 
     cv::Mat imgActual;
     cv::Mat imgApparent;
@@ -47,6 +48,7 @@ public:
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
     cv::Mat getDistorted() ;
+    cv::Mat getSecondary() ; // Made for testing
 
 protected:
     virtual void calculateAlphaBeta();
