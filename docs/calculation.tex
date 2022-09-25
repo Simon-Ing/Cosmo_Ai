@@ -25,6 +25,12 @@ The simulator maintains three images.
       system in the lens plane, with the origin in the centre of mass of the lens.
 \end{enumerate}
 
+A secondary image can also be calculated, returned by \texttt{getSecondary()}.
+It is calculated like the distorted image, but using the smaller root to
+find the apparent location.  The implementation is a hack, and overwrites
+the distorted image in the simulator state.  
+
+
 \section{Variables and Parameters}
 
 \begin{center}
