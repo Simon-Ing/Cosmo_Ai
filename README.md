@@ -37,7 +37,24 @@ The GUI tool should be pretty self explanatory.
 The images shown are the actual source on the left and the distorted (lensed)
 image on the right.
 
-## CLI Tool
+## Image Generator 
+
+```sh
+bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
+```
+
++ `-S` uses SphereSimulator instead of the default point mass simulator
++ `x` and `y` are the coordinates of the actual source
++ `s` is the standard deviation of the source
++ `chi` is the distance to the lens in percent of the distance to the source
++ `einsteinR` is the Einstein radius of the lens
++ `n` is the number of terms to use in roulette sum.  
+  (Not used for the point mass model.)
++ `imageSize` size of output image in pixels.  The image will be
+  `imageSize`$\times$`imageSize` pixels.
++ `name` is the name of the simulation, and used to generate filenames.
+
+## Data Set Generator 
 
 This can be run like this:
 
