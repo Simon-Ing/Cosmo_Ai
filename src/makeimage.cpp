@@ -29,10 +29,11 @@ int main(int argc, char *argv[]) {
     int imgsize = 512 ;
     double CHI ;
     std::string simname = "test" ;
-    int mode = 0 ;
+    int mode = 0, refmode = 0 ;
     int opt ;
+    cv::Mat im ;
 
-    while ( (opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:L")) > -1 ) {
        if ( optarg ) {
           std::cout << "Option " << opt << " - " << optarg << "\n" ;
        } else {
@@ -48,6 +49,7 @@ int main(int argc, char *argv[]) {
           case 'I': imgsize = atoi(optarg) ; break ;
           case 'N': simname = convertToString( optarg ) ; break ;
           case 'S': ++mode ; break ;
+          case 'L': ++refmode ; break ;
        }
     }
 
@@ -66,11 +68,40 @@ int main(int argc, char *argv[]) {
 
     std::ostringstream filename;
     filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-    cv::imwrite( "image-" + simname + filename.str(), simulator->getDistorted());
-    cv::imwrite( "actual-" + simname + filename.str(), simulator->getActual());
-    cv::imwrite( "apparent-" + simname + filename.str(), simulator->getApparent());
-    cv::imwrite( "secondary-" + simname + filename.str(), simulator->getSecondary());
-    cv::imwrite( "apparent2-" + simname + filename.str(), simulator->getApparent());
+
+    im = simulator->getDistorted() ;
+    std::cout << "D1 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "D1 Image type " << im.type() << "\n" ;
+    if ( refmode ) refLines(im) ;
+    std::cout << "D2 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "D2 Image type " << im.type() << "\n" ;
+    cv::imwrite( "image-" + simname + filename.str(), im );
+
+    im = simulator->getActual() ;
+    if ( refmode ) refLines(im) ;
+    cv::imwrite( "actual-" + simname + filename.str(), im );
+    im = simulator->getApparent() ;
+    if ( refmode ) refLines(im) ;
+    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "Image type " << im.type() << "\n" ;
+    cv::imwrite( "apparent-" + simname + filename.str(), im );
+
+    im = simulator->getSecondary() ;
+    std::cout << "Calculated Secondary image\n" ;
+    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "Image type " << im.type() << "\n" ;
+    // if ( refmode ) refLines(im) ;
+    std::cout << "Added axes box\n" ;
+    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "Image type " << im.type() << "\n" ;
+    cv::imwrite( "secondary-" + simname + filename.str(), im );
+    std::cout << "Written to file\n" ;
+
+    im = simulator->getApparent() ;
+    if ( refmode ) refLines(im) ;
+    cv::imwrite( "apparent2-" + simname + filename.str(), im );
 }
+
+
 
 

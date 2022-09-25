@@ -31,7 +31,7 @@ cv::Mat Simulator::getDistorted() { return imgDistorted ; }
 
 cv::Mat Simulator::getSecondary() { 
    apparentAbs = apparentAbs2 ;
-   update() ;
+   this->update() ;
    return imgDistorted ; }
 
 void Simulator::update() {
