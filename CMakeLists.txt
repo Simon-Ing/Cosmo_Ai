@@ -21,7 +21,7 @@ conan_cmake_run(REQUIRES
 add_executable(makeimage src/makeimage.cpp)
 add_executable(Datagen src/Data_generator.cpp)
 add_executable(Simulator_2 src/GL_Simulator_2.cpp)
-add_library(SimLib src/Simulator.cpp src/Window.cpp src/PointMassSimulator.cpp src/SphereSimulator.cpp)
+add_library(SimLib src/Simulator.cpp src/Window.cpp src/PointMassSimulator.cpp src/SphereSimulator.cpp src/simaux.cpp)
 
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
 target_link_libraries(Datagen ${CONAN_LIBS} SimLib)

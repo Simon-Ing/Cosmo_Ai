@@ -106,5 +106,7 @@ private:
 
 };
 
+/* simaux */
+void refLines(cv::Mat&) ;
 
 #endif //SPHERICAL_SIMULATOR_H
