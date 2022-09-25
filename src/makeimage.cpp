@@ -19,8 +19,9 @@ int main(int argc, char *argv[]) {
     int imgsize = 512 ;
     double CHI ;
     std::string simname = "test" ;
+    int mode = 0 ;
 
-    while ( int opt = getopt(argc,argv,"N:x:y:s:n:X:E:I:") > -1 ) {
+    while ( int opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:") > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
@@ -30,12 +31,17 @@ int main(int argc, char *argv[]) {
           case 'n': nterms = atoi(optarg) ; break ;
           case 'I': imgsize = atoi(optarg) ; break ;
           case 'N': simname = optarg ; break ;
+          case 'S': ++mode ; break ;
        }
     }
 
     CHI = CHI_percent/100.0 ;
 
-    simulator = PointMassSimulator(imgsize) ;
+    if ( mode ) {
+       simulator = SphereSimulator(imgsize) ;
+    } else {
+       simulator = PointMassSimulator(imgsize) ;
+    }
     simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
 
     std::ostringstream filename;
