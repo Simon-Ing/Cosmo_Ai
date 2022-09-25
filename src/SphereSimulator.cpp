@@ -58,6 +58,7 @@ void SphereSimulator::initAlphasBetas() {
 
 void SphereSimulator::calculateAlphaBeta() {
     double GAMMA = einsteinR/2.0;
+    std::cout << "SphereSimulator calculateAlphaBeta\n" ;
 
     // calculate all amplitudes for given X, Y, GAMMA, CHI
     // This is done here to before the code is parallellised

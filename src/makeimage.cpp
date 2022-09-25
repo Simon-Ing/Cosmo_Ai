@@ -20,7 +20,7 @@ std::string convertToString(char* a)
 
 int main(int argc, char *argv[]) {
 
-    Simulator simulator;
+    Simulator *simulator ;
 
     // Set Defaults
     int nterms = 16 ;
@@ -56,17 +56,19 @@ int main(int argc, char *argv[]) {
     CHI = CHI_percent/100.0 ;
 
     if ( mode ) {
-       simulator = SphereSimulator(imgsize) ;
+       std::cout << "Running SphereSimulator (mode=" << mode << ")\n" ;
+       simulator = new SphereSimulator(imgsize) ;
     } else {
-       simulator = PointMassSimulator(imgsize) ;
+       std::cout << "Running Point Mass Simulator (mode=" << mode << ")\n" ;
+       simulator = new PointMassSimulator(imgsize) ;
     }
-    simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
+    simulator->updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
 
     std::ostringstream filename;
     filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-    cv::imwrite( "image-" + simname + filename.str(), simulator.getDistorted());
-    cv::imwrite( "actual-" + simname + filename.str(), simulator.getActual());
-    cv::imwrite( "secondary-" + simname + filename.str(), simulator.getSecondary());
+    cv::imwrite( "image-" + simname + filename.str(), simulator->getDistorted());
+    cv::imwrite( "actual-" + simname + filename.str(), simulator->getActual());
+    cv::imwrite( "secondary-" + simname + filename.str(), simulator->getSecondary());
 }
 
 
