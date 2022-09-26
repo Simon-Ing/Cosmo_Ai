@@ -198,21 +198,16 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
-    // The two ratioes correspond to two roots of a quadratic equation.
-    double ratio1 = 0.5 + 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
-    double ratio2 = 0.5 - 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI*actualAbs*actualAbs));
-    // Each ratio gives rise to one apparent galaxy.
-    apparentAbs = actualAbs*ratio1;
-    apparentAbs2 = actualAbs*ratio2;
-    // (X,Y) co-ordinates of first image
-    // apparentX = actualX*ratio1;
-    // apparentY = actualY*ratio1;
-    // (X,Y) co-ordinates of second image.  This is never used.
-    // apparentX2 = actualX*ratio2;
-    // apparentY2 = actualY*ratio2;
+
+    // The apparent position is the solution to a quadratic equation.
+    // thus there are two solutions.
+    double root = 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI));
+    apparentAbs = actualAbs/2 + root ;
+    apparentAbs2 = actualAbs/2 - root ;
+    std::cout << "apparentAbs = " << apparentAbs << ", " << apparentAbs2 << "\n" ;
     // BDN: Is the calculation of apparent positions correct above?
 
-   update() ;
+    update() ;
 }
 /* Default implementation doing nothing.
  * This is correct for any subclass that does not need the alpha/beta tables. */
