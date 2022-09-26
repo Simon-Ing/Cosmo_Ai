@@ -195,6 +195,7 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
     // Actual position in source plane
     actualX = X ;
     actualY = Y ;
+    std::cout << "(x,y) = (" << X << "," << Y << ")\n" ;
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin

@@ -15,7 +15,7 @@ protected:
     double CHI;
     int size;
     int sourceSize;
-    int einsteinR;
+    double einsteinR;
     int nterms;
 
     double actualX{};

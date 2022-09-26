@@ -16,8 +16,8 @@ Window::Window() :
         CHI_percent(50),
         einsteinR(size/20),
         sourceSize(size/20),
-        xPosSlider(size/2 + 1),
-        yPosSlider(size/2),
+        xPosSlider(size*5 + 1),
+        yPosSlider(size*5),
         mode(0), // 0 = point mass, 1 = sphere
         nterms(10)
 { 
@@ -32,8 +32,8 @@ void Window::initGui(){
     cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, updateXY, this);
     cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator", &einsteinR, size, updateXY, this);
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, updateSize, this);
-    cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, size, updateXY, this);
-    cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, size, updateXY, this);
+    cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, 10*size, updateXY, this);
+    cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 1, updateMode, this);
 
     cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 49, updateNterms, this);
@@ -45,7 +45,7 @@ void Window::initSimulator(){
     if ( NULL != sim ) delete sim ;
     if ( 0 == mode ) sim = new PointMassSimulator(size) ;
     else sim = new SphereSimulator(size) ;
-    sim->updateAll( xPosSlider - size/2.0, yPosSlider - size/2.0,
+    sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
          einsteinR, sourceSize, CHI_percent / 100.0, nterms ) ;
     drawImages() ;
     std::cout << "initSimulator DONE\n" ;
@@ -57,7 +57,7 @@ void Window::updateMode(int, void* data){
 }
 void Window::updateXY(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->updateXY( that->xPosSlider - that->size/2.0, that->yPosSlider - that->size/2.0,
+    that->sim->updateXY( that->xPosSlider/10.0 - that->size/2.0, that->yPosSlider/10.0 - that->size/2.0,
                          that->CHI_percent / 100.0, that->einsteinR );
     /* The GUI has range 0..size; the simulator uses ±size/2. */
     that->drawImages() ;
