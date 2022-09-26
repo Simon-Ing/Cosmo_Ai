@@ -126,9 +126,9 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 std::pair<double, double> Simulator::getDistortedPos(double r, double theta) const {
     double R = apparentAbs * CHI ;
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
-    double x_= (r*cos(theta) + frac * (r / R + cos(theta))) / CHI;
-    double y_= (r*sin(theta) - frac * sin(theta)) / CHI;// Point mass lens equation
-    return {x_, y_};
+    double nu1 = r*cos(theta) + frac * (r / R + cos(theta)) ;
+    double nu2 = r*sin(theta) - frac * sin(theta) ;
+    return { nu1/CHI, nu2/CHI };
 }
 
 

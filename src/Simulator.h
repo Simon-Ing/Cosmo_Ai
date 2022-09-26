@@ -102,6 +102,7 @@ private:
     static void updateMode(int, void*);
 
     void drawImages() ;
+    /* void drawImages2() ; */
     void initSimulator();
 
 };

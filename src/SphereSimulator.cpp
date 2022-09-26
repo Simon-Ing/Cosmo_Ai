@@ -72,8 +72,8 @@ void SphereSimulator::calculateAlphaBeta() {
 
 // Calculate the main formula for the SIS model
 std::pair<double, double> SphereSimulator::getDistortedPos(double r, double theta) const {
-    double xi1 = r*cos(theta) ;
-    double xi2 = r*sin(theta) ;
+    double nu1 = r*cos(theta) ;
+    double nu2 = r*sin(theta) ;
 
     for (int m=1; m<=nterms; m++){
         double frac = pow(r, m) / factorial_(m);
@@ -89,12 +89,11 @@ std::pair<double, double> SphereSimulator::getDistortedPos(double r, double thet
             subTerm2 += 0.5*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 
                             + (alpha*sin((s+1)*theta) - beta*cos((s+1)*theta))*c_m);
         }
-        xi1 += frac*subTerm1;
-        xi2 += frac*subTerm2;
+        nu1 += frac*subTerm1;
+        nu2 += frac*subTerm2;
     }
-    // The return value (xi1,xi2) should be normalised coordinates in the source plane,
-    // and should probably be denoted as eta instead.  xi is usually used to denote
-    // location in the lens plane.  TODO Double check.
-    return {xi1, xi2};
+    // The return value should be normalised coordinates in the source plane.
+    // We have calculated the coordinates in the lens plane (nu1,nu2).
+    return {nu1/CHI, nu2/CHI};
 }
 

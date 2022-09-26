@@ -87,3 +87,29 @@ void Window::drawImages() {
    // Show the matDst array (i.e. both images) in the GUI window.
    cv::imshow("GL Simulator", matDst);
 }
+
+/*
+void Window::drawImages2() {
+   cv::Mat imgActual = sim->getActual() ;
+   cv::Mat imgDistorted = sim->getDistorted() ;
+   cv::Mat imgSecondary = sim->getSecondary() ;
+
+   // Copy both the actual and the distorted images into a new matDst array for display
+   cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
+   cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
+   imgActual.copyTo(matRoi);
+   matRoi = matDst(cv::Rect(size, 0, size, size));
+   // imgDistorted.copyTo(matRoi);
+   for ( int i=0 ; i < size ; ++i ) {
+      for ( int j=0 ; j < size ; ++j ) {
+         auto v1 = imgActual.at<uchar>(i, j);
+         auto v2 = imgDistorted.at<uchar>(i, j);
+         auto v3 = imgSecondary.at<uchar>(i, j);
+         matRoi.at<uchar>(i, j) = { v1[0], v2[1], v3[1] } ;
+      }
+   }
+
+   // Show the matDst array (i.e. both images) in the GUI window.
+   cv::imshow("GL Simulator", matDst);
+}
+*/
