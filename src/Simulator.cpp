@@ -20,7 +20,7 @@ Simulator::Simulator(int s) :
         nterms(10)
 { 
     imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-    imgApparent = cv::Mat(size, 2*size, CV_8UC1, cv::Scalar(0, 0, 0));
+    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
 }
 Simulator::Simulator() : Simulator(500) {};
 
@@ -40,7 +40,7 @@ void Simulator::update() {
     
     // Draw the Actual (Source) and Apparent Image
     drawParallel(imgActual, actualX, actualY);
-    drawParallel(imgApparent, apparentAbs, 0);
+    drawParallel(imgApparent, 0, 0);
     // The source image has a Gaussian distribution with standard deviation
     // equal to sourceSize.  See drawSource().
     // The apparent image is the source image translated to the apparent position 
@@ -49,14 +49,15 @@ void Simulator::update() {
     this->calculateAlphaBeta() ;
 
     // Make Distorted Image
-    cv::Mat imgD = cv::Mat(imgApparent.size(), CV_8UC1, cv::Scalar(0, 0, 0));
+    // We work in a double sized image to avoid cropping
+    cv::Mat imgD = cv::Mat(size*2, size*2, CV_8UC1, cv::Scalar(0, 0, 0));
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
     double phi = atan2(actualY, actualX); // Angle relative to x-axis
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size/2), phi*180/PI, 1);
-    cv::warpAffine(imgD, imgD, rot, cv::Size(2*size, size));    // crop distorted image
-    imgDistorted =  imgD(cv::Rect(size/2, 0, size, size));
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size), phi*180/PI, 1);
+    cv::warpAffine(imgD, imgD, rot, cv::Size(2*size, 2*size));    // crop distorted image
+    imgDistorted =  imgD(cv::Rect(size/2, size/2, size, size));
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
@@ -95,9 +96,10 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
-            double x = (col - apparentAbs - dst.cols / 2.0) * CHI;
+            double x = (col - dst.cols / 2.0 - apparentAbs) * CHI;
             double y = (dst.rows / 2.0 - row) * CHI;
-            // TODO Why do we multiply by CHI here?
+            // (x,y) are coordinates in the lens plane, and hence the
+            // multiplication by CHI
 
             // Calculate distance and angle of the point evaluated 
             // relative to center of lens (origin)
@@ -106,9 +108,9 @@ void Simulator::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             pos = this->getDistortedPos(r, theta);
 
-            // Translate to array index
+            // Translate to array index in the source plane
             row_ = (int) round(src.rows / 2.0 - pos.second);
-            col_ = (int) round(apparentAbs + src.cols / 2.0 + pos.first);
+            col_ = (int) round(src.cols / 2.0 + pos.first);
 
             // If (x', y') within source, copy value to imgDistorted
             if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
