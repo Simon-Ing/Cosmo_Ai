@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Calculated Secondary image\n" ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Image type " << im.type() << "\n" ;
-    // if ( refmode ) refLines(im) ;
+    if ( refmode ) refLines(im) ;
     std::cout << "Added axes box\n" ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Image type " << im.type() << "\n" ;
