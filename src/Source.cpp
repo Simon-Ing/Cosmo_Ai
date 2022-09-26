@@ -13,12 +13,13 @@ Source::Source(int sz,double sig) :
         size(sz),
         sigma(sig)
 { 
-    imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    // imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
     imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    drawParallel( imgApparent ) ;
 }
 
 /* Getters for the images */
-cv::Mat Source::getActual() { return imgActual ; }
+// cv::Mat Source::getActual() { return imgActual ; }
 cv::Mat Source::getApparent() { return imgApparent ; }
 
 /* drawParallel() split the image into chunks to draw it in parallel using drawSource() */

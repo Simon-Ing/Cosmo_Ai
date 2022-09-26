@@ -83,16 +83,13 @@ protected:
     double sigma ;
     int size ;
 
-    cv::Mat imgActual;
+    // cv::Mat imgActual;
     cv::Mat imgApparent;
 
 public:
     Source(int,double);
-
-    cv::Mat getActual() ;
+    // cv::Mat getActual() ;
     cv::Mat getApparent() ;
-
-// protected:
 
 private:
     void drawParallel(cv::Mat &img);
