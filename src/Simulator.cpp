@@ -202,10 +202,9 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
 
     // The apparent position is the solution to a quadratic equation.
     // thus there are two solutions.
-    double root = 2*sqrt(0.25 + einsteinR*einsteinR/(CHI*CHI));
+    double root = sqrt(0.25*actualAbs*actualAbs + einsteinR*einsteinR/(CHI*CHI));
     apparentAbs = actualAbs/2 + root ;
     apparentAbs2 = actualAbs/2 - root ;
-    std::cout << "apparentAbs = " << apparentAbs << ", " << apparentAbs2 << "\n" ;
     // BDN: Is the calculation of apparent positions correct above?
 
     update() ;
