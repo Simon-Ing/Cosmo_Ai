@@ -77,6 +77,29 @@ class SphereSimulator : public Simulator {
     void initAlphasBetas();
 };
 
+class Source {
+
+protected:
+    double sigma ;
+    int size ;
+
+    cv::Mat imgActual;
+    cv::Mat imgApparent;
+
+public:
+    Source(int,double);
+
+    cv::Mat getActual() ;
+    cv::Mat getApparent() ;
+
+// protected:
+
+private:
+    void drawParallel(cv::Mat &img);
+    virtual void drawSource(int begin, int end, cv::Mat &img);
+
+};
+
 class Window {
 private:
     int mode;
