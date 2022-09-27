@@ -19,13 +19,20 @@ Simulator::Simulator(int s) :
         sourceSize(size/20),
         nterms(10)
 { 
-    imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
     imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
 }
 Simulator::Simulator() : Simulator(500) {};
 
 /* Getters for the images */
-cv::Mat Simulator::getActual() { return imgActual ; }
+cv::Mat Simulator::getActual() { 
+   cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+   double phi = atan2(actualY, actualX); // Angle relative to x-axis
+   cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size), phi*180/PI, 1);
+   rot.at<uchar>(0,2) = actualX ;
+   rot.at<uchar>(1,2) = actualY ;
+   cv::warpAffine(imgApparent, imgActual, rot, cv::Size(size, size));    // crop distorted image
+   return imgActual ; 
+}
 cv::Mat Simulator::getApparent() { return imgApparent ; }
 cv::Mat Simulator::getDistorted() { return imgDistorted ; }
 
@@ -39,7 +46,6 @@ void Simulator::update() {
     auto startTime = std::chrono::system_clock::now();
     
     // Draw the Actual (Source) and Apparent Image
-    drawParallel(imgActual, actualX, actualY);
     drawParallel(imgApparent, 0, 0);
     // The source image has a Gaussian distribution with standard deviation
     // equal to sourceSize.  See drawSource().
@@ -191,11 +197,9 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
 
     CHI = chi ;
     einsteinR = er ;
-
     // Actual position in source plane
     actualX = X ;
     actualY = Y ;
-    std::cout << "(x,y) = (" << X << "," << Y << ")\n" ;
 
     // Absolute values in source plane
     actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
@@ -209,6 +213,11 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
 
     update() ;
 }
+
+void Simulator::setSource(Source src) {
+    update() ;
+}
+
 /* Default implementation doing nothing.
  * This is correct for any subclass that does not need the alpha/beta tables. */
 void Simulator::calculateAlphaBeta() { }

@@ -9,6 +9,24 @@ using namespace SymEngine;
 
 #define PI 3.14159265358979323846
 
+class Source {
+
+protected:
+    double sigma ;
+    int size ;
+
+    cv::Mat imgApparent;
+
+public:
+    Source(int,double);
+    cv::Mat getApparent() ;
+
+private:
+    void drawParallel(cv::Mat &img);
+    virtual void drawSource(int begin, int end, cv::Mat &img);
+
+};
+
 class Simulator {
 
 protected:
@@ -26,7 +44,6 @@ protected:
     double apparentAbs{};
     double apparentAbs2{};
 
-    cv::Mat imgActual;
     cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
@@ -44,6 +61,7 @@ public:
     void updateSize(double);
     void updateNterms(int);
     void updateAll( double, double, double, double, double, int ) ;
+    void setSource(Source src) ;
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
@@ -77,25 +95,6 @@ class SphereSimulator : public Simulator {
     void initAlphasBetas();
 };
 
-class Source {
-
-protected:
-    double sigma ;
-    int size ;
-
-    // cv::Mat imgActual;
-    cv::Mat imgApparent;
-
-public:
-    Source(int,double);
-    // cv::Mat getActual() ;
-    cv::Mat getApparent() ;
-
-private:
-    void drawParallel(cv::Mat &img);
-    virtual void drawSource(int begin, int end, cv::Mat &img);
-
-};
 
 class Window {
 private:
