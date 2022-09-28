@@ -12,13 +12,11 @@
 
 double factorial_(unsigned int n);
 
-Simulator::Simulator(int s) :
-        size(s),
+Simulator::Simulator() :
         CHI(0.5),
-        einsteinR(size/20),
+        einsteinR(20),
         nterms(10)
 { }
-Simulator::Simulator() : Simulator(500) {};
 
 /* Getters for the images */
 cv::Mat Simulator::getActual() { 
@@ -41,7 +39,7 @@ cv::Mat Simulator::getActual() {
    std::cout << "(x,y) = (" << (-actualY,actualX) << ")\n" ;
    std::cout << rot << "\n" ;
 
-   cv::warpAffine(imgApparent, imgActual, rot, cv::Size(size, size));    // crop distorted image
+   cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size());    // crop distorted image
    return imgActual ; 
 }
 cv::Mat Simulator::getApparent() { return source->getImage() ; }
@@ -60,16 +58,19 @@ void Simulator::update() {
 
     this->calculateAlphaBeta() ;
 
+    int nrows = imgApparent.rows ;
+    int ncols = imgApparent.cols ;
+
     // Make Distorted Image
     // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat(size*2, size*2, CV_8UC1, cv::Scalar(0, 0, 0));
+    cv::Mat imgD = cv::Mat::zeros(nrows*2, ncols*2, imgApparent.type());
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
     double phi = atan2(actualY, actualX); // Angle relative to x-axis
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size), phi*180/PI, 1);
-    cv::warpAffine(imgD, imgD, rot, cv::Size(2*size, 2*size));    // crop distorted image
-    imgDistorted =  imgD(cv::Rect(size/2, size/2, size, size));
+    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
+    cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
+    imgDistorted =  imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols));
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();

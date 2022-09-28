@@ -59,10 +59,10 @@ int main(int argc, char *argv[]) {
 
     if ( mode ) {
        std::cout << "Running SphereSimulator (mode=" << mode << ")\n" ;
-       simulator = new SphereSimulator(imgsize) ;
+       simulator = new SphereSimulator() ;
     } else {
        std::cout << "Running Point Mass Simulator (mode=" << mode << ")\n" ;
-       simulator = new PointMassSimulator(imgsize) ;
+       simulator = new PointMassSimulator() ;
     }
     simulator->setSource( new Source( imgsize, sourceSize ) );
     simulator->updateAll( X, Y, einsteinR, CHI, nterms );

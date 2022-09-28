@@ -30,7 +30,6 @@ class Simulator {
 
 protected:
     double CHI;
-    int size;
     Source *source ;
     double einsteinR;
     int nterms;
@@ -53,7 +52,6 @@ protected:
 
 public:
     Simulator();
-    Simulator(int);
     void update();
 
     void updateXY(double, double, double, double);
@@ -83,7 +81,6 @@ class PointMassSimulator : public Simulator {
 class SphereSimulator : public Simulator { 
   public:
     SphereSimulator();
-    SphereSimulator(int);
   protected:
     void calculateAlphaBeta();
     std::pair<double, double> getDistortedPos(double r, double theta) const;

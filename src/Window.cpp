@@ -43,8 +43,8 @@ void Window::initGui(){
 void Window::initSimulator(){
     std::cout << "initSimulator mode=" << mode << "\n" ;
     if ( NULL != sim ) delete sim ;
-    if ( 0 == mode ) sim = new PointMassSimulator(size) ;
-    else sim = new SphereSimulator(size) ;
+    if ( 0 == mode ) sim = new PointMassSimulator() ;
+    else sim = new SphereSimulator() ;
     sim->setSource( new Source( size, sourceSize ) ) ;
     sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
          einsteinR, CHI_percent / 100.0, nterms ) ;
