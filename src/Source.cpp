@@ -20,7 +20,7 @@ Source::Source(int sz,double sig) :
 
 /* Getters for the images */
 // cv::Mat Source::getActual() { return imgActual ; }
-cv::Mat Source::getApparent() { return imgApparent ; }
+cv::Mat Source::getImage() { return imgApparent ; }
 
 /* drawParallel() split the image into chunks to draw it in parallel using drawSource() */
 void Source::drawParallel(cv::Mat& dst){

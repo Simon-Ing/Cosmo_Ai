@@ -14,12 +14,11 @@ class Source {
 protected:
     double sigma ;
     int size ;
-
     cv::Mat imgApparent;
 
 public:
-    Source(int,double);
-    cv::Mat getApparent() ;
+    Source(int,double) ;
+    cv::Mat getImage() ;
 
 private:
     void drawParallel(cv::Mat &img);
@@ -32,7 +31,7 @@ class Simulator {
 protected:
     double CHI;
     int size;
-    int sourceSize;
+    Source *source ;
     double einsteinR;
     int nterms;
 
@@ -58,10 +57,9 @@ public:
     void update();
 
     void updateXY(double, double, double, double);
-    void updateSize(double);
     void updateNterms(int);
-    void updateAll( double, double, double, double, double, int ) ;
-    void setSource(Source src) ;
+    void updateAll( double, double, double, double, int ) ;
+    void setSource(Source*) ;
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
@@ -75,8 +73,6 @@ protected:
 private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
-    void drawParallel(cv::Mat &img, int xPos, int yPos);
-    void drawSource(int begin, int end, cv::Mat &img, int xPos, int yPos);
 
 };
 
@@ -102,11 +98,12 @@ private:
     Simulator *sim = NULL ;
     int size;
     int CHI_percent;
-    int sourceSize;
+    int sourceSize ;
     int einsteinR;
     int xPosSlider;
     int yPosSlider;
     int nterms;
+    Source *source ;
 
 public:
     Window();

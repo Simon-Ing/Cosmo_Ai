@@ -52,7 +52,8 @@ int main(int, char *argv[]) {
         std::vector<int> params = {CHI_percent, einsteinR, sourceSize, X, Y };
 
         if ( (!std::count(parameters.begin(), parameters.end(), params)) ) { // check for duplicate
-            simulator.updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
+            simulator.setSource( new Source( imgsize, sourceSize ) );
+            simulator.updateAll( X, Y, einsteinR, CHI, nterms );
             std::ostringstream filename;
             filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
             cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());

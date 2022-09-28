@@ -16,15 +16,13 @@ Simulator::Simulator(int s) :
         size(s),
         CHI(0.5),
         einsteinR(size/20),
-        sourceSize(size/20),
         nterms(10)
-{ 
-    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-}
+{ }
 Simulator::Simulator() : Simulator(500) {};
 
 /* Getters for the images */
 cv::Mat Simulator::getActual() { 
+   cv::Mat imgApparent = getApparent() ;
    cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
    double phi = atan2(actualY, actualX); // Angle relative to x-axis
    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size), phi*180/PI, 1);
@@ -33,7 +31,7 @@ cv::Mat Simulator::getActual() {
    cv::warpAffine(imgApparent, imgActual, rot, cv::Size(size, size));    // crop distorted image
    return imgActual ; 
 }
-cv::Mat Simulator::getApparent() { return imgApparent ; }
+cv::Mat Simulator::getApparent() { return source->getImage() ; }
 cv::Mat Simulator::getDistorted() { return imgDistorted ; }
 
 cv::Mat Simulator::getSecondary() { 
@@ -45,12 +43,7 @@ void Simulator::update() {
 
     auto startTime = std::chrono::system_clock::now();
     
-    // Draw the Actual (Source) and Apparent Image
-    drawParallel(imgApparent, 0, 0);
-    // The source image has a Gaussian distribution with standard deviation
-    // equal to sourceSize.  See drawSource().
-    // The apparent image is the source image translated to the apparent position 
-    // and to lie on the x axis, i.e. x=r (distance from origin) and y=0.
+    cv::Mat imgApparent = getApparent() ;
 
     this->calculateAlphaBeta() ;
 
@@ -140,34 +133,6 @@ std::pair<double, double> Simulator::getDistortedPos(double r, double theta) con
 }
 
 
-/* drawParallel() split the image into chunks to draw it in parallel using drawSource() */
-void Simulator::drawParallel(cv::Mat& dst, int xPos, int yPos){
-    int n_threads = std::thread::hardware_concurrency();
-    std::vector<std::thread> threads_vec;
-    for (int i = 0; i < n_threads; i++) {
-        int begin = dst.rows / n_threads * i;
-        int end = dst.rows / n_threads * (i + 1);
-        std::thread t([begin, end, &dst, xPos, yPos, this]() { drawSource(begin, end, dst, xPos, yPos); });
-        threads_vec.push_back(std::move(t));
-    }
-    for (auto& thread : threads_vec) {
-        thread.join();
-    }
-}
-
-
-/* Draw the source image.  The sourceSize is interpreted as the standard deviation in a Gaussian distribution */
-void Simulator::drawSource(int begin, int end, cv::Mat& dst, int xPos, int yPos) {
-    for (int row = begin; row < end; row++) {
-        for (int col = 0; col < dst.cols; col++) {
-            int x = col - xPos - dst.cols/2;
-            int y = row + yPos - dst.rows/2;
-            auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0*sourceSize*sourceSize)));
-            dst.at<uchar>(row, col) = value;
-        }
-    }
-}
-
 /* Calculate n! (n factorial) */
 double factorial_(unsigned int n){
     double a = 1.0;
@@ -177,16 +142,11 @@ double factorial_(unsigned int n){
     return a;
 }
 
-void Simulator::updateSize(double siz) {
-   sourceSize = siz ;
-   update() ;
-}
 void Simulator::updateNterms(int n) {
    nterms = n ;
    update() ;
 }
-void Simulator::updateAll( double X, double Y, double er, double siz, double chi, int n) {
-   sourceSize = siz ;
+void Simulator::updateAll( double X, double Y, double er, double chi, int n) {
    nterms = n ;
    updateXY(X,Y,chi,er);
 }
@@ -214,8 +174,8 @@ void Simulator::updateXY( double X, double Y, double chi, double er ) {
     update() ;
 }
 
-void Simulator::setSource(Source src) {
-    update() ;
+void Simulator::setSource(Source *src) {
+    source = src ;
 }
 
 /* Default implementation doing nothing.

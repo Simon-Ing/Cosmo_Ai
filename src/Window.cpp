@@ -45,8 +45,9 @@ void Window::initSimulator(){
     if ( NULL != sim ) delete sim ;
     if ( 0 == mode ) sim = new PointMassSimulator(size) ;
     else sim = new SphereSimulator(size) ;
+    sim->setSource( new Source( size, sourceSize ) ) ;
     sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
-         einsteinR, sourceSize, CHI_percent / 100.0, nterms ) ;
+         einsteinR, CHI_percent / 100.0, nterms ) ;
     drawImages() ;
     std::cout << "initSimulator DONE\n" ;
 }
@@ -64,7 +65,8 @@ void Window::updateXY(int, void* data){
 }
 void Window::updateSize(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->updateSize( that->sourceSize ) ;
+    that->sim->setSource( new Source( that->size, that->sourceSize ) ) ;
+    that->sim->update() ;
     that->drawImages() ;
 }
 void Window::updateNterms(int, void* data){

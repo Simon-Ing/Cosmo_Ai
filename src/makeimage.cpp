@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
        std::cout << "Running Point Mass Simulator (mode=" << mode << ")\n" ;
        simulator = new PointMassSimulator(imgsize) ;
     }
-    simulator->updateAll( X, Y, einsteinR, sourceSize, CHI, nterms );
+    simulator->setSource( new Source( imgsize, sourceSize ) );
+    simulator->updateAll( X, Y, einsteinR, CHI, nterms );
 
     std::ostringstream filename;
     filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
