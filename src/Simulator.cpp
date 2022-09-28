@@ -143,7 +143,9 @@ std::pair<double, double> Simulator::getDistortedPos(double r, double theta) con
     double frac = (einsteinR * einsteinR * r) / (r * r + R * R + 2 * r * R * cos(theta));
     double nu1 = r*cos(theta) + frac * (r / R + cos(theta)) ;
     double nu2 = r*sin(theta) - frac * sin(theta) ;
-    return { nu1/CHI, nu2/CHI };
+    nu1 /= CHI ;
+    nu2 /= CHI ;
+    return {nu1, nu2};
 }
 
 

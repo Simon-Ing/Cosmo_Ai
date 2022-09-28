@@ -87,7 +87,9 @@ std::pair<double, double> SphereSimulator::getDistortedPos(double r, double thet
         nu2 += frac*subTerm2;
     }
     // The return value should be normalised coordinates in the source plane.
-    // We have calculated the coordinates in the lens plane (nu1,nu2).
-    return {nu1/CHI, nu2/CHI};
+    // We have calculated the coordinates in the lens plane.
+    nu1 /= CHI ;
+    nu2 /= CHI ;
+    return {nu1, nu2};
 }
 
