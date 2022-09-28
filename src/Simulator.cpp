@@ -23,11 +23,24 @@ Simulator::Simulator() : Simulator(500) {};
 /* Getters for the images */
 cv::Mat Simulator::getActual() { 
    cv::Mat imgApparent = getApparent() ;
-   cv::Mat imgActual(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-   double phi = atan2(actualY, actualX); // Angle relative to x-axis
-   cv::Mat rot = cv::getRotationMatrix2D(cv::Point(size, size), phi*180/PI, 1);
-   rot.at<uchar>(0,2) = actualX ;
-   rot.at<uchar>(1,2) = actualY ;
+   cv::Mat imgActual = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
+
+   // (x0,y0) is the centre of the image in pixel coordinates 
+   double x0 = imgApparent.cols/2 ;
+   double y0 = imgApparent.rows/2 ;
+
+   cv::Point2f srcTri[3], dstTri[3];
+   srcTri[0] = cv::Point2f( x0, y0 );
+   dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
+   srcTri[1] = cv::Point2f( x0, y0+actualAbs );
+   dstTri[1] = cv::Point2f( x0, y0 );
+   srcTri[2] = cv::Point2f( x0+actualAbs, y0+actualAbs );
+   dstTri[2] = cv::Point2f( x0+actualY, y0+actualX );
+   cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
+
+   std::cout << "(x,y) = (" << (-actualY,actualX) << ")\n" ;
+   std::cout << rot << "\n" ;
+
    cv::warpAffine(imgApparent, imgActual, rot, cv::Size(size, size));    // crop distorted image
    return imgActual ; 
 }
