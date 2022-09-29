@@ -9,14 +9,14 @@
 
 double factorial_(unsigned int n);
 
-SphereSimulator::SphereSimulator() :
-   Simulator::Simulator()
+SphereLens::SphereLens() :
+   LensModel::LensModel()
 { 
-    std::cout << "Instantiating SphereSimulator ... \n" ;
+    std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
 
-void SphereSimulator::initAlphasBetas() {
+void SphereLens::initAlphasBetas() {
 
     auto x = SymEngine::symbol("x");
     auto y = SymEngine::symbol("y");
@@ -50,9 +50,9 @@ void SphereSimulator::initAlphasBetas() {
     }
 }
 
-void SphereSimulator::calculateAlphaBeta() {
+void SphereLens::calculateAlphaBeta() {
     double GAMMA = einsteinR/2.0;
-    std::cout << "SphereSimulator calculateAlphaBeta\n" ;
+    std::cout << "SphereLens calculateAlphaBeta\n" ;
 
     // calculate all amplitudes for given X, Y, GAMMA, CHI
     // This is done here to before the code is parallellised
@@ -65,7 +65,7 @@ void SphereSimulator::calculateAlphaBeta() {
 }
 
 // Calculate the main formula for the SIS model
-std::pair<double, double> SphereSimulator::getDistortedPos(double r, double theta) const {
+std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) const {
     double nu1 = r*cos(theta) ;
     double nu2 = r*sin(theta) ;
 

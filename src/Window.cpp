@@ -43,9 +43,9 @@ void Window::initGui(){
 void Window::initSimulator(){
     std::cout << "initSimulator mode=" << mode << "\n" ;
     if ( NULL != sim ) delete sim ;
-    if ( 0 == mode ) sim = new PointMassSimulator() ;
-    else sim = new SphereSimulator() ;
-    sim->setSource( new Source( size, sourceSize ) ) ;
+    if ( 0 == mode ) sim = new PointMassLens() ;
+    else sim = new SphereLens() ;
+    sim->setSource( new SphericalSource( size, sourceSize ) ) ;
     sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
          einsteinR, CHI_percent / 100.0, nterms ) ;
     drawImages() ;
@@ -65,7 +65,7 @@ void Window::updateXY(int, void* data){
 }
 void Window::updateSize(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->setSource( new Source( that->size, that->sourceSize ) ) ;
+    that->sim->setSource( new SphericalSource( that->size, that->sourceSize ) ) ;
     that->sim->update() ;
     that->drawImages() ;
 }

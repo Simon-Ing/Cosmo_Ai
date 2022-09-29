@@ -11,7 +11,7 @@
 
 int main(int, char *argv[]) {
 
-    Simulator simulator;
+    LensModel *simulator;
 
     int nterms = 16 ;
     int CHI_percent ;
@@ -23,7 +23,7 @@ int main(int, char *argv[]) {
     std::string simname = std::string(argv[3]);
     int n_params = atoi(argv[4]);
 
-    simulator = PointMassSimulator() ;
+    simulator = new PointMassLens() ;
 
     double xyrange = imgsize/2.5 ;
 
@@ -52,12 +52,12 @@ int main(int, char *argv[]) {
         std::vector<int> params = {CHI_percent, einsteinR, sourceSize, X, Y };
 
         if ( (!std::count(parameters.begin(), parameters.end(), params)) ) { // check for duplicate
-            simulator.setSource( new Source( imgsize, sourceSize ) );
-            simulator.updateAll( X, Y, einsteinR, CHI, nterms );
+            simulator->setSource( new SphericalSource( imgsize, sourceSize ) );
+            simulator->updateAll( X, Y, einsteinR, CHI, nterms );
             std::ostringstream filename;
             filename << CHI_percent << "," << einsteinR << "," << sourceSize << "," << X << "," << Y << ".png";
-            cv::imwrite( simname + "/images/" + filename.str(), simulator.getDistorted());
-            cv::imwrite( simname + "/actual/" + filename.str(), simulator.getActual());
+            cv::imwrite( simname + "/images/" + filename.str(), simulator->getDistorted());
+            cv::imwrite( simname + "/actual/" + filename.str(), simulator->getActual());
             parameters.push_back( params ) ;
         }
         if (parameters.size() % 25 == 0){

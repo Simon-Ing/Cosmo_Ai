@@ -6,20 +6,17 @@
  * of a range of source models.
  */
 
-#include "Simulator.h"
+#include "Source.h"
 #include <thread>
 
-Source::Source(int sz,double sig) :
-        size(sz),
-        sigma(sig)
+Source::Source(int sz) :
+        size(sz)
 { 
-    // imgActual = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
-    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0));
+    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0)) ;
     drawParallel( imgApparent ) ;
 }
 
 /* Getters for the images */
-// cv::Mat Source::getActual() { return imgActual ; }
 cv::Mat Source::getImage() { return imgApparent ; }
 
 /* drawParallel() split the image into chunks to draw it in parallel using drawSource() */
@@ -34,19 +31,6 @@ void Source::drawParallel(cv::Mat& dst){
     }
     for (auto& thread : threads_vec) {
         thread.join();
-    }
-}
-
-
-/* Draw the source image.  The sourceSize is interpreted as the standard deviation in a Gaussian distribution */
-void Source::drawSource(int begin, int end, cv::Mat& dst) {
-    for (int row = begin; row < end; row++) {
-        for (int col = 0; col < dst.cols; col++) {
-            int x = col - dst.cols/2;
-            int y = row - dst.rows/2;
-            auto value = (uchar)round(255 * exp((-x * x - y * y) / (2.0*sigma*sigma)));
-            dst.at<uchar>(row, col) = value;
-        }
     }
 }
 

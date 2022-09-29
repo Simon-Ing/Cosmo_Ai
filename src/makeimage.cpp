@@ -20,7 +20,7 @@ std::string convertToString(char* a)
 
 int main(int argc, char *argv[]) {
 
-    Simulator *simulator ;
+    LensModel *simulator ;
 
     // Set Defaults
     int nterms = 16 ;
@@ -58,13 +58,13 @@ int main(int argc, char *argv[]) {
     CHI = CHI_percent/100.0 ;
 
     if ( mode ) {
-       std::cout << "Running SphereSimulator (mode=" << mode << ")\n" ;
-       simulator = new SphereSimulator() ;
+       std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
+       simulator = new SphereLens() ;
     } else {
-       std::cout << "Running Point Mass Simulator (mode=" << mode << ")\n" ;
-       simulator = new PointMassSimulator() ;
+       std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
+       simulator = new PointMassLens() ;
     }
-    simulator->setSource( new Source( imgsize, sourceSize ) );
+    simulator->setSource( new SphericalSource( imgsize, sourceSize ) );
     simulator->updateAll( X, Y, einsteinR, CHI, nterms );
 
     std::ostringstream filename;

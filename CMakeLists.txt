@@ -20,12 +20,16 @@ conan_cmake_run(REQUIRES
 
 add_executable(makeimage src/makeimage.cpp)
 add_executable(Datagen src/Data_generator.cpp)
-add_executable(Simulator_2 src/GL_Simulator_2.cpp)
-add_library(SimLib src/Simulator.cpp src/Window.cpp src/PointMassSimulator.cpp src/SphereSimulator.cpp src/simaux.cpp src/Source.cpp)
+add_executable(Simulator src/Simulator.cpp)
+add_library(SimLib 
+   src/simaux.cpp 
+   src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
+   src/LensModel.cpp src/PointMassLens.cpp src/SphereLens.cpp 
+   src/Window.cpp)
 
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
 target_link_libraries(Datagen ${CONAN_LIBS} SimLib)
-target_link_libraries(Simulator_2 ${CONAN_LIBS} SimLib)
+target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
 target_link_libraries(SimLib ${CONAN_LIBS})
 
 if(${UNIX})

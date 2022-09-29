@@ -1,6 +1,7 @@
 #ifndef SPHERICAL_SIMULATOR_H
 #define SPHERICAL_SIMULATOR_H
 
+#include "Source.h"
 #include "opencv2/opencv.hpp"
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
@@ -9,39 +10,7 @@ using namespace SymEngine;
 
 #define PI 3.14159265358979323846
 
-class Source {
-
-private:
-    double sigma ;
-    cv::Mat imgApparent;
-
-protected:
-    int size ;
-
-public:
-    Source(int,double) ;
-    cv::Mat getImage() ;
-
-private:
-    void drawParallel(cv::Mat &img);
-    virtual void drawSource(int begin, int end, cv::Mat &img);
-};
-
-class EllipsoidSource {
-
-private:
-    double sigma1, sigma2 ;
-
-protected:
-    int size ;
-    cv::Mat imgApparent;
-
-public:
-    EllipsoidSource(int,double,double) ;
-
-};
-
-class Simulator {
+class LensModel {
 
 protected:
     double CHI;
@@ -66,7 +35,7 @@ protected:
     std::array<std::array<double, 52>, 51> betas_val;
 
 public:
-    Simulator();
+    LensModel();
     void update();
 
     void updateXY(double, double, double, double);
@@ -80,8 +49,8 @@ public:
     cv::Mat getSecondary() ; // Made for testing
 
 protected:
-    virtual void calculateAlphaBeta();
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual void calculateAlphaBeta() ;
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0;
 
 private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
@@ -89,13 +58,15 @@ private:
 
 };
 
-class PointMassSimulator : public Simulator { 
-  public:
-    using Simulator::Simulator ;
+class PointMassLens : public LensModel { 
+public:
+    using LensModel::LensModel ;
+protected:
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
 };
-class SphereSimulator : public Simulator { 
+class SphereLens : public LensModel { 
   public:
-    SphereSimulator();
+    SphereLens();
   protected:
     void calculateAlphaBeta();
     std::pair<double, double> getDistortedPos(double r, double theta) const;
@@ -107,7 +78,7 @@ class SphereSimulator : public Simulator {
 class Window {
 private:
     int mode;
-    Simulator *sim = NULL ;
+    LensModel *sim = NULL ;
     int size;
     int CHI_percent;
     int sourceSize ;

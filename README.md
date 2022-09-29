@@ -93,13 +93,16 @@ Three source files are used
 ## Refactored Components
 
 + Simulators
-    + `Simulator.cpp` is the base class; in practice it also contains the code for the point mass model,
-      but this may change.
-    + `PointMassSimulator.cpp` simulates the point mass model
-    + `SphereSimulator.cpp` simulates the SIS model
+    + `LensModel.cpp` is the abstract base class.
+    + `PointMassLens.cpp` simulates the point mass model
+    + `SphereLens.cpp` simulates the SIS model
++ Source Models
+    + `Source.cpp` is the abstract base class.
+    + `SphericalSource.cpp` is standard Guassian model
+    + `EllipsoidSource.cpp` is an ellipsoid Guassian model
 + `Window.cpp` is the GUI
 + `Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
-+ `GL_Simulator_2.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
++ `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
 
 The data generator has not been refactored and does not work at present.
 The code for file output has been retained in the simulator class, but will be moved when
