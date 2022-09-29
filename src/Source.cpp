@@ -7,13 +7,7 @@
  */
 
 #include "Simulator.h"
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
 #include <thread>
-#include <symengine/parser.h>
-#include <fstream>
-
-double factorial_(unsigned int n);
 
 Source::Source(int sz,double sig) :
         size(sz),

@@ -11,10 +11,12 @@ using namespace SymEngine;
 
 class Source {
 
-protected:
+private:
     double sigma ;
-    int size ;
     cv::Mat imgApparent;
+
+protected:
+    int size ;
 
 public:
     Source(int,double) ;
@@ -23,6 +25,19 @@ public:
 private:
     void drawParallel(cv::Mat &img);
     virtual void drawSource(int begin, int end, cv::Mat &img);
+};
+
+class EllipsoidSource {
+
+private:
+    double sigma1, sigma2 ;
+
+protected:
+    int size ;
+    cv::Mat imgApparent;
+
+public:
+    EllipsoidSource(int,double,double) ;
 
 };
 
