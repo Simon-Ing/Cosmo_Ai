@@ -34,3 +34,6 @@ void Source::drawParallel(cv::Mat& dst){
     }
 }
 
+void Source::drawSource(int begin, int end, cv::Mat& dst) {
+   std::cout << "ERROR drawSource\n" ;
+}

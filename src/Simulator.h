@@ -50,7 +50,7 @@ public:
 
 protected:
     virtual void calculateAlphaBeta() ;
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0;
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0 ;
 
 private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
@@ -68,8 +68,8 @@ class SphereLens : public LensModel {
   public:
     SphereLens();
   protected:
-    void calculateAlphaBeta();
-    std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual void calculateAlphaBeta();
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
   private:
     void initAlphasBetas();
 };

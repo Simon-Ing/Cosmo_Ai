@@ -182,3 +182,4 @@ void LensModel::setSource(Source *src) {
 /* Default implementation doing nothing.
  * This is correct for any subclass that does not need the alpha/beta tables. */
 void LensModel::calculateAlphaBeta() { }
+
