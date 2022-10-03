@@ -25,15 +25,17 @@ int main(int argc, char *argv[]) {
     // Set Defaults
     int nterms = 16 ;
     int CHI_percent=50 ;
-    int einsteinR=10, X=20, Y=0, sourceSize=10 ;
+    int einsteinR=10, X=20, Y=0, sourceSize=10, sigma2 = 10 ;
+    double theta = 0 ;
     int imgsize = 512 ;
     double CHI ;
     std::string simname = "test" ;
-    int mode = 0, refmode = 0 ;
+    int mode = 0, srcmode = 0, refmode = 0 ;
     int opt ;
     cv::Mat im ;
+    Source *src ;
 
-    while ( (opt = getopt(argc,argv,"SN:x:y:s:n:X:E:I:L")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"LS:N:x:y:s:2:t:n:X:E:I:R")) > -1 ) {
        if ( optarg ) {
           std::cout << "Option " << opt << " - " << optarg << "\n" ;
        } else {
@@ -43,13 +45,16 @@ int main(int argc, char *argv[]) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
           case 's': sourceSize = atoi(optarg) ; break ;
+          case '2': sigma2 = atoi(optarg) ; break ;
+          case 't': theta = PI*atoi(optarg)/180 ; break ;
           case 'X': CHI_percent = atoi(optarg) ; break ;
           case 'E': einsteinR = atoi(optarg) ; break ;
           case 'n': nterms = atoi(optarg) ; break ;
           case 'I': imgsize = atoi(optarg) ; break ;
           case 'N': simname = convertToString( optarg ) ; break ;
-          case 'S': ++mode ; break ;
-          case 'L': ++refmode ; break ;
+          case 'L': ++mode ; break ;
+          case 'S': srcmode = optarg[0] ; break ;
+          case 'R': ++refmode ; break ;
        }
     }
 
@@ -64,7 +69,17 @@ int main(int argc, char *argv[]) {
        std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
        simulator = new PointMassLens() ;
     }
-    simulator->setSource( new SphericalSource( imgsize, sourceSize ) );
+    switch ( srcmode ) {
+       case 'e': src = new EllipsoidSource( imgsize, sourceSize, sigma2, theta ) ;
+                 break ;
+       case 's':
+       default: 
+                 src = new SphericalSource( imgsize, sourceSize ) ;
+                 break ;
+
+
+    }
+    simulator->setSource( src ) ;
     simulator->updateAll( X, Y, einsteinR, CHI, nterms );
 
     std::ostringstream filename;

@@ -13,11 +13,17 @@ Source::Source(int sz) :
         size(sz)
 { 
     imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0)) ;
-    drawParallel( imgApparent ) ;
+    drawn = 0 ;
 }
 
 /* Getters for the images */
-cv::Mat Source::getImage() { return imgApparent ; }
+cv::Mat Source::getImage() { 
+   if ( ! drawn ) {
+      drawParallel( imgApparent ) ;
+      drawn = 1 ;
+   }
+   return imgApparent ; 
+}
 
 /* drawParallel() split the image into chunks to draw it in parallel using drawSource() */
 void Source::drawParallel(cv::Mat& dst){
@@ -26,7 +32,7 @@ void Source::drawParallel(cv::Mat& dst){
     for (int i = 0; i < n_threads; i++) {
         int begin = dst.rows / n_threads * i;
         int end = dst.rows / n_threads * (i + 1);
-        std::thread t([begin, end, &dst, this]() { drawSource(begin, end, dst ); });
+        std::thread t([begin, end, &dst, this]() { this->drawSource(begin, end, dst ); });
         threads_vec.push_back(std::move(t));
     }
     for (auto& thread : threads_vec) {
@@ -34,6 +40,6 @@ void Source::drawParallel(cv::Mat& dst){
     }
 }
 
-void Source::drawSource(int begin, int end, cv::Mat& dst) {
+void Source::drawSource(int begin, int end, cv::Mat &dst) {
    std::cout << "ERROR drawSource\n" ;
 }

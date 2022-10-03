@@ -7,10 +7,6 @@
 #include <symengine/parser.h>
 #include <fstream>
 
-#define PI 3.14159265358979323846
-
-double factorial_(unsigned int n);
-
 Window::Window() :
         size(512),
         CHI_percent(50),

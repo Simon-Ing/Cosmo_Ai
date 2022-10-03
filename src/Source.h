@@ -9,13 +9,15 @@ private:
     cv::Mat imgApparent;
     int size ;
 
+protected:
+    int drawn ;
 public:
     Source(int) ;
     cv::Mat getImage() ;
 
-private:
+protected:
     void drawParallel(cv::Mat &img);
-    virtual void drawSource(int begin, int end, cv::Mat &img) ;
+    virtual void drawSource(int, int, cv::Mat &) ;
 };
 
 class SphericalSource : public Source {
@@ -26,8 +28,8 @@ private:
 public:
     SphericalSource(int,double) ;
 
-private:
-    virtual void drawSource(int begin, int end, cv::Mat &img);
+protected:
+    virtual void drawSource(int, int, cv::Mat &) ;
 };
 
 class EllipsoidSource : public Source {
@@ -42,8 +44,8 @@ public:
     EllipsoidSource(int,double,double) ;
     EllipsoidSource(int,double,double,double) ;
 
-private:
-    virtual void drawSource(int begin, int end, cv::Mat &img);
+protected:
+    virtual void drawSource(int, int, cv::Mat &) ;
 
 };
 
