@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
     }
     switch ( srcmode ) {
        case 'e':
-          std::cout << "Spherical source\n" ;
+          std::cout << "Ellipsoid source, theta = " << theta << "\n" ;
           src = new EllipsoidSource( imgsize, sourceSize, sigma2, theta ) ;
           break ;
        case 's':
@@ -102,26 +102,20 @@ int main(int argc, char *argv[]) {
     // if ( refmode ) refLines(im) ; // This does not work for some obscure reason
     cv::imwrite( "actual-" + simname + filename.str(), im );
 
-    im = simulator->getApparent() ;
-    if ( refmode ) refLines(im) ;
-    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
-    std::cout << "Image type " << im.type() << "\n" ;
-    cv::imwrite( "apparent-" + simname + filename.str(), im );
-
     im = simulator->getSecondary() ;
     std::cout << "Calculated Secondary image\n" ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Image type " << im.type() << "\n" ;
     if ( refmode ) refLines(im) ;
     std::cout << "Added axes box\n" ;
-    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
-    std::cout << "Image type " << im.type() << "\n" ;
     cv::imwrite( "secondary-" + simname + filename.str(), im );
     std::cout << "Written to file\n" ;
 
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
-    cv::imwrite( "apparent2-" + simname + filename.str(), im );
+    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "Image type " << im.type() << "\n" ;
+    cv::imwrite( "apparent-" + simname + filename.str(), im );
 }
 
 

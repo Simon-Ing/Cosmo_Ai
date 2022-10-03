@@ -16,7 +16,7 @@ public:
     cv::Mat getImage() ;
 
 protected:
-    void drawParallel(cv::Mat &img);
+    virtual void drawParallel(cv::Mat &img) ;
     virtual void drawSource(int, int, cv::Mat &) = 0 ;
 };
 
@@ -46,6 +46,7 @@ public:
 
 protected:
     virtual void drawSource(int, int, cv::Mat &) ;
+    virtual void drawParallel(cv::Mat &img) ;
 
 };
 
