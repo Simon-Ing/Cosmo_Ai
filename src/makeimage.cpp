@@ -70,12 +70,15 @@ int main(int argc, char *argv[]) {
        simulator = new PointMassLens() ;
     }
     switch ( srcmode ) {
-       case 'e': src = new EllipsoidSource( imgsize, sourceSize, sigma2, theta ) ;
-                 break ;
+       case 'e':
+          std::cout << "Spherical source\n" ;
+          src = new EllipsoidSource( imgsize, sourceSize, sigma2, theta ) ;
+          break ;
        case 's':
        default: 
-                 src = new SphericalSource( imgsize, sourceSize ) ;
-                 break ;
+          std::cout << "Spherical source\n" ;
+          src = new SphericalSource( imgsize, sourceSize ) ;
+          break ;
 
 
     }
@@ -94,8 +97,11 @@ int main(int argc, char *argv[]) {
     cv::imwrite( "image-" + simname + filename.str(), im );
 
     im = simulator->getActual() ;
-    if ( refmode ) refLines(im) ;
+    std::cout << "Actual Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
+    std::cout << "Actual Image type " << im.type() << "\n" ;
+    // if ( refmode ) refLines(im) ;
     cv::imwrite( "actual-" + simname + filename.str(), im );
+
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
