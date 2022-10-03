@@ -17,7 +17,7 @@ public:
 
 protected:
     void drawParallel(cv::Mat &img);
-    virtual void drawSource(int, int, cv::Mat &) ;
+    virtual void drawSource(int, int, cv::Mat &) = 0 ;
 };
 
 class SphericalSource : public Source {
