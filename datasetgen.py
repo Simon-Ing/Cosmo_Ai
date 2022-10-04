@@ -8,18 +8,20 @@ import time
 
 from random import randint
 
-n = 3
+n = 300
 
 fn = "dataset.csv"
 
-def getline(idx,chi=50,nterms=16):
+def getline(idx,chi=0,nterms=16):
+    if 0 == chi:
+        chi = randint(30,70)
     srcmode = "s"
     lensmode = "p"
     x = randint(0,100)
     y = randint(0,100)
     einsteinR = randint(0,50)
-    sigma = randint(1,100)
-    sigma2 = randint(1,100)
+    sigma = randint(1,50)
+    sigma2 = randint(1,50)
     theta = randint(0,179)
     return f'{idx:04},{srcmode},{lensmode},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
 
