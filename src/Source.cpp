@@ -12,7 +12,7 @@
 Source::Source(int sz) :
         size(sz)
 { 
-    imgApparent = cv::Mat(size, size, CV_8UC3, cv::Scalar(0, 0, 0)) ;
+    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0)) ;
     drawn = 0 ;
 }
 
