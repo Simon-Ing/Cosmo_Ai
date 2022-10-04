@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     im = simulator->getActual() ;
     std::cout << "Actual Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Actual Image type " << im.type() << "\n" ;
-    // if ( refmode ) refLines(im) ; // This does not work for some obscure reason
+    if ( refmode ) refLines(im) ; // This does not work for some obscure reason
     cv::imwrite( "actual-" + simname + filename.str(), im );
 
     im = simulator->getSecondary() ;
