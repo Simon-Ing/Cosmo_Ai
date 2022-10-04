@@ -434,3 +434,4 @@ graph_info.json
 *.aux
 *.pdf
 *.png
+*.csv
