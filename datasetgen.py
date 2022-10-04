@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python2
 # Generate a set of lens/source parameters
 
 import multiprocessing as mp
@@ -8,7 +8,7 @@ import time
 
 from random import randint
 
-n = 300
+n = 100
 
 fn = "dataset.csv"
 
@@ -17,13 +17,13 @@ def getline(idx,chi=0,nterms=16):
         chi = randint(30,70)
     srcmode = "s"
     lensmode = "p"
-    x = randint(0,100)
-    y = randint(0,100)
-    einsteinR = randint(0,50)
-    sigma = randint(1,50)
-    sigma2 = randint(1,50)
+    x = randint(-75,75)
+    y = randint(-75,75)
+    einsteinR = randint(10,50)
+    sigma = randint(1,60)
+    sigma2 = randint(1,40)
     theta = randint(0,179)
-    return f'{idx:04},{srcmode},{lensmode},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
+    return f'{idx:04},{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
 
 
 def main():
