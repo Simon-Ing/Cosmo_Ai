@@ -89,19 +89,22 @@ int main(int argc, char *argv[]) {
     simulator->setSource( src ) ;
     simulator->updateAll( X, Y, einsteinR, CHI, nterms );
 
+    std::ostringstream filename;
+    filename << ".png";
+
     im = simulator->getDistorted() ;
     std::cout << "D1 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "D1 Image type " << im.type() << "\n" ;
     if ( refmode ) refLines(im) ;
     std::cout << "D2 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "D2 Image type " << im.type() << "\n" ;
-    cv::imwrite( "image-" + simname, im );
+    cv::imwrite( "image-" + simname + filename.str(), im );
 
     im = simulator->getActual() ;
     std::cout << "Actual Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Actual Image type " << im.type() << "\n" ;
     if ( refmode ) refLines(im) ; // This does not work for some obscure reason
-    cv::imwrite( "actual-" + simname, im );
+    cv::imwrite( "actual-" + simname + filename.str(), im );
 
     im = simulator->getSecondary() ;
     std::cout << "Calculated Secondary image\n" ;
@@ -109,14 +112,14 @@ int main(int argc, char *argv[]) {
     std::cout << "Image type " << im.type() << "\n" ;
     if ( refmode ) refLines(im) ;
     std::cout << "Added axes box\n" ;
-    cv::imwrite( "secondary-" + simname, im );
+    cv::imwrite( "secondary-" + simname + filename.str(), im );
     std::cout << "Written to file\n" ;
 
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     std::cout << "Image type " << im.type() << "\n" ;
-    cv::imwrite( "apparent-" + simname, im );
+    cv::imwrite( "apparent-" + simname + filename.str(), im );
 }
 
 
