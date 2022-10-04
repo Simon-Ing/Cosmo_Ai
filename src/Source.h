@@ -5,15 +5,14 @@
 
 class Source {
 
-private:
+protected:
     cv::Mat imgApparent;
     int size ;
-
-protected:
     int drawn ;
+
 public:
     Source(int) ;
-    cv::Mat getImage() ;
+    virtual cv::Mat getImage() ;
 
 protected:
     virtual void drawParallel(cv::Mat &img) ;
@@ -57,6 +56,7 @@ public:
     TriangleSource(int,double,double) ;
 
 protected:
+    virtual cv::Mat getImage() ;
     virtual void drawSource(int, int, cv::Mat &) ;
     virtual void drawParallel(cv::Mat &img) ;
 
