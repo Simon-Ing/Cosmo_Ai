@@ -127,8 +127,11 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             // If (x', y') within source, copy value to imgDistorted
             if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
-                auto val = src.at<uchar>(row_, col_);
-                dst.at<uchar>(row, col) = val;
+               if ( 3 == src.channels() ) {
+                  dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>(row_, col_);
+               } else {
+                  dst.at<uchar>(row, col) = src.at<uchar>(row_, col_);
+               }
             }
         }
     }
