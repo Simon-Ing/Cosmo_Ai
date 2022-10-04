@@ -7,15 +7,29 @@ void refLines(cv::Mat& target) {
     int rsize = target.rows;
     int csize = target.cols;
     std::cout << "refLines " << rsize << "x" << csize << "\n" ;
-    for (int i = 0; i < rsize ; i++) {
-        target.at<cv::Vec3b>(i, csize / 2) = {60, 60, 60};
-        target.at<cv::Vec3b>(i, csize - 1) = {255, 255, 255};
-        target.at<cv::Vec3b>(i, 0) = {255, 255, 255};
-    }
-    for (int i = 0; i < csize ; i++) {
-        target.at<cv::Vec3b>(rsize / 2 - 1, i) = {60, 60, 60};
-        target.at<cv::Vec3b>(rsize - 1, i) = {255, 255, 255};
-        target.at<cv::Vec3b>(0, i) = {255, 255, 255};
-    }
+    cv::line( target, cv::Point( 0, csize /2 ),
+                      cv::Point( rsize, csize /2 ),
+                      {60, 60, 60},
+                      1 ) ;
+    cv::line( target, cv::Point( rsize/2-1, 0 ),
+                      cv::Point( rsize/2-1, csize ),
+                      {60, 60, 60},
+                      1 ) ;
+    cv::line( target, cv::Point( 0, csize-1 ),
+                      cv::Point( rsize, csize-1 ),
+                      {255, 255, 255},
+                      1 ) ;
+    cv::line( target, cv::Point( rsize-1, 0 ),
+                      cv::Point( rsize-1, csize ),
+                      {255, 255, 255},
+                      1 ) ;
+    cv::line( target, cv::Point( 0, 0 ),
+                      cv::Point( rsize, 0 ),
+                      {255, 255, 255},
+                      1 ) ;
+    cv::line( target, cv::Point( 0, 0 ),
+                      cv::Point( 0, csize ),
+                      {255, 255, 255},
+                      1 ) ;
 }
 
