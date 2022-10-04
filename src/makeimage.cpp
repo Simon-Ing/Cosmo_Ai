@@ -26,16 +26,16 @@ int main(int argc, char *argv[]) {
     int nterms = 16 ;
     int CHI_percent=50 ;
     int einsteinR=10, X=20, Y=0, sourceSize=10, sigma2 = 10 ;
-    double theta = 0 ;
     int imgsize = 512 ;
+    double theta = 0 ;
     double CHI ;
     std::string simname = "test" ;
-    int mode = 0, srcmode = 0, refmode = 0 ;
+    int mode = 'p', srcmode = 's', refmode = 0 ;
     int opt ;
     cv::Mat im ;
     Source *src ;
 
-    while ( (opt = getopt(argc,argv,"LS:N:x:y:s:2:t:n:X:E:I:R")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"L:S:N:x:y:s:2:t:n:X:E:I:R")) > -1 ) {
        if ( optarg ) {
           std::cout << "Option " << opt << " - " << optarg << "\n" ;
        } else {
@@ -52,9 +52,10 @@ int main(int argc, char *argv[]) {
           case 'n': nterms = atoi(optarg) ; break ;
           case 'I': imgsize = atoi(optarg) ; break ;
           case 'N': simname = convertToString( optarg ) ; break ;
-          case 'L': ++mode ; break ;
+          case 'L': mode = optarg[0] ; break ;
           case 'S': srcmode = optarg[0] ; break ;
           case 'R': ++refmode ; break ;
+          case 'Z': imgsize = atoi(optarg) ; break ;
        }
     }
 
@@ -62,12 +63,16 @@ int main(int argc, char *argv[]) {
 
     CHI = CHI_percent/100.0 ;
 
-    if ( mode ) {
-       std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
-       simulator = new SphereLens() ;
-    } else {
-       std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
-       simulator = new PointMassLens() ;
+    switch ( mode ) {
+       case 's':
+         std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
+         simulator = new SphereLens() ;
+         break ;
+       case 'p':
+       default:
+         std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
+         simulator = new PointMassLens() ;
+         break ;
     }
     switch ( srcmode ) {
        case 'e':
@@ -83,9 +88,8 @@ int main(int argc, char *argv[]) {
           std::cout << "Spherical source\n" ;
           src = new SphericalSource( imgsize, sourceSize ) ;
           break ;
-
-
     }
+
     simulator->setSource( src ) ;
     simulator->updateAll( X, Y, einsteinR, CHI, nterms );
 
