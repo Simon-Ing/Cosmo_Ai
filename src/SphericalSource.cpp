@@ -1,10 +1,6 @@
 /* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> */
 
-/* The Source class implements the source model for the gravitational lensing simulator.
- * Currently it implements a Spherical, Gaussian mass,
- * It should be turned into an abstract class, with subclasses for each
- * of a range of source models.
- */
+/* The SphericalSource class implements a a Spherical, Gaussian mass, */
 
 #include "Source.h"
 #include <thread>
