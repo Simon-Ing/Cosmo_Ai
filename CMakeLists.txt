@@ -24,6 +24,7 @@ add_executable(Simulator src/Simulator.cpp)
 add_library(SimLib 
    src/simaux.cpp 
    src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
+   src/TriangleSource.cpp
    src/LensModel.cpp src/PointMassLens.cpp src/SphereLens.cpp 
    src/Window.cpp)
 

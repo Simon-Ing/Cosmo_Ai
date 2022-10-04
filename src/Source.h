@@ -37,12 +37,24 @@ class EllipsoidSource : public Source {
 private:
     double sigma1, sigma2, theta ;
 
-protected:
-    int size ;
-
 public:
     EllipsoidSource(int,double,double) ;
     EllipsoidSource(int,double,double,double) ;
+
+protected:
+    virtual void drawSource(int, int, cv::Mat &) ;
+    virtual void drawParallel(cv::Mat &img) ;
+
+};
+
+class TriangleSource : public Source {
+
+private:
+    double sigma, theta ;
+
+public:
+    TriangleSource(int,double) ;
+    TriangleSource(int,double,double) ;
 
 protected:
     virtual void drawSource(int, int, cv::Mat &) ;

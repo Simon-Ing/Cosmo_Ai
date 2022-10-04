@@ -74,6 +74,10 @@ int main(int argc, char *argv[]) {
           std::cout << "Ellipsoid source, theta = " << theta << "\n" ;
           src = new EllipsoidSource( imgsize, sourceSize, sigma2, theta ) ;
           break ;
+       case 't':
+          std::cout << "Triangle source, theta = " << theta << "\n" ;
+          src = new TriangleSource( imgsize, sourceSize, theta ) ;
+          break ;
        case 's':
        default: 
           std::cout << "Spherical source\n" ;
