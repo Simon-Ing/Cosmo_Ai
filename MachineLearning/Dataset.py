@@ -17,12 +17,11 @@ class CosmoDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        img_name = os.path.join(self.imgdir,
-                                self.frame.iloc[idx, 0])
-        image = io.imread(img_name)
-        landmarks = self.landmarks_frame.iloc[idx, 1:]
-        landmarks = np.array([landmarks])
-        landmarks = landmarks.astype('float').reshape(-1, 2)
-        sample = {'image': image, 'landmarks': landmarks}
+        fn = os.path.join(self.imgdir,
+                                self.frame.iloc[idx, 1])
+        image = io.imread(fn)
+        targets = self.frame.iloc[idx, 4:]
+        targets = np.array([targets])
+        targets = targets.astype('float')
 
-        return sample
+        return {'image': image, 'target': landmarks}

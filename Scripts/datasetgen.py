@@ -26,9 +26,9 @@ def getline(idx,chi=0,nterms=16):
     theta = randint(0,179)
     srcmode = srcmodes[randint(0,len(srcmodes)-1)]
     lensmode = lensmodes[randint(0,len(lensmodes)-1)]
-    return f'"{idx:04}",{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
+    return f'"{idx:04}",image-{idx:04}.png,{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
 
-header = "index,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms\n"
+header = "index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms\n"
 
 def main():
     with open(fn, 'w') as f:
