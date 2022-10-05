@@ -24,6 +24,8 @@ device = cuda_if_available()  # Use cuda if available
 
 # Initialize your network, loss function, optimizer and scheduler
 model = Inception3().to(device)
+# model = torch.nn.DataParallel(model)
+
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
@@ -107,3 +109,4 @@ print(message)
 
 # Save your model if you want to
 save_model(model)
+# torch.save(model.state_dict(), "Models/save2")
