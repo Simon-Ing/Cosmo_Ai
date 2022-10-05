@@ -32,9 +32,11 @@ scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
 
 
 # Load a dataset for training and one for verification
-train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size, folder="train", gen_new=gen_new_train)
+train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size,
+                                 folder="train", gen_new=gen_new_train)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size, folder="test", gen_new=gen_new_test)
+test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size,
+                                folder="test", gen_new=gen_new_test)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 # Load from checkpoint if desired:
@@ -79,9 +81,10 @@ try:
         # Test network for each epoch
         model.eval()
         loss = test_network(test_loader, model, criterion, device, print_results=False)
-        print(f"\nEpoch: {epoch+1}, Loss: {loss} lr: {optimizer.state_dict()['param_groups'][0]['lr']}, time: {time.time() - timer}\n")
+        print(f"\nEpoch: {epoch+1}, Loss: {loss} "
+              +"lr: {optimizer.state_dict()['param_groups'][0]['lr']}, time: {time.time() - timer}\n")
         
-        # Save checpoint
+        # Save checkpoint
         if (epoch % 20 == 0) and (epoch > 0):
             autosave_path = "Models/autosave/" + "autosave_epoch" + str(epoch)
             torch.save({
@@ -99,13 +102,10 @@ except TypeError:
 
 # Test network after training
 loss = test_network(test_loader, model, criterion, device, print_results=True)
-message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\nlearning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}'
+message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\n"
+          +"learning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}'
 
 print(message)
-
-
-# send_email('simon.ing.89@gmail.com', message)
-
 
 # Save your model if you want to
 save_model(model)
