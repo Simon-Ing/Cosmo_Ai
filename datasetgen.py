@@ -8,7 +8,7 @@ import time
 
 from random import randint
 
-n = 40
+n = 300
 
 fn = "dataset.csv"
 srcmodes = "e"
