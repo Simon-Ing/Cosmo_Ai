@@ -11,8 +11,8 @@ import torch.nn as nn
 import torch.nn.functional as func
 from torchvision.datasets import ImageFolder
 from torchvision.models import InceptionOutputs
-from torchvision.models.inception import BasicConv2d, InceptionB, InceptionD, InceptionAux, InceptionA, InceptionC, \
-    InceptionE
+from torchvision.models.inception import BasicConv2d, InceptionB, InceptionD, \
+                    InceptionAux, InceptionA, InceptionC, InceptionE
 from torchvision.transforms import transforms
 import smtplib
 import ssl
@@ -221,38 +221,12 @@ def load_model(model):
 
 
 def save_model(model):
-    pass
     ans = ""
     while ans not in ("y", "Y", "N", "n"):
         ans = input("Save model? (y/n): ")
     if ans == "y" or ans == "Y":
         path = "Models/" + input("Enter a name: ")
         torch.save(model.state_dict(), path)
-
-
-def dataset_from_png(n_samples, size, folder, gen_new):
-    if platform.system() == 'Windows':
-        _, current_folder = os.path.split(os.getcwd())
-        if current_folder != "Python":
-            os.chdir('Python')
-        if gen_new:
-            print(f"Started generating {folder} data")
-            shutil.rmtree(folder)
-            os.makedirs(f'{folder}/images')
-            os.system('Datagen.exe ' + str(n_samples) + " " + str(size) + " " + str(folder)+ " " + str(5))
-            print("Done generating, start loading")
-    else:
-        if gen_new:
-            print(f"Started generating {folder} data")
-            os.system(f'rm -r {folder}')
-            os.system(f'mkdir {folder}')
-            os.system(f'mkdir {folder}/images')
-            os.system('./Datagen ' + str(n_samples) + " " + str(size) + " " + str(folder)+ " " + str(5))
-            print("Done generating, start loading")
-
-    dataset = CosmoDatasetPng(str(folder))
-    print("Done loading")
-    return dataset
 
 
 def test_network(loader, model_, criterion_, device, print_results=False):
@@ -286,13 +260,9 @@ def print_images(images, params):
 class CosmoDatasetPng(ImageFolder):
     def __init__(self, root):
         super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
-        if platform.system() == 'Windows':
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
-                root + "\\images\\").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
-
-        else:
-            self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in [t[0].lstrip(
-                root + "/images/").rstrip(".png").split(",") for t in self.imgs]], dtype=torch.float)
+        self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in 
+            [t[0].lstrip(root + "/images/").rstrip(".png").split(",") for t in self.imgs]],
+            dtype=torch.float)
 
     def __getitem__(self, item):
         path, _ = self.samples[item]

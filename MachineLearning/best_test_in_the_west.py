@@ -16,7 +16,7 @@ model.eval()
 
 #load test data 
 batch_size = 1
-test_dataset = dataset_from_png(n_samples=5000, size=512, folder="test", gen_new=False)
+test_dataset = CosmoDatasetPng("test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 

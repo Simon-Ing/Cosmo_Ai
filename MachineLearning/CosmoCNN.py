@@ -15,8 +15,6 @@ n_test_samples = 5000
 img_size = 512
 
 # set to true when you want new data points
-gen_new_train = 0
-gen_new_test = 0
 load_checkpoint = False
 checkpoint_path = "Models/autosave/autosave_epoch40"
 
@@ -32,11 +30,9 @@ scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
 
 
 # Load a dataset for training and one for verification
-train_dataset = dataset_from_png(n_samples=n_train_samples, size=img_size,
-                                 folder="train", gen_new=gen_new_train)
+train_dataset = CosmoDatasetPng("train")
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_dataset = dataset_from_png(n_samples=n_test_samples, size=img_size,
-                                folder="test", gen_new=gen_new_test)
+test_dataset = CosmoDatasetPng("test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 # Load from checkpoint if desired:
