@@ -92,9 +92,7 @@ int main(int argc, char *argv[]) {
     filename << ".png";
 
     im = simulator->getDistorted() ;
-    std::cout << "D1 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     if ( refmode ) refLines(im) ;
-    std::cout << "D2 Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
     cv::imwrite( "image-" + simname + filename.str(), im );
 
     im = simulator->getActual() ;
@@ -103,7 +101,6 @@ int main(int argc, char *argv[]) {
     cv::imwrite( "actual-" + simname + filename.str(), im );
 
     im = simulator->getSecondary() ;
-    std::cout << "Calculated Secondary image\n" ;
     if ( refmode ) refLines(im) ;
 
     im = simulator->getApparent() ;
