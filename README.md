@@ -29,7 +29,8 @@ sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxa
 
 # Tools
 
-There are two tools, a GUI tool and a CLI tool
+There are two tools, a GUI tool and a CLI too, plus the deprecated 
+`Datagen` tool.
 
 ## GUI Tool
 
@@ -54,45 +55,27 @@ bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N n
   `imageSize`$\times$`imageSize` pixels.
 + `name` is the name of the simulation, and used to generate filenames.
 
-## Data Set Generator 
+To bulk generate images, two scripts have been provided:
 
-This can be run like this:
-
-```sh
-bin/Datagen 20 512 test 50
-```
-+ Generate 20 images (first parameters)
-+ Image size is $512\times512$
-+ Images are place under the directory `test/images` and `test/actual`.
-  **Note** The directories must be exist.
-+ The distance to the lens is half (50%) of the distance to the source.
-  If the last parameter is 0, the distance is drawn at random.
++ `Scripts/datasetgen.py` makes a CSV file of random parameter sets.
+  It should be tweaked to get the desired distribution.
++ `Scripts/datagen.sh` to read the CSV file and generate the corresponding
+  images
 
 # Versions
 
-There are two branches.
+The main branches are
 
+- develop is the current state of the art
+- master should be the last stable version
 - release/0.1 is the original version, with simulator and GUI in the same class.
-- master/refactor-separate-io which separates the GUI from the simulator 
 
-The original also had code in the `CosmoAI_qt` directory.  
-It is unused, and removing it, the code still works.
+The `CosmoAI_qt` directory is unused, and removing it, the code still works.
 Yet it may prove a useful starting point for a better GUI based on QT.
 
-The master branch is retained as a reference implementation. 
+# Components
 
-## Master Branch Components
-
-Three source files are used
-
-+ `./Simulator.cpp` for the library
-+ `./Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
-+ `./GL_Simulator_2.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
-
-
-## Refactored Components
-
-+ Simulators
++ Lens Models
     + `LensModel.cpp` is the abstract base class.
     + `PointMassLens.cpp` simulates the point mass model
     + `SphereLens.cpp` simulates the SIS model
@@ -100,13 +83,11 @@ Three source files are used
     + `Source.cpp` is the abstract base class.
     + `SphericalSource.cpp` is standard Guassian model
     + `EllipsoidSource.cpp` is an ellipsoid Guassian model
-+ `Window.cpp` is the GUI
-+ `Data_generator.cpp` for the `Datagen` binary. The executable takes four arguments for which I have not found the documentation.
-+ `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
-
-The data generator has not been refactored and does not work at present.
-The code for file output has been retained in the simulator class, but will be moved when
-the data generator is repaired.
++ `Window.cpp` is the GUI window.
++ Binaries
+    + `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
+    + `makeimage.cpp` is the CLI Tool
+    + `Data_generator.cpp` *(deprecated)* for the `Datagen` binary.
 
 # Technical Design
 
@@ -130,7 +111,7 @@ The instance variables correspond to the trackbars in the GUI, except for `size`
 gives the image size.  This is constant, currently at 300, and has to be the same for
 the `Window` and `Simulator` objects.
 
-## Simulator Class
+## Lens Model Class
 
 ### Virtual Functions
 
