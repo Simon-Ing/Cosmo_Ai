@@ -7,7 +7,7 @@ class CosmoDataset(Dataset):
             csvfile (string): Path to the csv file with annotations.
             imgdir (string): Directory with all the images.
         """
-        self.frame = pd.read_csv(csv_file)
+        self.frame = pd.read_csv(csvfile)
         self.imgdir = imgdir
 
     def __len__(self):

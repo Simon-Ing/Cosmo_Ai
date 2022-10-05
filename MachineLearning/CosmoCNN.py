@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+from Dataset import CosmoDataset
 from deepshit import *
 import time
 import torch.optim.lr_scheduler as lr_scheduler
@@ -30,9 +31,9 @@ scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
 
 
 # Load a dataset for training and one for verification
-train_dataset = CosmoDatasetPng("train")
+train_dataset = CosmoDataset("train.csv","train")
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_dataset = CosmoDatasetPng("test")
+test_dataset = CosmoDataset("test.csv","test")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
 # Load from checkpoint if desired:

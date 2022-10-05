@@ -257,21 +257,6 @@ def print_images(images, params):
         cv2.waitKey(0)
 
 
-class CosmoDatasetPng(ImageFolder):
-    def __init__(self, root):
-        super(CosmoDatasetPng, self).__init__(root, transform=transforms.ToTensor())
-        self.targets = torch.tensor([[int(a), int(b), int(c), int(d), int(e)] for (a, b, c, d, e) in 
-            [t[0].lstrip(root + "/images/").rstrip(".png").split(",") for t in self.imgs]],
-            dtype=torch.float)
-
-    def __getitem__(self, item):
-        path, _ = self.samples[item]
-        sample = self.loader(path)
-        if self.transform is not None:
-            sample = self.transform(sample)
-        return sample[0].view(1, sample.shape[1], sample.shape[2]), self.targets[item]
-
-
 class Inception3(nn.Module):
     def __init__(
             self,
