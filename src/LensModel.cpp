@@ -29,15 +29,14 @@ cv::Mat LensModel::getActual() {
 
    cv::Point2f srcTri[3], dstTri[3];
    srcTri[0] = cv::Point2f( x0, y0 );
-   dstTri[0] = cv::Point2f( x0+actualY, y0-actualX );
-   srcTri[1] = cv::Point2f( x0, y0+actualAbs );
+   dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
+   srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
    dstTri[1] = cv::Point2f( x0, y0 );
-   srcTri[2] = cv::Point2f( x0+actualAbs, y0+actualAbs );
-   dstTri[2] = cv::Point2f( x0+actualX, y0+actualY );
+   srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
+   dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
    cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
-   std::cout << "(x,y) = (" << (-actualY,actualX) << ")\n" ;
-   std::cout << rot << "\n" ;
+   std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" << rot << "\n" ;
 
    cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size());    // crop distorted image
    return imgActual ; 
@@ -71,6 +70,9 @@ void LensModel::update() {
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
     imgDistorted =  imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols));
+
+    std::cout << "update() (x,y) = (" << actualX << ", " << actualY << ")\n" ;
+    std::cout << rot << "\n" ;
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();

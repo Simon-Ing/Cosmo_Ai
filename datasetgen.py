@@ -8,9 +8,11 @@ import time
 
 from random import randint
 
-n = 100
+n = 40
 
 fn = "dataset.csv"
+srcmodes = "e"
+lensmodes = "pss"
 
 
 def getline(idx,chi=0,nterms=16):
@@ -22,8 +24,8 @@ def getline(idx,chi=0,nterms=16):
     sigma = randint(1,60)
     sigma2 = randint(1,40)
     theta = randint(0,179)
-    srcmode = "sse"[randint(0,2)]
-    lensmode = "pss"[randint(0,2)]
+    srcmode = srcmodes[randint(0,len(srcmodes)-1)]
+    lensmode = lensmodes[randint(0,len(lensmodes)-1)]
     return f'{idx:04},{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
 
 

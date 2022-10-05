@@ -8,5 +8,5 @@ while read -r idx srcmode lensmode chi x y einsteinr sigma sigma2 theta nterms
 do
   bin/makeimage $* -X $chi -x $x -y $y -E $einsteinr -s $sigma -2 $sigma2 -t $theta -n $nterms \
                 -S $srcmode -L $lensmode -N $idx -Z 800
-  convert actual-$idx.png image-$idx.png +append montage$idx.png
+  convert apparent-$idx.png actual-$idx.png image-$idx.png +append montage$idx.png
 done
