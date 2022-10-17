@@ -93,3 +93,18 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
     return {nu1, nu2};
 }
 
+/* Re-calculate co-ordinates using updated parameter settings from the GUI.
+ * This is called from the update() method.                                  */
+void SphereLens::updateXY( double X, double Y, double chi, double er ) {
+
+    CHI = chi ;
+    einsteinR = er ;
+    // Actual position in source plane
+    actualX = X ;
+    actualY = Y ;
+
+    actualAbs = sqrt(actualX * actualX + actualY * actualY); 
+    apparentAbs = actualAbs + einsteinR/CHI ;
+
+    update() ;
+}

@@ -38,7 +38,7 @@ public:
     LensModel();
     void update();
 
-    void updateXY(double, double, double, double);
+    virtual void updateXY(double, double, double, double);
     void updateNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
@@ -67,6 +67,7 @@ protected:
 class SphereLens : public LensModel { 
   public:
     SphereLens();
+    virtual void updateXY(double, double, double, double);
   protected:
     virtual void calculateAlphaBeta();
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
