@@ -72,6 +72,10 @@ int main(int argc, char *argv[]) {
          std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
          simulator = new SphereLens() ;
          break ;
+       case 'r':
+         std::cout << "Running Roulette Point Mass Lens (mode=" << mode << ")\n" ;
+         simulator = new RoulettePMLens() ;
+         break ;
        case 'p':
        default:
          std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;

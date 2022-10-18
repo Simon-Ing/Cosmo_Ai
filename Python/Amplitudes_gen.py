@@ -34,12 +34,12 @@ def simpl(x):
     return factor(x)
 
 
-def func(n, m, s, alpha, beta, x, y, g, chi, q):
+def func(n, m, s, alpha, beta, x, y, g, q):
     print(f'm: {m} s: {s}')# alpha: {alpha} beta: {beta}')
     while s > 0 and m < n:
         m += 1
         s -= 1
-        c = ((m + 1.0) / (m + 1.0 - s) * (1.0 + (s != 0.0)) / 2.0) * chi
+        c = ((m + 1.0) / (m + 1.0 - s) * (1.0 + (s != 0.0)) / 2.0)
         # start calculate
         alpha_ = simpl(c * (diff(alpha, x) + diff(beta, y)))
         beta_ = simpl(c * (diff(beta, x) - diff(alpha, y)))
@@ -58,8 +58,8 @@ def main():
 
 
     x, y = symbols('x, y', real=True)
-    g, chi = symbols("g c", positive=True, real=True)
-    psi = (2*g)/(chi**2) * sqrt(x ** 2 + y ** 2)
+    g = symbols("g", positive=True, real=True)
+    psi = (2*g) * sqrt(x ** 2 + y ** 2)
     # alphas = [[0 for a in range(n)] for b in range(n)]
     # betas = [[0 for c in range(n)] for d in range(n)]
 
@@ -77,10 +77,10 @@ def main():
             s = m + 1
             # print(m, s)
             if m == 0:
-                alpha = simpl(-chi * diff(psi, x))
-                beta = simpl(-chi * diff(psi, y))
+                alpha = simpl(diff(psi, x))
+                beta = simpl(diff(psi, y))
             else:
-                c = (m + 1.0) / (m + s + 1.0) * chi
+                c = (m + 1.0) / (m + s + 1.0) 
                 # calc sym func
                 alpha_ = simpl(c * (diff(alpha, x) - diff(beta, y)))
                 beta_ = simpl(c * (diff(beta, x) + diff(alpha, y)))
@@ -92,7 +92,7 @@ def main():
             # print("send write job:", res)
             q.put(res)
 
-            job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, g, chi, q))
+            job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, g, q))
             jobs.append(job)
 
 

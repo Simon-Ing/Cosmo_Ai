@@ -44,8 +44,8 @@ void SphereLens::initAlphasBetas() {
             auto beta_sym = SymEngine::parse(beta);
             // The following two variables are unused.
             // SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
-            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *alpha_sym);
-            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, c}, *beta_sym);
+            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *alpha_sym);
+            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *beta_sym);
         }
     }
 }
@@ -54,12 +54,12 @@ void SphereLens::calculateAlphaBeta() {
     double GAMMA = einsteinR/2.0;
     std::cout << "SphereLens calculateAlphaBeta\n" ;
 
-    // calculate all amplitudes for given X, Y, GAMMA, CHI
+    // calculate all amplitudes for given X, Y, GAMMA
     // This is done here to before the code is parallellised
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
-            alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
-            betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, GAMMA, CHI});
+            alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, GAMMA});
+            betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, GAMMA});
         }
     }
 }
