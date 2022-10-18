@@ -32,7 +32,7 @@ void Window::initGui(){
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 2, updateMode, this);
 
-    cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 49, updateNterms, this);
+    cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 1000, updateNterms, this);
     std::cout << "initGui DONE\n" ;
 }
 
@@ -86,6 +86,9 @@ void Window::updateNterms(int, void* data){
 void Window::drawImages() {
    cv::Mat imgActual = sim->getActual() ;
    cv::Mat imgDistorted = sim->getDistorted() ;
+
+   refLines( imgActual ) ;
+   refLines( imgDistorted ) ;
 
    // Copy both the actual and the distorted images into a new matDst array for display
    cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));

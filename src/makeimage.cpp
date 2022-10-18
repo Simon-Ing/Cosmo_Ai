@@ -34,11 +34,20 @@ int main(int argc, char *argv[]) {
     int opt ;
     cv::Mat im ;
     Source *src ;
+    std::vector<int> apparent  ;
 
-    while ( (opt = getopt(argc,argv,"L:S:N:x:y:s:2:t:n:X:E:I:RZ:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"A:L:S:N:x:y:s:2:t:n:X:E:I:RZ:")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
+          case 'A': 
+             { std::stringstream ss(optarg) ;
+               for ( int i ; ss >> i ; ) {
+                  apparent.push_back( i ) ;
+                  if ( ss.peek() == ',' ) ss.ignore() ;
+               }
+             }
+             break ;
           case 's': sourceSize = atoi(optarg) ; break ;
           case '2': sigma2 = atoi(optarg) ; break ;
           case 't': theta = PI*atoi(optarg)/180 ; break ;
@@ -103,6 +112,16 @@ int main(int argc, char *argv[]) {
     im = simulator->getSecondary() ;
     if ( refmode ) refLines(im) ;
     cv::imwrite( "secondary-" + simname + filename.str(), im );
+
+
+    for (std::size_t i = 0; i < apparent.size(); i++) {
+        std::stringstream ss;
+        im = simulator->getDistorted( apparent[i] ) ;
+        if ( refmode ) refLines(im) ;
+        ss << "roulettes-" << apparent[i] << "-" << simname << filename.str() ;
+        std::cout << "Apparent " << apparent[i] << "\n" ;
+        cv::imwrite( ss.str(), im );
+    }
 
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
