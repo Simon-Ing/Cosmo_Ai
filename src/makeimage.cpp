@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
 
     im = simulator->getSecondary() ;
     if ( refmode ) refLines(im) ;
+    cv::imwrite( "secondary-" + simname + filename.str(), im );
 
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
