@@ -19,3 +19,26 @@ std::pair<double, double> PointMassLens::getDistortedPos(double r, double theta)
     nu2 /= CHI ;
     return {nu1, nu2};
 }
+
+/* Re-calculate co-ordinates using updated parameter settings from the GUI.
+ * This is called from the update() method.                                  */
+void PointMassLens::updateXY( double X, double Y, double chi, double er ) {
+
+    CHI = chi ;
+    einsteinR = er ;
+    // Actual position in source plane
+    actualX = X ;
+    actualY = Y ;
+
+    // Absolute values in source plane
+    actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
+
+    // The apparent position is the solution to a quadratic equation.
+    // thus there are two solutions.
+    double root = sqrt(0.25*actualAbs*actualAbs + einsteinR*einsteinR/(CHI*CHI));
+    apparentAbs = actualAbs/2 + root ;
+    apparentAbs2 = actualAbs/2 - root ;
+    // BDN: Is the calculation of apparent positions correct above?
+
+    update() ;
+}

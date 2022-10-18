@@ -157,28 +157,6 @@ void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
    updateXY(X,Y,chi,er);
 }
 
-/* Re-calculate co-ordinates using updated parameter settings from the GUI.
- * This is called from the update() method.                                  */
-void LensModel::updateXY( double X, double Y, double chi, double er ) {
-
-    CHI = chi ;
-    einsteinR = er ;
-    // Actual position in source plane
-    actualX = X ;
-    actualY = Y ;
-
-    // Absolute values in source plane
-    actualAbs = sqrt(actualX * actualX + actualY * actualY); // Actual distance from the origin
-
-    // The apparent position is the solution to a quadratic equation.
-    // thus there are two solutions.
-    double root = sqrt(0.25*actualAbs*actualAbs + einsteinR*einsteinR/(CHI*CHI));
-    apparentAbs = actualAbs/2 + root ;
-    apparentAbs2 = actualAbs/2 - root ;
-    // BDN: Is the calculation of apparent positions correct above?
-
-    update() ;
-}
 
 void LensModel::setSource(Source *src) {
     source = src ;
