@@ -30,7 +30,7 @@ void Window::initGui(){
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, 10*size, updateXY, this);
-    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 1, updateMode, this);
+    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 2, updateMode, this);
 
     cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 49, updateNterms, this);
     std::cout << "initGui DONE\n" ;
@@ -39,8 +39,20 @@ void Window::initGui(){
 void Window::initSimulator(){
     std::cout << "initSimulator mode=" << mode << "\n" ;
     if ( NULL != sim ) delete sim ;
-    if ( 0 == mode ) sim = new PointMassLens() ;
-    else sim = new SphereLens() ;
+    switch ( mode ) {
+       case 0:
+         sim = new PointMassLens() ;
+         break ;
+       case 1:
+         sim = new SphereLens() ;
+         break ;
+       case 2:
+         sim = new RoulettePMLens() ;
+         break ;
+       default:
+         std::cout << "No such mode!\n" ;
+         exit(1) ;
+    }
     sim->setSource( new SphericalSource( size, sourceSize ) ) ;
     sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
          einsteinR, CHI_percent / 100.0, nterms ) ;

@@ -65,6 +65,14 @@ public:
 protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
 };
+
+class RoulettePMLens : public PointMassLens { 
+public:
+    using PointMassLens::PointMassLens ;
+protected:
+    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+};
+
 class SphereLens : public LensModel { 
   public:
     SphereLens();

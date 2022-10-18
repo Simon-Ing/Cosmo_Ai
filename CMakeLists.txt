@@ -26,6 +26,7 @@ add_library(SimLib
    src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
    src/TriangleSource.cpp
    src/LensModel.cpp src/PointMassLens.cpp src/SphereLens.cpp 
+   src/RoulettePMLens.cpp
    src/Window.cpp)
 
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
