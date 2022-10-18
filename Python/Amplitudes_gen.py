@@ -59,9 +59,7 @@ def main():
 
     x, y = symbols('x, y', real=True)
     g = symbols("g", positive=True, real=True)
-    psi = (2*g) * sqrt(x ** 2 + y ** 2)
-    # alphas = [[0 for a in range(n)] for b in range(n)]
-    # betas = [[0 for c in range(n)] for d in range(n)]
+    psi = - (2*g) * sqrt(x ** 2 + y ** 2)
 
     #must use Manager queue here, or will not work
     manager = mp.Manager()
