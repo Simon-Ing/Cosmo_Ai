@@ -2,6 +2,20 @@
 title: The CosmoAI project
 ---
 
+This project provides a simulator for gravitational lensing based on
+Chris Clarkson's Roulettes framework.
+The initial prototype was an undergraduate
+[final year project](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/3003634)
+by Ingebrigtsen, Remøy, Westbø, Nedreberg, and Austnes (2022).
+The software includes both a GUI simulator for interactive experimentation, 
+and a command line interface for batch generation of datasets.
+
+The intention is to be able to use the synthetic datasets to train
+machine learning models which can in turn be used to map the dark
+matter of the Universe.  This is work in progress.
+
+
+
 # Build and Run
 
 Provided a full C++ installation is available with cmake and conan, the system is built
