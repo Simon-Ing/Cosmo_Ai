@@ -1,3 +1,9 @@
+#! /usrbin/env python3
+
+"""
+Test Script for the CosmoAI model.
+"""
+
 from torch.utils.data import DataLoader
 from Dataset import CosmoDataset
 from deepshit import *

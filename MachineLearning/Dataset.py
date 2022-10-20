@@ -1,3 +1,10 @@
+"""
+The Dataset class manages loading and access to a dataset
+in the CosmoAI model.
+"""
+
+from torch.utils.data import Dataset 
+
 class CosmoDataset(Dataset):
     """CosmoAI  dataset."""
 
