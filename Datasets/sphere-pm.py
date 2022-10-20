@@ -18,7 +18,7 @@ def getline(idx,chi=0,nterms=16):
     theta = 0
     srcmode = "s"
     lensmode = "p"
-    return f'"{idx:04}",image-{idx:04}.png,{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
+    return f'"{idx:05}",image-{idx:04}.png,{srcmode},{lensmode},{chi},{x},{y},{einsteinR},{sigma},{sigma2},{theta},{nterms}'
 
 header = "index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms\n"
 
