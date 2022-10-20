@@ -35,8 +35,9 @@ int main(int argc, char *argv[]) {
     cv::Mat im ;
     Source *src ;
     std::vector<int> apparent  ;
+    int secondary = 0 ;
 
-    while ( (opt = getopt(argc,argv,"A:L:S:N:x:y:s:2:t:n:X:E:I:RZ:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"A:L:S:N:x:y:s:2:t:n:X:E:I:RZ:Y")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
@@ -59,6 +60,7 @@ int main(int argc, char *argv[]) {
           case 'L': mode = optarg[0] ; break ;
           case 'S': srcmode = optarg[0] ; break ;
           case 'R': ++refmode ; break ;
+          case 'Y': ++secondary ; break ;
           case 'Z': imgsize = atoi(optarg) ; break ;
        }
     }
@@ -113,10 +115,11 @@ int main(int argc, char *argv[]) {
     if ( refmode ) refLines(im) ; // This does not work for some obscure reason
     cv::imwrite( "actual-" + simname + filename.str(), im );
 
-    im = simulator->getSecondary() ;
-    if ( refmode ) refLines(im) ;
-    cv::imwrite( "secondary-" + simname + filename.str(), im );
-
+    if ( secondary ) {
+       im = simulator->getSecondary() ;
+       if ( refmode ) refLines(im) ;
+       cv::imwrite( "secondary-" + simname + filename.str(), im );
+    }
 
     for (std::size_t i = 0; i < apparent.size(); i++) {
         std::stringstream ss;
