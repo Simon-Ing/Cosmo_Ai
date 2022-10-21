@@ -76,119 +76,6 @@ class ConvNet3(nn.Module):
         x = self.fc1(x)
         return x
 
-class ProConvNet(nn.Module):
-    def __init__(self):
-        super(ProConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, 3)
-        self.conv2 = nn.Conv2d(4, 8, 3)
-        self.conv3 = nn.Conv2d(8, 16, 2)
-        self.conv4 = nn.Conv2d(16, 16, 2)
-        
-        self.fc1 = nn.LazyLinear(1024)
-        self.fc2 = nn.Linear(1024, 1024)
-        self.fc3 = nn.Linear(1024, 128)
-        self.fc4 = nn.Linear(128, 4)
-
-    def forward(self, x):
-        # Max pooling over a (2, 2) window
-        
-        x = func.max_pool2d(func.relu(self.conv1(x)), 2)
-        x = func.max_pool2d(func.relu(self.conv2(x)), 2)
-        x = func.max_pool2d(func.relu(self.conv3(x)), 2)
-        x = func.max_pool2d(func.relu(self.conv4(x)), 2)
-        x = func.max_pool2d(func.relu(self.conv4(x)), 2)
-        
-        
-        #print(x.shape)
-        x = torch.flatten(x, 1) # flatten all dimensions except the batch dimension
-        x = func.relu(self.fc1(x))
-        x = func.relu(self.fc2(x))
-        x = func.relu(self.fc2(x))
-        x = func.relu(self.fc3(x))
-        x = self.fc4(x)
-        return x
-
-class AlexNet(nn.Module):
-    def __init__(self, num_classes: int = 1000, dropout: float = 0.5) -> None:
-        super().__init__()
-        
-        self.features = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=11, stride=4, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(64, 192, kernel_size=5, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(192, 384, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(384, 256, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-        )
-        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
-        self.classifier = nn.Sequential(
-            nn.Dropout(p=dropout),
-            nn.Linear(256 * 6 * 6, 4096),
-            nn.ReLU(inplace=True),
-            nn.Dropout(p=dropout),
-            nn.Linear(4096, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 5),
-        )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.features(x)
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        #print(x.shape)
-        x = self.classifier(x)
-        return x
-
-
-class AlexMulti(nn.Module):
-    def __init__(self, num_classes: int = 1000) -> None:
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=11, stride=4, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(64, 192, kernel_size=5, padding=2),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(192, 384, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(384, 256, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-        )
-        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
-        self.fc = nn.Sequential(
-            nn.Linear(256 * 6 * 6 + 1, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 400),
-            nn.ReLU(inplace=True),
-            nn.Linear(400, 40),
-            nn.ReLU(inplace=True),
-            nn.Linear(40, num_classes)
-        )
-
-
-    def forward(self, x: torch.Tensor, chi: torch.Tensor) -> torch.Tensor:
-        x = self.features(x)
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        chi = chi.view(chi.shape[0],1)
-        x = torch.cat((x, chi), 1)
-        x = self.fc(x)
-        return x
-
-
-
-
 class Inception3(nn.Module):
     def __init__(
             self,
@@ -202,7 +89,8 @@ class Inception3(nn.Module):
         super().__init__()
         # _log_api_usage_once(self)
         if inception_blocks is None:
-            inception_blocks = [BasicConv2d, InceptionA, InceptionB, InceptionC, InceptionD, InceptionE, InceptionAux]
+            inception_blocks = [BasicConv2d, InceptionA, InceptionB, InceptionC,
+                                InceptionD, InceptionE, InceptionAux]
         if init_weights is None:
             warnings.warn(
                 "The default weight initialization of inception_v3 will be changed in future releases of "

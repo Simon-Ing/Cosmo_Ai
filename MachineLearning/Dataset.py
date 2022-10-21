@@ -31,9 +31,11 @@ class CosmoDataset(Dataset):
 
         fn = os.path.join(self.imgdir,
                                 self.frame.iloc[idx, 1])
-        image = io.imread(fn)
+        image = io.imread(fn)[np.newaxis,:,:].astype(np.double) / 255
+        image = torch.from_numpy( image )
         targets = self.frame.iloc[idx, 4:]
-        targets = np.array([targets])
-        targets = targets.astype('float')
+        targets = np.array([targets]).astype(np.double)
+        targets = torch.from_numpy( targets )
+        print( targets )
 
         return  image, targets 
