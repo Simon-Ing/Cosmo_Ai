@@ -14,67 +14,6 @@ from torchvision.models.inception import BasicConv2d, InceptionB, InceptionD, \
 from torchvision.transforms import transforms
 
 
-class ConvNet(nn.Module):
-    def __init__(self):
-        super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (5, 5))
-        self.conv2 = nn.Conv2d(4, 7, (5, 5))
-        self.conv3 = nn.Conv2d(7, 10, (5, 5))
-        self.conv4 = nn.Conv2d(10, 10, (5, 5))
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(40, 12)
-        self.fc2 = nn.Linear(12, 5)
-
-    def forward(self, x):
-        x = self.pool(func.relu(self.conv1(x)))
-        x = self.pool(func.relu(self.conv2(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv4(x)))
-        x = self.pool(func.relu(self.conv4(x)))
-        x = self.pool(func.relu(self.conv4(x))).view(-1, 40)
-        x = self.fc2(func.relu((self.fc1(x))))
-        return x
-
-
-class ConvNetNew(nn.Module):
-    def __init__(self):
-        super(ConvNetNew, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (10, 10))
-        self.conv2 = nn.Conv2d(4, 8, (10, 10))
-        self.conv3 = nn.Conv2d(8, 8, (5, 5))
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(512, 64)
-        self.fc2 = nn.Linear(64, 4)
-
-    def forward(self, x):
-        x = self.pool(func.relu(self.conv1(x)))
-        x = self.pool(func.relu(self.conv2(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv3(x))).view(-1, 512)
-        x = self.fc2(func.relu((self.fc1(x))))
-        return x
-
-
-class ConvNet3(nn.Module):
-    def __init__(self):
-        super(ConvNet3, self).__init__()
-        self.conv1 = nn.Conv2d(1, 4, (5, 5))
-        self.conv2 = nn.Conv2d(4, 8, (5, 5))
-        self.conv3 = nn.Conv2d(8, 8, (5, 5))
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.LazyLinear(32, 4)
-
-    def forward(self, x):
-        x = self.pool(func.relu(self.conv1(x)))
-        x = self.pool(func.relu(self.conv2(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv3(x)))
-        x = self.pool(func.relu(self.conv3(x))).view(-1, 32)
-        # print(x.shape)
-        x = self.fc1(x)
-        return x
 
 class Inception3(nn.Module):
     def __init__(
@@ -154,6 +93,7 @@ class Inception3(nn.Module):
 
     def _forward(self, x: Tensor) -> Tuple[Tensor, Optional[Tensor]]:
         # N x 3 x 299 x 299
+        print(x)
         x = self.Conv2d_1a_3x3(x)
         # N x 32 x 149 x 149
         x = self.Conv2d_2a_3x3(x)
