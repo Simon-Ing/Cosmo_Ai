@@ -6,7 +6,10 @@ Test Script for the CosmoAI model.
 
 from torch.utils.data import DataLoader
 from Dataset import CosmoDataset
-from deepshit import *
+from Network import Inception3
+from aux import test_network
+import torch.nn as nn
+import torch
 import time
 import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm

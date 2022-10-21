@@ -1,10 +1,8 @@
 import os
-import platform
 import shutil
 import warnings
 from typing import Optional, List, Callable, Tuple
 
-import cv2
 import torch
 from torch import Tensor
 import torch.nn as nn
@@ -14,8 +12,6 @@ from torchvision.models import InceptionOutputs
 from torchvision.models.inception import BasicConv2d, InceptionB, InceptionD, \
                     InceptionAux, InceptionA, InceptionC, InceptionE
 from torchvision.transforms import transforms
-import smtplib
-import ssl
 
 
 class ConvNet(nn.Module):
@@ -191,53 +187,6 @@ class AlexMulti(nn.Module):
         return x
 
 
-def load_model(model):
-    ans = ""
-    while True:
-        while ans not in ("y", "Y", "N", "n"):
-            ans = input("Load previous model? (y/n): ")
-        if ans == "n" or ans == "N":
-            break
-        if ans == "y" or ans == "Y":
-            try:
-                path = "Models/" + input("enter path: ")
-                model.load_state_dict(torch.load(path))
-                break
-            except FileNotFoundError as e:
-                print(e)
-                ans = ""
-            except IsADirectoryError:
-                print("You must enter a file name goddamnit!")
-                ans = ""
-
-
-
-def test_network(loader, model_, criterion_, device, print_results=False):
-    total_loss = 0
-    n_batches = 0
-    with torch.no_grad():
-        for images, params in loader:
-            images = images.to(device)
-            params = params.to(device)
-            output = model_(images)
-            loss_ = criterion_(output, params)
-            total_loss += loss_
-            n_batches += 1
-            if print_results:
-                for i, param in enumerate(params):
-                    niceoutput = [round(n, 4) for n in output[i].tolist()]
-                    niceparam = [round(n, 4) for n in param.tolist()]
-                    print(f"{f'Correct: {niceparam}' : <50} {f'Output: {niceoutput}' : ^50}")
-        return total_loss / n_batches
-
-
-def print_images(images, params):
-    for i, img in enumerate(images):
-        image = images[i].numpy().reshape(images[i].shape[1], images[i].shape[2], 1)
-        image = cv2.resize(image, (400, 400))
-        image = cv2.putText(image, f' dist: {str(params[i][0].item())} ein: {str(params[i][1].item())} sigma: {str(params[i][2].item())} x: {str(params[i][3].item())} y: {str(params[i][4].item())}', (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.imshow("img", image)
-        cv2.waitKey(0)
 
 
 class Inception3(nn.Module):
