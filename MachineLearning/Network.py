@@ -93,7 +93,6 @@ class Inception3(nn.Module):
 
     def _forward(self, x: Tensor) -> Tuple[Tensor, Optional[Tensor]]:
         # N x 3 x 299 x 299
-        print(x)
         x = self.Conv2d_1a_3x3(x)
         # N x 32 x 149 x 149
         x = self.Conv2d_2a_3x3(x)

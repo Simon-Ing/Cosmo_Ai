@@ -28,7 +28,7 @@ device = torch.device("cpu")
 # device = torch.device("cuda")
 
 # Initialize your network, loss function, optimizer and scheduler
-model = Inception3().to(device)
+model = Inception3(num_outputs=8).to(device)
 # model = torch.nn.DataParallel(model)
 
 criterion = nn.MSELoss()
@@ -54,8 +54,8 @@ if (load_checkpoint):
     loss = checkpoint['loss']
         
 # Test network prior to training
-#loss = test_network(test_loader, model, criterion, device)
-#print(f'\nAverage loss over test data before training: {loss}\n')
+loss = test_network(test_loader, model, criterion, device)
+print(f'\nAverage loss over test data before training: {loss}\n')
 
 timer = time.time()
 print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, \
