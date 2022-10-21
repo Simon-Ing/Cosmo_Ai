@@ -3,7 +3,11 @@ The Dataset class manages loading and access to a dataset
 in the CosmoAI model.
 """
 
+import torch
+import os
+from skimage import io
 from torch.utils.data import Dataset 
+import pandas as pd
 
 class CosmoDataset(Dataset):
     """CosmoAI  dataset."""
@@ -31,4 +35,4 @@ class CosmoDataset(Dataset):
         targets = np.array([targets])
         targets = targets.astype('float')
 
-        return {'image': image, 'target': landmarks}
+        return {'image': image, 'target': targets }
