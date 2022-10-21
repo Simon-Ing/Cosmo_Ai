@@ -191,14 +191,6 @@ class AlexMulti(nn.Module):
         return x
 
 
-def cuda_if_available():
-    if torch.cuda.is_available():
-        print("Running Cuda!")
-        return torch.device('cuda')
-    print("Running on cpu")
-    return torch.device("cpu")
-
-
 def load_model(model):
     ans = ""
     while True:
@@ -218,15 +210,6 @@ def load_model(model):
                 print("You must enter a file name goddamnit!")
                 ans = ""
 
-
-
-def save_model(model):
-    ans = ""
-    while ans not in ("y", "Y", "N", "n"):
-        ans = input("Save model? (y/n): ")
-    if ans == "y" or ans == "Y":
-        path = "Models/" + input("Enter a name: ")
-        torch.save(model.state_dict(), path)
 
 
 def test_network(loader, model_, criterion_, device, print_results=False):

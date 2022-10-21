@@ -13,7 +13,7 @@ import pandas as pd
 class CosmoDataset(Dataset):
     """CosmoAI  dataset."""
 
-    def __init__(self, csvfile, imgdir):
+    def __init__(self, csvfile, imgdir="."):
         """
         Args:
             csvfile (string): Path to the csv file with annotations.
@@ -36,4 +36,4 @@ class CosmoDataset(Dataset):
         targets = np.array([targets])
         targets = targets.astype('float')
 
-        return {'image': image, 'target': targets }
+        return  image, targets 

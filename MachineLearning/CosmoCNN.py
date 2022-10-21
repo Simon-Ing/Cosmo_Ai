@@ -17,15 +17,12 @@ num_epochs = 100
 batch_size = 32
 learning_rate = 0.001
 
-n_train_samples = 100000
-n_test_samples = 5000
-img_size = 512
-
-# set to true when you want new data points
+# checkpoints - set to true when you want new data points
 load_checkpoint = False
 checkpoint_path = "Models/autosave/autosave_epoch40"
 
-device = cuda_if_available()  # Use cuda if available
+device = torch.device("cpu")
+# device = torch.device("cuda")
 
 # Initialize your network, loss function, optimizer and scheduler
 model = Inception3().to(device)
@@ -37,10 +34,13 @@ scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
 
 
 # Load a dataset for training and one for verification
-train_dataset = CosmoDataset("train.csv","train")
+train_dataset = CosmoDataset("train.csv")
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_dataset = CosmoDataset("test.csv","test")
+test_dataset = CosmoDataset("test.csv")
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
+n_train_samples = len(train_dataset)
+n_test_samples = len(test_dataset)
+img_size = train_dataset[0][0].shape
 
 # Load from checkpoint if desired:
 if (load_checkpoint):
@@ -51,8 +51,8 @@ if (load_checkpoint):
     loss = checkpoint['loss']
         
 # Test network prior to training
-loss = test_network(test_loader, model, criterion, device)
-print(f'\nAverage loss over test data before training: {loss}\n')
+#loss = test_network(test_loader, model, criterion, device)
+#print(f'\nAverage loss over test data before training: {loss}\n')
 
 timer = time.time()
 print(f'Start training, num_epochs: {num_epochs}, batch size: {batch_size}, lr: {learning_rate}, \
@@ -65,6 +65,9 @@ try:
     for epoch in tqdm(range(num_epochs), desc="Total"):
         model.train()
         for i, (images, params) in enumerate(tqdm(train_loader, desc='Epoch')):
+            print( i )
+            print( images )
+            print( params )
             images = images.to(device)
             params = params.to(device)
             
@@ -100,16 +103,13 @@ try:
 except KeyboardInterrupt:
     print("Training aborted by keyboard interrupt.")
 except TypeError:
-    print("Training aborted by keyboard interrupt.")
+    print("TypeError.")
 
 
 # Test network after training
 loss = test_network(test_loader, model, criterion, device, print_results=True)
-message = f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\n"
-          +"learning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}'
-
-print(message)
+print( f'Loss: {loss}\nEpochs: {num_epochs}\nbatch_size: {batch_size}\n' )
+print( f'learning_rate: {learning_rate}\nn_train_samples: {n_train_samples}\nimg_size: {img_size}' )
 
 # Save your model if you want to
-save_model(model)
-# torch.save(model.state_dict(), "Models/save2")
+torch.save(model.state_dict(), "save-model")
