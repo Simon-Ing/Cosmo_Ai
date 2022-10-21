@@ -5,6 +5,7 @@ in the CosmoAI model.
 
 import torch
 import os
+import numpy as np
 from skimage import io
 from torch.utils.data import Dataset 
 import pandas as pd
