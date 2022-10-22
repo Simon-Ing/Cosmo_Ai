@@ -52,7 +52,7 @@ try:
             loss = criterion(output, params)
             loss.backward()
             optimizer.step()
-            print( f"Batch no. {epoch}-{i}: loss = {loss.item()}\n" )
+            print( f"Batch no. {epoch}-{i}: loss = {loss.item()}" )
 
         # Test network for each epoch
         model.eval()
