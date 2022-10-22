@@ -22,7 +22,7 @@ class Inception3(nn.Module):
             aux_logits: bool = True,
             transform_input: bool = False,
             inception_blocks: Optional[List[Callable[..., nn.Module]]] = None,
-            init_weights: Optional[bool] = None,
+            init_weights: Optional[bool] = True,
             dropout: float = 0.5,
     ) -> None:
         super().__init__()
@@ -30,14 +30,6 @@ class Inception3(nn.Module):
         if inception_blocks is None:
             inception_blocks = [BasicConv2d, InceptionA, InceptionB, InceptionC,
                                 InceptionD, InceptionE, InceptionAux]
-        if init_weights is None:
-            warnings.warn(
-                "The default weight initialization of inception_v3 will be changed in future releases of "
-                "torchvision. If you wish to keep the old behavior (which leads to long initialization times"
-                " due to scipy/scipy#11299), please set init_weights=True.",
-                FutureWarning,
-            )
-            init_weights = True
         if len(inception_blocks) != 7:
             raise ValueError(f"lenght of inception_blocks should be 7 instead of {len(inception_blocks)}")
         conv_block = inception_blocks[0]

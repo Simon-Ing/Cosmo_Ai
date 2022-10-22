@@ -68,9 +68,6 @@ try:
     for epoch in tqdm(range(num_epochs), desc="Total"):
         model.train()
         for i, (images, params) in enumerate(tqdm(train_loader, desc='Epoch')):
-            print( i )
-            print( images )
-            print( params )
             images = images.to(device)
             params = params.to(device)
             
