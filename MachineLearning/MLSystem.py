@@ -79,17 +79,25 @@ class MLSystem:
    def savemodel(self,fn="save-model"):
          torch.save(self.model.state_dict(), fn)
 
-ml = MLSystem()
-ml.loadtrainingdata()
-ml.loadtestdata()
+if __name__ == "__main__":
+    print( "MLSystem test script.\nConfiguring ... " )
 
-loss = ml.getLoss()
-print(f'\nAverage loss over test data before training: {loss}\n')
+    ml = MLSystem()
+    ml.loadtrainingdata()
+    ml.loadtestdata()
 
-ml.train()
+    print( "Pre-training test ..." )
 
-# Test network after training
-loss = ml.getLoss()
-print( f'Loss: {loss}' )
+    loss = ml.getLoss()
+    print(f'\nAverage loss over test data before training: {loss}\n')
 
-ml.savemodel()
+    print( "Training ..." )
+
+    ml.train()
+
+    print( "Post-training test ..." )
+    loss = ml.getLoss()
+    print( f'Loss: {loss}' )
+
+    print( "Saving ..." )
+    ml.savemodel()
