@@ -35,11 +35,11 @@ class MLSystem:
        self.trainloader = DataLoader(dataset=train_dataset,
                                  batch_size=self.batch_size, shuffle=True)
        self.img_size = train_dataset[0][0].shape
-       self.ntrain = len(self.train_dataset)
+       self.ntrain = len(train_dataset)
    def loadtestdata(self,fn="train.csv"):
        test_dataset = CosmoDataset("test.csv")
        self.testloader = DataLoader(dataset=test_dataset, batch_size=self.batch_size)
-       self.ntest = len(self.test_dataset)
+       self.ntest = len(test_dataset)
 
    def printparam(self):
      print(f'num_epochs: {self.num_epochs}, ' 
