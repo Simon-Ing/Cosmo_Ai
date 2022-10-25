@@ -52,13 +52,13 @@ class MLSystem:
      self.printparam()
      try:
          for epoch in range(self.num_epochs):
-             model.train()
+             self.model.train()
              for i, (images, params) in enumerate(self.trainloader):
                  self.optimizer.zero_grad()
                  
                  # Forward + Backward + Optimiser
-                 output = model(images)
-                 loss = criterion(output, params)
+                 output = self.model(images)
+                 loss = self.criterion(output, params)
                  loss.backward()
                  self.optimizer.step()
                  print( f"Batch no. {epoch}-{i}: loss = {loss.item()}" )
