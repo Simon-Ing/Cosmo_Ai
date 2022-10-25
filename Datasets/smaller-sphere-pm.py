@@ -8,10 +8,10 @@ n = 1000
 
 
 def getline(idx,chi=50,nterms=16):
-    x = randint(-100,100)
-    y = randint(-100,100)
+    x = randint(-85,85)
+    y = randint(-85,85)
     einsteinR = randint(1,50)
-    sigma = randint(1,70)
+    sigma = randint(1,50)
     sigma2 = 0
     theta = 0
     srcmode = "s"
