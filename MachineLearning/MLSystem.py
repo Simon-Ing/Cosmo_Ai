@@ -17,34 +17,35 @@ from tqdm import tqdm
 from torch.cuda.amp import autocast
 
 class MLSystem:
-    def __init__(self,model=None,criterion=None,optimizer=None,nepoch=20):
+   def __init__(self,model=None,criterion=None,optimizer=None,nepoch=20):
         self.num_epochs = nepoch
         self.batch_size = 32
         self.learning_rate = 0.001
 
         # Initialize your network, loss function, and optimizer 
-        if model = None:
+        if model == None:
            self.model = Inception3(num_outputs=8)
-        if criterion = None:
+        if criterion == None:
            self.criterion = nn.MSELoss()
-        if optimiser = None:
-           self.optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        if optimizer == None:
+           self.optimizer = torch.optim.SGD(self.model.parameters(),
+                                            lr=0.001, momentum=0.9)
    def loadtrainingdata(self,fn="train.csv"):
        train_dataset = CosmoDataset(fn)
        self.trainloader = DataLoader(dataset=train_dataset,
                                  batch_size=self.batch_size, shuffle=True)
-   def loadttestdata(self,fn="train.csv"):
-       test_dataset = CosmoDataset("test.csv")
-       self.testloader = DataLoader(dataset=test_dataset, batch_size=batch_size)
        self.img_size = train_dataset[0][0].shape
+   def loadtestdata(self,fn="train.csv"):
+       test_dataset = CosmoDataset("test.csv")
+       self.testloader = DataLoader(dataset=test_dataset, batch_size=self.batch_size)
    def ntrain(self): return len(self.train_dataset)
    def ntest(self): return len(self.test_dataset)
 
    def printparam(self):
      print(f'num_epochs: {self.num_epochs}, ' 
-             + f'batch size: {self.batch_size}, lr: {self.learning_rate}\n")
+             + f'batch size: {self.batch_size}, lr: {self.learning_rate}\n' )
      print(f'img size: {img_size}')
-     print(f'train samples: {self.ntrain()} test samples: {self.ntest()}\n')
+     print(f'train samples: {self.ntrain()} test samples: {self.ntest()}\n' )
    def train(self):
      timer = time.time()
      print('Start training:')
@@ -75,7 +76,7 @@ class MLSystem:
 
    def getLoss(self):
          loss = testCPU(self.testloader, self.model, self.criterion)
-   def savemodel(self,fn="save-model")
+   def savemodel(self,fn="save-model"):
          torch.save(self.model.state_dict(), fn)
 
 ml = MLSystem()
