@@ -35,17 +35,17 @@ class MLSystem:
        self.trainloader = DataLoader(dataset=train_dataset,
                                  batch_size=self.batch_size, shuffle=True)
        self.img_size = train_dataset[0][0].shape
+       self.ntrain = len(self.train_dataset)
    def loadtestdata(self,fn="train.csv"):
        test_dataset = CosmoDataset("test.csv")
        self.testloader = DataLoader(dataset=test_dataset, batch_size=self.batch_size)
-   def ntrain(self): return len(self.train_dataset)
-   def ntest(self): return len(self.test_dataset)
+       self.ntest = len(self.test_dataset)
 
    def printparam(self):
      print(f'num_epochs: {self.num_epochs}, ' 
              + f'batch size: {self.batch_size}, lr: {self.learning_rate}\n' )
      print(f'img size: {self.img_size}')
-     print(f'train samples: {self.ntrain()} test samples: {self.ntest()}\n' )
+     print(f'train samples: {self.ntrain} test samples: {self.ntest}\n' )
    def train(self):
      timer = time.time()
      print('Start training:')
