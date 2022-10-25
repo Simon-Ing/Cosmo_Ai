@@ -3,7 +3,7 @@
 
 from random import randint
 
-fn = "sphere-pm.csv"
+fn = "smaller-sphere-pm.csv"
 n = 1000
 
 

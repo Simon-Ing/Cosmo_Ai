@@ -1,3 +1,4 @@
+#!/bin/sh
 
 tsrc="-S t"
 sis="-L -n 16"
