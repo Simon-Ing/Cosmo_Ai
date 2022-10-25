@@ -44,7 +44,7 @@ class MLSystem:
    def printparam(self):
      print(f'num_epochs: {self.num_epochs}, ' 
              + f'batch size: {self.batch_size}, lr: {self.learning_rate}\n' )
-     print(f'img size: {img_size}')
+     print(f'img size: {self.img_size}')
      print(f'train samples: {self.ntrain()} test samples: {self.ntest()}\n' )
    def train(self):
      timer = time.time()
