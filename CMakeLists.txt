@@ -2,24 +2,32 @@
 cmake_minimum_required(VERSION 3.15)
 project(CosmoAi CXX)
 
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+cmake_host_system_information(RESULT host QUERY HOSTNAME)
+
+message(${HOSTNAME})
+message(${host})
+if( ${host} MATCHES "idun.*")
+   message("Running on IDUN.  We will not use Conan")
+else()
+
+   # Download automatically, you can also just copy the conan.cmake file
+   if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+       message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+       file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
             "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
+   endif()
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
+   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 
-conan_cmake_run(REQUIRES
+   conan_cmake_run(REQUIRES
         symengine/0.9.0
         opencv/4.5.3
         BASIC_SETUP)
 
+endif()
 
 add_executable(makeimage src/makeimage.cpp)
-add_executable(Datagen src/Data_generator.cpp)
 add_executable(Simulator src/Simulator.cpp)
 add_library(SimLib 
    src/simaux.cpp 
@@ -30,7 +38,6 @@ add_library(SimLib
    src/Window.cpp)
 
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
-target_link_libraries(Datagen ${CONAN_LIBS} SimLib)
 target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
 target_link_libraries(SimLib ${CONAN_LIBS})
 
