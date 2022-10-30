@@ -1,0 +1,16 @@
+
+cmake_minimum_required(VERSION 3.15)
+project(CosmoAi CXX)
+
+add_executable(makeimage src/makeimage.cpp)
+add_library(SimLib 
+   src/simaux.cpp 
+   src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
+   src/TriangleSource.cpp
+   src/LensModel.cpp src/PointMassLens.cpp src/SphereLens.cpp 
+   src/RoulettePMLens.cpp
+   src/Window.cpp)
+
+target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
+target_link_libraries(SimLib ${CONAN_LIBS})
+
