@@ -15,4 +15,4 @@ mkdir -p build
 cd build
 cmake ..
 cd $CWD
-make 
+# make 
