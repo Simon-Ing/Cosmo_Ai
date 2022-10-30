@@ -36,9 +36,16 @@ add_library(SimLib
    src/RoulettePMLens.cpp
    src/Window.cpp)
 
-target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
-target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
-target_link_libraries(SimLib ${CONAN_LIBS})
+if( ${host} MATCHES "idun.*")
+	find_library(NAMES symengine PATHS "${HOME}/local/usr/lib64")
+   target_link_libraries(makeimage opencv symengine SimLib)
+   target_link_libraries(Simulator opencv symengine SimLib)
+   target_link_libraries(SimLib opencv symengine SimLib)
+else()
+   target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
+   target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
+   target_link_libraries(SimLib ${CONAN_LIBS})
+endif()
 
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,--stack-size=1000000")
