@@ -4,8 +4,7 @@ project(CosmoAi CXX)
 
 cmake_host_system_information(RESULT host QUERY HOSTNAME)
 
-message(${HOSTNAME})
-message(${host})
+message("Running on ${host}")
 if( ${host} MATCHES "idun.*")
    message("Running on IDUN.  We will not use Conan")
 else()

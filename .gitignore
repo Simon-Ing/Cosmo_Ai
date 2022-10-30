@@ -435,3 +435,6 @@ graph_info.json
 *.pdf
 *.png
 *.csv
+
+# Build
+build
