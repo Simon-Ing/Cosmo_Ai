@@ -1,13 +1,17 @@
 
+message("CMakeLists.txt - CosmoSim - Starting ...")
+
 cmake_minimum_required(VERSION 3.15)
 project(CosmoAi CXX)
 
-cmake_host_system_information(RESULT host QUERY HOSTNAME)
+# cmake_host_system_information(RESULT host QUERY HOSTNAME)
+set(host "foobar")
 
 message("Running on ${host}")
 if( ${host} MATCHES "idun.*")
    message("Running on IDUN.  We will not use Conan")
 else()
+   message("CONAN setup")
 
    # Download automatically, you can also just copy the conan.cmake file
    if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
