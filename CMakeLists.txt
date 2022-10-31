@@ -37,10 +37,16 @@ add_library(SimLib
    src/Window.cpp)
 
 if( ${host} MATCHES "idun.*")
+   set(HOME "/cluster/home/hasc/")
+   message( "Homedir is ${HOME}" )
    set(CMAKE_LIBRARY_PATH "${HOME}/local/usr/lib64")
 
    find_library(SYMLIB NAMES symengine)
-   find_library(CVLIB NAMES opencv)
+   # find_library(CVLIB NAMES opencv_core)
+   # find_library(CVILIB NAMES opencv_imgcodecs)
+   set(CVLIB "opencv")
+   
+   message( "CVLIB=${CVLIB}" )
    # find_library(NAMES opencv PATHS "${HOME}/local/usr/lib64")
    target_link_libraries(makeimage ${SYMLIB} ${CVLIB} SimLib)
    target_link_libraries(Simulator ${SYMLIB} ${CVLIB} SimLib)
