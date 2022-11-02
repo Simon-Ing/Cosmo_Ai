@@ -20,6 +20,8 @@ add_library(SimLib
    src/RoulettePMLens.cpp
    src/Window.cpp)
 
+message("CONAN_LIBS=${CONAN_LIBS}")
+
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
 target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
 target_link_libraries(SimLib ${CONAN_LIBS})
