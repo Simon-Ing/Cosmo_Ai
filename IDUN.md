@@ -4,7 +4,7 @@
 ```
 module purge
 module load intel/2020b
-module load SciPy
+module load SciPy-bundle/2020.11-intel-2020b
 ```
 
 ```
