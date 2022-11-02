@@ -15,18 +15,28 @@ machine learning models which can in turn be used to map the dark
 matter of the Universe.  This is work in progress.
 
 
-
 # Build and Run
 
 Provided a full C++ installation is available with cmake and conan, the system is built
 with
 
+
 ```sh
-cmake -DCMAKE_BUILD_TYPE=Release .
-make
+mkdir build && cd build
+conan install ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
 ```
 
 Binaries will be located under bin/.
+
+The [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
+recommends the following settings (before building):
+
+```
+conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
+conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
+```
 
 ## Install Dependencies
 
