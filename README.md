@@ -15,15 +15,16 @@ machine learning models which can in turn be used to map the dark
 matter of the Universe.  This is work in progress.
 
 
-
 # Build and Run
 
 Provided a full C++ installation is available with cmake and conan, the system is built
 with
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE=Release .
-make
+mkdir build && cd build
+conan install ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build ..
 ```
 
 Binaries will be located under bin/.
