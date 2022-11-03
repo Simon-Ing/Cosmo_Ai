@@ -44,3 +44,5 @@ elseif(${MSVC})
 else()
     message(FATAL_ERROR "Compiler and system are not supported")
 endif()
+
+install( TARGETS makeimage Simulator DESTINATION bin)
