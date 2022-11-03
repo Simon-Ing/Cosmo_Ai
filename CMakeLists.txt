@@ -6,9 +6,21 @@ project(CosmoAi CXX)
 
 add_definitions("-std=c++11")
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+cmake_host_system_information(RESULT host QUERY HOSTNAME)
+# set(host "foobar")
+message("Running on ${host}")
 
+if( ${host} MATCHES "idun.*")
+	message("IDUN - conan is not available")
+	set(CONAN_LIBS "symengine;gmp;mpfr;opencv_core;opencv_imgproc;opencv_imgcodecs;opencv_highgui;opencv_ml;opencv_video;opencv_features2d;opencv_calib3d;opencv_objdetect;opencv_stitching;pthread")
+        message("CONAN_LIBS=${CONAN_LIBS}")
+
+	include_directories(AFTER SYSTEM "/cluster/apps/eb/software/OpenCV/4.5.3-foss-2021a-contrib/include/opencv4")
+else()
+      message("Including conan setup")
+      include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+      conan_basic_setup()
+endif()
 
 add_executable(makeimage src/makeimage.cpp)
 add_executable(Simulator src/Simulator.cpp)
@@ -20,7 +32,6 @@ add_library(SimLib
    src/RoulettePMLens.cpp
    src/Window.cpp)
 
-message("CONAN_LIBS=${CONAN_LIBS}")
 
 target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
 target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
