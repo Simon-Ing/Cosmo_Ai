@@ -34,9 +34,14 @@ protected:
     std::array<std::array<double, 52>, 51> alphas_val;
     std::array<std::array<double, 52>, 51> betas_val;
 
+private:
+    bool centredMode = false ;
+
 public:
     LensModel();
+    LensModel(bool);
     void update();
+    void setCentred( bool ) ;
 
     virtual void updateXY(double, double, double, double) = 0;
     void updateNterms(int);
@@ -54,7 +59,7 @@ protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0 ;
 
 private:
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst, int);
+    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 };
@@ -77,6 +82,7 @@ protected:
 class SphereLens : public LensModel { 
   public:
     SphereLens();
+    SphereLens(bool);
     virtual void updateXY(double, double, double, double);
   protected:
     virtual void calculateAlphaBeta();

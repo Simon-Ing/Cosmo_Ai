@@ -13,9 +13,13 @@
 double factorial_(unsigned int n);
 
 LensModel::LensModel() :
+        LensModel(false)
+{ }
+LensModel::LensModel(bool centred) :
         CHI(0.5),
         einsteinR(20),
-        nterms(10)
+        nterms(10),
+        centredMode(centred)
 { }
 
 /* Getters for the images */
@@ -96,7 +100,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     for (int i = 0; i < n_threads; i++) {
         int begin = dst.rows/n_threads*i;
         int end = dst.rows/n_threads*(i+1);
-            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst, apparentAbs ); });
+            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
             threads_vec.push_back(std::move(t));
         }
 
@@ -106,9 +110,11 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst, int R) {
+void LensModel::setCentred(bool b) { centredMode = b ; }
+void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
+    int R = centredMode ? 0 : apparentAbs ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 

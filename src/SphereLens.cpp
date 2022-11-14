@@ -15,6 +15,12 @@ SphereLens::SphereLens() :
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
+SphereLens::SphereLens(bool centred) :
+   LensModel::LensModel(centred)
+{ 
+    std::cout << "Instantiating SphereLens ... \n" ;
+    initAlphasBetas();
+}
 
 void SphereLens::initAlphasBetas() {
 
