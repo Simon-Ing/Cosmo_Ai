@@ -6,9 +6,25 @@ project(CosmoAi CXX)
 
 add_definitions("-std=c++11")
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+cmake_host_system_information(RESULT host QUERY HOSTNAME)
+# set(host "foobar")
+message("Running on ${host}")
 
+if( ${host} MATCHES "idun.*")
+	message("IDUN - conan is not available")
+	set(LLIBS "symengine;gmp;mpfr;pthread")
+
+	include_directories(AFTER SYSTEM "/cluster/apps/eb/software/OpenCV/4.5.3-foss-2021a-contrib/include/opencv4")
+	find_package( OpenCV REQUIRED )
+	# include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+	message("LLIBS=${LLIBS}")
+	message("OpenCV_LIBS=${OpenCV_LIBS}")
+else()
+      message("Including conan setup")
+      include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+      conan_basic_setup()
+endif()
 
 add_executable(makeimage src/makeimage.cpp)
 add_executable(Simulator src/Simulator.cpp)
@@ -20,11 +36,16 @@ add_library(SimLib
    src/RoulettePMLens.cpp
    src/Window.cpp)
 
-message("CONAN_LIBS=${CONAN_LIBS}")
 
-target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
-target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
-target_link_libraries(SimLib ${CONAN_LIBS})
+if( ${host} MATCHES "idun.*")
+	target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
+	target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
+	target_link_libraries(SimLib ${OpenCV_LIBS} ${LLIBS})
+else()
+   target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
+   target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
+   target_link_libraries(SimLib ${CONAN_LIBS})
+endif()
 
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=1000000")
@@ -33,3 +54,5 @@ elseif(${MSVC})
 else()
     message(FATAL_ERROR "Compiler and system are not supported")
 endif()
+
+install( TARGETS makeimage Simulator DESTINATION bin)
