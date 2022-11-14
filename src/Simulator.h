@@ -54,7 +54,7 @@ protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0 ;
 
 private:
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
+    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst, int);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 };

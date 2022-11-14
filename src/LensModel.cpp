@@ -36,9 +36,10 @@ cv::Mat LensModel::getActual() {
    dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
    cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
-   std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" << rot << "\n" ;
+   std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" 
+             << rot << "\n" ;
 
-   cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size());    // crop distorted image
+   cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
    return imgActual ; 
 }
 cv::Mat LensModel::getApparent() { return source->getImage() ; }
@@ -95,7 +96,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     for (int i = 0; i < n_threads; i++) {
         int begin = dst.rows/n_threads*i;
         int end = dst.rows/n_threads*(i+1);
-            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
+            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst, apparentAbs ); });
             threads_vec.push_back(std::move(t));
         }
 
@@ -105,7 +106,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
+void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst, int R) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
     for (int row = begin; row < end; row++) {
@@ -116,7 +117,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
-            double x = (col - dst.cols / 2.0 - apparentAbs) * CHI;
+            double x = (col - dst.cols / 2.0 - R) * CHI;
             double y = (dst.rows / 2.0 - row) * CHI;
             // (x,y) are coordinates in the lens plane, and hence the
             // multiplication by CHI
@@ -142,15 +143,6 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             }
         }
     }
-}
-
-/* Calculate n! (n factorial) */
-double factorial_(unsigned int n){
-    double a = 1.0;
-    for (int i = 2; i <= n; i++){
-        a *= i;
-    }
-    return a;
 }
 
 void LensModel::updateNterms(int n) {
