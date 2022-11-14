@@ -36,8 +36,9 @@ int main(int argc, char *argv[]) {
     Source *src ;
     std::vector<int> apparent  ;
     int secondary = 0 ;
+    bool centred = false ;
 
-    while ( (opt = getopt(argc,argv,"A:L:S:N:x:y:s:2:t:n:X:E:I:RZ:YD:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"A:CL:S:N:x:y:s:2:t:n:X:E:I:RZ:YD:")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]) {
           case 'S': srcmode = optarg[0] ; break ;
           case 'R': ++refmode ; break ;
           case 'Y': ++secondary ; break ;
+          case 'C': centred = true ; break ;
           case 'D': dirname = convertToString( optarg ) ; break ;
           case 'Z': imgsize = atoi(optarg) ; break ;
        }
@@ -73,16 +75,16 @@ int main(int argc, char *argv[]) {
     switch ( mode ) {
        case 's':
          std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
-         simulator = new SphereLens() ;
+         simulator = new SphereLens(centred) ;
          break ;
        case 'r':
          std::cout << "Running Roulette Point Mass Lens (mode=" << mode << ")\n" ;
-         simulator = new RoulettePMLens() ;
+         simulator = new RoulettePMLens(centred) ;
          break ;
        case 'p':
        default:
          std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
-         simulator = new PointMassLens() ;
+         simulator = new PointMassLens(centred) ;
          break ;
     }
     switch ( srcmode ) {
