@@ -25,12 +25,12 @@ im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
 print("Shape converted to grey scale: ", im.shape)
 
 m,n = im.shape
-ps = [ (x,y) for x in range(m) for y in range(n) ] )
+ps = [ (x,y) for x in range(m) for y in range(n) ]
 s = im.sum()
 xs = [ x*im[x,y] for (x,y) in ps ]
 ys = [ y*im[x,y] for (x,y) in ps ]
-xm = sum(xs)/s
-ym = sum(ys)/s
+xm = int(round(sum(xs)/s))
+ym = int(round(sum(ys)/s))
 
 print( f"Centre: ({xm},{ym})\n" )
 
