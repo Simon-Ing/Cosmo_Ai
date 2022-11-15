@@ -114,7 +114,7 @@ void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
-    int R = centredMode ? 0 : apparentAbs ;
+    int R = centredMode ? tentativeCentre : apparentAbs ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
