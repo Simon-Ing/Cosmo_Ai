@@ -2,7 +2,6 @@
 
 #include <unistd.h>
 #include <string>
-#include <opencv2/opencv.hpp>
 #include "Simulator.h"
 
 std::string convertToString(char*) ;
