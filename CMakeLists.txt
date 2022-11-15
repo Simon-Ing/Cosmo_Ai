@@ -14,7 +14,6 @@ if( ${host} MATCHES "idun.*")
 	message("IDUN - conan is not available")
 	set(LLIBS "symengine;gmp;mpfr;pthread")
 
-	include_directories(AFTER SYSTEM "/cluster/apps/eb/software/OpenCV/4.5.3-foss-2021a-contrib/include/opencv4")
 	find_package( OpenCV REQUIRED )
 	# include_directories( ${OpenCV_INCLUDE_DIRS} )
 

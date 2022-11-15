@@ -23,7 +23,7 @@ mkdir -p bin
 mkdir -p build && cd build
 cmake ..
 cmake --build .
-cmake --install .. --prefix ..
+cmake --install . --prefix ..
 ```
 
 # Notes
