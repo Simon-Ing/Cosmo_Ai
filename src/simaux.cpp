@@ -33,3 +33,11 @@ void refLines(cv::Mat& target) {
                       1 ) ;
 }
 
+/* Calculate n! (n factorial) */
+double factorial_(unsigned int n){
+    double a = 1.0;
+    for (int i = 2; i <= n; i++){
+        a *= i;
+    }
+    return a;
+}

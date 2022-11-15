@@ -1,7 +1,7 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
-#include "opencv2/opencv.hpp"
+#include "opencv4/opencv2/opencv.hpp"
 
 class Source {
 

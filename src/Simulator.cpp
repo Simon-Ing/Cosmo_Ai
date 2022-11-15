@@ -1,4 +1,3 @@
-#include <opencv2/opencv.hpp>
 #include "Simulator.h"
 #include <fstream>
 

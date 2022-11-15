@@ -6,7 +6,6 @@
 #include <thread>
 #include <random>
 #include <string>
-#include <opencv2/opencv.hpp>
 #include "Simulator.h"
 
 int main(int, char *argv[]) {
