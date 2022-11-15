@@ -19,30 +19,33 @@ else:
 print( "Filename: ", fn )
 
 raw = cv.imread(fn)
+
 print("Raw image Shape: ", raw.shape)
 
 im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
 print("Shape converted to grey scale: ", im.shape)
 
-retval, labels, stats, centroids = \
-  cv.connectedComponentsWithStats( im, connectivity=8, ltype=cv.CV_32S )
+def cleanImage(im):
+   retval, labels, stats, centroids = \
+     cv.connectedComponentsWithStats( im, connectivity=8, ltype=cv.CV_32S )
 
 
-print( "Labels Shape: ", labels.shape )
-print( "Labels Map: ", labels )
-print( "Labels Range: ", labels.min(), labels.max() )
+   print( "Labels Shape: ", labels.shape )
+   print( "Labels Map: ", labels )
+   print( "Labels Range: ", labels.min(), labels.max() )
+   print( "Stats: ", stats )
 
-print( "Stats: ", stats )
+   components = [ x for x in enumerate( stats[:,cv.CC_STAT_AREA] ) ]
+   print( "Components: ", components )
 
-components = [ x for x in enumerate( stats[:,cv.CC_STAT_AREA] ) ]
-print( "Components: ", components )
+   components.sort(reverse=True, key=lambda x : x[1] )
+   print( "Components: ", components )
 
-components.sort(reverse=True, key=lambda x : x[1] )
-print( "Components: ", components )
+   label = components[1][0]
+   mask = ( labels == label ).astype(np.uint8)
 
-label = components[1][0]
-mask = ( labels == label ).astype(np.uint8)
+   return cv.bitwise_and( im, im, mask=mask )
 
-masked = cv.bitwise_and( im, im, mask=mask )
+masked = cleanImage(im)
 
 cv.imwrite( "masked-test.png", masked )
