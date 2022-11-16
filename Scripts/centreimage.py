@@ -21,7 +21,6 @@ def centreImage(im):
   xm = int(round(sum(xs)/s - m/2))
   ym = int(round(sum(ys)/s - n/2))
   
-  print( f"Centre: ({xm},{ym})\n" )
 
   centred = np.zeros( (m,n) )
   c1 = np.zeros( (m,n) )
@@ -38,7 +37,8 @@ def centreImage(im):
       centred[:,-ym:] = c1[:,:ym]
   else:
       centred = c1
-  print( f"Range ({centred.min()},{centred.max()})" )
+  print( f"Centre: ({xm},{ym}) ;  " 
+       + f"Range ({centred.min()},{centred.max()})" )
   return centred
 
 def drawAxes(im):
@@ -74,28 +74,32 @@ if __name__ == "__main__":
           description = 'Centre an image on the centre of light',
           epilog = '')
 
-    parser.add_argument('fn',nargs="?",default="image-test.png",
-             help="Input file") 
-    parser.add_argument('outfile',nargs="?",default="centred-test.png",
-             help="Output file") 
+    parser.add_argument('fn',nargs="*", help="Input file") 
+    parser.add_argument('-o','--outfile',help="Output file") 
     parser.add_argument('-R', '--reflines',action='store_true',
             help="Add reference (axes) lines")
     parser.add_argument('-A', '--artifacts',action='store_true',
             help="Attempt to remove artifacts from the Roulettes model")
     args = parser.parse_args()
 
-    print( "Filename: ", args.fn )
+    fns = args.fn
+    if not fns: fns = ["image-test.png"]
+    for fn in fns:
+       print( "Filename: ", fn )
+       raw = cv.imread(fn)
+       print("Raw image Shape: ", raw.shape)
 
-    raw = cv.imread(args.fn)
-    print("Raw image Shape: ", raw.shape)
-
-    im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
-    print("Shape converted to grey scale: ", im.shape)
-    print("Image type: ", im.dtype)
-    centred = centreImage(im)
-    if args.artifacts:
-        centred = cleanImage(centred)
-    if args.reflines:
-        centred = drawAxes(centred)
-
-    cv.imwrite( args.outfile, centred )
+       im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
+       print("Shape converted to grey scale: ", im.shape)
+       print("Image type: ", im.dtype)
+       centred = centreImage(im)
+       if args.artifacts:
+           centred = cleanImage(centred)
+       if args.reflines:
+           centred = drawAxes(centred)
+   
+       if args.outfile == None:
+           outfile = "centred-" + fn
+       else:
+           outfile = args.outfile 
+       cv.imwrite( outfile, centred )
