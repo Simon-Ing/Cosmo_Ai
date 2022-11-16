@@ -17,9 +17,8 @@ matter of the Universe.  This is work in progress.
 
 # Build and Run
 
-Provided a full C++ installation is available with cmake and conan, the system is built
-with
-
+Provided a full C++ installation is available with cmake and conan,
+the system is built with
 
 ```sh
 mkdir build && cd build
@@ -207,15 +206,13 @@ Getters are provided for the three images.
 
 ### Update
 
-The main routine of the `Simulator` is `update()` which recalculates the three images,
-actual, apparent, and distorted.  This is called by the setters.
+The main routine of the `Simulator` is `update()` which recalculates the 
+three images: actual, apparent, and distorted.  This is called by the setters.
 
 In addition to the virtual functions mentioned above, it depends on
 
 + `parallelDistort()` and `distort()` which runs the main steps in parallel.
 + `drawParallel()` and `drawSource()` which draws the source image.
-  Only a Gaussian image has been implemented.  When new source models are required,
-  this should be delegated to a separate class.
 
 ## Auxiliaries
 

@@ -28,11 +28,10 @@ cmake --install . --prefix ..
 
 # Notes
 
-These notes 
-
-+ [Yum in User Space](https://stackoverflow.com/questions/36651091/how-to-install-packages-in-linux-centos-without-root-user-with-automatic-depen)
-
 ## Intel Compiler
+
+It seems that the Intel compiler is not compatible with the most
+recent libraries.
 
 ```
 module purge
@@ -46,6 +45,8 @@ cmake -D CMAKE_C_COMPILER=icc -D CMAKE_CXX_COMPILER=icc ..
 ```
 
 ## Libraries in User space
+
++ [Yum in User Space](https://stackoverflow.com/questions/36651091/how-to-install-packages-in-linux-centos-without-root-user-with-automatic-depen)
 
 ```
 export PATH="$HOME/local/usr/sbin:$HOME/local/usr/bin:$HOME/local/bin:$PATH"
