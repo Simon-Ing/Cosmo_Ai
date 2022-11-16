@@ -131,7 +131,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // Calculate distance and angle of the point evaluated 
             // relative to center of lens (origin)
             double r = sqrt(x * x + y * y);
-            double theta = x == 0 ? 0 : atan2(y, x);
+            double theta = x == 0 ? PI/2 : atan2(y, x);
 
             pos = this->getDistortedPos(r, theta);
 
