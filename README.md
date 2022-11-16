@@ -107,6 +107,19 @@ To bulk generate images, two scripts have been provided:
 + `Scripts/datagen.sh` to read the CSV file and generate the corresponding
   images
 
+## Scripts
+
++ `datasetgen.py` creates a CSV file of random parameter sets.
+  This script should be edited for different scenarioes.
+  + `python3 Scripts/datasetgen.py --help` for instructions
++ `datagen.sh` parses the CSV file from `datasetgen.py` and
+  generates images
++ `centreimage.py` post-processes images to centre them on the centre
+  of light and optionally remove artifacts
++ `montage.sh` concatenates the different images for one source 
+  for easier display
++ `triangle.sh` generates images from a triangle source (testing)
+
 # Versions
 
 The main branches are
@@ -132,7 +145,6 @@ Yet it may prove a useful starting point for a better GUI based on QT.
 + Binaries
     + `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
     + `makeimage.cpp` is the CLI Tool
-    + `Data_generator.cpp` *(deprecated)* for the `Datagen` binary.
 
 # Technical Design
 

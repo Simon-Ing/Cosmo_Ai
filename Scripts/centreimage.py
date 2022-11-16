@@ -74,12 +74,14 @@ if __name__ == "__main__":
           description = 'Centre an image on the centre of light',
           epilog = '')
 
-    parser.add_argument('fn',nargs="?",default="image-test.png") 
-    parser.add_argument('outfile',nargs="?",default="centred-test.png") 
-    parser.add_argument('-R', '--reflines',
-                    action='store_true')  # Add reference lines
-    parser.add_argument('-A', '--artifacts',
-                    action='store_true')  # Also clean artifacts
+    parser.add_argument('fn',nargs="?",default="image-test.png",
+             help="Input file") 
+    parser.add_argument('outfile',nargs="?",default="centred-test.png",
+             help="Output file") 
+    parser.add_argument('-R', '--reflines',action='store_true',
+            help="Add reference (axes) lines")
+    parser.add_argument('-A', '--artifacts',action='store_true',
+            help="Attempt to remove artifacts from the Roulettes model")
     args = parser.parse_args()
 
     print( "Filename: ", args.fn )
