@@ -76,6 +76,8 @@ if __name__ == "__main__":
 
     parser.add_argument('fn',nargs="?",default="image-test.png") 
     parser.add_argument('outfile',nargs="?",default="centred-test.png") 
+    parser.add_argument('-R', '--reflines',
+                    action='store_true')  # Add reference lines
     parser.add_argument('-A', '--artifacts',
                     action='store_true')  # Also clean artifacts
     args = parser.parse_args()
@@ -89,8 +91,9 @@ if __name__ == "__main__":
     print("Shape converted to grey scale: ", im.shape)
     print("Image type: ", im.dtype)
     centred = centreImage(im)
-    centred = drawAxes(centred)
     if args.artifacts:
         centred = cleanImage(centred)
+    if args.reflines:
+        centred = drawAxes(centred)
 
     cv.imwrite( args.outfile, centred )
