@@ -47,12 +47,19 @@ def drawAxes(im):
   im[:,(round(n/2))] = 127
   return im
 
-def cleanImage(im):
+def cleanImage(im,sensitivity=None):
    print( f"Image type: {im.dtype}; "
        + f"Range ({im.min()},{im.max()})" )
    im = im.astype(np.uint8)
+
+   if sensitivity:
+       im2 = im.copy()
+       im2[(im2<=sensitivity)] = 0
+   else:
+       im2 = im
+
    retval, labels, stats, centroids = \
-     cv.connectedComponentsWithStats( im, connectivity=8, ltype=cv.CV_32S )
+     cv.connectedComponentsWithStats( im2, connectivity=8, ltype=cv.CV_32S )
 
 
    print( "Labels Shape: ", labels.shape )
@@ -83,6 +90,8 @@ if __name__ == "__main__":
             help="Add reference (axes) lines")
     parser.add_argument('-A', '--artifacts',action='store_true',
             help="Attempt to remove artifacts from the Roulettes model")
+    parser.add_argument('-s', '--sensitivity',
+            help="Sensitivity for the connected components (only with -A)")
     args = parser.parse_args()
 
     fns = args.fn
@@ -97,7 +106,9 @@ if __name__ == "__main__":
        print("Image type: ", im.dtype)
        centred = centreImage(im)
        if args.artifacts:
-           centred = cleanImage(centred)
+           if args.sensitivity: sensitivity = int(args.sensitivity)
+           else: sensitivity = None
+           centred = cleanImage(centred,sensitivity)
        if args.reflines:
            centred = drawAxes(centred)
    
