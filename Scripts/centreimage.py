@@ -10,19 +10,7 @@ largest connected component.
 import cv2 as cv
 import sys
 import numpy as np
-
-
-if len(sys.argv) > 1:
-    fn = sys.argv[1] ;
-else:
-    fn = "image-test.png"
-print( "Filename: ", fn )
-
-raw = cv.imread(fn)
-print("Raw image Shape: ", raw.shape)
-
-im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
-print("Shape converted to grey scale: ", im.shape)
+import argparse
 
 def centreImage(im):
   m,n = im.shape
@@ -59,7 +47,50 @@ def drawAxes(im):
   im[:,(round(n/2))] = 127
   return im
 
-centred = centreImage(im)
-centred = drawAxes(centred)
+def cleanImage(im):
+   retval, labels, stats, centroids = \
+     cv.connectedComponentsWithStats( im, connectivity=8, ltype=cv.CV_32S )
 
-cv.imwrite( "centred-test.png", centred )
+
+   print( "Labels Shape: ", labels.shape )
+   print( "Labels Map: ", labels )
+   print( "Labels Range: ", labels.min(), labels.max() )
+   print( "Stats: ", stats )
+
+   components = [ x for x in enumerate( stats[:,cv.CC_STAT_AREA] ) ]
+   print( "Components: ", components )
+
+   components.sort(reverse=True, key=lambda x : x[1] )
+   print( "Components: ", components )
+
+   label = components[1][0]
+   mask = ( labels == label ).astype(np.uint8)
+
+   return cv.bitwise_and( im, im, mask=mask )
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+          prog = 'CosmoSim centreImage',
+          description = 'Centre an image on the centre of light',
+          epilog = '')
+
+    parser.add_argument('fn',nargs="?",default="image-test.png") 
+    parser.add_argument('outfile',nargs="?",default="centred-test.png") 
+    parser.add_argument('-A', '--artifacts',
+                    action='store_true')  # Also clean artifacts
+    args = parser.parse_args()
+
+    print( "Filename: ", args.fn )
+
+    raw = cv.imread(args.fn)
+    print("Raw image Shape: ", raw.shape)
+
+    im = cv.cvtColor(raw, cv.COLOR_BGR2GRAY)
+    print("Shape converted to grey scale: ", im.shape)
+    print("Image type: ", im.dtype)
+    centred = centreImage(im)
+    centred = drawAxes(centred)
+    if args.artifacts:
+        centred = cleanImage(centred)
+
+    cv.imwrite( args.outfile, centred )
