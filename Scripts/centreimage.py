@@ -48,6 +48,9 @@ def drawAxes(im):
   return im
 
 def cleanImage(im):
+   print( f"Image type: {im.dtype}; "
+       + f"Range ({im.min()},{im.max()})" )
+   im = im.astype(np.uint8)
    retval, labels, stats, centroids = \
      cv.connectedComponentsWithStats( im, connectivity=8, ltype=cv.CV_32S )
 
