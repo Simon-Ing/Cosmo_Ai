@@ -14,6 +14,8 @@ Window::Window() :
         sourceSize(size/20),
         xPosSlider(size*5 + 1),
         yPosSlider(size*5),
+        rPosSlider(1),
+        thetaPosSlider(0),
         mode(0), // 0 = point mass, 1 = sphere
         nterms(10)
 { 
@@ -30,6 +32,8 @@ void Window::initGui(){
     cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, 10*size, updateXY, this);
+    cv::createTrackbar("R position     :", "GL Simulator", &rPosSlider, 5*size, updatePolar, this);
+    cv::createTrackbar("Theta position     :", "GL Simulator", &thetaPosSlider, 361, updatePolar, this);
     cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 2, updateMode, this);
 
     cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 49, updateNterms, this);
@@ -68,6 +72,15 @@ void Window::updateXY(int, void* data){
     auto* that = (Window*)(data);
     that->sim->updateXY( that->xPosSlider/10.0 - that->size/2.0, that->yPosSlider/10.0 - that->size/2.0,
                          that->CHI_percent / 100.0, that->einsteinR );
+    /* The GUI has range 0..size; the simulator uses ±size/2. */
+    that->drawImages() ;
+}
+void Window::updatePolar(int, void* data){
+    auto* that = (Window*)(data);
+    that->sim->setPolar( that->rPosSlider/10.0,
+                         that->thetaPosSlider,
+                         that->CHI_percent / 100.0, that->einsteinR );
+    that->sim->update() ;
     /* The GUI has range 0..size; the simulator uses ±size/2. */
     that->drawImages() ;
 }

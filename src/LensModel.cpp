@@ -76,7 +76,6 @@ void LensModel::update() {
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
-    double phi = atan2(actualY, actualX); // Angle relative to x-axis
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
     imgDistorted =  imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols));
@@ -155,6 +154,9 @@ void LensModel::updateNterms(int n) {
    nterms = n ;
    update() ;
 }
+void LensModel::setNterms(int n) {
+   nterms = n ;
+}
 void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
    nterms = n ;
    updateXY(X,Y,chi,er);
@@ -179,9 +181,31 @@ void LensModel::updateXY( double X, double Y, double chi, double er ) {
     actualX = X ;
     actualY = Y ;
 
-    // Absolute values in source plane
+    // Calculate Polar Co-ordinates
     actualAbs = sqrt(actualX * actualX + actualY * actualY); 
+    phi = atan2(actualY, actualX); // Angle relative to x-axis
 
+    std::cout << "Set position x=" << actualX << "; y=" << actualY
+              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
     updateApparentAbs() ;
     update() ;
+}
+/* Re-calculate co-ordinates using updated parameter settings from the GUI.
+ * This is called from the update() method.                                  */
+void LensModel::setPolar( double R, double theta, double chi, double er ) {
+
+    CHI = chi ;
+    einsteinR = er ;
+
+    actualAbs = R ;
+    phi = PI*theta/180 ;
+
+    // Actual position in source plane
+    actualX = R*cos(phi) ;
+    actualY = R*sin(phi) ;
+
+    std::cout << "Set position x=" << actualX << "; y=" << actualY
+              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
+
+    updateApparentAbs() ;
 }

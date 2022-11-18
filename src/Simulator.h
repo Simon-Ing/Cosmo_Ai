@@ -21,6 +21,7 @@ protected:
     double actualX{};
     double actualY{};
     double actualAbs{};
+    double phi{};
     double apparentAbs{};
     double apparentAbs2{};
 
@@ -46,8 +47,10 @@ public:
     void setCentred( bool ) ;
 
     void updateXY(double, double, double, double) ;
+    void setPolar(double, double, double, double) ;
     virtual void updateApparentAbs()  = 0 ;
     void updateNterms(int);
+    void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
 
@@ -105,6 +108,7 @@ private:
     int einsteinR;
     int xPosSlider;
     int yPosSlider;
+    int rPosSlider, thetaPosSlider ;
     int nterms;
     Source *source ;
 
@@ -114,6 +118,7 @@ public:
 
 private:
     static void updateXY(int, void*);
+    static void updatePolar(int, void*);
     static void updateEinsteinR(int, void*);
     static void updateSize(int, void*);
     static void updateChi(int, void*);
