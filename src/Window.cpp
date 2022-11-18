@@ -9,6 +9,8 @@
 
 Window::Window() :
         size(512),
+        basesize(512),
+        displaysize(768),
         CHI_percent(50),
         einsteinR(size/20),
         sourceSize(size/20),
@@ -25,18 +27,28 @@ Window::Window() :
 void Window::initGui(){
     initSimulator( ) ;
     std::cout << "initGui\n" ;
-    // Make the user interface and specify the function to be called when moving the sliders: update()
-    cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Lens dist %    :", "GL Simulator", &CHI_percent, 100, updateXY, this);
-    cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator", &einsteinR, size, updateXY, this);
-    cv::createTrackbar("Source sourceSize   :", "GL Simulator", &sourceSize, size / 10, updateSize, this);
-    cv::createTrackbar("X position     :", "GL Simulator", &xPosSlider, 10*size, updateXY, this);
-    cv::createTrackbar("Y position     :", "GL Simulator", &yPosSlider, 10*size, updateXY, this);
-    cv::createTrackbar("R position     :", "GL Simulator", &rPosSlider, 5*size, updatePolar, this);
-    cv::createTrackbar("Theta position     :", "GL Simulator", &thetaPosSlider, 361, updatePolar, this);
-    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t\t\t\t\t\t\t\t\t\t", "GL Simulator", &mode, 2, updateMode, this);
 
-    cv::createTrackbar("sum from m=1 to...:", "GL Simulator", &nterms, 49, updateNterms, this);
+    cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
+    cv::createTrackbar("Lens dist %    :", "GL Simulator",
+          &CHI_percent, 100, updateXY, this);
+    cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator",
+          &einsteinR, size, updateXY, this);
+    cv::createTrackbar("Source sourceSize   :", "GL Simulator",
+          &sourceSize, size / 10, updateSize, this);
+    cv::createTrackbar("X position     :", "GL Simulator",
+          &xPosSlider, 10*size, updateXY, this);
+    cv::createTrackbar("Y position     :", "GL Simulator",
+          &yPosSlider, 10*size, updateXY, this);
+    cv::createTrackbar("R position     :", "GL Simulator",
+          &rPosSlider, 5*size, updatePolar, this);
+    cv::createTrackbar("Theta position     :", "GL Simulator",
+          &thetaPosSlider, 361, updatePolar, this);
+    cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t",
+          "GL Simulator", &mode, 2, updateMode, this);
+    cv::createTrackbar("Resolution:", "GL Simulator",
+          &basesize, size+1, updateDisplaySize, this);
+    cv::createTrackbar("sum from m=1 to...:", "GL Simulator",
+          &nterms, 49, updateNterms, this);
     std::cout << "initGui DONE\n" ;
 }
 
@@ -95,6 +107,10 @@ void Window::updateNterms(int, void* data){
     that->sim->updateNterms( that->nterms ) ;
     that->drawImages() ;
 }
+void Window::updateDisplaySize(int, void* data){
+    auto* that = (Window*)(data);
+    that->drawImages() ;
+}
 
 void Window::drawImages() {
    cv::Mat imgActual = sim->getActual() ;
@@ -103,12 +119,24 @@ void Window::drawImages() {
    refLines( imgActual ) ;
    refLines( imgDistorted ) ;
 
-   // Copy both the actual and the distorted images into a new matDst array for display
-   cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
-   cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
-   imgActual.copyTo(matRoi);
-   matRoi = matDst(cv::Rect(size, 0, size, size));
-   imgDistorted.copyTo(matRoi);
+   // Copy both the actual and the distorted images into a new 
+   // matDst array for display
+   cv::Mat matDst(cv::Size(2*displaysize, displaysize), imgActual.type(),
+                  cv::Scalar::all(255));
+   cv::Mat matRoi = matDst(cv::Rect(0, 0, displaysize, displaysize));
+   cv::resize(imgActual,matRoi,cv::Size(displaysize,displaysize) ) ;
+
+   matRoi = matDst(cv::Rect(displaysize, 0, displaysize, displaysize));
+
+   if ( basesize < size ) {
+     cv::Mat tmp(cv::Size(basesize, basesize), imgActual.type(),
+                  cv::Scalar::all(255));
+     cv::resize(imgDistorted,tmp,cv::Size(basesize,basesize) ) ;
+     cv::resize(tmp,matRoi,cv::Size(displaysize,displaysize),
+             0, 0, cv::INTER_NEAREST ) ;
+   } else {
+     cv::resize(imgDistorted,matRoi,cv::Size(displaysize,displaysize) ) ;
+   }
 
    // Show the matDst array (i.e. both images) in the GUI window.
    cv::imshow("GL Simulator", matDst);
@@ -120,8 +148,10 @@ void Window::drawImages2() {
    cv::Mat imgDistorted = sim->getDistorted() ;
    cv::Mat imgSecondary = sim->getSecondary() ;
 
-   // Copy both the actual and the distorted images into a new matDst array for display
-   cv::Mat matDst(cv::Size(2*size, size), imgActual.type(), cv::Scalar::all(255));
+   // Copy both the actual and the distorted images into a new 
+   // matDst array for display
+   cv::Mat matDst(cv::Size(2*size, size), imgActual.type(),
+                  cv::Scalar::all(255));
    cv::Mat matRoi = matDst(cv::Rect(0, 0, size, size));
    imgActual.copyTo(matRoi);
    matRoi = matDst(cv::Rect(size, 0, size, size));

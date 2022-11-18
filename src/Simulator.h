@@ -102,7 +102,7 @@ class Window {
 private:
     int mode;
     LensModel *sim = NULL ;
-    int size;
+    int size, displaysize, basesize;
     int CHI_percent;
     int sourceSize ;
     int einsteinR;
@@ -123,6 +123,7 @@ private:
     static void updateSize(int, void*);
     static void updateChi(int, void*);
     static void updateNterms(int, void*);
+    static void updateDisplaySize(int, void*);
     static void updateMode(int, void*);
 
     void drawImages() ;
