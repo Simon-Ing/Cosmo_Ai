@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     int nterms = 16 ;
     int CHI_percent=50 ;
     int einsteinR=10, X=20, Y=0, sourceSize=10, sigma2 = 10 ;
+    int phi = -1 ;
     int imgsize = 512 ;
     double theta = 0 ;
     double CHI ;
@@ -37,10 +38,11 @@ int main(int argc, char *argv[]) {
     int secondary = 0 ;
     bool centred = false ;
 
-    while ( (opt = getopt(argc,argv,"A:CL:S:N:x:y:s:2:t:n:X:E:I:RZ:YD:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"A:CD:L:S:N:s:2:t:T:n:X:E:I:r:Rx:y:YZ:")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
+          case 'T': phi = atoi(optarg) ; break ;
           case 'A': 
              { std::stringstream ss(optarg) ;
                for ( int i ; ss >> i ; ) {
@@ -103,7 +105,13 @@ int main(int argc, char *argv[]) {
     }
 
     simulator->setSource( src ) ;
-    simulator->updateAll( X, Y, einsteinR, CHI, nterms );
+    if ( phi < 0 ) {
+        simulator->updateAll( X, Y, einsteinR, CHI, nterms );
+    } else {
+        simulator->setNterms( nterms ) ;
+        simulator->setPolar( X, phi, einsteinR, CHI );
+        simulator->update() ;
+    }
 
     std::ostringstream filename;
     filename << ".png";
