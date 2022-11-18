@@ -82,7 +82,8 @@ void Window::updateMode(int, void* data){
 }
 void Window::updateXY(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->updateXY( that->xPosSlider/10.0 - that->size/2.0, that->yPosSlider/10.0 - that->size/2.0,
+    that->sim->updateXY( that->xPosSlider/10.0 - that->size/2.0,
+          that->yPosSlider/10.0 - that->size/2.0,
                          that->CHI_percent / 100.0, that->einsteinR );
     /* The GUI has range 0..size; the simulator uses ±size/2. */
     that->drawImages() ;
