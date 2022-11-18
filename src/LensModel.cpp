@@ -169,3 +169,19 @@ void LensModel::setSource(Source *src) {
  * This is correct for any subclass that does not need the alpha/beta tables. */
 void LensModel::calculateAlphaBeta() { }
 
+/* Re-calculate co-ordinates using updated parameter settings from the GUI.
+ * This is called from the update() method.                                  */
+void LensModel::updateXY( double X, double Y, double chi, double er ) {
+
+    CHI = chi ;
+    einsteinR = er ;
+    // Actual position in source plane
+    actualX = X ;
+    actualY = Y ;
+
+    // Absolute values in source plane
+    actualAbs = sqrt(actualX * actualX + actualY * actualY); 
+
+    updateApparentAbs() ;
+    update() ;
+}

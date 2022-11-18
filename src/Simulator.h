@@ -45,7 +45,8 @@ public:
     void update();
     void setCentred( bool ) ;
 
-    virtual void updateXY(double, double, double, double) = 0;
+    void updateXY(double, double, double, double) ;
+    virtual void updateApparentAbs()  = 0 ;
     void updateNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
@@ -69,9 +70,9 @@ private:
 class PointMassLens : public LensModel { 
 public:
     using LensModel::LensModel ;
-    virtual void updateXY(double, double, double, double);
 protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual void updateApparentAbs() ;
 };
 
 class RoulettePMLens : public PointMassLens { 
@@ -85,10 +86,10 @@ class SphereLens : public LensModel {
   public:
     SphereLens();
     SphereLens(bool);
-    virtual void updateXY(double, double, double, double);
   protected:
     virtual void calculateAlphaBeta();
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual void updateApparentAbs() ;
   private:
     void initAlphasBetas();
 };
