@@ -10,9 +10,9 @@
 IFS=,
 read -r header
 echo $header
-while read -r idx fn srcmode lensmode chi R theta einsteinr sigma sigma2 theta nterms x y
+while read -r idx fn srcmode lensmode chi R phi einsteinr sigma sigma2 theta nterms x y
 do
   idx=`echo $idx | tr -d '"'`
-  makeimage $* -X $chi -x $R -T $theta -E $einsteinr -s $sigma -2 $sigma2 -t $theta -n $nterms \
+  makeimage $* -X $chi -x $R -T $phi -E $einsteinr -s $sigma -2 $sigma2 -t $theta -n $nterms \
                 -S $srcmode -L $lensmode -N $idx 
 done
