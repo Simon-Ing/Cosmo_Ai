@@ -7,6 +7,10 @@
 # -R    to draw axes and box the plot
 # -Z n  to change the image size
 
+pwd
+echo $0 $1
+which makeimage
+
 IFS=,
 read -r header
 echo $header

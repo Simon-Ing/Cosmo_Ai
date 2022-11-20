@@ -69,9 +69,8 @@ int main(int argc, char *argv[]) {
        }
     }
 
-    std::cout << simname << "\n" ; 
-
     CHI = CHI_percent/100.0 ;
+    std::cout << "makeindex (CosmoSim)\n" ;
 
     switch ( mode ) {
        case 's':
@@ -109,7 +108,7 @@ int main(int argc, char *argv[]) {
         simulator->updateAll( X, Y, einsteinR, CHI, nterms );
     } else {
         simulator->setNterms( nterms ) ;
-        simulator->setPolar( X, phi, einsteinR, CHI );
+        simulator->setPolar( X, phi, CHI, einsteinR );
         simulator->update() ;
     }
 
@@ -143,7 +142,6 @@ int main(int argc, char *argv[]) {
     im = simulator->getApparent() ;
     if ( refmode ) refLines(im) ;
     std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
-    std::cout << "Image type " << im.type() << "\n" ;
     cv::imwrite( dirname + "apparent-" + simname + filename.str(), im );
 }
 

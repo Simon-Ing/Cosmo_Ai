@@ -65,6 +65,10 @@ void LensModel::update() {
     
     cv::Mat imgApparent = getApparent() ;
 
+    std::cout << "update() x=" << actualX << "; y= " << actualY 
+              << "; R=" << actualAbs << "; theta=" << phi
+              << "; R_R=" << einsteinR << "; CHI=" << CHI << "\n" ;
+
     this->calculateAlphaBeta() ;
 
     int nrows = imgApparent.rows ;
