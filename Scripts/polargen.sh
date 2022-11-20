@@ -20,4 +20,5 @@ do
   makeimage $* -X $chi -x $R -T $phi -E $einsteinr \
 	        -s $sigma -2 $sigma2 -t $theta -n $nterms \
                 -S $srcmode -L $lensmode -N $idx 
+  centreimage.py $fn
 done
