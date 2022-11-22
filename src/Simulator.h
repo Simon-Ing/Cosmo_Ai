@@ -48,6 +48,8 @@ public:
 
     void updateXY(double, double, double, double) ;
     void setPolar(double, double, double, double) ;
+    void setCHI(double) ;
+    void setEinsteinR(double) ;
     virtual void updateApparentAbs()  = 0 ;
     void updateNterms(int);
     void setNterms(int);
@@ -121,7 +123,7 @@ private:
     static void updatePolar(int, void*);
     static void updateEinsteinR(int, void*);
     static void updateSize(int, void*);
-    static void updateChi(int, void*);
+    static void updateCHI(int, void*);
     static void updateNterms(int, void*);
     static void updateDisplaySize(int, void*);
     static void updateMode(int, void*);

@@ -161,6 +161,14 @@ void LensModel::updateNterms(int n) {
 void LensModel::setNterms(int n) {
    nterms = n ;
 }
+void LensModel::setCHI(double chi) {
+   CHI = chi ;
+   updateApparentAbs() ;
+}
+void LensModel::setEinsteinR(double r) {
+   einsteinR = r ;
+   updateApparentAbs() ;
+}
 void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
    nterms = n ;
    updateXY(X,Y,chi,er);

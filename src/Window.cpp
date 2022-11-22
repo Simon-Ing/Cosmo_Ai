@@ -30,9 +30,9 @@ void Window::initGui(){
 
     cv::namedWindow("GL Simulator", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("Lens dist %    :", "GL Simulator",
-          &CHI_percent, 100, updateXY, this);
+          &CHI_percent, 100, updateCHI, this);
     cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator",
-          &einsteinR, size, updateXY, this);
+          &einsteinR, size, updateEinsteinR, this);
     cv::createTrackbar("Source sourceSize   :", "GL Simulator",
           &sourceSize, size / 10, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator",
@@ -88,13 +88,25 @@ void Window::updateXY(int, void* data){
     /* The GUI has range 0..size; the simulator uses ±size/2. */
     that->drawImages() ;
 }
+void Window::updateEinsteinR(int, void* data){
+    auto* that = (Window*)(data);
+    that->sim->setEinsteinR( that->einsteinR ) ;
+    that->sim->update() ;
+    that->drawImages() ;
+}
+void Window::updateCHI(int, void* data){
+    auto* that = (Window*)(data);
+    that->sim->setCHI( that->CHI_percent / 100.0 ) ;
+    that->sim->update() ;
+    that->drawImages() ;
+}
 void Window::updatePolar(int, void* data){
     auto* that = (Window*)(data);
     that->sim->setPolar( that->rPosSlider/10.0,
                          that->thetaPosSlider,
                          that->CHI_percent / 100.0, that->einsteinR );
-    that->sim->update() ;
     /* The GUI has range 0..size; the simulator uses ±size/2. */
+    that->sim->update() ;
     that->drawImages() ;
 }
 void Window::updateSize(int, void* data){
