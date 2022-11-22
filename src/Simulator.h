@@ -102,11 +102,11 @@ class SphereLens : public LensModel {
 
 class Window {
 private:
-    int mode;
+    int mode, srcmode;
     LensModel *sim = NULL ;
     int size, displaysize, basesize;
     int CHI_percent;
-    int sourceSize ;
+    int sourceSize, sourceSize2, sourceTheta ;
     int einsteinR;
     int xPosSlider;
     int yPosSlider;

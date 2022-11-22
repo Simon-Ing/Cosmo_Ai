@@ -14,11 +14,14 @@ Window::Window() :
         CHI_percent(50),
         einsteinR(size/20),
         sourceSize(size/20),
+        sourceSize2(size/40),
+        sourceTheta(90),
         xPosSlider(size*5 + 1),
         yPosSlider(size*5),
         rPosSlider(1),
         thetaPosSlider(0),
-        mode(0), // 0 = point mass, 1 = sphere
+        mode(0), // 0 = point mass, 1 = sphere, 2 = roulette point mass
+        srcmode(0), // 0 = sphere, 1 = ellipsoid, 2 = triangle 
         nterms(10)
 { 
 }
@@ -33,15 +36,21 @@ void Window::initGui(){
           &CHI_percent, 100, updateCHI, this);
     cv::createTrackbar("Einstein radius / Gamma:", "GL Simulator",
           &einsteinR, size, updateEinsteinR, this);
+    cv::createTrackbar("Source Type         :", "GL Simulator",
+          &srcmode, 2, updateSize, this);
     cv::createTrackbar("Source sourceSize   :", "GL Simulator",
           &sourceSize, size / 10, updateSize, this);
+    cv::createTrackbar("Source sourceSize(2):", "GL Simulator",
+          &sourceSize2, size / 10, updateSize, this);
+    cv::createTrackbar("Source sourceTheta  :", "GL Simulator",
+          &sourceTheta, 260, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator",
           &xPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("Y position     :", "GL Simulator",
           &yPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("R position     :", "GL Simulator",
           &rPosSlider, 5*size, updatePolar, this);
-    cv::createTrackbar("Theta position     :", "GL Simulator",
+    cv::createTrackbar("Phi position     :", "GL Simulator",
           &thetaPosSlider, 361, updatePolar, this);
     cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t",
           "GL Simulator", &mode, 2, updateMode, this);
@@ -111,7 +120,24 @@ void Window::updatePolar(int, void* data){
 }
 void Window::updateSize(int, void* data){
     auto* that = (Window*)(data);
-    that->sim->setSource( new SphericalSource( that->size, that->sourceSize ) ) ;
+    Source *src ;
+    if ( src != NULL ) delete src ;
+    switch ( that->srcmode ) {
+       case 0:
+         src = new SphericalSource( that->size, that->sourceSize ) ;
+         break ;
+       case 1:
+         src = new EllipsoidSource( that->size, that->sourceSize,
+               that->sourceSize2, that->sourceTheta ) ;
+         break ;
+       case 2:
+         src = new TriangleSource( that->size, that->sourceSize ) ;
+         break ;
+       default:
+         std::cout << "No such mode!\n" ;
+         exit(1) ;
+    }
+    that->sim->setSource( src ) ;
     that->sim->update() ;
     that->drawImages() ;
 }
