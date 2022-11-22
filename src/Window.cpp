@@ -117,9 +117,6 @@ void Window::drawImages() {
    cv::Mat imgActual = sim->getActual() ;
    cv::Mat imgDistorted = sim->getDistorted() ;
 
-   refLines( imgActual ) ;
-   refLines( imgDistorted ) ;
-
    // Copy both the actual and the distorted images into a new 
    // matDst array for display
    cv::Mat matDst(cv::Size(2*displaysize, displaysize), imgActual.type(),
@@ -128,6 +125,7 @@ void Window::drawImages() {
    cv::resize(imgActual,matRoi,cv::Size(displaysize,displaysize) ) ;
 
    matRoi = matDst(cv::Rect(displaysize, 0, displaysize, displaysize));
+   refLines( matRoi ) ;
 
    if ( basesize < size ) {
      cv::Mat tmp(cv::Size(basesize, basesize), imgActual.type(),
@@ -138,6 +136,7 @@ void Window::drawImages() {
    } else {
      cv::resize(imgDistorted,matRoi,cv::Size(displaysize,displaysize) ) ;
    }
+   refLines( matRoi ) ;
 
    // Show the matDst array (i.e. both images) in the GUI window.
    cv::imshow("GL Simulator", matDst);
