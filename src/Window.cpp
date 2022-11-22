@@ -46,7 +46,7 @@ void Window::initGui(){
     cv::createTrackbar("\t\t\t\t\t\t\t\t\t\tMode, point/sphere:\t",
           "GL Simulator", &mode, 2, updateMode, this);
     cv::createTrackbar("Resolution:", "GL Simulator",
-          &basesize, size+1, updateDisplaySize, this);
+          &basesize, size, updateDisplaySize, this);
     cv::createTrackbar("sum from m=1 to...:", "GL Simulator",
           &nterms, 49, updateNterms, this);
     std::cout << "initGui DONE\n" ;
@@ -116,6 +116,10 @@ void Window::updateDisplaySize(int, void* data){
 void Window::drawImages() {
    cv::Mat imgActual = sim->getActual() ;
    cv::Mat imgDistorted = sim->getDistorted() ;
+
+   // This is a quick hack to prevent a crash on zero resolution.
+   // It should be reviewed when a better GUI is designed.
+   if ( basesize < 4 ) basesize = 4 ;
 
    // Copy both the actual and the distorted images into a new 
    // matDst array for display
