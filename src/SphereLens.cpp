@@ -115,7 +115,7 @@ cv::Mat SphereLens::getMask( cv::Mat r ) {
       std::cout << "SphereLens::getMask\n" ;
       cv::Mat app = getApparent() ;
       cv::circle( r, cv::Point( apparentAbs +app.cols, app.rows),
-            2*apparentAbs, 1, 255 ) ;
+            apparentAbs/CHI, 1, 255 ) ;
       // cv::bitwise_and( imgD, imgD, imgD, getMask() ) ;
       return r ;
 }
