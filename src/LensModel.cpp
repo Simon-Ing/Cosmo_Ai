@@ -19,7 +19,8 @@ LensModel::LensModel(bool centred) :
         CHI(0.5),
         einsteinR(20),
         nterms(10),
-        centredMode(centred)
+        centredMode(centred),
+        source(NULL)
 { }
 
 /* Getters for the images */
@@ -176,6 +177,7 @@ void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
 
 
 void LensModel::setSource(Source *src) {
+    if ( source != NULL ) delete source ;
     source = src ;
 }
 

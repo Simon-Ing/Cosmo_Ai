@@ -78,7 +78,7 @@ void Window::initSimulator(){
          std::cout << "No such mode!\n" ;
          exit(1) ;
     }
-    sim->setSource( new SphericalSource( size, sourceSize ) ) ;
+    setSource() ;
     sim->updateAll( xPosSlider/10.0 - size/2.0, yPosSlider/10.0 - size/2.0,
          einsteinR, CHI_percent / 100.0, nterms ) ;
     drawImages() ;
@@ -118,26 +118,28 @@ void Window::updatePolar(int, void* data){
     that->sim->update() ;
     that->drawImages() ;
 }
-void Window::updateSize(int, void* data){
-    auto* that = (Window*)(data);
+void Window::setSource(){
     Source *src ;
-    if ( src != NULL ) delete src ;
-    switch ( that->srcmode ) {
+    switch ( srcmode ) {
        case 0:
-         src = new SphericalSource( that->size, that->sourceSize ) ;
+         src = new SphericalSource( size, sourceSize ) ;
          break ;
        case 1:
-         src = new EllipsoidSource( that->size, that->sourceSize,
-               that->sourceSize2, that->sourceTheta ) ;
+         src = new EllipsoidSource( size, sourceSize,
+               sourceSize2, sourceTheta*PI/180 ) ;
          break ;
        case 2:
-         src = new TriangleSource( that->size, that->sourceSize ) ;
+         src = new TriangleSource( size, sourceSize, sourceTheta*PI/180 ) ;
          break ;
        default:
          std::cout << "No such mode!\n" ;
          exit(1) ;
     }
-    that->sim->setSource( src ) ;
+    sim->setSource( src ) ;
+}
+void Window::updateSize(int, void* data){
+    auto* that = (Window*)(data);
+    that->setSource() ;
     that->sim->update() ;
     that->drawImages() ;
 }

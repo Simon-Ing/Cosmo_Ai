@@ -131,6 +131,7 @@ private:
     void drawImages() ;
     /* void drawImages2() ; */
     void initSimulator();
+    void setSource();
 
 };
 
