@@ -168,8 +168,8 @@ void Window::drawImages() {
    cv::Mat matRoi = matDst(cv::Rect(0, 0, displaysize, displaysize));
    cv::resize(imgActual,matRoi,cv::Size(displaysize,displaysize) ) ;
 
-   matRoi = matDst(cv::Rect(displaysize, 0, displaysize, displaysize));
    refLines( matRoi ) ;
+   matRoi = matDst(cv::Rect(displaysize, 0, displaysize, displaysize));
 
    if ( basesize < size ) {
      cv::Mat tmp(cv::Size(basesize, basesize), imgActual.type(),
