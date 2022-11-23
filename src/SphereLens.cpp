@@ -102,20 +102,16 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
 void SphereLens::updateApparentAbs( ) {
     apparentAbs = actualAbs + einsteinR/CHI ;
 }
-cv::Mat SphereLens::getMask() {
-      std::cout << "SphereLens::getMask\n" ;
-      cv::Mat app = getApparent() ;
-      cv::Mat r = cv::Mat::zeros( app.size()*2, app.type() ) ;
-      cv::circle( r, cv::Point( r.cols/2, 2*apparentAbs +r.rows/2),
-            2*apparentAbs, 1, cv::FILLED ) ;
-      // cv::bitwise_and( imgD, imgD, imgD, getMask() ) ;
-      return r ;
-}
-cv::Mat SphereLens::getMask( cv::Mat r ) {
-      std::cout << "SphereLens::getMask\n" ;
-      cv::Mat app = getApparent() ;
-      cv::circle( r, cv::Point( apparentAbs +app.cols, app.rows),
-            apparentAbs/CHI, 1, 255 ) ;
-      // cv::bitwise_and( imgD, imgD, imgD, getMask() ) ;
-      return r ;
+void SphereLens::maskImage( cv::InputOutputArray imgD ) {
+      std::cout << "SphereLens::maskImage\n" ;
+      cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
+      cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
+      cv::circle( imgD, cv::Point( apparentAbs + imgD.cols()/2, imgD.rows()/2),
+            apparentAbs, cv::Scalar(255), 1 ) ;
+      cv::imwrite( "/tmp/test.png", imgD );
+      cv::circle( mask, cv::Point( apparentAbs + imgD.cols()/2, imgD.rows()/2),
+            apparentAbs, cv::Scalar(0), cv::FILLED ) ;
+      cv::imwrite( "/tmp/mask.png", mask );
+      black.copyTo( imgD, mask ) ;
+      cv::imwrite( "/tmp/ret.png", imgD );
 }

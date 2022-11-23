@@ -52,8 +52,7 @@ public:
     void setCHI(double) ;
     void setEinsteinR(double) ;
     virtual void updateApparentAbs()  = 0 ;
-    virtual cv::Mat getMask() ;
-    virtual cv::Mat getMask( cv::Mat ) ;
+    virtual void maskImage( cv::InputOutputArray ) ;
     void updateNterms(int);
     void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
@@ -95,8 +94,7 @@ class SphereLens : public LensModel {
     SphereLens();
     SphereLens(bool);
   protected:
-    virtual cv::Mat getMask() ;
-    virtual cv::Mat getMask( cv::Mat ) ;
+    virtual void maskImage( cv::InputOutputArray ) ;
     virtual void calculateAlphaBeta();
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;

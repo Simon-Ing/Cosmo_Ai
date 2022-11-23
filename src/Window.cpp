@@ -43,7 +43,7 @@ void Window::initGui(){
     cv::createTrackbar("Source sourceSize(2):", "GL Simulator",
           &sourceSize2, size / 10, updateSize, this);
     cv::createTrackbar("Source sourceTheta  :", "GL Simulator",
-          &sourceTheta, 260, updateSize, this);
+          &sourceTheta, 360, updateSize, this);
     cv::createTrackbar("X position     :", "GL Simulator",
           &xPosSlider, 10*size, updateXY, this);
     cv::createTrackbar("Y position     :", "GL Simulator",

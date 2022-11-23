@@ -90,7 +90,7 @@ void LensModel::update() {
 
     if ( maskMode ) {
        std::cout << "Masking the image\n" ;
-       getMask( imgD ) ;
+       maskImage( imgD ) ;
     }
 
     // Correct the rotation applied to the source image
@@ -236,12 +236,6 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
 
     updateApparentAbs() ;
 }
-cv::Mat LensModel::getMask() {
-      std::cout << "LensModel::getMask\n" ;
-      cv::Mat r = cv::Mat::ones( getApparent().size()*2, CV_8U )*255 ;
-      return r ;
-}
-cv::Mat LensModel::getMask( cv::Mat r ) {
-      std::cout << "LensModel::getMask\n" ;
-      return r ;
+void LensModel::maskImage( cv::InputOutputArray r ) {
+      std::cout << "LensModel::maskImage\n" ;
 }
