@@ -26,26 +26,33 @@ LensModel::LensModel(bool centred) :
 /* Getters for the images */
 cv::Mat LensModel::getActual() { 
    cv::Mat imgApparent = getApparent() ;
-   cv::Mat imgActual = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
 
-   // (x0,y0) is the centre of the image in pixel coordinates 
-   double x0 = imgApparent.cols/2 ;
-   double y0 = imgApparent.rows/2 ;
+   if ( actualX == 0 && actualY == 0 ) {
+      return getApparent() ;
+   } else {
+     cv::Mat imgActual 
+        = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
 
-   cv::Point2f srcTri[3], dstTri[3];
-   srcTri[0] = cv::Point2f( x0, y0 );
-   dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
-   srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
-   dstTri[1] = cv::Point2f( x0, y0 );
-   srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
-   dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
-   cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
+     // (x0,y0) is the centre of the image in pixel coordinates 
+     double x0 = imgApparent.cols/2 ;
+     double y0 = imgApparent.rows/2 ;
 
-   std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" 
-             << rot << "\n" ;
+     cv::Point2f srcTri[3], dstTri[3];
+     srcTri[0] = cv::Point2f( x0, y0 );
+     dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
+     srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
+     dstTri[1] = cv::Point2f( x0, y0 );
+     srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
+     dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
+     cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
-   cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
-   return imgActual ; 
+     std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" 
+               << rot << "\n" ;
+
+     cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
+     return imgActual ; 
+   }
+   exit(1) ;
 }
 cv::Mat LensModel::getApparent() { return source->getImage() ; }
 cv::Mat LensModel::getDistorted() { return imgDistorted ; }
