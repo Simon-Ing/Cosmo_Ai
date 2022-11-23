@@ -102,3 +102,20 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
 void SphereLens::updateApparentAbs( ) {
     apparentAbs = actualAbs + einsteinR/CHI ;
 }
+cv::Mat SphereLens::getMask() {
+      std::cout << "SphereLens::getMask\n" ;
+      cv::Mat app = getApparent() ;
+      cv::Mat r = cv::Mat::zeros( app.size()*2, app.type() ) ;
+      cv::circle( r, cv::Point( r.cols/2, 2*apparentAbs +r.rows/2),
+            2*apparentAbs, 1, cv::FILLED ) ;
+      // cv::bitwise_and( imgD, imgD, imgD, getMask() ) ;
+      return r ;
+}
+cv::Mat SphereLens::getMask( cv::Mat r ) {
+      std::cout << "SphereLens::getMask\n" ;
+      cv::Mat app = getApparent() ;
+      cv::circle( r, cv::Point( apparentAbs +app.cols, app.rows),
+            2*apparentAbs, 1, 255 ) ;
+      // cv::bitwise_and( imgD, imgD, imgD, getMask() ) ;
+      return r ;
+}

@@ -20,6 +20,7 @@ LensModel::LensModel(bool centred) :
         einsteinR(20),
         nterms(10),
         centredMode(centred),
+        maskMode(true),
         source(NULL)
 { }
 
@@ -86,6 +87,11 @@ void LensModel::update() {
     // We work in a double sized image to avoid cropping
     cv::Mat imgD = cv::Mat::zeros(nrows*2, ncols*2, imgApparent.type());
     parallelDistort(imgApparent, imgD);
+
+    if ( maskMode ) {
+       std::cout << "Masking the image\n" ;
+       getMask( imgD ) ;
+    }
 
     // Correct the rotation applied to the source image
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
@@ -229,4 +235,13 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
               << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
 
     updateApparentAbs() ;
+}
+cv::Mat LensModel::getMask() {
+      std::cout << "LensModel::getMask\n" ;
+      cv::Mat r = cv::Mat::ones( getApparent().size()*2, CV_8U )*255 ;
+      return r ;
+}
+cv::Mat LensModel::getMask( cv::Mat r ) {
+      std::cout << "LensModel::getMask\n" ;
+      return r ;
 }
