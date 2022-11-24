@@ -16,6 +16,9 @@ std::string convertToString(char* a)
     return s;
 }
 
+#define WRITE_APPARENT  1
+#define WRITE_ACTUAL    2
+
 
 int main(int argc, char *argv[]) {
 
@@ -34,23 +37,14 @@ int main(int argc, char *argv[]) {
     int opt ;
     cv::Mat im ;
     Source *src ;
-    std::vector<int> apparent  ;
-    int secondary = 0 ;
     bool centred = false ;
+    int outputmode = 0 ;
 
-    while ( (opt = getopt(argc,argv,"A:CD:L:S:N:s:2:t:T:n:X:E:I:r:Rx:y:YZ:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"aACD:L:S:N:s:2:t:T:n:X:E:I:r:Rx:y:Z:")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
           case 'T': phi = atoi(optarg) ; break ;
-          case 'A': 
-             { std::stringstream ss(optarg) ;
-               for ( int i ; ss >> i ; ) {
-                  apparent.push_back( i ) ;
-                  if ( ss.peek() == ',' ) ss.ignore() ;
-               }
-             }
-             break ;
           case 's': sourceSize = atoi(optarg) ; break ;
           case '2': sigma2 = atoi(optarg) ; break ;
           case 't': theta = PI*atoi(optarg)/180 ; break ;
@@ -62,10 +56,11 @@ int main(int argc, char *argv[]) {
           case 'L': mode = optarg[0] ; break ;
           case 'S': srcmode = optarg[0] ; break ;
           case 'R': ++refmode ; break ;
-          case 'Y': ++secondary ; break ;
           case 'C': centred = true ; break ;
           case 'D': dirname = convertToString( optarg ) ; break ;
           case 'Z': imgsize = atoi(optarg) ; break ;
+          case 'a': outputmode |= WRITE_ACTUAL ; break ;
+          case 'A': outputmode |= WRITE_APPARENT ; break ;
        }
     }
 
@@ -119,30 +114,21 @@ int main(int argc, char *argv[]) {
     if ( refmode ) refLines(im) ;
     cv::imwrite( dirname + "image-" + simname + filename.str(), im );
 
-    im = simulator->getActual() ;
-    std::cout << "Actual Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
-    if ( refmode ) refLines(im) ; // This does not work for some obscure reason
-    cv::imwrite( dirname + "actual-" + simname + filename.str(), im );
+    if ( outputmode&WRITE_ACTUAL ) {
+      im = simulator->getActual() ;
+      std::cout << "Actual Image size " << im.rows << "x" << im.cols 
+                << " - depth " << im.depth() << "\n" ;
+      if ( refmode ) refLines(im) ; 
+      cv::imwrite( dirname + "actual-" + simname + filename.str(), im );
+    }
 
-    if ( secondary ) {
-       im = simulator->getSecondary() ;
+    if ( outputmode&WRITE_APPARENT ) {
+       im = simulator->getApparent() ;
        if ( refmode ) refLines(im) ;
-       cv::imwrite( dirname + "secondary-" + simname + filename.str(), im );
+       std::cout << "Image size " << im.rows << "x" << im.cols 
+                 << " - depth " << im.depth() << "\n" ;
+       cv::imwrite( dirname + "apparent-" + simname + filename.str(), im );
     }
-
-    for (std::size_t i = 0; i < apparent.size(); i++) {
-        std::stringstream ss;
-        im = simulator->getDistorted( apparent[i] ) ;
-        if ( refmode ) refLines(im) ;
-        ss << dirname << "roulettes-" << apparent[i] << "-" << simname << filename.str() ;
-        std::cout << "Apparent " << apparent[i] << "\n" ;
-        cv::imwrite( ss.str(), im );
-    }
-
-    im = simulator->getApparent() ;
-    if ( refmode ) refLines(im) ;
-    std::cout << "Image size " << im.rows << "x" << im.cols << " - depth " << im.depth() << "\n" ;
-    cv::imwrite( dirname + "apparent-" + simname + filename.str(), im );
 }
 
 
