@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
     CHI = CHI_percent/100.0 ;
-    std::cout << "makeindex (CosmoSim)\n" ;
+    std::cout << "testmask (CosmoSim)\n" ;
 
     switch ( mode ) {
        case 'r':
@@ -87,13 +87,20 @@ int main(int argc, char *argv[]) {
     }
 
     simulator->setSource( src ) ;
-    simulator->setMaskMode( maskmode ) ;
     if ( phi < 0 ) {
         simulator->updateAll( X, Y, einsteinR, CHI, nterms );
     } else {
         simulator->setNterms( nterms ) ;
         simulator->setPolar( X, phi, CHI, einsteinR );
         simulator->update() ;
+    }
+    switch ( maskmode ) {
+       case 1:
+          simulator->maskImage() ;
+          break ;
+       case 2:
+          simulator->markMask() ;
+          break ;
     }
 
     im = simulator->getDistorted() ;

@@ -8,6 +8,7 @@
 
 using namespace SymEngine;
 
+
 #define PI 3.14159265358979323846
 
 class LensModel {
@@ -39,7 +40,6 @@ protected:
 
 private:
     bool centredMode = false ;
-    int maskMode = 0 ;
 
 public:
     LensModel();
@@ -52,13 +52,15 @@ public:
     void setCHI(double) ;
     void setEinsteinR(double) ;
     virtual void updateApparentAbs()  = 0 ;
+    virtual void maskImage( ) ;
+    virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
-    virtual void setMaskMode( int ) ;
     void updateNterms(int);
     void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
+    double getCentre() ;
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
@@ -96,6 +98,8 @@ class SphereLens : public LensModel {
     SphereLens();
     SphereLens(bool);
   protected:
+    virtual void maskImage( ) ;
+    virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void calculateAlphaBeta();

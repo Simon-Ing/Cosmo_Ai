@@ -87,15 +87,6 @@ void LensModel::update() {
     cv::Mat imgD = cv::Mat::zeros(nrows*2, ncols*2, imgApparent.type());
     parallelDistort(imgApparent, imgD);
 
-    if ( maskMode ) {
-       std::cout << "Masking the image\n" ;
-       if ( 1 == maskMode ) {
-          maskImage( imgD ) ;
-       } else { 
-          markMask( imgD ) ;
-       }
-    }
-
     // Correct the rotation applied to the source image
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
@@ -134,7 +125,7 @@ void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
-    int R = centredMode ? tentativeCentre : apparentAbs ;
+    int R = getCentre() ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
@@ -239,12 +230,18 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
 
     updateApparentAbs() ;
 }
+void LensModel::maskImage( ) {
+   throw NotImplemented() ;
+}
+void LensModel::markMask(  ) {
+   throw NotImplemented() ;
+}
 void LensModel::maskImage( cv::InputOutputArray r ) {
    throw NotImplemented() ;
 }
 void LensModel::markMask( cv::InputOutputArray r ) {
    throw NotImplemented() ;
 }
-void LensModel::setMaskMode( int r ) {
-   maskMode = r ;
+double LensModel::getCentre( ) {
+  return centredMode ? tentativeCentre : apparentAbs ;
 }

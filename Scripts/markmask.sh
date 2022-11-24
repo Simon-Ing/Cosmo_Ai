@@ -14,10 +14,10 @@ which testmask
 IFS=,
 read -r header
 echo $header
-while read -r idx fn srcmode lensmode chi R phi einsteinr sigma sigma2 theta nterms x y
+while read -r idx fn srcmode lensmode chi x y einsteinr sigma sigma2 theta nterms
 do
   idx=`echo $idx | tr -d '"'`
-  testmask $* -X $chi -x $R -T $phi -E $einsteinr \
+  testmask $* -X $chi -x $x -y $y -E $einsteinr \
 	        -s $sigma -2 $sigma2 -t $theta -n $nterms \
                 -S $srcmode -L $lensmode -N $idx 
 done
