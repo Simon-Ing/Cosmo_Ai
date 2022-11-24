@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     }
 
     CHI = CHI_percent/100.0 ;
-    std::cout << "makeindex (CosmoSim)\n" ;
+    std::cout << "makeimage (CosmoSim)\n" ;
 
     switch ( mode ) {
        case 's':

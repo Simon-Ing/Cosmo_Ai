@@ -26,6 +26,7 @@ else()
 endif()
 
 add_executable(makeimage src/makeimage.cpp)
+add_executable(testmask src/testmask.cpp)
 add_executable(Simulator src/Simulator.cpp)
 add_library(SimLib 
    src/simaux.cpp 
@@ -38,10 +39,12 @@ add_library(SimLib
 
 if( ${host} MATCHES "idun.*")
 	target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
+	target_link_libraries(testmask ${OpenCV_LIBS} ${LLIBS} SimLib)
 	target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
 	target_link_libraries(SimLib ${OpenCV_LIBS} ${LLIBS})
 else()
    target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
+   target_link_libraries(testmask ${CONAN_LIBS} SimLib)
    target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
    target_link_libraries(SimLib ${CONAN_LIBS})
 endif()
@@ -54,4 +57,4 @@ else()
     message(FATAL_ERROR "Compiler and system are not supported")
 endif()
 
-install( TARGETS makeimage Simulator DESTINATION bin)
+install( TARGETS testmask makeimage Simulator DESTINATION bin)

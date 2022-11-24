@@ -39,7 +39,7 @@ protected:
 
 private:
     bool centredMode = false ;
-    bool maskMode = false ;
+    int maskMode = 0 ;
 
 public:
     LensModel();
@@ -53,6 +53,8 @@ public:
     void setEinsteinR(double) ;
     virtual void updateApparentAbs()  = 0 ;
     virtual void maskImage( cv::InputOutputArray ) ;
+    virtual void markMask( cv::InputOutputArray ) ;
+    virtual void setMaskMode( int ) ;
     void updateNterms(int);
     void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
@@ -95,6 +97,7 @@ class SphereLens : public LensModel {
     SphereLens(bool);
   protected:
     virtual void maskImage( cv::InputOutputArray ) ;
+    virtual void markMask( cv::InputOutputArray ) ;
     virtual void calculateAlphaBeta();
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
@@ -140,5 +143,11 @@ private:
 
 /* simaux */
 void refLines(cv::Mat&) ;
+
+class NotImplemented : public std::logic_error
+{
+public:
+    NotImplemented() : std::logic_error("Function not yet implemented") { };
+};
 
 #endif //SPHERICAL_SIMULATOR_H

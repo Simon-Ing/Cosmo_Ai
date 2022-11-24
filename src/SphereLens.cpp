@@ -106,12 +106,13 @@ void SphereLens::maskImage( cv::InputOutputArray imgD ) {
       std::cout << "SphereLens::maskImage\n" ;
       cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
+      cv::circle( mask,
+            cv::Point( apparentAbs + imgD.cols()/2, imgD.rows()/2),
+            apparentAbs, cv::Scalar(0), cv::FILLED ) ;
+      black.copyTo( imgD, mask ) ;
+}
+void SphereLens::markMask( cv::InputOutputArray imgD ) {
+      std::cout << "SphereLens::maskImage\n" ;
       cv::circle( imgD, cv::Point( apparentAbs + imgD.cols()/2, imgD.rows()/2),
             apparentAbs, cv::Scalar(255), 1 ) ;
-      cv::imwrite( "/tmp/test.png", imgD );
-      cv::circle( mask, cv::Point( apparentAbs + imgD.cols()/2, imgD.rows()/2),
-            apparentAbs, cv::Scalar(0), cv::FILLED ) ;
-      cv::imwrite( "/tmp/mask.png", mask );
-      black.copyTo( imgD, mask ) ;
-      cv::imwrite( "/tmp/ret.png", imgD );
 }

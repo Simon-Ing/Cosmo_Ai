@@ -20,7 +20,6 @@ LensModel::LensModel(bool centred) :
         einsteinR(20),
         nterms(10),
         centredMode(centred),
-        maskMode(true),
         source(NULL)
 { }
 
@@ -90,7 +89,11 @@ void LensModel::update() {
 
     if ( maskMode ) {
        std::cout << "Masking the image\n" ;
-       maskImage( imgD ) ;
+       if ( 1 == maskMode ) {
+          maskImage( imgD ) ;
+       } else { 
+          markMask( imgD ) ;
+       }
     }
 
     // Correct the rotation applied to the source image
@@ -237,5 +240,11 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     updateApparentAbs() ;
 }
 void LensModel::maskImage( cv::InputOutputArray r ) {
-      std::cout << "LensModel::maskImage\n" ;
+   throw NotImplemented() ;
+}
+void LensModel::markMask( cv::InputOutputArray r ) {
+   throw NotImplemented() ;
+}
+void LensModel::setMaskMode( int r ) {
+   maskMode = r ;
 }

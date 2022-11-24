@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     LensModel *simulator ;
 
     // Set Defaults
-    int nterms = 16 ;
+    int nterms = 16, maskmode=1 ;
     int CHI_percent=50 ;
     int einsteinR=10, X=20, Y=0, sourceSize=10, sigma2 = 10 ;
     int phi = -1 ;
@@ -30,27 +30,16 @@ int main(int argc, char *argv[]) {
     double theta = 0 ;
     double CHI ;
     std::string simname = "test", dirname = "./" ;
-    int mode = 'p', srcmode = 's', refmode = 0 ;
+    int mode = 'p', srcmode = 's' ;
     int opt ;
     cv::Mat im ;
     Source *src ;
-    std::vector<int> apparent  ;
-    int secondary = 0 ;
-    bool centred = false ;
 
-    while ( (opt = getopt(argc,argv,"A:CD:L:S:N:s:2:t:T:n:X:E:I:r:Rx:y:YZ:")) > -1 ) {
+    while ( (opt = getopt(argc,argv,"D:L:S:M:N:s:2:t:T:n:X:E:I:r:Rx:y:Z:")) > -1 ) {
        switch(opt) {
           case 'x': X = atoi(optarg) ; break ;
           case 'y': Y = atoi(optarg) ; break ;
           case 'T': phi = atoi(optarg) ; break ;
-          case 'A': 
-             { std::stringstream ss(optarg) ;
-               for ( int i ; ss >> i ; ) {
-                  apparent.push_back( i ) ;
-                  if ( ss.peek() == ',' ) ss.ignore() ;
-               }
-             }
-             break ;
           case 's': sourceSize = atoi(optarg) ; break ;
           case '2': sigma2 = atoi(optarg) ; break ;
           case 't': theta = PI*atoi(optarg)/180 ; break ;
@@ -58,14 +47,12 @@ int main(int argc, char *argv[]) {
           case 'E': einsteinR = atoi(optarg) ; break ;
           case 'n': nterms = atoi(optarg) ; break ;
           case 'I': imgsize = atoi(optarg) ; break ;
-          case 'N': simname = convertToString( optarg ) ; break ;
           case 'L': mode = optarg[0] ; break ;
           case 'S': srcmode = optarg[0] ; break ;
-          case 'R': ++refmode ; break ;
-          case 'Y': ++secondary ; break ;
-          case 'C': centred = true ; break ;
           case 'D': dirname = convertToString( optarg ) ; break ;
           case 'Z': imgsize = atoi(optarg) ; break ;
+          case 'M': maskmode = atoi(optarg) ; break ;
+          case 'N': simname = convertToString( optarg ) ; break ;
        }
     }
 
@@ -73,18 +60,14 @@ int main(int argc, char *argv[]) {
     std::cout << "makeindex (CosmoSim)\n" ;
 
     switch ( mode ) {
-       case 's':
-         std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
-         simulator = new SphereLens(centred) ;
-         break ;
        case 'r':
          std::cout << "Running Roulette Point Mass Lens (mode=" << mode << ")\n" ;
-         simulator = new RoulettePMLens(centred) ;
+         simulator = new RoulettePMLens() ;
          break ;
-       case 'p':
+       case 's':
        default:
-         std::cout << "Running Point Mass Lens (mode=" << mode << ")\n" ;
-         simulator = new PointMassLens(centred) ;
+         std::cout << "Running SphereLens (mode=" << mode << ")\n" ;
+         simulator = new SphereLens() ;
          break ;
     }
     switch ( srcmode ) {
@@ -104,6 +87,7 @@ int main(int argc, char *argv[]) {
     }
 
     simulator->setSource( src ) ;
+    simulator->setMaskMode( maskmode ) ;
     if ( phi < 0 ) {
         simulator->updateAll( X, Y, einsteinR, CHI, nterms );
     } else {
@@ -112,15 +96,8 @@ int main(int argc, char *argv[]) {
         simulator->update() ;
     }
 
-    std::ostringstream filename;
-    filename << ".png";
-
     im = simulator->getDistorted() ;
-    if ( refmode ) refLines(im) ;
-    cv::imwrite( dirname + "image-" + simname + filename.str(), im );
+    refLines(im) ;
+    cv::imwrite( dirname + "mask-" + simname + ".png", im );
 
 }
-
-
-
-
