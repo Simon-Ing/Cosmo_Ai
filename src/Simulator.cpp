@@ -1,4 +1,5 @@
 #include "Simulator.h"
+#include "Window.h"
 #include <fstream>
 
 int main()

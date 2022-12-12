@@ -10,6 +10,7 @@ cmake_host_system_information(RESULT host QUERY HOSTNAME)
 # set(host "foobar")
 message("Running on ${host}")
 
+# Symengine and OpenCV
 if( ${host} MATCHES "idun.*")
 	message("IDUN - conan is not available")
 	set(LLIBS "symengine;gmp;mpfr;pthread")
@@ -24,6 +25,7 @@ else()
       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
       conan_basic_setup()
 endif()
+
 
 add_executable(makeimage src/makeimage.cpp)
 add_executable(testmask src/testmask.cpp)
@@ -48,6 +50,15 @@ else()
    target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
    target_link_libraries(SimLib ${CONAN_LIBS})
 endif()
+
+# Python Boost
+find_package(pybind11 CONFIG)
+
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
+add_library(CosmoSim src/CosmoSim.cpp) 
+target_link_libraries(CosmoSim pybind11::headers)
 
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=1000000")

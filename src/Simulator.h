@@ -1,5 +1,5 @@
-#ifndef SPHERICAL_SIMULATOR_H
-#define SPHERICAL_SIMULATOR_H
+#ifndef COSMOSIM_H
+#define COSMOSIM_H
 
 #include "Source.h"
 #include "opencv4/opencv2/opencv.hpp"
@@ -111,40 +111,6 @@ class SphereLens : public LensModel {
 };
 
 
-class Window {
-private:
-    int mode, srcmode;
-    LensModel *sim = NULL ;
-    int size, displaysize, basesize;
-    int CHI_percent;
-    int sourceSize, sourceSize2, sourceTheta ;
-    int einsteinR;
-    int xPosSlider;
-    int yPosSlider;
-    int rPosSlider, thetaPosSlider ;
-    int nterms;
-    Source *source ;
-
-public:
-    Window();
-    void initGui();
-
-private:
-    static void updateXY(int, void*);
-    static void updatePolar(int, void*);
-    static void updateEinsteinR(int, void*);
-    static void updateSize(int, void*);
-    static void updateCHI(int, void*);
-    static void updateNterms(int, void*);
-    static void updateDisplaySize(int, void*);
-    static void updateMode(int, void*);
-
-    void drawImages() ;
-    /* void drawImages2() ; */
-    void initSimulator();
-    void setSource();
-
-};
 
 /* simaux */
 void refLines(cv::Mat&) ;
@@ -155,4 +121,4 @@ public:
     NotImplemented() : std::logic_error("Function not yet implemented") { };
 };
 
-#endif //SPHERICAL_SIMULATOR_H
+#endif // COSMOSIM_H

@@ -1,6 +1,7 @@
 /* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> */
 
 #include "Simulator.h"
+#include "Window.h"
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
 #include <thread>
