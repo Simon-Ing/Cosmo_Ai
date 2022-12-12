@@ -1,3 +1,5 @@
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
+
 #ifndef COSMOSIM_WINDOW_H
 #define COSMOSIM_WINDOW_H
 
