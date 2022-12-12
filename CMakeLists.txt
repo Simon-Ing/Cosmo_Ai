@@ -60,6 +60,12 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 add_library(CosmoSim src/CosmoSim.cpp) 
 target_link_libraries(CosmoSim pybind11::headers)
 
+if( ${host} MATCHES "idun.*")
+   target_link_libraries(CosmoSim SimLib ${OpenCV_LIBS} ${LLIBS})
+else()
+   target_link_libraries(CosmoSim SimLib ${CONAN_LIBS})
+endif()
+
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=1000000")
 elseif(${MSVC})

@@ -1,5 +1,5 @@
-#ifndef SOURCE_H
-#define SOURCE_H
+#ifndef COSMOSIM_SOURCE_H
+#define COSMOSIM_SOURCE_H
 
 #include "opencv4/opencv2/opencv.hpp"
 
@@ -62,5 +62,5 @@ protected:
 
 };
 
-#endif //SOURCE_H
+#endif // COSMOSIM_SOURCE_H
 
