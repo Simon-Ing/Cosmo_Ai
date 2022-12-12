@@ -64,7 +64,8 @@ cv::Mat LensModel::getDistorted() { return imgDistorted ; }
 cv::Mat LensModel::getDistorted( double app ) { 
    apparentAbs = app ;
    this->update() ;
-   return imgDistorted ; }
+   return imgDistorted ; 
+}
 
 cv::Mat LensModel::getSecondary() { 
    apparentAbs = apparentAbs2 ;

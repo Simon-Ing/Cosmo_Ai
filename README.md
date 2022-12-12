@@ -107,6 +107,17 @@ To bulk generate images, two scripts have been provided:
 + `Scripts/datagen.sh` to read the CSV file and generate the corresponding
   images
 
+## Roulette Test
+
+The `roulettetest` program is similar to `makeimage`, but can generate extra
+images to test the behaviour of the Roulettes model.  In particular,
+
++ `-A` takes a comma separated list of floating point values, which are taken
+  to the the apparent position (distance from origin).  A distorted image is
+  created for each value.
++ `-Y` generates a secondary distorted image using the second root for the
+  apparent position.  This only makes sense for the point mass lens.
+
 ## Scripts
 
 + `datasetgen.py` creates a CSV file of random parameter sets.
