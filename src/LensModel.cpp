@@ -22,6 +22,10 @@ LensModel::LensModel(bool centred) :
         centredMode(centred),
         source(NULL)
 { }
+LensModel::~LensModel() {
+   std::cout << "Destruct lens model\n" ;
+   delete source ;
+}
 
 /* Getters for the images */
 cv::Mat LensModel::getActual() { 

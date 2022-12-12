@@ -44,6 +44,7 @@ private:
 public:
     LensModel();
     LensModel(bool);
+    ~LensModel();
     void update();
     void setCentred( bool ) ;
 
