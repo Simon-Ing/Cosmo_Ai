@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> */
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
 /* The Source class implements the source model for the gravitational lensing simulator.
  * Currently it implements a Spherical, Gaussian mass,

@@ -13,6 +13,18 @@ CosmoSim::CosmoSim() {
 void helloworld() {
    std::cout << "Hello World!\n" ;
    std::cout << "This is the CosmoSim Python Library!\n" ;
+}
+void CosmoSim::diagnostics() {
+   if ( src ) {
+      cv::Mat im = src->getImage() ;
+      std::cout << "Source Image " << im.rows << "x" << im.cols 
+         << "x" << im.channels() << "\n" ;
+   }
+   if ( sim ) {
+      cv::Mat im = sim->getDistorted() ;
+      std::cout << "Distorted Image " << im.rows << "x" << im.cols 
+         << "x" << im.channels() << "\n" ;
+   }
    return ;
 }
 
@@ -78,12 +90,16 @@ void CosmoSim::runSim() {
 cv::Mat CosmoSim::getActual() {
    if ( NULL == sim )
       throw std::bad_function_call() ;
-   return sim->getActual() ;
+   cv::Mat im = sim->getActual() ;
+   refLines(im) ;
+   return im ;
 }
 cv::Mat CosmoSim::getDistorted() {
    if ( NULL == sim )
       throw std::bad_function_call() ;
-   return sim->getDistorted() ;
+   cv::Mat im = sim->getDistorted() ;
+   refLines(im) ;
+   return im ;
 }
 void CosmoSim::init() {
    initLens() ;
@@ -109,6 +125,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("init", &CosmoSim::init)
         .def("runSim", &CosmoSim::runSim)
+        .def("diagnostics", &CosmoSim::diagnostics)
         ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/

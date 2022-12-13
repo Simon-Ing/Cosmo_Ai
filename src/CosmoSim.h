@@ -42,6 +42,7 @@ public:
 
     void init();
     void runSim();
+    void diagnostics();
 
     cv::Mat getActual() ;
     cv::Mat getDistorted() ;
