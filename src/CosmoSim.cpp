@@ -8,8 +8,10 @@ enum SourceSpec { CSIM_SOURCE_SPHERE,
 
 namespace py = pybind11;
 
-int addT(int i, int j) {
-    return i + j;
+void helloworld() {
+   std::cout << "Hello World!\n" ;
+   std::cout << "This is the CosmoSim Python Library!\n" ;
+   return ;
 }
 
 void CosmoSim::setCHI(int c) { chi = c/100 ; } ;
@@ -51,7 +53,7 @@ cv::Mat CosmoSim::getDistorted() {
 PYBIND11_MODULE(CosmoSim, m) {
     m.doc() = "Wrapper for the CosmoSim simulator" ;
 
-    m.def("add", &addT, "A function that adds two numbers");
+    m.def("helloworld", &helloworld, "A test function");
 
     py::class_<CosmoSim>(m, "CosmoSim")
         .def(py::init<>())
