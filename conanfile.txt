@@ -1,6 +1,7 @@
 [requires]
 symengine/0.9.0
-opencv/4.5.3
+opencv/4.5.5
 wayland/1.21.0
+zlib/1.2.13
 [generators]
 cmake
