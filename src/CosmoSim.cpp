@@ -1,5 +1,6 @@
 #include "CosmoSim.h"
 #include <pybind11/pybind11.h>
+#include <opencv2/opencv.hpp>
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,
@@ -22,24 +23,30 @@ void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
    sourceTheta = theta ;
-   if ( source ) delete source ;
+   if ( src ) delete src ;
    switch ( srcmode ) {
        case CSIM_SOURCE_SPHERE:
-         source = new SphericalSource( size, sourceSize ) ;
+         src = new SphericalSource( size, sourceSize ) ;
          break ;
        case CSIM_SOURCE_ELLIPSE:
-         source = new EllipsoidSource( size, sourceSize,
+         src = new EllipsoidSource( size, sourceSize,
                sourceSize2, sourceTheta*PI/180 ) ;
          break ;
        case CSIM_SOURCE_TRIANGLE:
-         source = new TriangleSource( size, sourceSize, sourceTheta*PI/180 ) ;
+         src = new TriangleSource( size, sourceSize, sourceTheta*PI/180 ) ;
          break ;
        default:
          std::cout << "No such mode!\n" ;
          exit(1) ;
     }
-    if (sim) sim->setSource( source ) ;
+    if (sim) sim->setSource( src ) ;
 } ;
+cv::Mat CosmoSim::getActual() {
+   return sim->getActual() ;
+}
+cv::Mat CosmoSim::getDistorted() {
+   return sim->getDistorted() ;
+}
 
 PYBIND11_MODULE(CosmoSim, m) {
     m.doc() = "Wrapper for the CosmoSim simulator" ;
@@ -52,6 +59,30 @@ PYBIND11_MODULE(CosmoSim, m) {
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setSourceMode", &CosmoSim::setSourceMode)
         .def("setSourceSize", &CosmoSim::setSourceSize)
+        .def("getActual", &CosmoSim::getActual)
+        .def("getDistorted", &CosmoSim::getDistorted)
         ;
 
+    // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
+    pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
+        .def_buffer([](cv::Mat& im) -> pybind11::buffer_info {
+            return pybind11::buffer_info(
+                // Pointer to buffer
+                im.data,
+                // Size of one scalar
+                sizeof(unsigned char),
+                // Python struct-style format descriptor
+                pybind11::format_descriptor<unsigned char>::format(),
+                // Number of dimensions
+                3,
+                // Buffer dimensions
+                { im.rows, im.cols, im.channels() },
+                // Strides (in bytes) for each index
+                {
+                    sizeof(unsigned char) * im.channels() * im.cols,
+                    sizeof(unsigned char) * im.channels(),
+                    sizeof(unsigned char)
+                }
+            );
+        });
 }

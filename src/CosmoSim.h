@@ -15,7 +15,7 @@ private:
     int xPos, yPos, rPos, thetaPos; ;
     int nterms ;
     LensModel *sim = NULL ;
-    Source *source = NULL ;
+    Source *src = NULL ;
 
 public:
     CosmoSim();
