@@ -42,19 +42,19 @@ add_library(SimLib ${SimLibFiles})
 
 # Python Bindings
 find_package(pybind11 REQUIRED)
-pybind11_add_module(CosmoSim MODULE src/CosmoSim.cpp ${SimLibFiles})
+pybind11_add_module(CosmoSimPy MODULE src/CosmoSim.cpp ${SimLibFiles})
 
 # Link Libraries
 if( ${host} MATCHES "idun.*")
    target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
    target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
    target_link_libraries(SimLib ${OpenCV_LIBS} ${LLIBS})
-   target_link_libraries(CosmoSim PRIVATE ${OpenCV_LIBS} ${LLIBS})
+   target_link_libraries(CosmoSimPy PRIVATE ${OpenCV_LIBS} ${LLIBS})
 else()
    target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
    target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
    target_link_libraries(SimLib ${CONAN_LIBS})
-   target_link_libraries(CosmoSim PRIVATE ${CONAN_LIBS})
+   target_link_libraries(CosmoSimPy PRIVATE ${CONAN_LIBS})
 endif()
 
 
@@ -68,4 +68,4 @@ endif()
 
 # Install targets
 install( TARGETS makeimage Simulator DESTINATION bin)
-install( TARGETS SimLib CosmoSim DESTINATION lib)
+install( TARGETS SimLib CosmoSimPy DESTINATION lib)

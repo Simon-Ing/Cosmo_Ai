@@ -90,7 +90,7 @@ void CosmoSim::init() {
    return ;
 }
 
-PYBIND11_MODULE(CosmoSim, m) {
+PYBIND11_MODULE(CosmoSimPy, m) {
     m.doc() = "Wrapper for the CosmoSim simulator" ;
 
     m.def("helloworld", &helloworld, "A test function");
