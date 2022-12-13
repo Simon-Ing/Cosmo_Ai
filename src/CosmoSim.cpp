@@ -7,6 +7,9 @@ enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_TRIANGLE } ;
 
 namespace py = pybind11;
+CosmoSim::CosmoSim() {
+   std::cout << "CosmoSim Constructor does nothing\n" ;
+}
 
 void helloworld() {
    std::cout << "Hello World!\n" ;
