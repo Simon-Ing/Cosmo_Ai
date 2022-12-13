@@ -80,7 +80,7 @@ void LensModel::update() {
 
     std::cout << "update() x=" << actualX << "; y= " << actualY 
               << "; R=" << actualAbs << "; theta=" << phi
-              << "; R_R=" << einsteinR << "; CHI=" << CHI << "\n" ;
+              << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
 
     this->calculateAlphaBeta() ;
 
