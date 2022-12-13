@@ -2,7 +2,7 @@
 message("CMakeLists.txt - CosmoSim - Starting ...")
 
 cmake_minimum_required(VERSION 3.15)
-project(CosmoAi CXX)
+project(CosmoAi LANGUAGES CXX VERSION 1.1.0)
 
 add_definitions("-std=c++11")
 
