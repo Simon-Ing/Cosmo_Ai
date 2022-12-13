@@ -130,4 +130,7 @@ PYBIND11_MODULE(CosmoSim, m) {
                 }
             );
         });
+    // Note.  The cv::Mat object returned needs to by wrapped in python:
+    // `np.array(im, copy=False)` where `im` is the `Mat` object.
+
 }
