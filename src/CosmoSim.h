@@ -39,6 +39,7 @@ public:
     void setSourceMode(int);
     void setSourceSize(int,int,int);
 
+    void init();
     void runSim();
 
     cv::Mat getActual() ;

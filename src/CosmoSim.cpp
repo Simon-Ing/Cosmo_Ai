@@ -47,13 +47,23 @@ void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
     if (sim) sim->setSource( src ) ;
 }
 void CosmoSim::runSim() { 
+   if ( NULL == sim )
+      throw std::bad_function_call() ;
    sim->update() ;
 } 
 cv::Mat CosmoSim::getActual() {
+   if ( NULL == sim )
+      throw std::bad_function_call() ;
    return sim->getActual() ;
 }
 cv::Mat CosmoSim::getDistorted() {
+   if ( NULL == sim )
+      throw std::bad_function_call() ;
    return sim->getDistorted() ;
+}
+void CosmoSim::init() {
+   throw NotImplemented() ;
+   return ;
 }
 
 PYBIND11_MODULE(CosmoSim, m) {
