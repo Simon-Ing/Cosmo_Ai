@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> */
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "Simulator.h"
 #include <symengine/expression.h>
