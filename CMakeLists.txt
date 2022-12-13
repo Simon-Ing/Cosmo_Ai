@@ -51,20 +51,9 @@ else()
    target_link_libraries(SimLib ${CONAN_LIBS})
 endif()
 
-# Python Boost
+# Python Bindings
 find_package(pybind11 CONFIG)
-
-find_package(PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_DIRS})
-
-add_library(CosmoSim src/CosmoSim.cpp) 
-target_link_libraries(CosmoSim pybind11::headers)
-
-if( ${host} MATCHES "idun.*")
-   target_link_libraries(CosmoSim SimLib ${OpenCV_LIBS} ${LLIBS})
-else()
-   target_link_libraries(CosmoSim SimLib ${CONAN_LIBS})
-endif()
+pybind11_add_module(CosmoSim MODULE src/CosmoSim.cpp ${SimLibFiles})
 
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=1000000")
