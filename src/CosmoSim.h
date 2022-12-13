@@ -6,14 +6,22 @@
 #include "Simulator.h"
 #include "Source.h"
 
+enum SourceSpec { CSIM_SOURCE_SPHERE,
+                  CSIM_SOURCE_ELLIPSE,
+                  CSIM_SOURCE_TRIANGLE } ;
+enum LensSpec { CSIM_LENS_SPHERE,
+                  CSIM_LENS_ELLIPSE,
+                  CSIM_LENS_PM_ROULETTE, 
+                  CSIM_LENS_PM } ;
+
 class CosmoSim {
 private:
-    int size, displaysize, basesize;
-    double chi = 0.5 ;
-    int lensmode, einsteinR ;
-    int srcmode, sourceSize, sourceSize2, sourceTheta ;
-    int xPos, yPos, rPos, thetaPos; ;
-    int nterms ;
+    int size=512, displaysize=512, basesize=512 ;
+    double chi=0.5 ;
+    int lensmode=CSIM_LENS_PM, einsteinR=20 ;
+    int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10, sourceTheta=0 ;
+    int xPos=10, yPos=0, rPos=10, thetaPos=0; ;
+    int nterms=16 ;
     LensModel *sim = NULL ;
     Source *src = NULL ;
 
@@ -30,6 +38,8 @@ public:
     void setEinsteinR(int);
     void setSourceMode(int);
     void setSourceSize(int,int,int);
+
+    void runSim();
 
     cv::Mat getActual() ;
     cv::Mat getDistorted() ;

@@ -1,10 +1,9 @@
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
+
 #include "CosmoSim.h"
 #include <pybind11/pybind11.h>
 #include <opencv2/opencv.hpp>
 
-enum SourceSpec { CSIM_SOURCE_SPHERE,
-                  CSIM_SOURCE_ELLIPSE,
-                  CSIM_SOURCE_TRIANGLE } ;
 
 namespace py = pybind11;
 CosmoSim::CosmoSim() {
@@ -17,13 +16,14 @@ void helloworld() {
    return ;
 }
 
-void CosmoSim::setCHI(int c) { chi = c/100 ; } ;
-void CosmoSim::setNterms(int c) { nterms = c ; } ;
-void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; } ;
-void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; } ;
-void CosmoSim::setLensMode(int m) { lensmode = m ; } ;
-void CosmoSim::setEinsteinR(int r) { einsteinR = r ; } ;
-void CosmoSim::setSourceMode(int m) { srcmode = m ; } ;
+
+void CosmoSim::setCHI(int c) { chi = c/100 ; }
+void CosmoSim::setNterms(int c) { nterms = c ; }
+void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; }
+void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
+void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
+void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
@@ -45,7 +45,10 @@ void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
          exit(1) ;
     }
     if (sim) sim->setSource( src ) ;
-} ;
+}
+void CosmoSim::runSim() { 
+   sim->update() ;
+} 
 cv::Mat CosmoSim::getActual() {
    return sim->getActual() ;
 }
@@ -66,6 +69,7 @@ PYBIND11_MODULE(CosmoSim, m) {
         .def("setSourceSize", &CosmoSim::setSourceSize)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
+        .def("runSim", &CosmoSim::runSim)
         ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
