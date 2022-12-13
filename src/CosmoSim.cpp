@@ -23,19 +23,20 @@ void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::initLens() {
+   bool centred = true ;
    if ( sim ) delete sim ;
    switch ( lensmode ) {
        case CSIM_LENS_SPHERE:
          std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
-         sim = new SphereLens() ;
+         sim = new SphereLens(centred) ;
          break ;
        case CSIM_LENS_PM_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" << lensmode << ")\n" ;
-         sim = new RoulettePMLens() ;
+         sim = new RoulettePMLens(centred) ;
          break ;
        case CSIM_LENS_PM:
          std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
-         sim = new PointMassLens() ;
+         sim = new PointMassLens(centred) ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;
