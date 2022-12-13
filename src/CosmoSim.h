@@ -35,9 +35,10 @@ public:
     // void updateDisplaySize(int);
 
     void setLensMode(int);
+    void initLens() ;
     void setEinsteinR(int);
-    void setSourceMode(int);
-    void setSourceSize(int,int,int);
+    void setSourceParameters(int,int,int,int);
+    void initSource() ;
 
     void init();
     void runSim();

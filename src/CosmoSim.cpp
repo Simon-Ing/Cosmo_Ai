@@ -22,12 +22,35 @@ void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::initLens() {
+   if ( sim ) delete sim ;
+   switch ( lensmode ) {
+       case CSIM_LENS_SPHERE:
+         std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
+         sim = new SphereLens() ;
+         break ;
+       case CSIM_LENS_PM_ROULETTE:
+         std::cout << "Running Roulette Point Mass Lens (mode=" << lensmode << ")\n" ;
+         sim = new RoulettePMLens() ;
+         break ;
+       case CSIM_LENS_PM:
+         std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
+         sim = new PointMassLens() ;
+         break ;
+       default:
+         std::cout << "No such lens mode!\n" ;
+         throw NotImplemented();
+    }
+    return ;
+}
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
-void CosmoSim::setSourceMode(int m) { srcmode = m ; }
-void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
+void CosmoSim::setSourceParameters(int mode, int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
    sourceTheta = theta ;
+   srcmode = mode ;
+}
+void CosmoSim::initSource( ) {
    if ( src ) delete src ;
    switch ( srcmode ) {
        case CSIM_SOURCE_SPHERE:
@@ -41,8 +64,8 @@ void CosmoSim::setSourceSize(int s1, int s2, int theta ) {
          src = new TriangleSource( size, sourceSize, sourceTheta*PI/180 ) ;
          break ;
        default:
-         std::cout << "No such mode!\n" ;
-         exit(1) ;
+         std::cout << "No such source mode!\n" ;
+         throw NotImplemented();
     }
     if (sim) sim->setSource( src ) ;
 }
@@ -62,7 +85,8 @@ cv::Mat CosmoSim::getDistorted() {
    return sim->getDistorted() ;
 }
 void CosmoSim::init() {
-   throw NotImplemented() ;
+   initLens() ;
+   initSource() ;
    return ;
 }
 
@@ -75,10 +99,12 @@ PYBIND11_MODULE(CosmoSim, m) {
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
-        .def("setSourceMode", &CosmoSim::setSourceMode)
-        .def("setSourceSize", &CosmoSim::setSourceSize)
+        .def("setSourceParameters", &CosmoSim::setSourceParameters)
+        .def("initLens", &CosmoSim::initSource)
+        .def("initSource", &CosmoSim::initSource)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
+        .def("init", &CosmoSim::init)
         .def("runSim", &CosmoSim::runSim)
         ;
 
