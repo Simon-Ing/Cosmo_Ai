@@ -52,8 +52,9 @@ else()
 endif()
 
 # Python Bindings
-find_package(pybind11 CONFIG)
+find_package(pybind11 REQUIRED)
 pybind11_add_module(CosmoSim MODULE src/CosmoSim.cpp ${SimLibFiles})
+target_link_libraries(CosmoSim PRIVATE ${CONAN_LIBS})
 
 if(${UNIX})
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=1000000")
@@ -64,3 +65,4 @@ else()
 endif()
 
 install( TARGETS testmask makeimage Simulator DESTINATION bin)
+install( TARGETS SimLib CosmoSim DESTINATION lib)
