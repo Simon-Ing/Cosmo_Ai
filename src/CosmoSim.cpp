@@ -87,6 +87,8 @@ cv::Mat CosmoSim::getDistorted() {
 void CosmoSim::init() {
    initLens() ;
    initSource() ;
+   sim->setNterms( nterms ) ;
+   sim->updateXY( xPos, yPos, chi, einsteinR ) ;
    return ;
 }
 
