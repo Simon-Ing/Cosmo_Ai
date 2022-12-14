@@ -20,6 +20,29 @@ sim = CosmoSim()
 sim.init()
 sim.runSim()
 
+class RoundedVar(DoubleVar):
+    def set(self,v):
+        vv = round(v)
+        print(vv)
+        return super().set(vv)
+
+class IntSlider:
+    def __init__(self,parent,text,row=1,fromval=0,toval=100):
+        self.var = IntVar()
+        self.label = ttk.Label( parent, text=text,
+                style="Std.TLabel" )
+        self.slider = Scale( parent, length=200, variable=self.var,
+                resolution=1,
+                orient=HORIZONTAL,
+                from_=fromval, to=toval )
+        # self.val = ttk.Label( parent, textvariable=self.var )
+        self.label.grid(row=row,column=0,sticky=E)
+        self.slider.grid(row=row,column=1)
+        # self.val.grid(row=row,column=2)
+    def get(self): return self.var.get()
+    def set(self,v): return self.var.get(v)
+
+
 
 
 frm1 = ttk.Frame(root, padding=10)
@@ -36,7 +59,8 @@ posFrame.grid(column=2,row=1)
 style = ttk.Style()
 style.configure("Red.TButton", foreground="white", background="red")
 labelstyle = ttk.Style()
-labelstyle.configure("Std.TLabel", foreground="black", padding=4 )
+labelstyle.configure("Std.TLabel", foreground="black", padding=4,
+        font=( "Arial", 15 ) )
 
 quitButton = ttk.Button(frm1, text="Quit", command=root.destroy, style="Red.TButton")
 quitButton.grid(column=2, row=0)
@@ -46,29 +70,22 @@ lensSelector = ttk.Combobox( lensFrame, values=[ "SIS (roulettes)", "Point Mass 
 lensLabel.grid(column=0, row=1, sticky=E )
 lensSelector.grid(column=1, row=1)
 
-einsteinLabel = ttk.Label( lensFrame, text="Einstein Radius", style="Std.TLabel" )
-chiLabel = ttk.Label( lensFrame, text="Distance Ratio (chi)", style="Std.TLabel" )
-nTermsLabel = ttk.Label( lensFrame, text="Number of Terms (Roulettes only)", style="Std.TLabel" )
-einsteinLabel.grid(column=0,row=2, sticky=E )
-chiLabel.grid(column=0,row=3, sticky=E )
-nTermsLabel.grid(column=0,row=4, sticky=E )
+einsteinSlider = IntSlider( lensFrame, text="Einstein Radius", row=2 )
+chiSlider = IntSlider( lensFrame, text="Distance Ratio (chi)", row=3 )
+nTermsSlider = IntSlider( lensFrame, text="Number of Terms (Roulettes only)",
+        row=4)
 
 sourceLabel = ttk.Label( sourceFrame, text="Source Model", style="Std.TLabel" )
 sourceSelector = ttk.Combobox( sourceFrame, values=[ "Spherical", "Ellipsoid", "Triangle" ] )
 sourceLabel.grid(column=0, row=1, sticky=E )
 sourceSelector.grid(column=1, row=1)
 
-sigmaLabel = ttk.Label( sourceFrame, text="Source Size", style="Std.TLabel"  )
-sigma2Label = ttk.Label( sourceFrame, text="Secondary Size", style="Std.TLabel"  )
-thetaLabel = ttk.Label( sourceFrame, text="Source Rotation", style="Std.TLabel"  )
-sigmaLabel.grid(column=0,row=2, sticky=E )
-sigma2Label.grid(column=0,row=3, sticky=E )
-thetaLabel.grid(column=0,row=4, sticky=E )
+sigmaSlider = IntSlider( sourceFrame, text="Source Size", row=2  )
+sigma2Slider = IntSlider( sourceFrame, text="Secondary Size", row=3 )
+thetaSlider = IntSlider( sourceFrame, text="Source Rotation", row=4 )
 
-xLabel = ttk.Label( posFrame, text="x", style="Std.TLabel"  )
-yLabel = ttk.Label( posFrame, text="y", style="Std.TLabel"  )
-xLabel.grid(column=0,row=2, sticky=E )
-yLabel.grid(column=0,row=3, sticky=E )
+xSlider = IntSlider( posFrame, text="x", row=1 )
+ySlider = IntSlider( posFrame, text="y", row=2 )
 
 
 
