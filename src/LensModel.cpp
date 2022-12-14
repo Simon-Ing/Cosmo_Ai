@@ -10,6 +10,8 @@
 #include <symengine/parser.h>
 #include <fstream>
 
+#define DEBUG 0
+
 double factorial_(unsigned int n);
 
 LensModel::LensModel() :
@@ -112,6 +114,7 @@ void LensModel::update() {
 /* This just splits the image space in chunks and runs distort() in parallel */
 void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
+    if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
     for (int i = 0; i < n_threads; i++) {
         int begin = dst.rows/n_threads*i;
