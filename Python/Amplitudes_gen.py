@@ -1,11 +1,13 @@
 #! /usr/bin/env python3
-# Generate the 50.txt file containing expressions for alpha and beta
-# for the SIS model in Roulettes.
+
+"""
+Generate the 50.txt file containing expressions for alpha and beta
+for the SIS model in Roulettes.
+"""
 
 import multiprocessing as mp
 import sys
 import time
-
 
 from sympy import simplify, symbols, sqrt, diff, factor
 
