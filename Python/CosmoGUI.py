@@ -22,17 +22,18 @@ sim.runSim()
 
 
 
-frm = ttk.Frame(root, padding=10)
-# frm.grid()
-l = ttk.Label(root, text="Hello World!")  # .grid(column=0, row=0)
-b = ttk.Button(root, text="Quit", command=root.destroy)  # .grid(column=1, row=0)
-l.pack()
-b.pack()
+frm1 = ttk.Frame(root, padding=10)
+frm2 = ttk.Frame(root, padding=10)
+frm1.grid()
+frm2.grid()
 
-actual = Canvas(root,width=512,height=512)  # .grid(column=0,row=1)
-distorted = Canvas(root,width=512,height=512)  # .grid(column=1,row=1)
-actual.pack()
-distorted.pack()
+l = ttk.Label(frm1, text="Hello World!").grid(column=0, row=0)
+b = ttk.Button(frm1, text="Quit", command=root.destroy).grid(column=1, row=0)
+
+actual = Canvas(frm2,width=512,height=512)
+actual.grid(column=0,row=0)
+distorted = Canvas(frm2,width=512,height=512)
+distorted.grid(column=1,row=0)
 
 def setActualImage(im):
     im0 =  Image.fromarray(im)
