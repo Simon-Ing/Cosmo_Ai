@@ -30,6 +30,8 @@ lensFrame = ttk.Frame(frm1, padding=10)
 lensFrame.grid(column=0,row=1)
 sourceFrame = ttk.Frame(frm1, padding=10)
 sourceFrame.grid(column=1,row=1)
+posFrame = ttk.Frame(frm1, padding=10)
+posFrame.grid(column=2,row=1)
 
 style = ttk.Style()
 style.configure("Red.TButton", foreground="white", background="red")
@@ -45,21 +47,28 @@ lensLabel.grid(column=0, row=1, sticky=E )
 lensSelector.grid(column=1, row=1)
 
 einsteinLabel = ttk.Label( lensFrame, text="Einstein Radius", style="Std.TLabel" )
+chiLabel = ttk.Label( lensFrame, text="Distance Ratio (chi)", style="Std.TLabel" )
 nTermsLabel = ttk.Label( lensFrame, text="Number of Terms (Roulettes only)", style="Std.TLabel" )
-einsteinLabel.grid(column=0,row=3, sticky=E )
+einsteinLabel.grid(column=0,row=2, sticky=E )
+chiLabel.grid(column=0,row=3, sticky=E )
 nTermsLabel.grid(column=0,row=4, sticky=E )
 
 sourceLabel = ttk.Label( sourceFrame, text="Source Model", style="Std.TLabel" )
 sourceSelector = ttk.Combobox( sourceFrame, values=[ "Spherical", "Ellipsoid", "Triangle" ] )
-sourceLabel.grid(column=0, row=2, sticky=E )
-sourceSelector.grid(column=1, row=2)
+sourceLabel.grid(column=0, row=1, sticky=E )
+sourceSelector.grid(column=1, row=1)
 
 sigmaLabel = ttk.Label( sourceFrame, text="Source Size", style="Std.TLabel"  )
 sigma2Label = ttk.Label( sourceFrame, text="Secondary Size", style="Std.TLabel"  )
 thetaLabel = ttk.Label( sourceFrame, text="Source Rotation", style="Std.TLabel"  )
-sigmaLabel.grid(column=0,row=3, sticky=E )
-sigma2Label.grid(column=0,row=4, sticky=E )
-thetaLabel.grid(column=0,row=5, sticky=E )
+sigmaLabel.grid(column=0,row=2, sticky=E )
+sigma2Label.grid(column=0,row=3, sticky=E )
+thetaLabel.grid(column=0,row=4, sticky=E )
+
+xLabel = ttk.Label( posFrame, text="x", style="Std.TLabel"  )
+yLabel = ttk.Label( posFrame, text="y", style="Std.TLabel"  )
+xLabel.grid(column=0,row=2, sticky=E )
+yLabel.grid(column=0,row=3, sticky=E )
 
 
 
