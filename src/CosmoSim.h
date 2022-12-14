@@ -22,6 +22,7 @@ private:
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10, sourceTheta=0 ;
     int xPos=10, yPos=0, rPos=10, thetaPos=0; ;
     int nterms=16 ;
+    bool refLinesMode=true ;
     LensModel *sim = NULL ;
     Source *src = NULL ;
 
@@ -39,6 +40,7 @@ public:
     void setEinsteinR(int);
     void setSourceParameters(int,int,int,int);
     void initSource() ;
+    void setRefLines(bool) ;
 
     void init();
     void runSim();

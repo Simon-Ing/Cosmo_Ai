@@ -29,6 +29,7 @@ void CosmoSim::diagnostics() {
 }
 
 
+void CosmoSim::setRefLines(bool c) { refLinesMode = c ; }
 void CosmoSim::setCHI(int c) { chi = c/100 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; }
@@ -91,15 +92,18 @@ cv::Mat CosmoSim::getActual() {
    if ( NULL == sim )
       throw std::bad_function_call() ;
    cv::Mat im = sim->getActual() ;
-   refLines(im) ;
+   if (refLinesMode) refLines(im) ;
    return im ;
 }
 cv::Mat CosmoSim::getDistorted() {
    if ( NULL == sim )
       throw std::bad_function_call() ;
    cv::Mat im = sim->getDistorted() ;
-   refLines(im) ;
-   return im ;
+   if (refLinesMode) refLines(im) ;
+   // It is necessary to clone because the distorted image is created
+   // by cropping, and the pixmap is thus larger than the image,
+   // causing subsequent conversion to a numpy array to be misaligned. 
+   return im.clone() ;
 }
 void CosmoSim::init() {
    initLens() ;
