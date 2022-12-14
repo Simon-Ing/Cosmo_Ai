@@ -2,6 +2,8 @@ import CosmoSim as cs
 import matplotlib.pyplot as plt
 
 sim = cs.CosmoSim()
+sim.setLensMode(0)
+sim.setNterms(40)
 sim.init()
 sim.runSim()
 sim.diagnostics() 

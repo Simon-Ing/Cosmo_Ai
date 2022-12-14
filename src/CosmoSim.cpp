@@ -122,6 +122,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
+        .def("setNterms", &CosmoSim::setNterms)
         .def("setSourceParameters", &CosmoSim::setSourceParameters)
         .def("initLens", &CosmoSim::initSource)
         .def("initSource", &CosmoSim::initSource)
