@@ -26,9 +26,29 @@ frm1 = ttk.Frame(root, padding=10)
 frm2 = ttk.Frame(root, padding=10)
 frm1.grid()
 frm2.grid()
+lensFrame = ttk.Frame(frm1, padding=10)
+lensFrame.grid(column=0,row=1)
+sourceFrame = ttk.Frame(frm1, padding=10)
+sourceFrame.grid(column=1,row=1)
+
+style = ttk.Style()
+style.configure("Red.TButton", foreground="white", background="red")
 
 l = ttk.Label(frm1, text="Hello World!").grid(column=0, row=0)
-b = ttk.Button(frm1, text="Quit", command=root.destroy).grid(column=1, row=0)
+quitButton = ttk.Button(frm1, text="Quit", command=root.destroy, style="Red.TButton")
+quitButton.grid(column=1, row=0)
+
+lensLabel = ttk.Label( lensFrame, text="Lens Model" )
+lensSelector = ttk.Combobox( lensFrame, values=[ "SIS (roulettes)", "Point Mass (exact)", "Point Mass (roulettes)" ] )
+lensLabel.grid(column=0, row=1)
+lensSelector.grid(column=1, row=1)
+
+sourceLabel = ttk.Label( sourceFrame, text="Source Model" )
+sourceSelector = ttk.Combobox( sourceFrame, values=[ "Spherical", "Ellipsoid", "Triangle" ] )
+sourceLabel.grid(column=0, row=2)
+sourceSelector.grid(column=1, row=2)
+
+
 
 actual = Canvas(frm2,width=512,height=512)
 actual.grid(column=0,row=0)
