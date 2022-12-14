@@ -1,4 +1,8 @@
 # Python files from the student project
 
-These files seem to have been used to generate the formulæ
-for alpha and beta in the SIS model.
++ Amplitudes_gen.py
+    + Generate the 50.txt file with formulæ for alpha and beta.
++ CosmoSim
+    + Python package wrapping the CosmoSim library.
+    + Test script: testcosmosim.py
+
