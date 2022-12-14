@@ -31,24 +31,31 @@ b.pack()
 
 actual = Canvas(root,width=512,height=512)  # .grid(column=0,row=1)
 distorted = Canvas(root,width=512,height=512)  # .grid(column=1,row=1)
+actual.pack()
+distorted.pack()
 
 def setActualImage(im):
-    img =  ImageTk.PhotoImage(image=Image.fromarray(im))
-    actual.create_image((0,0),anchor="nw", image=img)
+    im0 =  Image.fromarray(im)
+    img =  ImageTk.PhotoImage(image=im0)
+    im0.show()
+    return actual.create_image(0,0,anchor=NW, image=img)
 def setDistortedImage(im):
     im0 =  Image.fromarray(im)
     img =  ImageTk.PhotoImage(image=im0)
-    print(im)
-    im0.show()
-    distorted.create_image((0,0),anchor="nw", image=img)
+    return distorted.create_image(0,0,anchor=NW, image=img)
 
-img= ImageTk.PhotoImage(Image.open("test.png"))
-actual.create_image(0,0,anchor=NW,image=img)
+# img= ImageTk.PhotoImage(Image.open("test.png"))
+# actual.create_image(0,0,anchor=NW,image=img)
 
-setDistortedImage(sim.getDistortedImage())
+# setDistortedImage(sim.getDistortedImage())
 # setActualImage(sim.getActualImage())
-actual.pack()
-distorted.pack()
+im0 = Image.fromarray( sim.getActualImage() )
+img0 = ImageTk.PhotoImage(image=im0)
+actual.create_image(0,0,anchor=NW, image=img0)
+
+im = Image.fromarray( sim.getDistortedImage() )
+img = ImageTk.PhotoImage(image=im)
+distorted.create_image(0,0,anchor=NW, image=img)
 
 root.mainloop()
 
