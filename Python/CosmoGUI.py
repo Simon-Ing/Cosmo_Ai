@@ -34,9 +34,8 @@ sourceFrame.grid(column=1,row=1)
 style = ttk.Style()
 style.configure("Red.TButton", foreground="white", background="red")
 
-l = ttk.Label(frm1, text="Hello World!").grid(column=0, row=0)
 quitButton = ttk.Button(frm1, text="Quit", command=root.destroy, style="Red.TButton")
-quitButton.grid(column=1, row=0)
+quitButton.grid(column=2, row=0)
 
 lensLabel = ttk.Label( lensFrame, text="Lens Model" )
 lensSelector = ttk.Combobox( lensFrame, values=[ "SIS (roulettes)", "Point Mass (exact)", "Point Mass (roulettes)" ] )
