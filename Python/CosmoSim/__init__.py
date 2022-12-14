@@ -9,6 +9,10 @@ class CosmoSim(cs.CosmoSim):
     This wraps the CosmoSim library written in C++.
     """
     def getActualImage(self):
-        return np.array(self.getActual(),copy=False)
+        im = np.array(self.getActual(),copy=False)
+        if im.shape[2] == 1 : im.shape = im.shape[:2]
+        return im
     def getDistortedImage(self):
-        return np.array(self.getDistorted(),copy=False)
+        im = np.array(self.getDistorted(),copy=False)
+        if im.shape[2] == 1 : im.shape = im.shape[:2]
+        return im
