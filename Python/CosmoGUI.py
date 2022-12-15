@@ -10,16 +10,12 @@ gravitational lensing.
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-
+import numpy as np
 
 from CosmoSim import CosmoSim
 
-root = Tk()
 
-sim = CosmoSim()
-sim.init()
-sim.runSim()
-
+# Classes
 class RoundedVar(DoubleVar):
     def set(self,v):
         vv = round(v)
@@ -42,9 +38,47 @@ class IntSlider:
     def get(self): return self.var.get()
     def set(self,v): return self.var.get(v)
 
+class ImagePane:
+    def __init__(self,root,sim):
+        self.sim = sim
+        self.actual = Canvas(root,width=512,height=512)
+        self.actual.grid(column=0,row=0)
+        self.distorted = Canvas(root,width=512,height=512)
+        self.distorted.grid(column=1,row=0)
+        im = Image.fromarray( np.zeros((512,512)) )
+        img =  ImageTk.PhotoImage(image=im)
+        self.actualCanvas = self.actual.create_image(0,0,anchor=NW, image=img)
+        self.distortedCanvas = self.distorted.create_image(0,0,anchor=NW, image=img)
+    def setActualImage(self):
+        im0 = Image.fromarray( self.sim.getActualImage() )
+        # Use an attribute to prevent garbage collection here
+        self.img0 =  ImageTk.PhotoImage(image=im0)
+        self.actual.itemconfig(self.actualCanvas, image=self.img0)
+    def setDistortedImage(self):
+        im1 = Image.fromarray( self.sim.getDistortedImage() )
+        self.img1 =  ImageTk.PhotoImage(image=im1)
+        self.distorted.itemconfig(self.distortedCanvas, image=self.img1)
+    def update(self):
+        self.setDistortedImage()
+        self.setActualImage()
+
+# Main object
+root = Tk()
+
+# Styles
+style = ttk.Style()
+style.configure("Red.TButton", foreground="white", background="red")
+labelstyle = ttk.Style()
+labelstyle.configure("Std.TLabel", foreground="black", padding=4,
+        font=( "Arial", 15 ) )
 
 
+# Simulator
+sim = CosmoSim()
+sim.init()
+sim.runSim()
 
+# GUI
 frm1 = ttk.Frame(root, padding=10)
 frm2 = ttk.Frame(root, padding=10)
 frm1.grid()
@@ -56,11 +90,6 @@ sourceFrame.grid(column=1,row=1)
 posFrame = ttk.Frame(frm1, padding=10)
 posFrame.grid(column=2,row=1)
 
-style = ttk.Style()
-style.configure("Red.TButton", foreground="white", background="red")
-labelstyle = ttk.Style()
-labelstyle.configure("Std.TLabel", foreground="black", padding=4,
-        font=( "Arial", 15 ) )
 
 quitButton = ttk.Button(frm1, text="Quit", command=root.destroy, style="Red.TButton")
 quitButton.grid(column=2, row=0)
@@ -89,33 +118,11 @@ ySlider = IntSlider( posFrame, text="y", row=2 )
 
 
 
-actual = Canvas(frm2,width=512,height=512)
-actual.grid(column=0,row=0)
-distorted = Canvas(frm2,width=512,height=512)
-distorted.grid(column=1,row=0)
 
-def setActualImage(im):
-    im0 =  Image.fromarray(im)
-    img =  ImageTk.PhotoImage(image=im0)
-    im0.show()
-    return actual.create_image(0,0,anchor=NW, image=img)
-def setDistortedImage(im):
-    im0 =  Image.fromarray(im)
-    img =  ImageTk.PhotoImage(image=im0)
-    return distorted.create_image(0,0,anchor=NW, image=img)
 
-# img= ImageTk.PhotoImage(Image.open("test.png"))
-# actual.create_image(0,0,anchor=NW,image=img)
 
-# setDistortedImage(sim.getDistortedImage())
-# setActualImage(sim.getActualImage())
-im0 = Image.fromarray( sim.getActualImage() )
-img0 = ImageTk.PhotoImage(image=im0)
-actual.create_image(0,0,anchor=NW, image=img0)
-
-im = Image.fromarray( sim.getDistortedImage() )
-img = ImageTk.PhotoImage(image=im)
-distorted.create_image(0,0,anchor=NW, image=img)
+imgPane = ImagePane(frm2,sim)
+imgPane.update()
 
 root.mainloop()
 
