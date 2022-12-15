@@ -30,18 +30,16 @@ class IntSlider:
         :param fromval: lower bound on the range
         :param toval: upper bound on the range
         """
-        self.frm = ttk.Frame(root, padding=10)
-        self.frm.grid()
         self.var = IntVar()
-        self.label = ttk.Label( self.frm, text=text,
+        self.label = ttk.Label( root, text=text,
                 style="Std.TLabel" )
-        self.slider = Scale( self.frm, length=200, variable=self.var,
+        self.slider = Scale( root, length=200, variable=self.var,
                 resolution=1,
                 orient=HORIZONTAL,
                 from_=fromval, to=toval )
-        # self.val = ttk.Label( self.frm, textvariable=self.var )
         self.label.grid(row=row,column=0,sticky=E)
         self.slider.grid(row=row,column=1)
+        # self.val = ttk.Label( root, textvariable=self.var )
         # self.val.grid(row=row,column=2)
     def get(self):
         "Get the value of the slider."
@@ -115,12 +113,12 @@ class Controller:
         self.makePosFrame()
 
     def makeLensFrame(self):
-        lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
+        self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
                 style="Std.TLabel" )
-        lensSelector = ttk.Combobox( self.lensFrame, 
+        self.lensSelector = ttk.Combobox( self.lensFrame, 
                 values=self.lensValues )
-        lensLabel.grid(column=0, row=1, sticky=E )
-        lensSelector.grid(column=1, row=1)
+        self.lensLabel.grid(column=0, row=1, sticky=E )
+        self.lensSelector.grid(column=1, row=1)
 
         self.einsteinSlider = IntSlider( self.lensFrame,
             text="Einstein Radius", row=2 )
@@ -162,12 +160,10 @@ sim.init()
 sim.runSim()
 
 # GUI
-
-
-
 controller = Controller(root,sim)
 imgPane = ImagePane(root,sim)
 imgPane.update()
 
+# Main Loop
 root.mainloop()
 
