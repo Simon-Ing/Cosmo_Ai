@@ -96,6 +96,9 @@ class ImagePane:
         self.setDistortedImage()
         self.setActualImage()
 class Controller:
+    """
+    Pane with widgets to control the various parameters for the simulation.
+    """
     def __init__(self,root,sim):
         """
         Set up the pane.
@@ -117,14 +120,13 @@ class Controller:
         self.quitButton = ttk.Button(self.frm, text="Quit",
                 command=root.destroy, style="Red.TButton")
         self.quitButton.grid(column=2, row=0)
+        self.posPane = PosPane(self.posFrame,self.sim)
         self.makeLensFrame()
         self.makeSourceFrame()
-        self.posPane = PosPane(self.posFrame,self.sim)
 
     def makeLensFrame(self):
         modeVar = StringVar()
         self.lensVar = modeVar
-        modeVar.set( self.lensValues[0] )
         modeVar.trace_add("write", self.pushLensMode ) 
         self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
                 style="Std.TLabel" )
@@ -147,14 +149,16 @@ class Controller:
         self.einsteinSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.chiSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.ntermsSlider.var.trace_add( "write", self.pushLensParameters ) 
+        self.pushLensParameters(runsim=False)
+        modeVar.set( self.lensValues[0] )
 
-    def pushLensParameters(self,*a):
+    def pushLensParameters(self,*a,runsim=True):
         print( "[CosmoGUI] Push lens parameters" )
         self.sim.setNterms( self.ntermsSlider.get() )
         self.sim.setCHI( self.chiSlider.get() )
         self.sim.setEinsteinR( self.einsteinSlider.get())
-        self.sim.runSimulator()
-    def pushSourceParameters(self,*a):
+        if runsim: self.sim.runSimulator()
+    def pushSourceParameters(self,*a,runsim=True):
         print( "[CosmoGUI] Push source parameters" )
         self.sim.setSourceParameters(
                 self.sigmaSlider.get(),
@@ -178,10 +182,7 @@ class Controller:
                 values=[ "Spherical", "Ellipsoid", "Triangle" ] )
         sourceLabel.grid(column=0, row=1, sticky=E )
         self.sourceSelector.grid(column=1, row=1)
-        modeVar.set( self.sourceValues[0] )
         modeVar.trace_add("write", self.pushSourceMode ) 
-
-
 
         self.sigmaSlider = IntSlider( self.sourceFrame,
                 text="Source Size", row=2,
@@ -190,10 +191,13 @@ class Controller:
                 text="Secondary Size", row=3,
                 default=10 )
         self.thetaSlider = IntSlider( self.sourceFrame, 
+                toval=360,
                 text="Source Rotation", row=4, default=45 )
         self.sigmaSlider.var.trace_add( "write", self.pushSourceParameters )
         self.sigma2Slider.var.trace_add( "write", self.pushSourceParameters )
         self.thetaSlider.var.trace_add( "write", self.pushSourceParameters )
+        self.pushSourceParameters(runsim=False)
+        modeVar.set( self.sourceValues[0] )
 
 class PosPane:
     """
@@ -225,6 +229,7 @@ class PosPane:
         self.thetaVar.trace_add( "write", self.polarUpdate ) ;
         self._polarUpdate = False
         self._xyUpdate = False
+        self.pushXY()
     def polarUpdate(self,*a):
         """
         Event handler to update Cartesian co-ordinates when polar 
