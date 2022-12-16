@@ -3,8 +3,6 @@
 """
 Desktop application to run the CosmoSim simulator for
 gravitational lensing.
-
-(Under construction.)
 """
 
 from tkinter import *
