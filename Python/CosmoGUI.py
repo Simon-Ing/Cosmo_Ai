@@ -140,9 +140,8 @@ class Controller(ttk.Frame):
         self.lensFrame.grid(column=0,row=1)
         self.sourceFrame = ttk.Frame(self, padding=10)
         self.sourceFrame.grid(column=1,row=1)
-        self.posFrame = ttk.Frame(self, padding=10)
-        self.posFrame.grid(column=2,row=1)
-        self.posPane = PosPane(self.posFrame,self.sim)
+        self.posPane = PosPane(self,self.sim)
+        self.posPane.grid(column=2,row=1)
         self.makeLensFrame()
         self.makeSourceFrame()
 
@@ -223,22 +222,28 @@ class Controller(ttk.Frame):
         self.pushSourceParameters(runsim=False)
         modeVar.trace_add("write", self.pushSourceMode ) 
 
-class PosPane:
+class PosPane(ttk.Frame):
     """
     The pane of widgets to set the source position.
     """
-    def __init__(self,frm,sim):
-        self.frm = frm 
+    def __init__(self,root,sim, *a, **kw):
+        """
+        Set up the pane.
+
+        :param root: parent widget
+        :param sim: CosmoSim object
+        """
+        super().__init__(root, *a, **kw)
         self.sim = sim 
-        xSlider = IntSlider( self.frm, text="x", row=1,
+        xSlider = IntSlider( self, text="x", row=1,
                 fromval=-100,
                 var=DoubleVar(), resolution=0.01 )
-        ySlider = IntSlider( self.frm, text="y", row=2,
+        ySlider = IntSlider( self, text="y", row=2,
                 fromval=-100,
                 var=DoubleVar(), resolution=0.01 )
-        rSlider = IntSlider( self.frm, text="r", row=3,
+        rSlider = IntSlider( self, text="r", row=3,
                 var=DoubleVar(), resolution=0.01 )
-        thetaSlider = IntSlider( self.frm, text="theta", row=4,
+        thetaSlider = IntSlider( self, text="theta", row=4,
                 toval=360,
                 var=DoubleVar(), resolution=0.1 )
 
