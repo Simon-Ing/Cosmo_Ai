@@ -126,9 +126,18 @@ class Controller:
             text="Einstein Radius", row=2 )
         self.chiSlider = IntSlider( self.lensFrame,
             text="Distance Ratio (chi)", row=3 )
-        self.nTermsSlider = IntSlider( self.lensFrame, 
+        self.ntermsSlider = IntSlider( self.lensFrame, 
             text="Number of Terms (Roulettes only)", row=4)
+        self.einsteinSlider.var.trace_add( "write", self.pushLensParameters ) 
+        self.chiSlider.var.trace_add( "write", self.pushLensParameters ) 
+        self.ntermsSlider.var.trace_add( "write", self.pushLensParameters ) 
 
+    def pushLensParameters(self,*a):
+        print( "[CosmoGUI] Push lens parameters" )
+        self.sim.setNterms( self.ntermsSlider.get() )
+        self.sim.setCHI( self.chiSlider.get() )
+        self.sim.setEinsteinR( self.einsteinSlider.get())
+        self.sim.runSimulator()
     def pushSourceParameters(self,*a):
         print( "[CosmoGUI] Push source parameters" )
         self.sim.setSourceParameters(
@@ -162,9 +171,6 @@ class Controller:
         sim = self.sim
         x,y = self.posPane.getXY()
         sim.setXY( x, y )
-        sim.setNterms( self.ntermsSlider.get() )
-        sim.setCHI( self.chiSlider.get() )
-        sim.setEinsteinR( self.einsteinSlider.get())
         # sim.setLensMode( self.einsteinSlider.get() )
         # sim.setSourceParameters( self.einsteinSlider.get() )
         # TODO: Complete

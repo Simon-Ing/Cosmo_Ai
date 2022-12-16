@@ -30,7 +30,7 @@ void CosmoSim::diagnostics() {
 
 
 void CosmoSim::setRefLines(bool c) { refLinesMode = c ; }
-void CosmoSim::setCHI(int c) { chi = c/100 ; }
+void CosmoSim::setCHI(int c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY(int x, int y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
@@ -132,6 +132,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setLensMode", &CosmoSim::setLensMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
+        .def("setCHI", &CosmoSim::setCHI)
         .def("setSourceParameters", &CosmoSim::setSourceParameters)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
