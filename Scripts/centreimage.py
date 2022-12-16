@@ -48,6 +48,9 @@ def drawAxes(im):
   return im
 
 def cleanImage(im,sensitivity=None):
+   """
+   Do connected components analysis and remove all but the largest component.
+   """
    print( f"Image type: {im.dtype}; "
        + f"Range ({im.min()},{im.max()})" )
    im = im.astype(np.uint8)
