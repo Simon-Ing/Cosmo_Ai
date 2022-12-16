@@ -139,8 +139,24 @@ class Controller:
         sigmaSlider = IntSlider( self.sourceFrame, text="Source Size", row=2  )
         sigma2Slider = IntSlider( self.sourceFrame, text="Secondary Size", row=3 )
         thetaSlider = IntSlider( self.sourceFrame, text="Source Rotation", row=4 )
+    def updateSim(self):
+        """
+        Push parameters to the CosmoSim object
+        """
+        sim = self.sim
+        x,y = self.posPane.getXY()
+        sim.setXY( x, y )
+        sim.setNterms( self.ntermsSlider.get() )
+        sim.setCHI( self.chiSlider.get() )
+        sim.setEinsteinR self.einsteinSlider.get()
+        # sim.setLensMode( self.einsteinSlider.get() )
+        # sim.setSourceParameters( self.einsteinSlider.get() )
+        # TODO: Complete
 
 class PosPane:
+    """
+    The pane of widgets to set the source position.
+    """
     def __init__(self,frm):
         self.posFrame = frm 
         xSlider = IntSlider( self.posFrame, text="x", row=1 )
@@ -159,7 +175,13 @@ class PosPane:
         self.thetaVar.trace_add( "write", self.polarUpdate ) ;
         self._polarUpdate = False
         self._xyUpdate = False
+    def getXY(self):
+        return ( self.xVar.get(), self.yVar.get() )
     def polarUpdate(self,*a):
+        """
+        Event handler to update Cartesian co-ordinates when polar 
+        co-ordinates change.
+        """
         self._polarUpdate = True
         if self._xyUpdate: 
             self._polarUpdate = False
@@ -171,6 +193,10 @@ class PosPane:
         self.yVar.set( math.sin(theta)*r ) 
         self._polarUpdate = False
     def xyUpdate(self,*a):
+        """
+        Event handler to update polar co-ordinates when Cartesian 
+        co-ordinates change.
+        """
         self._xyUpdate = True
         if self._polarUpdate: 
             self._xyUpdate = False
