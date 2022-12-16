@@ -72,30 +72,31 @@ class Window:
         labelstyle.configure("Std.TLabel", foreground="black", padding=4,
                 font=( "Arial", 15 ) )
 
-        controller = Controller(self.root,sim)
-        imgPane = ImagePane(self.root,sim)
+        controller = Controller(self.root,sim, padding=10)
+        controller.grid()
+        imgPane = ImagePane(self.root,sim, padding=10)
+        imgPane.grid()
         self.frm = ttk.Frame(self.root, padding=10)
         self.frm.grid()
         self.quitButton = ttk.Button(self.frm, text="Quit",
                 command=self.destroy, style="Red.TButton")
         self.quitButton.grid(column=0, row=0, sticky=E)
-class ImagePane:
+class ImagePane(ttk.Frame):
     """
     A pane with all images to be displayed from the simulator.
     """
-    def __init__(self,root,sim):
+    def __init__(self,root,sim, *a, **kw ):
         """
         Set up the pane.
 
         :param root: parent widget
         :param sim: CosmoSim object
         """
+        super().__init__(root, *a, **kw)
         self.sim = sim
-        self.frm = ttk.Frame(root, padding=10)
-        self.frm.grid()
-        self.actual = Canvas(self.frm,width=512,height=512)
+        self.actual = Canvas(self,width=512,height=512)
         self.actual.grid(column=0,row=0)
-        self.distorted = Canvas(self.frm,width=512,height=512)
+        self.distorted = Canvas(self,width=512,height=512)
         self.distorted.grid(column=1,row=0)
         im = Image.fromarray( np.zeros((512,512)) )
         img =  ImageTk.PhotoImage(image=im)
@@ -120,27 +121,26 @@ class ImagePane:
         """
         self.setDistortedImage()
         self.setActualImage()
-class Controller:
+class Controller(ttk.Frame):
     """
     Pane with widgets to control the various parameters for the simulation.
     """
-    def __init__(self,root,sim):
+    def __init__(self,root,sim, *a, **kw):
         """
         Set up the pane.
 
         :param root: parent widget
         :param sim: CosmoSim object
         """
+        super().__init__(root, *a, **kw)
         self.sim = sim
         self.lensValues = list(lensValues.keys())
         self.sourceValues = list(sourceValues.keys())
-        self.frm = ttk.Frame(root, padding=10)
-        self.frm.grid()
-        self.lensFrame = ttk.Frame(self.frm, padding=10)
+        self.lensFrame = ttk.Frame(self, padding=10)
         self.lensFrame.grid(column=0,row=1)
-        self.sourceFrame = ttk.Frame(self.frm, padding=10)
+        self.sourceFrame = ttk.Frame(self, padding=10)
         self.sourceFrame.grid(column=1,row=1)
-        self.posFrame = ttk.Frame(self.frm, padding=10)
+        self.posFrame = ttk.Frame(self, padding=10)
         self.posFrame.grid(column=2,row=1)
         self.posPane = PosPane(self.posFrame,self.sim)
         self.makeLensFrame()
