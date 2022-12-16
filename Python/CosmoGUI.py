@@ -134,94 +134,113 @@ class Controller(ttk.Frame):
         """
         super().__init__(root, *a, **kw)
         self.sim = sim
-        self.lensValues = list(lensValues.keys())
-        self.sourceValues = list(sourceValues.keys())
-        self.lensFrame = ttk.Frame(self, padding=10)
+        self.lensFrame = LensPane(self, sim, padding=10)
         self.lensFrame.grid(column=0,row=1)
-        self.sourceFrame = ttk.Frame(self, padding=10)
+        self.sourceFrame = SourcePane(self, sim, padding=10)
         self.sourceFrame.grid(column=1,row=1)
-        self.posPane = PosPane(self,self.sim)
+        self.posPane = PosPane(self,self.sim, padding=10)
         self.posPane.grid(column=2,row=1)
-        self.makeLensFrame()
-        self.makeSourceFrame()
 
-    def makeLensFrame(self):
+class SourcePane(ttk.Frame):
+    """
+    The pane of widgets to set the source parameters.
+    """
+    def __init__(self,root,sim, *a, **kw):
+        """
+        Set up the pane for the lens controls.
+
+        :param root: parent widget
+        :param sim: CosmoSim object
+        """
+        super().__init__(root, *a, **kw)
+        self.sim = sim 
+        self.sourceValues = list(sourceValues.keys())
+
         modeVar = StringVar()
-        self.lensVar = modeVar
-        modeVar.set( self.lensValues[0] )
-        self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
-                style="Std.TLabel" )
-        self.lensSelector = ttk.Combobox( self.lensFrame, 
+        self.sourceVar = modeVar
+        modeVar.set( self.sourceValues[0] )
+        sourceLabel = ttk.Label( self,
+            text="Source Model", style="Std.TLabel" )
+        self.sourceSelector = ttk.Combobox( self,
                 textvariable=modeVar,
-                values=self.lensValues )
-        self.lensLabel.grid(column=0, row=1, sticky=E )
-        self.lensSelector.grid(column=1, row=1)
-        self.lensSelector.set( self.lensValues[0] )
+                values=[ "Spherical", "Ellipsoid", "Triangle" ] )
+        sourceLabel.grid(column=0, row=1, sticky=E )
+        self.sourceSelector.grid(column=1, row=1)
 
-        self.einsteinSlider = IntSlider( self.lensFrame,
-            text="Einstein Radius", row=2,
-            default=20 )
-        self.chiSlider = IntSlider( self.lensFrame,
-            text="Distance Ratio (chi)", row=3,
-            default=50 )
-        self.ntermsSlider = IntSlider( self.lensFrame, 
-            text="Number of Terms (Roulettes only)", row=4,
-            toval=50,
-            default=16 )
-        self.einsteinSlider.var.trace_add( "write", self.pushLensParameters ) 
-        self.chiSlider.var.trace_add( "write", self.pushLensParameters ) 
-        self.ntermsSlider.var.trace_add( "write", self.pushLensParameters ) 
-        self.pushLensParameters(runsim=False)
-
-        modeVar.trace_add("write", self.pushLensMode ) 
-
-    def pushLensParameters(self,*a,runsim=True):
-        print( "[CosmoGUI] Push lens parameters" )
-        self.sim.setNterms( self.ntermsSlider.get() )
-        self.sim.setCHI( self.chiSlider.get() )
-        self.sim.setEinsteinR( self.einsteinSlider.get())
-        if runsim: self.sim.runSimulator()
-    def pushSourceParameters(self,*a,runsim=True):
+        self.sigmaSlider = IntSlider( self,
+                text="Source Size", row=2,
+                default=20 )
+        self.sigma2Slider = IntSlider( self,
+                text="Secondary Size", row=3,
+                default=10 )
+        self.thetaSlider = IntSlider( self, 
+                toval=360,
+                text="Source Rotation", row=4, default=45 )
+        self.sigmaSlider.var.trace_add( "write", self.push)
+        self.sigma2Slider.var.trace_add( "write", self.push)
+        self.thetaSlider.var.trace_add( "write", self.push)
+        self.push(runsim=False)
+        modeVar.trace_add("write", self.push) 
+    def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push source parameters" )
         self.sim.setSourceParameters(
                 self.sigmaSlider.get(),
                 self.sigma2Slider.get(),
                 self.thetaSlider.get()
                 )
-        if runsim: self.sim.runSimulator()
-    def pushSourceMode(self,*a,runsim=True):
         self.sim.setSourceMode(self.sourceVar.get())
         if runsim: self.sim.runSimulator()
-    def pushLensMode(self,*a,runsim=True):
-        self.sim.setLensMode(self.lensVar.get())
-        if runsim: self.sim.runSimulator()
-    def makeSourceFrame(self):
+
+class LensPane(ttk.Frame):
+    """
+    The pane of widgets to set the lens parameters.
+    """
+    def __init__(self,root,sim, *a, **kw):
+        """
+        Set up the pane for the lens controls.
+
+        :param root: parent widget
+        :param sim: CosmoSim object
+        """
+        super().__init__(root, *a, **kw)
+        self.sim = sim 
+        self.lensValues = list(lensValues.keys())
+
         modeVar = StringVar()
-        self.sourceVar = modeVar
-        modeVar.set( self.sourceValues[0] )
-        sourceLabel = ttk.Label( self.sourceFrame,
-            text="Source Model", style="Std.TLabel" )
-        self.sourceSelector = ttk.Combobox( self.sourceFrame,
+        self.lensVar = modeVar
+        modeVar.set( self.lensValues[0] )
+        self.lensLabel = ttk.Label( self, text="Lens Model",
+                style="Std.TLabel" )
+        self.lensSelector = ttk.Combobox( self, 
                 textvariable=modeVar,
-                values=[ "Spherical", "Ellipsoid", "Triangle" ] )
-        sourceLabel.grid(column=0, row=1, sticky=E )
-        self.sourceSelector.grid(column=1, row=1)
+                values=self.lensValues )
+        self.lensLabel.grid(column=0, row=1, sticky=E )
+        self.lensSelector.grid(column=1, row=1)
+        self.lensSelector.set( self.lensValues[0] )
 
-        self.sigmaSlider = IntSlider( self.sourceFrame,
-                text="Source Size", row=2,
-                default=20 )
-        self.sigma2Slider = IntSlider( self.sourceFrame,
-                text="Secondary Size", row=3,
-                default=10 )
-        self.thetaSlider = IntSlider( self.sourceFrame, 
-                toval=360,
-                text="Source Rotation", row=4, default=45 )
-        self.sigmaSlider.var.trace_add( "write", self.pushSourceParameters )
-        self.sigma2Slider.var.trace_add( "write", self.pushSourceParameters )
-        self.thetaSlider.var.trace_add( "write", self.pushSourceParameters )
-        self.pushSourceParameters(runsim=False)
-        modeVar.trace_add("write", self.pushSourceMode ) 
+        self.einsteinSlider = IntSlider( self,
+            text="Einstein Radius", row=2,
+            default=20 )
+        self.chiSlider = IntSlider( self,
+            text="Distance Ratio (chi)", row=3,
+            default=50 )
+        self.ntermsSlider = IntSlider( self, 
+            text="Number of Terms (Roulettes only)", row=4,
+            toval=50,
+            default=16 )
+        self.einsteinSlider.var.trace_add( "write", self.push ) 
+        self.chiSlider.var.trace_add( "write", self.push ) 
+        self.ntermsSlider.var.trace_add( "write", self.push ) 
+        self.push(runsim=False)
 
+        modeVar.trace_add("write", self.push) 
+    def push(self,*a,runsim=True):
+        print( "[CosmoGUI] Push lens parameters" )
+        self.sim.setLensMode(self.lensVar.get())
+        self.sim.setNterms( self.ntermsSlider.get() )
+        self.sim.setCHI( self.chiSlider.get() )
+        self.sim.setEinsteinR( self.einsteinSlider.get())
+        if runsim: self.sim.runSimulator()
 class PosPane(ttk.Frame):
     """
     The pane of widgets to set the source position.
