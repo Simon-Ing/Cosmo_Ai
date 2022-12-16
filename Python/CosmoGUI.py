@@ -13,7 +13,7 @@ from PIL import Image, ImageTk
 import numpy as np
 import math
 
-from CosmoSim import CosmoSim
+from CosmoSim import CosmoSim, lensValues, sourceValues
 
 # Classes
 class IntSlider:
@@ -21,7 +21,7 @@ class IntSlider:
     A slider for integer values with label.
     """
     def __init__(self,root,text,row=1,fromval=0,toval=100,var=None,
-            resolution=1):
+            resolution=1, default=0):
         """
         Set up the slider with the following parameters:
 
@@ -38,6 +38,7 @@ class IntSlider:
             self.var = IntVar()
         else:
             self.var = var
+        self.var.set( default )
         self.label = ttk.Label( root, text=text,
                 style="Std.TLabel" )
         self.slider = Scale( root, length=200, variable=self.var,
@@ -95,8 +96,6 @@ class ImagePane:
         self.setDistortedImage()
         self.setActualImage()
 class Controller:
-    lensValues = [ "SIS (roulettes)", "Point Mass (exact)",
-                        "Point Mass (roulettes)" ]
     def __init__(self,root,sim):
         """
         Set up the pane.
@@ -105,6 +104,8 @@ class Controller:
         :param sim: CosmoSim object
         """
         self.sim = sim
+        self.lensValues = list(lensValues.keys())
+        self.sourceValues = list(sourceValues.keys())
         self.frm = ttk.Frame(root, padding=10)
         self.frm.grid()
         self.lensFrame = ttk.Frame(self.frm, padding=10)
@@ -121,19 +122,28 @@ class Controller:
         self.posPane = PosPane(self.posFrame,self.sim)
 
     def makeLensFrame(self):
+        modeVar = StringVar()
+        self.lensVar = modeVar
+        modeVar.set( self.lensValues[0] )
+        modeVar.trace_add("write", self.pushLensMode ) 
         self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
                 style="Std.TLabel" )
         self.lensSelector = ttk.Combobox( self.lensFrame, 
+                textvariable=modeVar,
                 values=self.lensValues )
         self.lensLabel.grid(column=0, row=1, sticky=E )
         self.lensSelector.grid(column=1, row=1)
+        self.lensSelector.set( self.lensValues[0] )
 
         self.einsteinSlider = IntSlider( self.lensFrame,
-            text="Einstein Radius", row=2 )
+            text="Einstein Radius", row=2,
+            default=20 )
         self.chiSlider = IntSlider( self.lensFrame,
-            text="Distance Ratio (chi)", row=3 )
+            text="Distance Ratio (chi)", row=3,
+            default=50 )
         self.ntermsSlider = IntSlider( self.lensFrame, 
-            text="Number of Terms (Roulettes only)", row=4)
+            text="Number of Terms (Roulettes only)", row=4,
+            default=16 )
         self.einsteinSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.chiSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.ntermsSlider.var.trace_add( "write", self.pushLensParameters ) 
@@ -147,26 +157,40 @@ class Controller:
     def pushSourceParameters(self,*a):
         print( "[CosmoGUI] Push source parameters" )
         self.sim.setSourceParameters(
-                0, # self.sourceSelector.var.get
                 self.sigmaSlider.get(),
                 self.sigma2Slider.get(),
                 self.thetaSlider.get()
                 )
         self.sim.runSimulator()
+    def pushSourceMode(self,*a):
+        self.sim.setSourceMode(self.sourceVar.get())
+        self.sim.runSimulator()
+    def pushLensMode(self,*a):
+        self.sim.setLensMode(self.lensVar.get())
+        self.sim.runSimulator()
     def makeSourceFrame(self):
+        modeVar = StringVar()
+        self.sourceVar = modeVar
         sourceLabel = ttk.Label( self.sourceFrame,
             text="Source Model", style="Std.TLabel" )
         self.sourceSelector = ttk.Combobox( self.sourceFrame,
-            values=[ "Spherical", "Ellipsoid", "Triangle" ] )
+                textvariable=modeVar,
+                values=[ "Spherical", "Ellipsoid", "Triangle" ] )
         sourceLabel.grid(column=0, row=1, sticky=E )
         self.sourceSelector.grid(column=1, row=1)
+        modeVar.set( self.sourceValues[0] )
+        modeVar.trace_add("write", self.pushSourceMode ) 
+
+
 
         self.sigmaSlider = IntSlider( self.sourceFrame,
-                text="Source Size", row=2  )
+                text="Source Size", row=2,
+                default=20 )
         self.sigma2Slider = IntSlider( self.sourceFrame,
-                text="Secondary Size", row=3 )
+                text="Secondary Size", row=3,
+                default=10 )
         self.thetaSlider = IntSlider( self.sourceFrame, 
-                text="Source Rotation", row=4 )
+                text="Source Rotation", row=4, default=45 )
         self.sigmaSlider.var.trace_add( "write", self.pushSourceParameters )
         self.sigma2Slider.var.trace_add( "write", self.pushSourceParameters )
         self.thetaSlider.var.trace_add( "write", self.pushSourceParameters )
@@ -257,7 +281,7 @@ if __name__ == "__main__":
 
     # Simulator
     sim = CosmoSim()
-    sim.runSim()
+    sim.runSimulator()
 
     # GUI
     controller = Controller(root,sim)

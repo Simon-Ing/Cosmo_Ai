@@ -3,6 +3,20 @@
 import CosmoSim.CosmoSimPy as cs
 import numpy as np
 
+LensSpec = cs.LensSpec
+SourceSpec = cs.SourceSpec
+
+lensValues = {
+        "Point Mass (exact)" : LensSpec.PointMass,
+        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
+        "SIS (roulettes)" : LensSpec.SIS,
+        }
+sourceValues = {
+        "Spherical" : SourceSpec.Sphere,
+        "Ellipsoid" : SourceSpec.Ellipse,
+        "Triangle" : SourceSpec.Triangle }
+
+
 class CosmoSim(cs.CosmoSim):
     """
     Simulator for gravitational lensing.
@@ -15,8 +29,13 @@ class CosmoSim(cs.CosmoSim):
         self.callback = f
     def setCallback(self,f):
         self.callback = f
+    def setSourceMode(self,s):
+        return super().setSourceMode( int( sourceValues[s] ) ) 
+    def setLensMode(self,s):
+        return super().setLensMode( int( lensValues[s] ) ) 
     def runSimulator(self):
         self.pending = False
+        print ( "runSimulator" )
         ret = self.runSim()
         if ret:
             if None != self.callback: self.callback()

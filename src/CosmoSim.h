@@ -41,9 +41,10 @@ public:
     void setNterms(int);
     // void updateDisplaySize(int);
 
+    void setSourceMode(int);
     void setLensMode(int);
     void setEinsteinR(int);
-    void setSourceParameters(int,int,int,int);
+    void setSourceParameters(int,int,int);
     void setRefLines(bool) ;
 
     bool runSim();

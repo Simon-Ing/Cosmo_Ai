@@ -35,6 +35,7 @@ void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::initLens() {
    bool centred = true ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
@@ -61,7 +62,7 @@ void CosmoSim::initLens() {
     return ;
 }
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
-void CosmoSim::setSourceParameters(int mode, int s1, int s2, int theta ) {
+void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
    sourceTheta = theta ;
@@ -130,6 +131,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     py::class_<CosmoSim>(m, "CosmoSim")
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
+        .def("setSourceMode", &CosmoSim::setSourceMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
         .def("setCHI", &CosmoSim::setCHI)
@@ -140,6 +142,17 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("runSim", &CosmoSim::runSim)
         .def("diagnostics", &CosmoSim::diagnostics)
         ;
+
+    pybind11::enum_<SourceSpec>(m, "SourceSpec") 
+       .value( "Sphere", CSIM_SOURCE_SPHERE )
+       .value( "Ellipse", CSIM_SOURCE_ELLIPSE )
+       .value( "Triangle", CSIM_SOURCE_TRIANGLE ) ;
+    pybind11::enum_<LensSpec>(m, "LensSpec") 
+       .value( "SIS", CSIM_LENS_SPHERE )
+       .value( "Ellipse", CSIM_LENS_ELLIPSE )
+       .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
+       .value( "PointMass", CSIM_LENS_PM )
+       .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
     pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
