@@ -12,6 +12,7 @@ protected:
 
 public:
     Source(int) ;
+    ~Source();
     virtual cv::Mat getImage() ;
 
 protected:

@@ -9,19 +9,28 @@
 #include "Source.h"
 #include <thread>
 
+
+Source::~Source() {
+   // imgApparent.deallocate() ;
+}
 Source::Source(int sz) :
         size(sz)
 { 
     drawn = 0 ;
+    std::cout << "[Source] constructor; size = " << size << "\n" ;
+    imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0)) ;
+    std::cout << "[Source] allocated memory\n" ;
 }
 
 /* Getters for the images */
 cv::Mat Source::getImage() { 
    if ( ! drawn ) {
-      imgApparent = cv::Mat(size, size, CV_8UC1, cv::Scalar(0, 0, 0)) ;
+      std::cout << "Source.getImage() starting to draw; size = " 
+         << size << "\n" ;
       drawParallel( imgApparent ) ;
       drawn = 1 ;
    }
+   std::cout << "Source.getImage() returns\n" ;
    return imgApparent ; 
 }
 

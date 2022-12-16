@@ -65,11 +65,14 @@ void CosmoSim::setSourceParameters(int mode, int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
    sourceTheta = theta ;
-   srcmode = mode ;
+   // srcmode = mode ;
 }
 void CosmoSim::initSource( ) {
    std::cout << "[CosmoSim.cpp] initSource()\n" ;
-   if ( src ) delete src ;
+   // Deleting the source object messes up the heap and causes
+   // subsequent instantiation to fail.  This is probably because
+   // the imgApparent (cv:;Mat) is not freed correctly.
+   // if ( src ) delete src ;
    switch ( srcmode ) {
        case CSIM_SOURCE_SPHERE:
          src = new SphericalSource( size, sourceSize ) ;
@@ -90,15 +93,13 @@ void CosmoSim::initSource( ) {
 }
 bool CosmoSim::runSim() { 
    std::cout << "[CosmoSim.cpp] runSim()\n" ;
-   // if ( NULL == sim )
-      // throw std::bad_function_call() ;
    if ( running ) return false ;
    std::cout << "[CosmoSim.cpp] runSim() - running similator\n" ;
    initLens() ;
    initSource() ;
    sim->setNterms( nterms ) ;
-   std::cout << "[runSim] setNterms - nterms = "<< nterms <<"\n" ;
-   sim->updateXY( xPos, yPos, chi, einsteinR ) ;
+   sim->setXY( xPos, yPos, chi, einsteinR ) ;
+   std::cout << "[runSim] set parameters, ready to run\n" ;
    sim->update() ;
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;

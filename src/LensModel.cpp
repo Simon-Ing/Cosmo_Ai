@@ -175,10 +175,7 @@ void LensModel::updateNterms(int n) {
    update() ;
 }
 void LensModel::setNterms(int n) {
-   std::cout << "setNterms - nterms = "<< n<<"\n" ;
-   std::cout << "setNterms - nterms was "<< nterms<<"\n" ;
    nterms = n ;
-   std::cout << "setNterms completes\n" ;
 }
 void LensModel::setCHI(double chi) {
    CHI = chi ;
@@ -205,7 +202,7 @@ void LensModel::calculateAlphaBeta() { }
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
-void LensModel::updateXY( double X, double Y, double chi, double er ) {
+void LensModel::setXY( double X, double Y, double chi, double er ) {
 
     CHI = chi ;
     einsteinR = er ;
@@ -217,9 +214,12 @@ void LensModel::updateXY( double X, double Y, double chi, double er ) {
     actualAbs = sqrt(actualX * actualX + actualY * actualY); 
     phi = atan2(actualY, actualX); // Angle relative to x-axis
 
-    std::cout << "Set position x=" << actualX << "; y=" << actualY
+    std::cout << "[setXY] Set position x=" << actualX << "; y=" << actualY
               << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
     updateApparentAbs() ;
+}
+void LensModel::updateXY( double X, double Y, double chi, double er ) {
+    setXY( X, Y, chi, er ) ;
     update() ;
 }
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
@@ -236,7 +236,7 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     actualX = R*cos(phi) ;
     actualY = R*sin(phi) ;
 
-    std::cout << "Set position x=" << actualX << "; y=" << actualY
+    std::cout << "[setPolar] Set position x=" << actualX << "; y=" << actualY
               << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
 
     updateApparentAbs() ;

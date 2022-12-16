@@ -49,6 +49,7 @@ public:
     void setCentred( bool ) ;
 
     void updateXY(double, double, double, double) ;
+    void setXY(double, double, double, double) ;
     void setPolar(double, double, double, double) ;
     void setCHI(double) ;
     void setEinsteinR(double) ;
