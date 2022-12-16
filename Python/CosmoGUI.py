@@ -92,7 +92,9 @@ class ImagePane:
         self.img1 =  ImageTk.PhotoImage(image=im1)
         self.distorted.itemconfig(self.distortedCanvas, image=self.img1)
     def update(self):
-        "Update the images with new data from the CosmoSim object."
+        """
+        Update the images with new data from the CosmoSim object.
+        """
         self.setDistortedImage()
         self.setActualImage()
 class Controller:
@@ -127,7 +129,7 @@ class Controller:
     def makeLensFrame(self):
         modeVar = StringVar()
         self.lensVar = modeVar
-        modeVar.trace_add("write", self.pushLensMode ) 
+        modeVar.set( self.lensValues[0] )
         self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
                 style="Std.TLabel" )
         self.lensSelector = ttk.Combobox( self.lensFrame, 
@@ -145,12 +147,14 @@ class Controller:
             default=50 )
         self.ntermsSlider = IntSlider( self.lensFrame, 
             text="Number of Terms (Roulettes only)", row=4,
+            toval=50,
             default=16 )
         self.einsteinSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.chiSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.ntermsSlider.var.trace_add( "write", self.pushLensParameters ) 
         self.pushLensParameters(runsim=False)
-        modeVar.set( self.lensValues[0] )
+
+        modeVar.trace_add("write", self.pushLensMode ) 
 
     def pushLensParameters(self,*a,runsim=True):
         print( "[CosmoGUI] Push lens parameters" )
@@ -165,16 +169,17 @@ class Controller:
                 self.sigma2Slider.get(),
                 self.thetaSlider.get()
                 )
-        self.sim.runSimulator()
-    def pushSourceMode(self,*a):
+        if runsim: self.sim.runSimulator()
+    def pushSourceMode(self,*a,runsim=True):
         self.sim.setSourceMode(self.sourceVar.get())
-        self.sim.runSimulator()
-    def pushLensMode(self,*a):
+        if runsim: self.sim.runSimulator()
+    def pushLensMode(self,*a,runsim=True):
         self.sim.setLensMode(self.lensVar.get())
-        self.sim.runSimulator()
+        if runsim: self.sim.runSimulator()
     def makeSourceFrame(self):
         modeVar = StringVar()
         self.sourceVar = modeVar
+        modeVar.set( self.sourceValues[0] )
         sourceLabel = ttk.Label( self.sourceFrame,
             text="Source Model", style="Std.TLabel" )
         self.sourceSelector = ttk.Combobox( self.sourceFrame,
@@ -182,7 +187,6 @@ class Controller:
                 values=[ "Spherical", "Ellipsoid", "Triangle" ] )
         sourceLabel.grid(column=0, row=1, sticky=E )
         self.sourceSelector.grid(column=1, row=1)
-        modeVar.trace_add("write", self.pushSourceMode ) 
 
         self.sigmaSlider = IntSlider( self.sourceFrame,
                 text="Source Size", row=2,
@@ -197,7 +201,7 @@ class Controller:
         self.sigma2Slider.var.trace_add( "write", self.pushSourceParameters )
         self.thetaSlider.var.trace_add( "write", self.pushSourceParameters )
         self.pushSourceParameters(runsim=False)
-        modeVar.set( self.sourceValues[0] )
+        modeVar.trace_add("write", self.pushSourceMode ) 
 
 class PosPane:
     """
@@ -229,7 +233,7 @@ class PosPane:
         self.thetaVar.trace_add( "write", self.polarUpdate ) ;
         self._polarUpdate = False
         self._xyUpdate = False
-        self.pushXY()
+        self.sim.setXY( self.xVar.get(), self.yVar.get() )
     def polarUpdate(self,*a):
         """
         Event handler to update Cartesian co-ordinates when polar 
@@ -267,12 +271,11 @@ class PosPane:
         self._xyUpdate = False
         self.pushXY()
     def pushXY(self):
-        x,y = self.xVar.get(), self.yVar.get() 
-        print ( "x,y = ", x, y )
-        self.sim.setXY( x, y )
+        self.sim.setXY( self.xVar.get(), self.yVar.get() )
         self.sim.runSimulator()
 
 if __name__ == "__main__":
+    print( "CosmoGUI starting." )
 
     # Main object
     root = Tk()
@@ -284,14 +287,10 @@ if __name__ == "__main__":
     labelstyle.configure("Std.TLabel", foreground="black", padding=4,
             font=( "Arial", 15 ) )
 
-    # Simulator
     sim = CosmoSim()
-    sim.runSimulator()
-
-    # GUI
     controller = Controller(root,sim)
     imgPane = ImagePane(root,sim)
-    imgPane.update()
+    sim.runSimulator()
 
     # Main Loop
     root.mainloop()

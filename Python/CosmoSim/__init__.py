@@ -2,6 +2,7 @@
 
 import CosmoSim.CosmoSimPy as cs
 import numpy as np
+import threading as th
 
 LensSpec = cs.LensSpec
 SourceSpec = cs.SourceSpec
@@ -27,21 +28,23 @@ class CosmoSim(cs.CosmoSim):
     def __init__(self,f=None,*a,**kw):
         super().__init__(*a,**kw)
         self.callback = f
+        self.simEvent = th.Event()
+        self.simThread = th.Thread(target=self.simThread)
+        self.simThread.start()
     def setCallback(self,f):
         self.callback = f
     def setSourceMode(self,s):
         return super().setSourceMode( int( sourceValues[s] ) ) 
     def setLensMode(self,s):
         return super().setLensMode( int( lensValues[s] ) ) 
-    def runSimulator(self):
-        self.pending = False
-        print ( "runSimulator" )
-        ret = self.runSim()
-        if ret:
+    def simThread(self):
+        while True:
+            self.simEvent.wait()
+            self.simEvent.clear()
+            self.runSim()
             if None != self.callback: self.callback()
-            if self.pending: self.runSimulator()
-        else:
-            self.pending = True
+    def runSimulator(self):
+        self.simEvent.set()
             
 
     def getActualImage(self):

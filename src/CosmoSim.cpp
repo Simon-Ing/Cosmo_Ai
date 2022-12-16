@@ -37,7 +37,7 @@ void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::initLens() {
-   bool centred = true ;
+   bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
    if ( sim ) delete sim ;
@@ -101,7 +101,9 @@ bool CosmoSim::runSim() {
    sim->setNterms( nterms ) ;
    sim->setXY( xPos, yPos, chi, einsteinR ) ;
    std::cout << "[runSim] set parameters, ready to run\n" ;
+   Py_BEGIN_ALLOW_THREADS
    sim->update() ;
+   Py_END_ALLOW_THREADS
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;
 } 
