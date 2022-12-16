@@ -15,13 +15,13 @@ import math
 
 from CosmoSim import CosmoSim
 
-
 # Classes
 class IntSlider:
     """
     A slider for integer values with label.
     """
-    def __init__(self,root,text,row=1,fromval=0,toval=100):
+    def __init__(self,root,text,row=1,fromval=0,toval=100,var=None,
+            resolution=1):
         """
         Set up the slider with the following parameters:
 
@@ -30,12 +30,18 @@ class IntSlider:
         :param row: row number in the parent grid
         :param fromval: lower bound on the range
         :param toval: upper bound on the range
+        :param var: variable object to use for the value 
+                    (IntVar instanceby default)
+        :param resolution: resolution of the variable (default 1)
         """
-        self.var = IntVar()
+        if var == None:
+            self.var = IntVar()
+        else:
+            self.var = var
         self.label = ttk.Label( root, text=text,
                 style="Std.TLabel" )
         self.slider = Scale( root, length=200, variable=self.var,
-                resolution=1,
+                resolution=resolution,
                 orient=HORIZONTAL,
                 from_=fromval, to=toval )
         self.label.grid(row=row,column=0,sticky=E)
@@ -142,9 +148,9 @@ class Controller:
         print( "[CosmoGUI] Push source parameters" )
         self.sim.setSourceParameters(
                 0, # self.sourceSelector.var.get
-                self.sigmaSlider.var.get(),
-                self.sigma2Slider.var.get(),
-                self.thetaSlider.var.get()
+                self.sigmaSlider.get(),
+                self.sigma2Slider.get(),
+                self.thetaSlider.get()
                 )
         self.sim.runSimulator()
     def makeSourceFrame(self):
@@ -164,16 +170,6 @@ class Controller:
         self.sigmaSlider.var.trace_add( "write", self.pushSourceParameters )
         self.sigma2Slider.var.trace_add( "write", self.pushSourceParameters )
         self.thetaSlider.var.trace_add( "write", self.pushSourceParameters )
-    def updateSim(self):
-        """
-        Push parameters to the CosmoSim object
-        """
-        sim = self.sim
-        x,y = self.posPane.getXY()
-        sim.setXY( x, y )
-        # sim.setLensMode( self.einsteinSlider.get() )
-        # sim.setSourceParameters( self.einsteinSlider.get() )
-        # TODO: Complete
 
 class PosPane:
     """
@@ -182,10 +178,17 @@ class PosPane:
     def __init__(self,frm,sim):
         self.frm = frm 
         self.sim = sim 
-        xSlider = IntSlider( self.frm, text="x", row=1 )
-        ySlider = IntSlider( self.frm, text="y", row=2 )
-        rSlider = IntSlider( self.frm, text="r", row=3 )
-        thetaSlider = IntSlider( self.frm, text="theta", row=4 )
+        xSlider = IntSlider( self.frm, text="x", row=1,
+                fromval=-100,
+                var=DoubleVar(), resolution=0.01 )
+        ySlider = IntSlider( self.frm, text="y", row=2,
+                fromval=-100,
+                var=DoubleVar(), resolution=0.01 )
+        rSlider = IntSlider( self.frm, text="r", row=3,
+                var=DoubleVar(), resolution=0.01 )
+        thetaSlider = IntSlider( self.frm, text="theta", row=4,
+                toval=360,
+                var=DoubleVar(), resolution=0.1 )
 
         self.xVar = xSlider.var
         self.yVar = ySlider.var
@@ -213,7 +216,7 @@ class PosPane:
         self.xVar.set( math.cos(theta)*r ) 
         self.yVar.set( math.sin(theta)*r ) 
         self._polarUpdate = False
-        self.sim.setXY( self.xVar.get(), self.yVar.get() )
+        self.pushXY()
     def xyUpdate(self,*a):
         """
         Event handler to update polar co-ordinates when Cartesian 
@@ -233,28 +236,34 @@ class PosPane:
            if t < 0: t += 2*math.pi
            self.thetaVar.set( t )
         self._xyUpdate = False
-        self.sim.setXY( self.xVar.get(), self.yVar.get() )
+        self.pushXY()
+    def pushXY(self):
+        x,y = self.xVar.get(), self.yVar.get() 
+        print ( "x,y = ", x, y )
+        self.sim.setXY( x, y )
+        self.sim.runSimulator()
 
-# Main object
-root = Tk()
+if __name__ == "__main__":
 
-# Styles
-style = ttk.Style()
-style.configure("Red.TButton", foreground="white", background="red")
-labelstyle = ttk.Style()
-labelstyle.configure("Std.TLabel", foreground="black", padding=4,
-        font=( "Arial", 15 ) )
+    # Main object
+    root = Tk()
 
+    # Styles
+    style = ttk.Style()
+    style.configure("Red.TButton", foreground="white", background="red")
+    labelstyle = ttk.Style()
+    labelstyle.configure("Std.TLabel", foreground="black", padding=4,
+            font=( "Arial", 15 ) )
 
-# Simulator
-sim = CosmoSim()
-sim.runSim()
+    # Simulator
+    sim = CosmoSim()
+    sim.runSim()
 
-# GUI
-controller = Controller(root,sim)
-imgPane = ImagePane(root,sim)
-imgPane.update()
+    # GUI
+    controller = Controller(root,sim)
+    imgPane = ImagePane(root,sim)
+    imgPane.update()
 
-# Main Loop
-root.mainloop()
+    # Main Loop
+    root.mainloop()
 

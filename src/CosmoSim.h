@@ -22,7 +22,7 @@ private:
     int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
-    int xPos=10, yPos=0, rPos=10, thetaPos=0; ;
+    double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
     int nterms=16 ;
     bool refLinesMode=true ;
     LensModel *sim = NULL ;
@@ -35,7 +35,7 @@ private:
 public:
     CosmoSim();
 
-    void setXY(int, int) ;
+    void setXY(double, double) ;
     void setPolar(int, int) ;
     void setCHI(int);
     void setNterms(int);
