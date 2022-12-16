@@ -11,6 +11,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 import numpy as np
+import math
 
 from CosmoSim import CosmoSim
 
@@ -110,7 +111,7 @@ class Controller:
         self.quitButton.grid(column=2, row=0)
         self.makeLensFrame()
         self.makeSourceFrame()
-        self.makePosFrame()
+        self.posPane = PosPane(self.posFrame)
 
     def makeLensFrame(self):
         self.lensLabel = ttk.Label( self.lensFrame, text="Lens Model",
@@ -139,9 +140,52 @@ class Controller:
         sigma2Slider = IntSlider( self.sourceFrame, text="Secondary Size", row=3 )
         thetaSlider = IntSlider( self.sourceFrame, text="Source Rotation", row=4 )
 
-    def makePosFrame(self):
+class PosPane:
+    def __init__(self,frm):
+        self.posFrame = frm 
         xSlider = IntSlider( self.posFrame, text="x", row=1 )
         ySlider = IntSlider( self.posFrame, text="y", row=2 )
+        rSlider = IntSlider( self.posFrame, text="r", row=3 )
+        thetaSlider = IntSlider( self.posFrame, text="theta", row=4 )
+
+        self.xVar = xSlider.var
+        self.yVar = ySlider.var
+        self.rVar = rSlider.var
+        self.thetaVar = thetaSlider.var
+
+        self.xVar.trace_add( "write", self.xyUpdate ) ;
+        self.yVar.trace_add( "write", self.xyUpdate ) ;
+        self.rVar.trace_add( "write", self.polarUpdate ) ;
+        self.thetaVar.trace_add( "write", self.polarUpdate ) ;
+        self._polarUpdate = False
+        self._xyUpdate = False
+    def polarUpdate(self,*a):
+        self._polarUpdate = True
+        if self._xyUpdate: 
+            self._polarUpdate = False
+            return
+        print( "polarUpdate", *a )
+        r = self.rVar.get()
+        theta = self.thetaVar.get()*math.pi/180
+        self.xVar.set( math.cos(theta)*r ) 
+        self.yVar.set( math.sin(theta)*r ) 
+        self._polarUpdate = False
+    def xyUpdate(self,*a):
+        self._xyUpdate = True
+        if self._polarUpdate: 
+            self._xyUpdate = False
+            return
+        print( "xyUpdate", *a )
+        x = self.xVar.get()
+        y = self.yVar.get()
+        r = math.sqrt( x*x + y*y ) 
+        self.rVar.set( r )
+        if r > 0:
+           t = math.atan2( x, y )
+           if t < 0: t += 2*math.pi
+           self.thetaVar.set( t )
+        self._xyUpdate = False
+
 
 # Main object
 root = Tk()
@@ -156,7 +200,6 @@ labelstyle.configure("Std.TLabel", foreground="black", padding=4,
 
 # Simulator
 sim = CosmoSim()
-sim.init()
 sim.runSim()
 
 # GUI

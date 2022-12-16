@@ -175,7 +175,10 @@ void LensModel::updateNterms(int n) {
    update() ;
 }
 void LensModel::setNterms(int n) {
+   std::cout << "setNterms - nterms = "<< n<<"\n" ;
+   std::cout << "setNterms - nterms was "<< nterms<<"\n" ;
    nterms = n ;
+   std::cout << "setNterms completes\n" ;
 }
 void LensModel::setCHI(double chi) {
    CHI = chi ;

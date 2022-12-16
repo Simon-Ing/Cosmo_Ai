@@ -12,13 +12,14 @@ enum SourceSpec { CSIM_SOURCE_SPHERE,
 enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_ELLIPSE,
                   CSIM_LENS_PM_ROULETTE, 
-                  CSIM_LENS_PM } ;
+                  CSIM_LENS_PM,
+                  CSIM_NOLENS } ;
 
 class CosmoSim {
 private:
     int size=512, displaysize=512, basesize=512 ;
     double chi=0.5 ;
-    int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_LENS_PM, einsteinR=20 ;
+    int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     int xPos=10, yPos=0, rPos=10, thetaPos=0; ;
@@ -45,7 +46,6 @@ public:
     void setSourceParameters(int,int,int,int);
     void setRefLines(bool) ;
 
-    void init();
     bool runSim();
     void diagnostics();
 

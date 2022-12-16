@@ -37,6 +37,7 @@ void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::initLens() {
    bool centred = true ;
+   std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
    if ( sim ) delete sim ;
    switch ( lensmode ) {
@@ -67,6 +68,7 @@ void CosmoSim::setSourceParameters(int mode, int s1, int s2, int theta ) {
    srcmode = mode ;
 }
 void CosmoSim::initSource( ) {
+   std::cout << "[CosmoSim.cpp] initSource()\n" ;
    if ( src ) delete src ;
    switch ( srcmode ) {
        case CSIM_SOURCE_SPHERE:
@@ -84,16 +86,21 @@ void CosmoSim::initSource( ) {
          throw NotImplemented();
     }
     if (sim) sim->setSource( src ) ;
+    std::cout << "[CosmoSim.cpp] initSource() completes\n" ;
 }
 bool CosmoSim::runSim() { 
-   if ( NULL == sim )
-      throw std::bad_function_call() ;
+   std::cout << "[CosmoSim.cpp] runSim()\n" ;
+   // if ( NULL == sim )
+      // throw std::bad_function_call() ;
    if ( running ) return false ;
+   std::cout << "[CosmoSim.cpp] runSim() - running similator\n" ;
    initLens() ;
    initSource() ;
    sim->setNterms( nterms ) ;
+   std::cout << "[runSim] setNterms - nterms = "<< nterms <<"\n" ;
    sim->updateXY( xPos, yPos, chi, einsteinR ) ;
    sim->update() ;
+   std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;
 } 
 cv::Mat CosmoSim::getActual() {
@@ -113,13 +120,6 @@ cv::Mat CosmoSim::getDistorted() {
    // causing subsequent conversion to a numpy array to be misaligned. 
    return im.clone() ;
 }
-void CosmoSim::init() {
-   initLens() ;
-   initSource() ;
-   sim->setNterms( nterms ) ;
-   sim->updateXY( xPos, yPos, chi, einsteinR ) ;
-   return ;
-}
 
 PYBIND11_MODULE(CosmoSimPy, m) {
     m.doc() = "Wrapper for the CosmoSim simulator" ;
@@ -132,11 +132,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
         .def("setSourceParameters", &CosmoSim::setSourceParameters)
-        // .def("initLens", &CosmoSim::initSource)
-        // .def("initSource", &CosmoSim::initSource)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
-        .def("init", &CosmoSim::init)
         .def("runSim", &CosmoSim::runSim)
         .def("diagnostics", &CosmoSim::diagnostics)
         ;
