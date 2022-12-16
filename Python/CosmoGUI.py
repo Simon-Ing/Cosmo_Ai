@@ -54,6 +54,31 @@ class IntSlider:
         "Set the value of the slider."
         return self.var.get(v)
 
+class Window:
+    """
+    The Window for the application
+    """
+    def mainloop(self): return self.root.mainloop()
+    def destroy(self):
+        self.sim.close()
+        return self.root.destroy()
+    def __init__(self,sim):
+        self.root = Tk()
+        self.sim = sim
+
+        style = ttk.Style()
+        style.configure("Red.TButton", foreground="white", background="red")
+        labelstyle = ttk.Style()
+        labelstyle.configure("Std.TLabel", foreground="black", padding=4,
+                font=( "Arial", 15 ) )
+
+        controller = Controller(self.root,sim)
+        imgPane = ImagePane(self.root,sim)
+        self.frm = ttk.Frame(self.root, padding=10)
+        self.frm.grid()
+        self.quitButton = ttk.Button(self.frm, text="Quit",
+                command=self.destroy, style="Red.TButton")
+        self.quitButton.grid(column=0, row=0, sticky=E)
 class ImagePane:
     """
     A pane with all images to be displayed from the simulator.
@@ -117,9 +142,6 @@ class Controller:
         self.sourceFrame.grid(column=1,row=1)
         self.posFrame = ttk.Frame(self.frm, padding=10)
         self.posFrame.grid(column=2,row=1)
-        self.quitButton = ttk.Button(self.frm, text="Quit",
-                command=root.destroy, style="Red.TButton")
-        self.quitButton.grid(column=2, row=0)
         self.posPane = PosPane(self.posFrame,self.sim)
         self.makeLensFrame()
         self.makeSourceFrame()
@@ -275,21 +297,10 @@ class PosPane:
 if __name__ == "__main__":
     print( "CosmoGUI starting." )
 
-    # Main object
-    root = Tk()
-
-    # Styles
-    style = ttk.Style()
-    style.configure("Red.TButton", foreground="white", background="red")
-    labelstyle = ttk.Style()
-    labelstyle.configure("Std.TLabel", foreground="black", padding=4,
-            font=( "Arial", 15 ) )
-
     sim = CosmoSim()
-    controller = Controller(root,sim)
-    imgPane = ImagePane(root,sim)
+    win = Window(sim)
+
     sim.runSimulator()
 
-    # Main Loop
-    root.mainloop()
+    win.mainloop()
 

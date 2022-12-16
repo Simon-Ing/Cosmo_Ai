@@ -27,10 +27,20 @@ class CosmoSim(cs.CosmoSim):
     """
     def __init__(self,f=None,*a,**kw):
         super().__init__(*a,**kw)
+        self._continue = True
         self.callback = f
         self.simEvent = th.Event()
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
+    def close(self):
+        """
+        Terminate the worker thread.
+        """
+        print ( "CosmoSim object closing" )
+        self._continue = False
+        self.simEvent.set()
+        self.simThread.join()
+        print ( "CosmoSim object closed" )
     def setCallback(self,f):
         self.callback = f
     def setSourceMode(self,s):
@@ -38,11 +48,13 @@ class CosmoSim(cs.CosmoSim):
     def setLensMode(self,s):
         return super().setLensMode( int( lensValues[s] ) ) 
     def simThread(self):
-        while True:
+        while self._continue:
             self.simEvent.wait()
-            self.simEvent.clear()
-            self.runSim()
-            if None != self.callback: self.callback()
+            if self._continue:
+               self.simEvent.clear()
+               self.runSim()
+               if None != self.callback: self.callback()
+        print( "simThread() returning" )
     def runSimulator(self):
         self.simEvent.set()
             
