@@ -18,13 +18,18 @@ class CosmoSim {
 private:
     int size=512, displaysize=512, basesize=512 ;
     double chi=0.5 ;
-    int lensmode=CSIM_LENS_PM, einsteinR=20 ;
-    int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10, sourceTheta=0 ;
+    int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_LENS_PM, einsteinR=20 ;
+    int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
+        sourceTheta=0 ;
     int xPos=10, yPos=0, rPos=10, thetaPos=0; ;
     int nterms=16 ;
     bool refLinesMode=true ;
     LensModel *sim = NULL ;
     Source *src = NULL ;
+    bool running = false ;
+
+    void initSource() ;
+    void initLens() ;
 
 public:
     CosmoSim();
@@ -36,14 +41,12 @@ public:
     // void updateDisplaySize(int);
 
     void setLensMode(int);
-    void initLens() ;
     void setEinsteinR(int);
     void setSourceParameters(int,int,int,int);
-    void initSource() ;
     void setRefLines(bool) ;
 
     void init();
-    void runSim();
+    bool runSim();
     void diagnostics();
 
     cv::Mat getActual() ;

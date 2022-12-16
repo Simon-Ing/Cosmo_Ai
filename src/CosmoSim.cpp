@@ -37,6 +37,7 @@ void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::initLens() {
    bool centred = true ;
+   if ( lensmode == oldlensmode ) return ;
    if ( sim ) delete sim ;
    switch ( lensmode ) {
        case CSIM_LENS_SPHERE:
@@ -55,6 +56,7 @@ void CosmoSim::initLens() {
          std::cout << "No such lens mode!\n" ;
          throw NotImplemented();
     }
+    oldlensmode = lensmode ;
     return ;
 }
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
@@ -83,10 +85,16 @@ void CosmoSim::initSource( ) {
     }
     if (sim) sim->setSource( src ) ;
 }
-void CosmoSim::runSim() { 
+bool CosmoSim::runSim() { 
    if ( NULL == sim )
       throw std::bad_function_call() ;
+   if ( running ) return false ;
+   initLens() ;
+   initSource() ;
+   sim->setNterms( nterms ) ;
+   sim->updateXY( xPos, yPos, chi, einsteinR ) ;
    sim->update() ;
+   return true ;
 } 
 cv::Mat CosmoSim::getActual() {
    if ( NULL == sim )
@@ -124,8 +132,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
         .def("setSourceParameters", &CosmoSim::setSourceParameters)
-        .def("initLens", &CosmoSim::initSource)
-        .def("initSource", &CosmoSim::initSource)
+        // .def("initLens", &CosmoSim::initSource)
+        // .def("initSource", &CosmoSim::initSource)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("init", &CosmoSim::init)
