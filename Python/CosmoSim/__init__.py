@@ -25,10 +25,10 @@ class CosmoSim(cs.CosmoSim):
     it wraps functions returning images, to convert the data to 
     numpy arrays.
     """
-    def __init__(self,f=None,*a,**kw):
+    def __init__(self,*a,**kw):
         super().__init__(*a,**kw)
         self._continue = True
-        self.callback = f
+        self.updateEvent = th.Event()
         self.simEvent = th.Event()
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
@@ -41,21 +41,30 @@ class CosmoSim(cs.CosmoSim):
         self.simEvent.set()
         self.simThread.join()
         print ( "CosmoSim object closed" )
-    def setCallback(self,f):
-        self.callback = f
+    def getUpdateEvent(self):
+        return self.updateEvent
     def setSourceMode(self,s):
         return super().setSourceMode( int( sourceValues[s] ) ) 
     def setLensMode(self,s):
         return super().setLensMode( int( lensValues[s] ) ) 
     def simThread(self):
+        """
+        This function repeatedly runs the simulator when the parameters
+        have changed.  It is intended to run in a dedicated thread.
+        """
         while self._continue:
             self.simEvent.wait()
             if self._continue:
                self.simEvent.clear()
                self.runSim()
-               if None != self.callback: self.callback()
+               self.updateEvent.set()
         print( "simThread() returning" )
     def runSimulator(self):
+        """
+        Run the simulator; that is, tell it that the parameters
+        have changed.  This triggers an event which will be handled
+        when the simulator is idle.
+        """
         self.simEvent.set()
             
 

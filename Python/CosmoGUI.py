@@ -60,12 +60,14 @@ class Window(Tk):
     """
     def destroy(self):
         self.sim.close()
+        self.imgPane.close()
         return super().destroy()
     def __init__(self,sim,*a,**kw):
         super().__init__(*a,**kw)
         self.sim = sim
 
-        ttk.Style().configure("Red.TButton", foreground="white", background="red")
+        ttk.Style().configure("Red.TButton",
+                foreground="white", background="red")
         ttk.Style().configure("Std.TLabel", foreground="black", padding=4,
                 font=( "Arial", 15 ) )
         ttk.Style().configure("Std.TCheckbutton", foreground="black", 
@@ -74,8 +76,8 @@ class Window(Tk):
 
         controller = Controller(self,sim, padding=10)
         controller.grid()
-        imgPane = view.ImagePane(self,sim, padding=10)
-        imgPane.grid()
+        self.imgPane = view.ImagePane(self,sim, padding=10)
+        self.imgPane.grid()
         self.frm = ttk.Frame(self, padding=10)
         self.frm.grid()
         self.quitButton = ttk.Button(self.frm, text="Quit",

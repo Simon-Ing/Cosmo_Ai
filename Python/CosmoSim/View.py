@@ -9,6 +9,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 import numpy as np
+import threading as th
 
 class ImagePane(ttk.Frame):
     """
@@ -23,6 +24,7 @@ class ImagePane(ttk.Frame):
         """
         super().__init__(root, *a, **kw)
         self.sim = sim
+        self._continue = True
         self.actual = Canvas(self,width=512,height=512)
         self.actual.grid(column=0,row=0)
         self.distorted = Canvas(self,width=512,height=512)
@@ -30,8 +32,21 @@ class ImagePane(ttk.Frame):
         im = Image.fromarray( np.zeros((512,512)) )
         img =  ImageTk.PhotoImage(image=im)
         self.actualCanvas = self.actual.create_image(0,0,anchor=NW, image=img)
-        self.distortedCanvas = self.distorted.create_image(0,0,anchor=NW, image=img)
-        sim.setCallback(self.update)
+        self.distortedCanvas = self.distorted.create_image(0,0,
+                anchor=NW, image=img)
+
+        self.updateEvent = sim.getUpdateEvent()
+        self.updateThread = th.Thread(target=self.updateThread)
+        self.updateThread.start()
+    def close(self):
+        """
+        Terminate the update thread.
+        """
+        print ( "CosmoSim View object closing" )
+        self._continue = False
+        self.updateEvent.set()
+        self.updateThread.join()
+        print ( "CosmoSim View object closed" )
     def setActualImage(self):
         "Helper for `update()`."
         im0 = Image.fromarray( self.sim.getActualImage() )
@@ -50,3 +65,10 @@ class ImagePane(ttk.Frame):
         """
         self.setDistortedImage()
         self.setActualImage()
+    def updateThread(self):
+        while self._continue:
+            self.updateEvent.wait()
+            if self._continue:
+               self.updateEvent.clear()
+               self.update()
+        print( "updateThread() returning" )
