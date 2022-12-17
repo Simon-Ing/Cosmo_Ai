@@ -56,7 +56,7 @@ class IntSlider:
 
 class Window(Tk):
     """
-    The Window for the application
+    The main application window.
     """
     def destroy(self):
         self.sim.close()
@@ -292,7 +292,7 @@ class PosPane(ttk.Frame):
         self.xVar.set( math.cos(theta)*r ) 
         self.yVar.set( math.sin(theta)*r ) 
         self._polarUpdate = False
-        self.pushXY()
+        self.push()
     def xyUpdate(self,*a):
         """
         Event handler to update polar co-ordinates when Cartesian 
@@ -312,8 +312,8 @@ class PosPane(ttk.Frame):
            if t < 0: t += 2*math.pi
            self.thetaVar.set( t )
         self._xyUpdate = False
-        self.pushXY()
-    def pushXY(self):
+        self.push()
+    def push(self):
         self.sim.setXY( self.xVar.get(), self.yVar.get() )
         self.sim.runSimulator()
 
