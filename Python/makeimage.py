@@ -19,19 +19,19 @@ if __name__ == "__main__":
     parser.add_argument('-y', '--y', help="y coordinate")
     parser.add_argument('-T', '--phi', help="polar coordinate angle (phi)")
 
-    parser.add_argument('-s', '--sigma', help="source size (sigma)")
-    parser.add_argument('-2', '--sigma2', help="secondary source size (sigma2)")
-    parser.add_argument('-t', '--theta', help="source rotation angle (theta)")
+    parser.add_argument('-s', '--sigma', default=20, help="source size (sigma)")
+    parser.add_argument('-2', '--sigma2', default=10, help="secondary source size (sigma2)")
+    parser.add_argument('-t', '--theta', default=45, help="source rotation angle (theta)")
 
-    parser.add_argument('-X', '--chi', help="lens distance ration (chi)")
-    parser.add_argument('-E', '--einstein-radius', help="Einstein radius")
+    parser.add_argument('-X', '--chi', default=50, help="lens distance ration (chi)")
+    parser.add_argument('-E', '--einsteinradius', default=20, help="Einstein radius")
 
     parser.add_argument('-n', '--nterms', help="Number of Roulettes terms")
-    parser.add_argument('-Z', '--image-size', help="image size")
+    parser.add_argument('-Z', '--imagesize', help="image size")
     parser.add_argument('-N', '--name', help="simulation name")
 
-    parser.add_argument('-L', '--lens-mode', help="lens mode")
-    parser.add_argument('-S', '--source-mode', help="source mode")
+    parser.add_argument('-L', '--lensmode', help="lens mode")
+    parser.add_argument('-S', '--sourcemode', help="source mode")
 
     parser.add_argument('-R', '--reflines',action='store_true',
             help="Add reference (axes) lines")
@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
     parser.add_argument('-D', '--directory',help="directory path (for output files)")
 
-    parser.add_argument('-A', '--apparent-image',help="write apparent image")
-    parser.add_argument('-a', '--actual-image',help="write actual image")
+    parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
+    parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
 
     parser.add_argument('--artifacts',action='store_true',
             help="Attempt to remove artifacts from the Roulettes model")
@@ -48,3 +48,14 @@ if __name__ == "__main__":
             help="Sensitivity for the connected components (only with -A)")
     args = parser.parse_args()
 
+    sim = CosmoSim()
+    if args.phi:
+        sim.setPolar( args.x, args.phi )
+    else:
+        sim.setPolar( args.x, args.y )
+    if args.sourcemode:
+        sim.setSourceMode( args.sourcemode )
+    sim.setSourceParemters( args.sigma, args.sigma2, args.theta )
+    if args.lensmode:
+        sim.setLensMode( args.lensmode )
+    sim.runSimulator()

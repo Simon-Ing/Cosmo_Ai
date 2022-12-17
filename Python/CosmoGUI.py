@@ -54,16 +54,15 @@ class IntSlider:
         "Set the value of the slider."
         return self.var.get(v)
 
-class Window:
+class Window(Tk):
     """
     The Window for the application
     """
-    def mainloop(self): return self.root.mainloop()
     def destroy(self):
         self.sim.close()
-        return self.root.destroy()
-    def __init__(self,sim):
-        self.root = Tk()
+        return super().destroy()
+    def __init__(self,sim,*a,**kw):
+        super().__init__(*a,**kw)
         self.sim = sim
 
         style = ttk.Style()
@@ -72,11 +71,11 @@ class Window:
         labelstyle.configure("Std.TLabel", foreground="black", padding=4,
                 font=( "Arial", 15 ) )
 
-        controller = Controller(self.root,sim, padding=10)
+        controller = Controller(self,sim, padding=10)
         controller.grid()
-        imgPane = ImagePane(self.root,sim, padding=10)
+        imgPane = ImagePane(self,sim, padding=10)
         imgPane.grid()
-        self.frm = ttk.Frame(self.root, padding=10)
+        self.frm = ttk.Frame(self, padding=10)
         self.frm.grid()
         self.quitButton = ttk.Button(self.frm, text="Quit",
                 command=self.destroy, style="Red.TButton")
