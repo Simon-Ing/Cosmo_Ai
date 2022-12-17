@@ -58,4 +58,15 @@ if __name__ == "__main__":
     sim.setSourceParemters( args.sigma, args.sigma2, args.theta )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
+    if args.chi:
+        sim.setCHI( args.chi/100.0 )
+    if args.einsteinradius:
+        sim.setEinsteinR( args.einsteinradius/100.0 )
+    if args.nterms:
+        sim.setNterms( args.nterms )
+
+    print( args.name )
+    print( args.directory )
+    # args.reflines
+    # args.centred
     sim.runSimulator()
