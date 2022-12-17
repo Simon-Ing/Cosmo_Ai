@@ -65,8 +65,12 @@ if __name__ == "__main__":
     if args.nterms:
         sim.setNterms( args.nterms )
 
+    sim.setRefLines( args.reflines )
+
+    sim.runSimulator()
+
+
+    if args.centred:
+        print( "centred mode not implemented" )
     print( args.name )
     print( args.directory )
-    # args.reflines
-    # args.centred
-    sim.runSimulator()
