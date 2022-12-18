@@ -40,6 +40,8 @@ class ImagePane(ttk.Frame):
         self.updateEvent = sim.getUpdateEvent()
         self.updateThread = th.Thread(target=self.updateThread)
         self.updateThread.start()
+        self.reflinesVar.trace_add( "write", 
+                lambda *a : self.updateEvent.set() )
     def getReflinesVar(self):
         return self.reflinesVar
     def close(self):

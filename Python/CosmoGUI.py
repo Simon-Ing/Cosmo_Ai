@@ -85,6 +85,7 @@ class Window(Tk):
         self.quitButton.grid(column=4, row=0, sticky=E)
         Label(self.frm,"" , width=20 ).grid(column=2,row=0)
         self.reflineButton = ttk.Checkbutton(self.frm,
+                onvalue=True, offvalue=False,
                 variable=self.imgPane.getReflinesVar(),
                 text="Show Reference Lines" )
         self.reflineButton.grid(column=0, row=0, sticky=E)
