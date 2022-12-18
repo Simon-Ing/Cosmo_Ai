@@ -59,17 +59,17 @@ class CosmoSim(cs.CosmoSim):
         self.simEvent.set()
             
 
-    def getActualImage(self):
+    def getActualImage(self,reflines=True):
         """
         Return the Actual Image from the simulator as a numpy array.
         """
-        im = np.array(self.getActual(),copy=False)
+        im = np.array(self.getActual(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im
-    def getDistortedImage(self):
+    def getDistortedImage(self,reflines=True):
         """
         Return the Distorted Image from the simulator as a numpy array.
         """
-        im = np.array(self.getDistorted(),copy=False)
+        im = np.array(self.getDistorted(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im

@@ -24,7 +24,6 @@ private:
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
     int nterms=16 ;
-    bool refLinesMode=true ;
     LensModel *sim = NULL ;
     Source *src = NULL ;
     bool running = false ;
@@ -45,13 +44,12 @@ public:
     void setLensMode(int);
     void setEinsteinR(int);
     void setSourceParameters(int,int,int);
-    void setRefLines(bool) ;
 
     bool runSim();
     void diagnostics();
 
-    cv::Mat getActual() ;
-    cv::Mat getDistorted() ;
+    cv::Mat getActual(bool) ;
+    cv::Mat getDistorted(bool) ;
 
 };
 
