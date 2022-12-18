@@ -116,9 +116,11 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
+    int lower = maskMode ? floor( dst.rows/2.0 - maskRadius ) : 0,
+         rng = maskMode ? ceil( 2.0*maskRadius ) + 1 : dst.rows,
+         rng1 = ceil( rng/ n_threads ) ;
     for (int i = 0; i < n_threads; i++) {
-        int begin = dst.rows/n_threads*i;
-        int end = dst.rows/n_threads*(i+1);
+        int begin = lower+rng1*i, end = begin+rng1 ;
         std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
         threads_vec.push_back(std::move(t));
     }
@@ -151,10 +153,10 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // Calculate distance and angle of the point evaluated 
             // relative to CoM (origin)
             double r = sqrt(x * x + y * y);
-            double theta = x == 0 ? PI/2 : atan2(y, x);
 
             if ( maskMode && r > maskRadius*CHI ) {
             } else {
+              double theta = x == 0 ? PI/2 : atan2(y, x);
               pos = this->getDistortedPos(r, theta);
 
               // Translate to array index in the source plane
