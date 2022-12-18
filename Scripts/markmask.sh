@@ -2,6 +2,8 @@
 
 # This script reads a CSV file with source and lens parameters and 
 # generate corresponding images.
+# This is similar to polargen and olddatagen, except that it uses
+# the testmask program which adds masking.
 #
 # Useful options:
 # -R    to draw axes and box the plot
