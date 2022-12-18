@@ -56,6 +56,7 @@ class Controller(ttk.Frame):
     """
     Pane with widgets to control the various parameters for the simulation.
     """
+    def getMaskModeVar(self): return self.lensFrame.getMaskModeVar()
     def __init__(self,root,sim, *a, **kw):
         """
         Set up the pane.
@@ -162,15 +163,25 @@ class LensPane(ttk.Frame):
         self.einsteinSlider.var.trace_add( "write", self.push ) 
         self.chiSlider.var.trace_add( "write", self.push ) 
         self.ntermsSlider.var.trace_add( "write", self.push ) 
-        self.push(runsim=False)
 
+        self.maskModeVar = BooleanVar()
+        self.maskModeVar.set( False )
+
+        print ( "Ready to push parameters to Simulator" )
+
+        self.push(runsim=False)
+        print ( "Pushed parameters to Simulator" )
+        self.maskModeVar.trace_add( "write",self.push )
         modeVar.trace_add("write", self.push) 
+    def getMaskModeVar(self):
+        return self.maskModeVar
     def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push lens parameters" )
         self.sim.setLensMode(self.lensVar.get())
         self.sim.setNterms( self.ntermsSlider.get() )
         self.sim.setCHI( self.chiSlider.get() )
         self.sim.setEinsteinR( self.einsteinSlider.get())
+        self.sim.setMaskMode( self.maskModeVar.get())
         if runsim: self.sim.runSimulator()
 class PosPane(ttk.Frame):
     """
@@ -218,7 +229,6 @@ class PosPane(ttk.Frame):
         if self._xyUpdate: 
             self._polarUpdate = False
             return
-        print( "polarUpdate", *a )
         r = self.rVar.get()
         theta = self.thetaVar.get()*math.pi/180
         self.xVar.set( math.cos(theta)*r ) 
@@ -234,7 +244,6 @@ class PosPane(ttk.Frame):
         if self._polarUpdate: 
             self._xyUpdate = False
             return
-        print( "xyUpdate", *a )
         x = self.xVar.get()
         y = self.yVar.get()
         r = math.sqrt( x*x + y*y ) 

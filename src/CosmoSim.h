@@ -27,6 +27,7 @@ private:
     LensModel *sim = NULL ;
     Source *src = NULL ;
     bool running = false ;
+    bool maskmode ;
 
     void initSource() ;
     void initLens() ;

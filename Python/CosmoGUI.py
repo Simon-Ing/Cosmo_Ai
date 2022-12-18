@@ -33,8 +33,8 @@ class Window(Tk):
                 relief=[ ( "selected", "sunken" ), ( "!selected", "raised" ) ],
                  )
 
-        controller = cont.Controller(self,sim, padding=10)
-        controller.grid()
+        self.controller = cont.Controller(self,sim, padding=10)
+        self.controller.grid()
         self.imgPane = view.ImagePane(self,sim, padding=10)
         self.imgPane.grid()
         self.frm = ttk.Frame(self, padding=10)
@@ -44,11 +44,6 @@ class Window(Tk):
         self.quitButton.grid(column=4, row=0, sticky=E)
         Label(self.frm,"" , width=20 ).grid(column=2,row=0)
 
-        self.maskModeVar = BooleanVar() ;
-        self.maskModeVar.set( False ) ;
-        self.maskModeVar.trace_add( "write",
-                lambda *a : self.sim.setMaskMode( self.maskModeVar.get() ) )
-
         self.reflineButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getReflinesVar(),
@@ -56,13 +51,13 @@ class Window(Tk):
         self.reflineButton.grid(column=0, row=0, sticky=E)
         self.maskedButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
-                variable=self.maskModeVar,
+                variable=self.controller.getMaskModeVar(),
                 text="Mask Mode" )
         self.maskedButton.grid(column=3, row=0, sticky=E)
         self.maskButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getMaskVar(),
-                text="Mask Roulettes Image" )
+                text="Postprocessing Mask" )
         self.maskButton.grid(column=1, row=0, sticky=E)
         self.showmaskButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,

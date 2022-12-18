@@ -35,10 +35,7 @@ void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
-void CosmoSim::setMaskMode(bool b) { 
-   std::cout << "[CosmoSim.cpp] setMaskMode " << b << "\n" ;
-   sim->setMaskMode(b) ; 
-}
+void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::initLens() {
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
@@ -102,6 +99,7 @@ bool CosmoSim::runSim() {
    initLens() ;
    initSource() ;
    sim->setNterms( nterms ) ;
+   sim->setMaskMode( maskmode ) ;
    sim->setXY( xPos, yPos, chi, einsteinR ) ;
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS

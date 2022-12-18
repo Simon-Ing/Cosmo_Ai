@@ -116,6 +116,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
+    if ( maskRadius > dst.rows/2.0 ) maskRadius = dst.rows/2.0 ;
     int lower = maskMode ? floor( dst.rows/2.0 - maskRadius ) : 0,
          rng = maskMode ? ceil( 2.0*maskRadius ) + 1 : dst.rows,
          rng1 = ceil( rng/ n_threads ) ;
@@ -131,7 +132,9 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void LensModel::setMaskMode(bool b) { maskMode = b ; }
+void LensModel::setMaskMode(bool b) {
+   maskMode = b ; 
+}
 void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
