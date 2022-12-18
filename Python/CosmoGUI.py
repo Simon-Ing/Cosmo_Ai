@@ -48,6 +48,16 @@ class Window(Tk):
                 variable=self.imgPane.getReflinesVar(),
                 text="Show Reference Lines" )
         self.reflineButton.grid(column=0, row=0, sticky=E)
+        self.maskButton = ttk.Checkbutton(self.frm,
+                onvalue=True, offvalue=False,
+                # variable=self.imgPane.getReflinesVar(),
+                text="Mask Roulettes Image" )
+        self.maskButton.grid(column=1, row=0, sticky=E)
+        self.showmaskButton = ttk.Checkbutton(self.frm,
+                onvalue=True, offvalue=False,
+                # variable=self.imgPane.getReflinesVar(),
+                text="Show Masks" )
+        self.showmaskButton.grid(column=2, row=0, sticky=E)
 
 if __name__ == "__main__":
     print( "CosmoGUI starting." )
