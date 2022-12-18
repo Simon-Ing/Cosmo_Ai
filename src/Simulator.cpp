@@ -1,3 +1,4 @@
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 #include "Simulator.h"
 #include "Window.h"
 #include <fstream>

@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> *
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> *
  * Building on code by Simon Ingebrigtsen, Sondre Westbø Remøy,
  * Einar Leite Austnes, and Simon Nedreberg Runde
  */

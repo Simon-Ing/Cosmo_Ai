@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <hg@schaathun.net> */
+/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
 /* The SphericalSource class implements a a Spherical, Gaussian mass, */
 
