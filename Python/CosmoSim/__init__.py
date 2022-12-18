@@ -78,8 +78,11 @@ class CosmoSim(cs.CosmoSim):
         """
         Return the Distorted Image from the simulator as a numpy array.
         """
-        if mask: self.maskImage()
-        if showmask: self.markMask()
+        try:
+            if mask: self.maskImage()
+            if showmask: self.showMask()
+        except:
+            print( "Masking not supported for this lens model." )
         im = np.array(self.getDistorted(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im

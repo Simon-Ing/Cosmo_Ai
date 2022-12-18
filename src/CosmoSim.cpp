@@ -151,6 +151,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("runSim", &CosmoSim::runSim)
         .def("diagnostics", &CosmoSim::diagnostics)
+        .def("maskImage", &CosmoSim::maskImage)
+        .def("showMask", &CosmoSim::showMask)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

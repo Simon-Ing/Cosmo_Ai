@@ -36,14 +36,26 @@ class ImagePane(ttk.Frame):
                 anchor=NW, image=img)
         self.reflinesVar = BooleanVar()
         self.reflinesVar.set( True )
+        self.maskVar = BooleanVar()
+        self.maskVar.set( False )
+        self.showmaskVar = BooleanVar()
+        self.showmaskVar.set( False )
 
         self.updateEvent = sim.getUpdateEvent()
         self.updateThread = th.Thread(target=self.updateThread)
         self.updateThread.start()
         self.reflinesVar.trace_add( "write", 
                 lambda *a : self.updateEvent.set() )
+        self.maskVar.trace_add( "write",
+                lambda *a : self.updateEvent.set() )
+        self.showmaskVar.trace_add( "write",
+                lambda *a : self.updateEvent.set() )
     def getReflinesVar(self):
         return self.reflinesVar
+    def getMaskVar(self):
+        return self.maskVar
+    def getShowmaskVar(self):
+        return self.showmaskVar
     def close(self):
         """
         Terminate the update thread.
@@ -65,7 +77,10 @@ class ImagePane(ttk.Frame):
         "Helper for `update()`."
         im1 = Image.fromarray( 
                 self.sim.getDistortedImage( 
-                    reflines=self.reflinesVar.get() ) )
+                    reflines=self.reflinesVar.get(),
+                    mask=self.maskVar.get(),
+                    showmask=self.showmaskVar.get(),
+                ) )
         # Use an attribute to prevent garbage collection here
         self.img1 =  ImageTk.PhotoImage(image=im1)
         self.distorted.itemconfig(self.distortedCanvas, image=self.img1)

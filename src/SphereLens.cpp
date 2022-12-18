@@ -9,6 +9,8 @@
 
 double factorial_(unsigned int n);
 
+#define MASK_R 1*apparentAbs
+
 SphereLens::SphereLens() :
    LensModel::LensModel()
 { 
@@ -110,7 +112,7 @@ void SphereLens::maskImage( cv::InputOutputArray imgD ) {
       cv::Point origo(
             R*cos(phi) + imgD.cols()/2,
             R*sin(phi) + imgD.rows()/2) ;
-      cv::circle( mask, origo, apparentAbs, cv::Scalar(0), cv::FILLED ) ;
+      cv::circle( mask, origo, MASK_R, cv::Scalar(0), cv::FILLED ) ;
       black.copyTo( imgD, mask ) ;
 }
 void SphereLens::markMask( cv::InputOutputArray imgD ) {
@@ -119,7 +121,7 @@ void SphereLens::markMask( cv::InputOutputArray imgD ) {
       cv::Point origo(
             R*cos(phi) + imgD.cols()/2,
             - R*sin(phi) + imgD.rows()/2) ;
-      cv::circle( imgD, origo, apparentAbs, cv::Scalar(255), 1 ) ;
+      cv::circle( imgD, origo, MASK_R, cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
