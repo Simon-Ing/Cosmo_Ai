@@ -100,8 +100,6 @@ class SphereLens : public LensModel {
     SphereLens();
     SphereLens(bool);
   protected:
-    virtual void maskImage( ) ;
-    virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void calculateAlphaBeta();

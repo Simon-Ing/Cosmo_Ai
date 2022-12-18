@@ -102,12 +102,6 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
 void SphereLens::updateApparentAbs( ) {
     apparentAbs = actualAbs + einsteinR/CHI ;
 }
-void SphereLens::maskImage( ) {
-    maskImage( imgDistorted ) ;
-}
-void SphereLens::markMask( ) {
-    markMask( imgDistorted ) ;
-}
 void SphereLens::maskImage( cv::InputOutputArray imgD ) {
       std::cout << "SphereLens::maskImage\n" ;
       int R = getCentre() ;

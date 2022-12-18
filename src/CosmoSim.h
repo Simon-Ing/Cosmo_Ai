@@ -48,6 +48,9 @@ public:
     bool runSim();
     void diagnostics();
 
+    void maskImage() ;
+    void showMask() ;
+
     cv::Mat getActual(bool) ;
     cv::Mat getDistorted(bool) ;
 

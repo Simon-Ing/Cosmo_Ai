@@ -242,10 +242,10 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     updateApparentAbs() ;
 }
 void LensModel::maskImage( ) {
-   throw NotImplemented() ;
+    maskImage( imgDistorted ) ;
 }
-void LensModel::markMask(  ) {
-   throw NotImplemented() ;
+void LensModel::markMask( ) {
+    markMask( imgDistorted ) ;
 }
 void LensModel::maskImage( cv::InputOutputArray r ) {
    throw NotImplemented() ;

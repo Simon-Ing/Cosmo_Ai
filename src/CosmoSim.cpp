@@ -116,14 +116,20 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
    }
    return im ;
 }
+void CosmoSim::maskImage() {
+          sim->maskImage() ;
+}
+void CosmoSim::showMask() {
+          sim->markMask() ;
+}
 cv::Mat CosmoSim::getDistorted(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
-   cv::Mat im = sim->getDistorted().clone() ;
-   if (refLinesMode) refLines(im) ;
    // It is necessary to clone because the distorted image is created
    // by cropping, and the pixmap is thus larger than the image,
    // causing subsequent conversion to a numpy array to be misaligned. 
+   cv::Mat im = sim->getDistorted().clone() ;
+   if (refLinesMode) refLines(im) ;
    return im;
 }
 
