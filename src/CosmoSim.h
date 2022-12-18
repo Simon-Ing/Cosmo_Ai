@@ -50,6 +50,7 @@ public:
 
     void maskImage() ;
     void showMask() ;
+    void setMaskMode(bool) ;
 
     cv::Mat getActual(bool) ;
     cv::Mat getDistorted(bool) ;

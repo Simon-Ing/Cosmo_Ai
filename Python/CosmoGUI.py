@@ -43,11 +43,22 @@ class Window(Tk):
                 command=self.destroy, style="Red.TButton" )
         self.quitButton.grid(column=4, row=0, sticky=E)
         Label(self.frm,"" , width=20 ).grid(column=2,row=0)
+
+        self.maskModeVar = BooleanVar() ;
+        self.maskModeVar.set( False ) ;
+        self.maskModeVar.trace_add( "write",
+                lambda *a : self.sim.setMaskMode( self.maskModeVar.get() ) )
+
         self.reflineButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getReflinesVar(),
                 text="Show Reference Lines" )
         self.reflineButton.grid(column=0, row=0, sticky=E)
+        self.maskedButton = ttk.Checkbutton(self.frm,
+                onvalue=True, offvalue=False,
+                variable=self.maskModeVar,
+                text="Mask Mode" )
+        self.maskedButton.grid(column=3, row=0, sticky=E)
         self.maskButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getMaskVar(),

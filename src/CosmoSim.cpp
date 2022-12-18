@@ -4,8 +4,8 @@
 #include <pybind11/pybind11.h>
 #include <opencv2/opencv.hpp>
 
-
 namespace py = pybind11;
+
 CosmoSim::CosmoSim() {
    std::cout << "CosmoSim Constructor does nothing\n" ;
 }
@@ -35,6 +35,10 @@ void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
+void CosmoSim::setMaskMode(bool b) { 
+   std::cout << "[CosmoSim.cpp] setMaskMode " << b << "\n" ;
+   sim->setMaskMode(b) ; 
+}
 void CosmoSim::initLens() {
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
@@ -153,6 +157,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("diagnostics", &CosmoSim::diagnostics)
         .def("maskImage", &CosmoSim::maskImage)
         .def("showMask", &CosmoSim::showMask)
+        .def("setMaskMode", &CosmoSim::setMaskMode)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

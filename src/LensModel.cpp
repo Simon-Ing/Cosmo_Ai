@@ -119,9 +119,9 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     for (int i = 0; i < n_threads; i++) {
         int begin = dst.rows/n_threads*i;
         int end = dst.rows/n_threads*(i+1);
-            std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
-            threads_vec.push_back(std::move(t));
-        }
+        std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
+        threads_vec.push_back(std::move(t));
+    }
 
     for (auto& thread : threads_vec) {
         thread.join();
@@ -153,13 +153,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             double r = sqrt(x * x + y * y);
             double theta = x == 0 ? PI/2 : atan2(y, x);
 
-            if ( maskMode && r > maskRadius ) {
-                 if ( 3 == src.channels() ) {
-                    for ( int i=0 ; i<3 ; ++i )
-                    dst.at<cv::Vec3b>(row, col)[i] = 0 ;
-                 } else {
-                    dst.at<uchar>(row, col) = 0 ;
-                 }
+            if ( maskMode && r > maskRadius*CHI ) {
             } else {
               pos = this->getDistortedPos(r, theta);
 
