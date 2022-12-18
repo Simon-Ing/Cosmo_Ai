@@ -74,12 +74,15 @@ axes cross.
 
 # Tools
 
-There are two tools, a GUI tool and a CLI too, plus the deprecated 
-`Datagen` tool.
+There are two tools, a GUI tool and a CLI too.
 
 ## GUI Tool
 
-The GUI tool should be pretty self explanatory.  
++ `bin/Simulator` - old version implemented in C++, 
+  using the GUI API from OpenCV.
++ `Python/CosmoGUI.py` - new version implemented in Python using tkinter.
+
+The two GUI tools are similar and pretty self explanatory.  
 The images shown are the actual source on the left and the distorted (lensed)
 image on the right.
 
@@ -139,9 +142,6 @@ The main branches are
 - master should be the last stable version
 - release/0.1 is the original version, with simulator and GUI in the same class.
 
-The `CosmoAI_qt` directory is unused, and removing it, the code still works.
-Yet it may prove a useful starting point for a better GUI based on QT.
-
 # Components
 
 + Lens Models
@@ -175,8 +175,9 @@ call corresponding update functions in the simulator before they call
 `drawImages()` to get updated images from the simulator and display them.
 When the mode changes, `updateMode` will instantiate the relevant subclass of `Simulator`.
 
-The instance variables correspond to the trackbars in the GUI, except for `size` which
-gives the image size.  This is constant, currently at 300, and has to be the same for
+The instance variables correspond to the trackbars in the GUI,
+except for `size` which gives the image size.
+This is constant, currently at 300, and has to be the same for
 the `Window` and `Simulator` objects.
 
 ## Lens Model Class
@@ -226,10 +227,12 @@ In addition to the virtual functions mentioned above, it depends on
 + `parallelDistort()` and `distort()` which runs the main steps in parallel.
 + `drawParallel()` and `drawSource()` which draws the source image.
 
-## Auxiliaries
+## Auxiliaries 
+
+The `simaux.cpp` file provides the following:
 
 + `factorial_()`
-+ `writeToPngFiles()` should be moved to the CLI tool
++ `refLines()` to draw the axis cross
 
 ### Subclasses
 
