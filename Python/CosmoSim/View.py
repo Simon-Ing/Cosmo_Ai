@@ -34,10 +34,14 @@ class ImagePane(ttk.Frame):
         self.actualCanvas = self.actual.create_image(0,0,anchor=NW, image=img)
         self.distortedCanvas = self.distorted.create_image(0,0,
                 anchor=NW, image=img)
+        self.reflinesVar = BooleanVar()
+        self.reflinesVar.set( True )
 
         self.updateEvent = sim.getUpdateEvent()
         self.updateThread = th.Thread(target=self.updateThread)
         self.updateThread.start()
+    def getReflinesVar(self):
+        return self.reflinesVar
     def close(self):
         """
         Terminate the update thread.
@@ -49,13 +53,17 @@ class ImagePane(ttk.Frame):
         print ( "CosmoSim View object closed" )
     def setActualImage(self):
         "Helper for `update()`."
-        im0 = Image.fromarray( self.sim.getActualImage() )
+        im0 = Image.fromarray( 
+                self.sim.getActualImage( 
+                    reflines=self.reflinesVar.get() ) )
         # Use an attribute to prevent garbage collection here
         self.img0 =  ImageTk.PhotoImage(image=im0)
         self.actual.itemconfig(self.actualCanvas, image=self.img0)
     def setDistortedImage(self):
         "Helper for `update()`."
-        im1 = Image.fromarray( self.sim.getDistortedImage() )
+        im1 = Image.fromarray( 
+                self.sim.getDistortedImage( 
+                    reflines=self.reflinesVar.get() ) )
         # Use an attribute to prevent garbage collection here
         self.img1 =  ImageTk.PhotoImage(image=im1)
         self.distorted.itemconfig(self.distortedCanvas, image=self.img1)

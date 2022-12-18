@@ -66,7 +66,6 @@ class CosmoSim(cs.CosmoSim):
         when the simulator is idle.
         """
         self.simEvent.set()
-            
 
     def getActualImage(self,reflines=True):
         """
