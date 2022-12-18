@@ -74,10 +74,12 @@ class CosmoSim(cs.CosmoSim):
         im = np.array(self.getActual(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im
-    def getDistortedImage(self,reflines=True):
+    def getDistortedImage(self,reflines=True,mask=False,showmask=False):
         """
         Return the Distorted Image from the simulator as a numpy array.
         """
+        if mask: self.maskImage()
+        if showmask: self.markMask()
         im = np.array(self.getDistorted(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im
