@@ -9,8 +9,6 @@
 
 double factorial_(unsigned int n);
 
-#define MASK_R 1*apparentAbs
-
 SphereLens::SphereLens() :
    LensModel::LensModel()
 { 
@@ -102,7 +100,7 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
 }
 
 void SphereLens::updateApparentAbs( ) {
-    apparentAbs = actualAbs + einsteinR/CHI ;
+    maskRadius = apparentAbs = actualAbs + einsteinR/CHI ;
 }
 void SphereLens::maskImage( cv::InputOutputArray imgD ) {
       std::cout << "SphereLens::maskImage\n" ;
@@ -111,8 +109,8 @@ void SphereLens::maskImage( cv::InputOutputArray imgD ) {
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
       cv::Point origo(
             R*cos(phi) + imgD.cols()/2,
-            R*sin(phi) + imgD.rows()/2) ;
-      cv::circle( mask, origo, MASK_R, cv::Scalar(0), cv::FILLED ) ;
+            - R*sin(phi) + imgD.rows()/2) ;
+      cv::circle( mask, origo, maskRadius, cv::Scalar(0), cv::FILLED ) ;
       black.copyTo( imgD, mask ) ;
 }
 void SphereLens::markMask( cv::InputOutputArray imgD ) {
@@ -121,7 +119,7 @@ void SphereLens::markMask( cv::InputOutputArray imgD ) {
       cv::Point origo(
             R*cos(phi) + imgD.cols()/2,
             - R*sin(phi) + imgD.rows()/2) ;
-      cv::circle( imgD, origo, MASK_R, cv::Scalar(255), 1 ) ;
+      cv::circle( imgD, origo, maskRadius, cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }

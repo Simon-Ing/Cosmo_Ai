@@ -129,6 +129,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
+void LensModel::setMaskMode(bool b) { maskMode = b ; }
 void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
@@ -148,23 +149,32 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // multiplication by CHI
 
             // Calculate distance and angle of the point evaluated 
-            // relative to center of lens (origin)
+            // relative to CoM (origin)
             double r = sqrt(x * x + y * y);
             double theta = x == 0 ? PI/2 : atan2(y, x);
 
-            pos = this->getDistortedPos(r, theta);
+            if ( maskMode && r > maskRadius ) {
+                 if ( 3 == src.channels() ) {
+                    for ( int i=0 ; i<3 ; ++i )
+                    dst.at<cv::Vec3b>(row, col)[i] = 0 ;
+                 } else {
+                    dst.at<uchar>(row, col) = 0 ;
+                 }
+            } else {
+              pos = this->getDistortedPos(r, theta);
 
-            // Translate to array index in the source plane
-            row_ = (int) round(src.rows / 2.0 - pos.second);
-            col_ = (int) round(src.cols / 2.0 + pos.first);
-
-            // If (x', y') within source, copy value to imgDistorted
-            if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
-               if ( 3 == src.channels() ) {
-                  dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>(row_, col_);
-               } else {
-                  dst.at<uchar>(row, col) = src.at<uchar>(row_, col_);
-               }
+              // Translate to array index in the source plane
+              row_ = (int) round(src.rows / 2.0 - pos.second);
+              col_ = (int) round(src.cols / 2.0 + pos.first);
+  
+              // If (x', y') within source, copy value to imgDistorted
+              if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+                 if ( 3 == src.channels() ) {
+                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>(row_, col_);
+                 } else {
+                    dst.at<uchar>(row, col) = src.at<uchar>(row_, col_);
+                 }
+              }
             }
         }
     }

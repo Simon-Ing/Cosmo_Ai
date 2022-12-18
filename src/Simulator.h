@@ -25,6 +25,8 @@ protected:
     double phi{};
     double apparentAbs{};
     double apparentAbs2{};
+    bool maskMode = false ;
+    double maskRadius = 1024*1024 ;
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
@@ -47,6 +49,7 @@ public:
     ~LensModel();
     void update();
     void setCentred( bool ) ;
+    void setMaskMode( bool ) ;
 
     void updateXY(double, double, double, double) ;
     void setXY(double, double, double, double) ;
