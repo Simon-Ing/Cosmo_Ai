@@ -113,7 +113,7 @@ if __name__ == "__main__":
         cols = frame.columns
         print( "columns:", cols )
         for index,row in frame.iterrows():
-            for c in cols: print( row[c] )
+            for c in cols: print( row[c], type(row[c]) )
             makeSingle(sim,args,name=row["index"])
     else:
         makeSingle(sim,args)
