@@ -39,7 +39,7 @@ public:
     void setPolar(int, int) ;
     void setCHI(int);
     void setNterms(int);
-    // void updateDisplaySize(int);
+    void setImageSize(int);
 
     void setSourceMode(int);
     void setLensMode(int);

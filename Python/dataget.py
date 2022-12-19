@@ -12,6 +12,34 @@ import argparse
 from CosmoSim.Image import centreImage, drawAxes
 from CosmoSim import CosmoSim
 
+import pandas as pd
+
+
+
+def makeSingle(sim,args):
+    sim.runSim()
+
+    im = sim.getDistortedImage( 
+                    reflines=args.reflines,
+                    showmask=args.showmask
+                ) 
+
+    if args.centred:
+        im = centreImage(im)
+
+    fn = os.path.join(args.directory,"image-" + args.name + ".png" ) 
+    cv.imwrite(fn,im)
+
+    if args.actual:
+       fn = os.path.join(args.directory,"actual-" + args.name + ".png" ) 
+       im = sim.getActualImage( reflines=args.reflines )
+       cv.imwrite(fn,im)
+    if args.apparent:
+       fn = os.path.join(args.directory,"apparent-" + args.name + ".png" ) 
+       im = sim.getApparentImage( reflines=args.reflines )
+       cv.imwrite(fn,im)
+    sim.close()
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
           prog = 'CosmoSim makeimage',
@@ -75,26 +103,4 @@ if __name__ == "__main__":
 
     sim.setMaskMode( args.mask )
 
-    sim.runSim()
-
-    im = sim.getDistortedImage( 
-                    reflines=args.reflines,
-                    showmask=args.showmask
-                ) 
-
-    if args.centred:
-        im = centreImage(im)
-
-    fn = os.path.join(args.directory,"image-" + args.name + ".png" ) 
-    cv.imwrite(fn,im)
-
-    if args.actual:
-       fn = os.path.join(args.directory,"actual-" + args.name + ".png" ) 
-       im = sim.getActualImage( reflines=args.reflines )
-       cv.imwrite(fn,im)
-    if args.apparent:
-       fn = os.path.join(args.directory,"apparent-" + args.name + ".png" ) 
-       im = sim.getApparentImage( reflines=args.reflines )
-       cv.imwrite(fn,im)
-
-    sim.close()
+    makeSingle(sim,args)

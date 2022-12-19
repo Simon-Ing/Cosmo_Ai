@@ -62,6 +62,7 @@ void CosmoSim::initLens() {
     return ;
 }
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
+void CosmoSim::setImageSize(int sz ) { size = sz ; }
 void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    sourceSize2 = s2 ;
@@ -168,6 +169,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("maskImage", &CosmoSim::maskImage)
         .def("showMask", &CosmoSim::showMask)
         .def("setMaskMode", &CosmoSim::setMaskMode)
+        .def("setImageSize", &CosmoSim::setImageSize)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
