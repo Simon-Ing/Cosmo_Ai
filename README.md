@@ -153,7 +153,12 @@ The main branches are
 
 - develop is the current state of the art
 - master should be the last stable version
-- release/0.1 is the original version, with simulator and GUI in the same class.
+
+Tags
+
+- v0.1.0, v0.2.0, v1.0.0 are versions made by the u/g students
+  Spring 2022.
+- v1.0.1 is cleaned up to be able to build v1.0.0
 
 # Components
 
