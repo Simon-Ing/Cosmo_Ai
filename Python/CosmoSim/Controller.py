@@ -38,7 +38,7 @@ class IntSlider:
         self.var.set( default )
         self.label = ttk.Label( root, text=text,
                 style="Std.TLabel" )
-        self.slider = Scale( root, length=200, variable=self.var,
+        self.slider = Scale( root, length=250, variable=self.var,
                 resolution=resolution,
                 orient=HORIZONTAL,
                 from_=fromval, to=toval )
@@ -164,6 +164,12 @@ class LensPane(ttk.Frame):
         self.chiSlider.var.trace_add( "write", self.push ) 
         self.ntermsSlider.var.trace_add( "write", self.push ) 
 
+        self.sizeSlider = IntSlider( self, 
+            text="Image Size", row=5,
+            toval=1024,
+            default=512 )
+        self.sizeSlider.var.trace_add( "write", self.push ) 
+
         self.maskModeVar = BooleanVar()
         self.maskModeVar.set( False )
 
@@ -182,6 +188,7 @@ class LensPane(ttk.Frame):
         self.sim.setCHI( self.chiSlider.get() )
         self.sim.setEinsteinR( self.einsteinSlider.get())
         self.sim.setMaskMode( self.maskModeVar.get())
+        self.sim.setImageSize( self.sizeSlider.get())
         if runsim: self.sim.runSimulator()
 class PosPane(ttk.Frame):
     """
