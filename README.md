@@ -51,6 +51,8 @@ sudo pip3 install conan
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
 
+It is also necessary to install pybind11.
+
 ## Notes
 
 Adjustmentss may be needed depending on the version of conan.
@@ -58,6 +60,14 @@ Currently it is set up to use wayland/1.21.0 to override a
 transitive dependency on wayland/1.20.0 which failed with the
 latest conan. We should possibly upgrade the other dependencies
 and remove wayland.
+
+## Installation without Conan
+
+If conan is not available, OpenCV and SymEngine must be installed
+on the system.  We have set up cmake not to use conan when the
+hostname starts with `idun`, in which case the `idunbuild.sh`
+script can be used for installation.  This has been designed
+for the NTNU Idun cluster, but can be tweaked for other systems.
 
 # Test
 
@@ -91,6 +101,9 @@ image on the right.
 ```sh
 bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
 ```
+
+A new version with additional features is under construction; see
+`Python/makeimage.py`.
 
 + `-S` uses SphereSimulator instead of the default point mass simulator
 + `x` and `y` are the coordinates of the actual source
@@ -144,18 +157,42 @@ The main branches are
 
 # Components
 
+## C++ components
+
 + Lens Models
     + `LensModel.cpp` is the abstract base class.
     + `PointMassLens.cpp` simulates the point mass model
+      using the exact formulation
+    + `RoulettePMLens.cpp` simulates the point mass model using
+      the Roulette formalism
     + `SphereLens.cpp` simulates the SIS model
 + Source Models
     + `Source.cpp` is the abstract base class.
     + `SphericalSource.cpp` is standard Guassian model
     + `EllipsoidSource.cpp` is an ellipsoid Guassian model
+    + `TriangleSource.cpp` is a three colour triangle source,
+       intended for debugging
 + `Window.cpp` is the GUI window.
++ `simaux.cpp` is auxiliary functions
++ `CosmoSim.cpp` defines the `CosmoSimPy` class with python bindigs.
+  This class operates as a facade to the library, and does not 
+  expose the individual classes.
 + Binaries
     + `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
     + `makeimage.cpp` is the CLI Tool
+
+## Python Components
+
++ `CosmoSim` is a wrapper around `CosmoSimPy` from `CosmoSim.cpp`,
+  defining the `CosmoSim` class.
++ `CosmoGUI` is a tkinter desktop application, providing a GUI to the
+  simulator
++ `CosmoSim.View` is a tkinter widget displaying the source and 
+  distorted image for `CosmoGUI`.
++ `CosmoSim.Controller` is a tkinter widget to interactively set
+  the simulator parameters for `CosmoGUI`.
++ `CosmoSim.Image` provides post-processing functions for the images.
++ `makeimage.py` is a batch script to generate distorted images.
 
 # Technical Design
 
