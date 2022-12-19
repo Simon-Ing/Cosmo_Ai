@@ -98,12 +98,17 @@ image on the right.
 
 ## Image Generator 
 
+New version
+
 ```sh
-bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
+Python/datagen.sh [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
+Python/datagen.py --csvfile Datasets/debug.csv --mask -R -C
+Python/datagen.py --help
 ```
 
-A new version with additional features is under construction; see
-`Python/makeimage.py`.
+The second form generates images in bulk by parsing the CSV file.
+Parameters which are constant for all images may be given on the 
+command line instead of the CSV file.
 
 + `-S` uses SphereSimulator instead of the default point mass simulator
 + `x` and `y` are the coordinates of the actual source
@@ -120,10 +125,9 @@ To bulk generate images, two scripts have been provided:
 
 + `Scripts/datasetgen.py` makes a CSV file of random parameter sets.
   It should be tweaked to get the desired distribution.
-+ `Scripts/datagen.sh` to read the CSV file and generate the corresponding
-  images
+  + `python3 Scripts/datasetgen.py --help` for instructions
 
-## Roulette Test
+## Roulette Test (experimental)
 
 The `roulettetest` program is similar to `makeimage`, but can generate extra
 images to test the behaviour of the Roulettes model.  In particular,
@@ -136,16 +140,26 @@ images to test the behaviour of the Roulettes model.  In particular,
 
 ## Scripts
 
-+ `datasetgen.py` creates a CSV file of random parameter sets.
-  This script should be edited for different scenarioes.
-  + `python3 Scripts/datasetgen.py --help` for instructions
-+ `datagen.sh` parses the CSV file from `datasetgen.py` and
-  generates images
-+ `centreimage.py` post-processes images to centre them on the centre
-  of light and optionally remove artifacts
 + `montage.sh` concatenates the different images for one source 
   for easier display
 + `triangle.sh` generates images from a triangle source (testing)
+
+## Old versions
+
+There is an old version written in C++ and accompanying Bourne shell
+scripts for post-processing and bulk processing of CSV files.
+
+```sh
+bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
+sh Scripts/olddatagen.sh < Dataset/debug.csv
+sh Scripts/polargen.sh < csvfile
+Python/centreimage.py [file ...]
+```
+
+The `centreimage.py` script post-processes images to centre them on
+the centre of light and optionally remove artifacts.
+In the new python script, all the functionality has been integrated
+in one script.
 
 # Versions
 
@@ -184,7 +198,8 @@ Tags
   expose the individual classes.
 + Binaries
     + `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
-    + `makeimage.cpp` is the CLI Tool
+    + `makeimage.cpp` is the CLI Tool. 
+       This is deprecated in favour of the `datagen.py` python script.
 
 ## Python Components
 
@@ -197,30 +212,9 @@ Tags
 + `CosmoSim.Controller` is a tkinter widget to interactively set
   the simulator parameters for `CosmoGUI`.
 + `CosmoSim.Image` provides post-processing functions for the images.
-+ `makeimage.py` is a batch script to generate distorted images.
++ `datagen.py` is a batch script to generate distorted images.
 
 # Technical Design
-
-## Window Class
-
-The `initGui` method sets up a window using the basic GUI functions from OpenCV.
-This is crude, partly because the OpenCV API is only really meant for debugging, and
-partly because some features are only available with QT and I have not yet figured out
-how to set up OpenCV with QT support.
-
-When the GUI is initialised, `initSimulator` is called to instantiate a `Simulator`.
-
-When a trackbar changes in the GUI, the corresponding callback function is called;
-either `updateXY`, `updateMode`, `updateSize`, or `updateNterms`.  Except for `updateMode`,
-each of these
-call corresponding update functions in the simulator before they call
-`drawImages()` to get updated images from the simulator and display them.
-When the mode changes, `updateMode` will instantiate the relevant subclass of `Simulator`.
-
-The instance variables correspond to the trackbars in the GUI,
-except for `size` which gives the image size.
-This is constant, currently at 300, and has to be the same for
-the `Window` and `Simulator` objects.
 
 ## Lens Model Class
 
@@ -288,7 +282,7 @@ by `calculateAlphaBeta()` when parameters change.
 
 # Contributors
 
-+ **Idea and Current Maintainer** Hans Georg Schaathun <hasc@ntnu.no>
++ **Idea and Current Maintainance** Hans Georg Schaathun <hasc@ntnu.no>
 + **Mathematical Models** Ben David Normann
 + **Initial Prototype** Simon Ingebrigtsen, Sondre Westbø Remøy,
   Einar Leite Austnes, and Simon Nedreberg Runde

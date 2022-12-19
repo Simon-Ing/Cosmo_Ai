@@ -1,5 +1,34 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
+/* Crude GUI written in the highlevel GUI API of OpenCV.
+ * This is deprecated in favour of CosmoGUI.py written with
+ * tkinter. */
+
+/* DESIGN NOTES
+ *
+ * The `initGui` method sets up a window using the basic GUI functions 
+ * from OpenCV.  This is crude, partly because the OpenCV API is only 
+ * really meant for debugging, and partly because some features are
+ * only available with QT and I have not yet figured out how to set
+ * up OpenCV with QT support.
+ *
+ * When the GUI is initialised, `initSimulator` is called to
+ * instantiate a `Simulator`.
+ *
+ * When a trackbar changes in the GUI, the corresponding callback
+ * function is called; either `updateXY`, `updateMode`, `updateSize`,
+ * or `updateNterms`.  Except for `updateMode`, each of these
+ * call corresponding update functions in the simulator before they 
+ * call `drawImages()` to get updated images from the simulator and 
+ * display them.  When the mode changes, `updateMode` will instantiate
+ * the relevant subclass of `Simulator`.
+ *
+ * The instance variables correspond to the trackbars in the GUI,
+ * except for `size` which gives the image size.
+ * This is constant, currently at 300, and has to be the same for
+ * the `Window` and `Simulator` objects.
+ */
+
 #include "Simulator.h"
 #include "Window.h"
 #include <symengine/expression.h>
