@@ -63,6 +63,7 @@ void CosmoSim::initLens() {
 }
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
 void CosmoSim::setImageSize(int sz ) { size = sz ; }
+void CosmoSim::setResolution(int sz ) { basesize = sz ; }
 void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    if ( s2 >= 0 ) sourceSize2 = s2 ;
@@ -123,7 +124,13 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
    cv::Mat im = sim->getActual() ;
-   if (refLinesMode) {
+   if ( basesize < size ) {
+      cv::Mat ret(cv::Size(basesize, basesize), im.type(),
+                  cv::Scalar::all(255));
+      cv::resize(im,ret,cv::Size(basesize,basesize) ) ;
+      im = ret ;
+      if (refLinesMode) refLines(im) ;
+   } else if (refLinesMode) {
       im = im.clone() ;
       refLines(im) ;
    }
@@ -135,13 +142,23 @@ void CosmoSim::maskImage() {
 void CosmoSim::showMask() {
           sim->markMask() ;
 }
+
 cv::Mat CosmoSim::getDistorted(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
    // It is necessary to clone because the distorted image is created
    // by cropping, and the pixmap is thus larger than the image,
    // causing subsequent conversion to a numpy array to be misaligned. 
-   cv::Mat im = sim->getDistorted().clone() ;
+   cv::Mat im ;
+   if ( basesize < size ) {
+      im = sim->getDistorted() ;
+      cv::Mat ret(cv::Size(basesize, basesize), sim->getActual().type(),
+                  cv::Scalar::all(255));
+      cv::resize(im,ret,cv::Size(basesize,basesize) ) ;
+      im = ret ;
+   } else {
+      im = sim->getDistorted().clone() ;
+   }
    if (refLinesMode) refLines(im) ;
    return im;
 }
@@ -170,6 +187,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("showMask", &CosmoSim::showMask)
         .def("setMaskMode", &CosmoSim::setMaskMode)
         .def("setImageSize", &CosmoSim::setImageSize)
+        .def("setResolution", &CosmoSim::setResolution)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

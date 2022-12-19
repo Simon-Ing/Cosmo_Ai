@@ -17,7 +17,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
 
 class CosmoSim {
 private:
-    int size=512, displaysize=512, basesize=512 ;
+    int size=512, basesize=512 ;
     double chi=0.5 ;
     int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
@@ -40,6 +40,7 @@ public:
     void setCHI(int);
     void setNterms(int);
     void setImageSize(int);
+    void setResolution(int);
 
     void setSourceMode(int);
     void setLensMode(int);

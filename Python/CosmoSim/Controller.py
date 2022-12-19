@@ -152,6 +152,7 @@ class ResolutionPane(ttk.Frame):
     def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push image resolution" )
         self.sim.setImageSize( self.sizeSlider.get())
+        self.sim.setResolution( self.resolutionSlider.get())
         if runsim: self.sim.runSimulator()
 
 class LensPane(ttk.Frame):
