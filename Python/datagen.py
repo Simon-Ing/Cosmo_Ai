@@ -80,6 +80,8 @@ if __name__ == "__main__":
 
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
+    parser.add_argument('-i', '--csvfile',
+            help="Dataset to generate (CSV file)")
 
     args = parser.parse_args()
 
@@ -103,4 +105,7 @@ if __name__ == "__main__":
 
     sim.setMaskMode( args.mask )
 
-    makeSingle(sim,args)
+    if args.csvfile:
+        print( "CSV file:", args.csvfile )
+    else:
+        makeSingle(sim,args)
