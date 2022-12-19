@@ -53,6 +53,7 @@ public:
     void showMask() ;
     void setMaskMode(bool) ;
 
+    cv::Mat getApparent(bool) ;
     cv::Mat getActual(bool) ;
     cv::Mat getDistorted(bool) ;
 

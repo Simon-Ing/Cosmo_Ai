@@ -67,6 +67,13 @@ class CosmoSim(cs.CosmoSim):
         """
         self.simEvent.set()
 
+    def getApparentImage(self,reflines=True):
+        """
+        Return the Apparent Image from the simulator as a numpy array.
+        """
+        im = np.array(self.getApparent(reflines),copy=False)
+        if im.shape[2] == 1 : im.shape = im.shape[:2]
+        return im
     def getActualImage(self,reflines=True):
         """
         Return the Actual Image from the simulator as a numpy array.

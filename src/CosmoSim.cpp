@@ -108,6 +108,16 @@ bool CosmoSim::runSim() {
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;
 } 
+cv::Mat CosmoSim::getApparent(bool refLinesMode) {
+   if ( NULL == sim )
+      throw std::bad_function_call() ;
+   cv::Mat im = sim->getApparent() ;
+   if (refLinesMode) {
+      im = im.clone() ;
+      refLines(im) ;
+   }
+   return im ;
+}
 cv::Mat CosmoSim::getActual(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
@@ -149,6 +159,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setCHI", &CosmoSim::setCHI)
         .def("setSourceParameters", &CosmoSim::setSourceParameters)
         .def("setXY", &CosmoSim::setXY)
+        .def("setPolar", &CosmoSim::setPolar)
         .def("getActual", &CosmoSim::getActual)
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("runSim", &CosmoSim::runSim)
