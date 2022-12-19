@@ -106,6 +106,7 @@ if __name__ == "__main__":
     sim.setMaskMode( args.mask )
 
     if args.csvfile:
-        print( "CSV file:", args.csvfile )
+        print( "Load CSV file:", args.csvfile )
+        frame = pd.read_csv(args.csvfile)
     else:
         makeSingle(sim,args)
