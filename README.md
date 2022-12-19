@@ -187,6 +187,8 @@ Tags
 - v0.1.0, v0.2.0, v1.0.0 are versions made by the u/g students
   Spring 2022.
 - v1.0.1 is cleaned up to be able to build v1.0.0
+- v2.0.0 (19 Dec 2022) provides the new GUI and CLI tools written
+  in Python, with several new features and corrected models.
 
 # Components
 
