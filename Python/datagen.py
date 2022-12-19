@@ -100,6 +100,8 @@ if __name__ == "__main__":
         sim.setCHI( int(args.chi) )
     if args.einsteinradius:
         sim.setEinsteinR( int(args.einsteinradius) )
+    if args.imagesize:
+        sim.setImageSize( int(args.imagesize) )
     if args.nterms:
         sim.setNterms( int(args.nterms) )
 
