@@ -123,6 +123,37 @@ class SourcePane(ttk.Frame):
         self.sim.setSourceMode(self.sourceVar.get())
         if runsim: self.sim.runSimulator()
 
+class ResolutionPane(ttk.Frame):
+    """
+    The pane of widgets to set the lens image resolution.
+    """
+    def __init__(self,root,sim, *a, **kw):
+        """
+        Set up the pane for the lens controls.
+
+        :param root: parent widget
+        :param sim: CosmoSim object
+        """
+        super().__init__(root, *a, **kw)
+        self.sim = sim 
+
+        self.sizeSlider = IntSlider( self, 
+            text="Image Size", row=1,
+            fromval=16,
+            toval=1024,
+            default=512 )
+        self.sizeSlider.var.trace_add( "write", self.push ) 
+        self.resolutionSlider = IntSlider( self, 
+            text="Image Resolution", row=2,
+            fromval=16,
+            toval=1024,
+            default=512 )
+        self.sizeSlider.var.trace_add( "write", self.push ) 
+    def push(self,*a,runsim=True):
+        print( "[CosmoGUI] Push image resolution" )
+        self.sim.setImageSize( self.sizeSlider.get())
+        if runsim: self.sim.runSimulator()
+
 class LensPane(ttk.Frame):
     """
     The pane of widgets to set the lens parameters.
@@ -164,12 +195,6 @@ class LensPane(ttk.Frame):
         self.chiSlider.var.trace_add( "write", self.push ) 
         self.ntermsSlider.var.trace_add( "write", self.push ) 
 
-        self.sizeSlider = IntSlider( self, 
-            text="Image Size", row=5,
-            toval=1024,
-            default=512 )
-        self.sizeSlider.var.trace_add( "write", self.push ) 
-
         self.maskModeVar = BooleanVar()
         self.maskModeVar.set( False )
 
@@ -188,7 +213,6 @@ class LensPane(ttk.Frame):
         self.sim.setCHI( self.chiSlider.get() )
         self.sim.setEinsteinR( self.einsteinSlider.get())
         self.sim.setMaskMode( self.maskModeVar.get())
-        self.sim.setImageSize( self.sizeSlider.get())
         if runsim: self.sim.runSimulator()
 class PosPane(ttk.Frame):
     """

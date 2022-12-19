@@ -41,29 +41,33 @@ class Window(Tk):
         self.imgPane.pack(fill=Y,expand=YES,side=TOP)
         self.quitButton = ttk.Button(self.frm, text="Quit",
                 command=self.destroy, style="Red.TButton" )
-        self.quitButton.grid(column=4, row=0, sticky=E)
+        self.quitButton.grid(column=3, row=1, sticky=E)
         Label(self.frm,"" , width=20 ).grid(column=2,row=0)
+
+        self.resFrame = cont.ResolutionPane(self.frm,sim)
+        self.resFrame.grid(column=0, row=0, rowspan=2, sticky=W)
 
         self.reflineButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getReflinesVar(),
                 text="Show Reference Lines" )
-        self.reflineButton.grid(column=0, row=0, sticky=E)
-        self.maskedButton = ttk.Checkbutton(self.frm,
-                onvalue=True, offvalue=False,
-                variable=self.controller.getMaskModeVar(),
-                text="Mask Mode" )
-        self.maskedButton.grid(column=3, row=0, sticky=E)
+        self.reflineButton.grid(column=1, row=0, sticky=W)
         self.maskButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getMaskVar(),
                 text="Postprocessing Mask" )
-        self.maskButton.grid(column=1, row=0, sticky=E)
+        self.maskButton.grid(column=2, row=1, sticky=W)
+
+        self.maskedButton = ttk.Checkbutton(self.frm,
+                onvalue=True, offvalue=False,
+                variable=self.controller.getMaskModeVar(),
+                text="Mask Mode" )
+        self.maskedButton.grid(column=2, row=0, sticky=W)
         self.showmaskButton = ttk.Checkbutton(self.frm,
                 onvalue=True, offvalue=False,
                 variable=self.imgPane.getShowmaskVar(),
                 text="Show Masks" )
-        self.showmaskButton.grid(column=2, row=0, sticky=E)
+        self.showmaskButton.grid(column=1, row=1, sticky=W)
 
 if __name__ == "__main__":
     print( "CosmoGUI starting." )
