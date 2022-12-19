@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-x', '--x', default=0, help="x coordinate")
     parser.add_argument('-y', '--y', default=0, help="y coordinate")
-    parser.add_argument('-T', '--phi', default=-1, help="polar coordinate angle (phi)")
+    parser.add_argument('-T', '--phi', help="polar coordinate angle (phi)")
 
     parser.add_argument('-s', '--sigma', default=20, help="source size (sigma)")
     parser.add_argument('-2', '--sigma2', default=10, help="secondary source size (sigma2)")
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     if args.phi:
         sim.setPolar( int(args.x), int(args.phi) )
     else:
-        sim.setPolar( int(args.x), int(args.y) )
+        sim.setXY( int(args.x), int(args.y) )
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
     sim.setSourceParameters( int(args.sigma),

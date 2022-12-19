@@ -161,6 +161,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setXY", &CosmoSim::setXY)
         .def("setPolar", &CosmoSim::setPolar)
         .def("getActual", &CosmoSim::getActual)
+        .def("getApparent", &CosmoSim::getApparent)
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("runSim", &CosmoSim::runSim)
         .def("diagnostics", &CosmoSim::diagnostics)
