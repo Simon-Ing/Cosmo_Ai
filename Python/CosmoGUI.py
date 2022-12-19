@@ -34,11 +34,11 @@ class Window(Tk):
                  )
 
         self.controller = cont.Controller(self,sim, padding=10)
-        self.controller.grid()
-        self.imgPane = view.ImagePane(self,sim, padding=10)
-        self.imgPane.grid()
+        self.controller.pack()
         self.frm = ttk.Frame(self, padding=10)
-        self.frm.grid()
+        self.frm.pack()
+        self.imgPane = view.ImagePane(self,sim, padding=10)
+        self.imgPane.pack(fill=Y,expand=YES,side=TOP)
         self.quitButton = ttk.Button(self.frm, text="Quit",
                 command=self.destroy, style="Red.TButton" )
         self.quitButton.grid(column=4, row=0, sticky=E)
