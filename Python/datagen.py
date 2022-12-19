@@ -40,12 +40,14 @@ def makeSingle(sim,args,name=None):
     sim.runSim()
 
     im = sim.getDistortedImage( 
-                    reflines=args.reflines,
+                    reflines=False,
                     showmask=args.showmask
                 ) 
 
     if args.centred:
         im = centreImage(im)
+    if args.reflines:
+        drawAxes(im)
 
     fn = os.path.join(args.directory,"image-" + name + ".png" ) 
     cv.imwrite(fn,im)

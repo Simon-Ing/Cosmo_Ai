@@ -96,6 +96,8 @@ public:
     using PointMassLens::PointMassLens ;
 protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual void markMask( cv::InputOutputArray ) ;
+    virtual void updateApparentAbs() ;
 };
 
 class SphereLens : public LensModel { 
