@@ -16,7 +16,8 @@ import pandas as pd
 
 
 
-def makeSingle(sim,args):
+def makeSingle(sim,args,name=None):
+    if name == None: name = args.name
     sim.runSim()
 
     im = sim.getDistortedImage( 
@@ -27,18 +28,17 @@ def makeSingle(sim,args):
     if args.centred:
         im = centreImage(im)
 
-    fn = os.path.join(args.directory,"image-" + args.name + ".png" ) 
+    fn = os.path.join(args.directory,"image-" + name + ".png" ) 
     cv.imwrite(fn,im)
 
     if args.actual:
-       fn = os.path.join(args.directory,"actual-" + args.name + ".png" ) 
+       fn = os.path.join(args.directory,"actual-" + name + ".png" ) 
        im = sim.getActualImage( reflines=args.reflines )
        cv.imwrite(fn,im)
     if args.apparent:
-       fn = os.path.join(args.directory,"apparent-" + args.name + ".png" ) 
+       fn = os.path.join(args.directory,"apparent-" + name + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-    sim.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -110,5 +110,11 @@ if __name__ == "__main__":
     if args.csvfile:
         print( "Load CSV file:", args.csvfile )
         frame = pd.read_csv(args.csvfile)
+        cols = frame.columns
+        print( "columns:", cols )
+        for index,row in frame.iterrows():
+            for c in cols: print( row[c] )
+            makeSingle(sim,args,name=row["index"])
     else:
         makeSingle(sim,args)
+    sim.close()
