@@ -32,8 +32,10 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nterms', default=10, help="Number of Roulettes terms")
     parser.add_argument('-Z', '--imagesize', default=400, help="image size")
 
-    parser.add_argument('-L', '--lensmode', help="lens mode")
-    parser.add_argument('-S', '--sourcemode', help="source mode")
+    parser.add_argument('-L', '--lensmode',
+            default="Point Mass (exact)", help="lens mode")
+    parser.add_argument('-S', '--sourcemode',
+            default="Spherical", help="source mode")
 
     parser.add_argument('-R', '--reflines',action='store_true',
             help="Add reference (axes) lines")
@@ -43,7 +45,8 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--showmask',action='store_true',
             help="Mark the convergence circle")
 
-    parser.add_argument('-N', '--name', help="simulation name")
+    parser.add_argument('-N', '--name', default="test",
+            help="simulation name")
     parser.add_argument('-D', '--directory',default="./",
             help="directory path (for output files)")
 
@@ -59,11 +62,12 @@ if __name__ == "__main__":
         sim.setPolar( int(args.x), int(args.y) )
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
-    sim.setSourceParemters( int(args.sigma), int(args.sigma2), int(args.theta) )
+    sim.setSourceParameters( int(args.sigma),
+            int(args.sigma2), int(args.theta) )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
     if args.chi:
-        sim.setCHI( float(args.chi)/100.0 )
+        sim.setCHI( int(args.chi) )
     if args.einsteinradius:
         sim.setEinsteinR( int(args.einsteinradius) )
     if args.nterms:
@@ -71,13 +75,14 @@ if __name__ == "__main__":
 
     sim.setMaskMode( args.mask )
 
-    sim.runSimulator()
+    sim.runSim()
 
     im = sim.getDistortedImage( 
                     reflines=args.reflines,
                     showmask=args.showmask
                 ) 
 
+    sim.close()
     if args.centred:
         im = centreImage(im)
 
