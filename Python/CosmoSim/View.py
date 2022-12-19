@@ -10,6 +10,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import numpy as np
 import threading as th
+from CosmoSim.Image import drawAxes
 
 
 class ImageCanvas(Canvas):
@@ -63,7 +64,7 @@ class ImagePane(ttk.Frame):
         self.actual.grid(column=0,row=0)
         self.distorted = ImageCanvas(self,width=512,height=512)
         self.distorted.grid(column=1,row=0)
-        self.height = 512
+        self.height = 540
 
         self.reflinesVar = BooleanVar()
         self.reflinesVar.set( True )
@@ -82,6 +83,7 @@ class ImagePane(ttk.Frame):
         self.showmaskVar.trace_add( "write",
                 lambda *a : self.updateEvent.set() )
         self.bind("<Configure>", self.on_resize)
+        self.updateEvent.set() 
     def on_resize(self,event):
         if np.abs(self.height - event.height) > 4:
            print( "Height", self.height, event.height )
@@ -106,19 +108,22 @@ class ImagePane(ttk.Frame):
         print ( "CosmoSim View object closed" )
     def setActualImage(self):
         "Helper for `update()`."
-        im0 = Image.fromarray( 
-                self.sim.getActualImage( 
-                    reflines=self.reflinesVar.get() ) )
+        print( "setActualImage" )
+        im = self.sim.getActualImage(reflines=False,) 
+        if self.reflinesVar.get(): drawAxes(im)
+        im0 = Image.fromarray(im)
         self.actual.setImage(im0)
     def setDistortedImage(self):
         "Helper for `update()`."
-        im = Image.fromarray( 
-                self.sim.getDistortedImage( 
-                    reflines=self.reflinesVar.get(),
+        print( "setDistortedImage" )
+        im = self.sim.getDistortedImage( 
+                reflines=False,
                     mask=self.maskVar.get(),
                     showmask=self.showmaskVar.get(),
-                ) )
-        self.distorted.setImage(im)
+                 )
+        if self.reflinesVar.get(): drawAxes(im)
+        im0 = Image.fromarray( im )
+        self.distorted.setImage(im0)
     def update(self):
         """
         Update the images with new data from the CosmoSim object.

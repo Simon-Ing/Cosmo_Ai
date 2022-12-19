@@ -133,9 +133,10 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
                   cv::Scalar::all(255));
       cv::resize(im,ret,cv::Size(basesize,basesize) ) ;
       im = ret ;
-      if (refLinesMode) refLines(im) ;
-   } else if (refLinesMode) {
+   } else {
       im = im.clone() ;
+   }
+   if (refLinesMode) {
       refLines(im) ;
    }
    return im ;
