@@ -53,6 +53,15 @@ sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxa
 
 It is also necessary to install pybind11.
 
+## Python module
+
+Python modules are under `Python`.
+The binary module `CosmoSim.so` needs to be installed under
+`Python/CosmoSim` manually (for now).
+The install target of cmake installs it under `lib` with the
+standard library.
+
+
 ## Notes
 
 Adjustmentss may be needed depending on the version of conan.
