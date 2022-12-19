@@ -17,6 +17,24 @@ sourceValues = {
         "Ellipsoid" : SourceSpec.Ellipse,
         "Triangle" : SourceSpec.Triangle }
 
+lensDict = {
+        "Point Mass (exact)" : LensSpec.PointMass,
+        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
+        "SIS (roulettes)" : LensSpec.SIS,
+        "p" : LensSpec.PointMass,
+        "r" : LensSpec.PointMassRoulettes,
+        "s" : LensSpec.SIS,
+        }
+sourceDict = {
+        "Spherical" : SourceSpec.Sphere,
+        "Ellipsoid" : SourceSpec.Ellipse,
+        "Triangle" : SourceSpec.Triangle,
+        "s" : SourceSpec.Sphere,
+        "e" : SourceSpec.Ellipse,
+        "t" : SourceSpec.Triangle,
+        }
+
+
 
 class CosmoSim(cs.CosmoSim):
     """
@@ -44,9 +62,9 @@ class CosmoSim(cs.CosmoSim):
     def getUpdateEvent(self):
         return self.updateEvent
     def setSourceMode(self,s):
-        return super().setSourceMode( int( sourceValues[s] ) ) 
+        return super().setSourceMode( int( sourceDict[s] ) ) 
     def setLensMode(self,s):
-        return super().setLensMode( int( lensValues[s] ) ) 
+        return super().setLensMode( int( lensDict[s] ) ) 
     def simThread(self):
         """
         This function repeatedly runs the simulator when the parameters

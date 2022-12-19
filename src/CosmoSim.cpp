@@ -65,8 +65,8 @@ void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
 void CosmoSim::setImageSize(int sz ) { size = sz ; }
 void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
    sourceSize = s1 ;
-   sourceSize2 = s2 ;
-   sourceTheta = theta ;
+   if ( s2 >= 0 ) sourceSize2 = s2 ;
+   if ( theta >= 0 ) sourceTheta = theta ;
    // srcmode = mode ;
 }
 void CosmoSim::initSource( ) {

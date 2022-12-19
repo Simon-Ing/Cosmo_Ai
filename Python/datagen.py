@@ -14,7 +14,26 @@ from CosmoSim import CosmoSim
 
 import pandas as pd
 
-
+def setParameters(sim,row):
+    if row.get("y",None) != None:
+        sim.setXY( row["x"], row["y"] )
+    elif row.get("phi",None) != None:
+        sim.setPolar( row["x"], row["phi"] )
+    if row.get("source",None) != None:
+        sim.setSourceMode( row["source"] )
+    if row.get("sigma",None) != None:
+        sim.setSourceParameters( row["sigma"],
+            row.get("sigma2",-1), row.get("theta",-1) )
+    if row.get("lens",None) != None:
+        sim.setLensMode( row["lens"] )
+    if row.get("chi",None) != None:
+        sim.setCHI( row["chi"] )
+    if row.get("einsteinR",None) != None:
+        sim.setEinsteinR( row["einsteinR"] )
+    if row.get("imagesize",None) != None:
+        sim.setImageSize( row["imagesize"] )
+    if row.get("nterms",None) != None:
+        sim.setNterms( row["nterms"] )
 
 def makeSingle(sim,args,name=None):
     if name == None: name = args.name
@@ -113,7 +132,7 @@ if __name__ == "__main__":
         cols = frame.columns
         print( "columns:", cols )
         for index,row in frame.iterrows():
-            for c in cols: print( row[c], type(row[c]) )
+            setParameters( sim, row )
             makeSingle(sim,args,name=row["index"])
     else:
         makeSingle(sim,args)
