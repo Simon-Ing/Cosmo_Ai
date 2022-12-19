@@ -148,7 +148,7 @@ class ResolutionPane(ttk.Frame):
             fromval=16,
             toval=1024,
             default=512 )
-        self.sizeSlider.var.trace_add( "write", self.push ) 
+        self.resolutionSlider.var.trace_add( "write", self.push ) 
     def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push image resolution" )
         self.sim.setImageSize( self.sizeSlider.get())

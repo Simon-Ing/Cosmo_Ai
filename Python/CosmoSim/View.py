@@ -34,7 +34,7 @@ class ImageCanvas(Canvas):
         else:
            im = self.origimage 
         size = self.height 
-        self.im = im.resize((size,size), Image.ANTIALIAS)
+        self.im = im.resize((size,size), Image.NEAREST)
         print( "Image resized", size )
         self.img =  ImageTk.PhotoImage(image=self.im)
         self.itemconfig(self.imageCanvas, image=self.img)

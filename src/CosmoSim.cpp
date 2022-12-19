@@ -63,7 +63,10 @@ void CosmoSim::initLens() {
 }
 void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
 void CosmoSim::setImageSize(int sz ) { size = sz ; }
-void CosmoSim::setResolution(int sz ) { basesize = sz ; }
+void CosmoSim::setResolution(int sz ) { 
+   basesize = sz ; 
+   std::cout << "[setResolution] basesize=" << basesize << "; size=" << size << "\n" ;
+}
 void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
    sourceSize = s1 ;
    if ( s2 >= 0 ) sourceSize2 = s2 ;
@@ -124,6 +127,7 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
    cv::Mat im = sim->getActual() ;
+   std::cout << "basesize=" << basesize << "; size=" << size << "\n" ;
    if ( basesize < size ) {
       cv::Mat ret(cv::Size(basesize, basesize), im.type(),
                   cv::Scalar::all(255));
@@ -151,6 +155,7 @@ cv::Mat CosmoSim::getDistorted(bool refLinesMode) {
    // causing subsequent conversion to a numpy array to be misaligned. 
    cv::Mat im ;
    if ( basesize < size ) {
+      std::cout << "basesize=" << basesize << "; size=" << size << "\n" ;
       im = sim->getDistorted() ;
       cv::Mat ret(cv::Size(basesize, basesize), sim->getActual().type(),
                   cv::Scalar::all(255));
