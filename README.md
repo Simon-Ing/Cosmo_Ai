@@ -159,7 +159,6 @@ images to test the behaviour of the Roulettes model.  In particular,
 + `montage.sh` concatenates the different images for one source 
   for easier display.
     + This has not been tested with the latest updates.
-+ `triangle.sh` generates images from a triangle source (testing)
 
 ## Old versions
 
