@@ -149,10 +149,17 @@ class ResolutionPane(ttk.Frame):
             toval=1024,
             default=512 )
         self.resolutionSlider.var.trace_add( "write", self.push ) 
+        self.bgSlider = IntSlider( self, 
+            text="Background Colour", row=3,
+            fromval=0,
+            toval=255,
+            default=3 )
+        self.bgSlider.var.trace_add( "write", self.push ) 
     def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push image resolution" )
         self.sim.setImageSize( self.sizeSlider.get())
         self.sim.setResolution( self.resolutionSlider.get())
+        self.sim.setBGColour( self.bgSlider.get())
         if runsim: self.sim.runSimulator()
 
 class LensPane(ttk.Frame):

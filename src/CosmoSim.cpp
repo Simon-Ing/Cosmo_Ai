@@ -36,6 +36,7 @@ void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
+void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
@@ -103,6 +104,7 @@ bool CosmoSim::runSim() {
    std::cout << "[CosmoSim.cpp] runSim() - running similator\n" ;
    initLens() ;
    initSource() ;
+   sim->setBGColour( bgcolour ) ;
    sim->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
    sim->setXY( xPos, yPos, chi, einsteinR ) ;
@@ -194,6 +196,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setMaskMode", &CosmoSim::setMaskMode)
         .def("setImageSize", &CosmoSim::setImageSize)
         .def("setResolution", &CosmoSim::setResolution)
+        .def("setBGColour", &CosmoSim::setBGColour)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

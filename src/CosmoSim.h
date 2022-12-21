@@ -24,6 +24,7 @@ private:
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
     int nterms=16 ;
+    int bgcolour=0 ;
     LensModel *sim = NULL ;
     Source *src = NULL ;
     bool running = false ;
@@ -41,6 +42,7 @@ public:
     void setNterms(int);
     void setImageSize(int);
     void setResolution(int);
+    void setBGColour(int);
 
     void setSourceMode(int);
     void setLensMode(int);
