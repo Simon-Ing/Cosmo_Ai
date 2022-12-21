@@ -50,6 +50,7 @@ class CosmoSim(cs.CosmoSim):
         self.simEvent = th.Event()
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
+        self.bgcolour = 0
     def close(self):
         """
         Terminate the worker thread.
@@ -67,6 +68,8 @@ class CosmoSim(cs.CosmoSim):
         return super().setSourceMode( int( sourceDict[s] ) ) 
     def setLensMode(self,s):
         return super().setLensMode( int( lensDict[s] ) ) 
+    def setBGColour(self,s):
+        self.bgcolour = s
     def simThread(self):
         """
         This function repeatedly runs the simulator when the parameters
@@ -93,14 +96,14 @@ class CosmoSim(cs.CosmoSim):
         """
         im = np.array(self.getApparent(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
-        return im
+        return np.maximum(im,self.bgcolour)
     def getActualImage(self,reflines=True):
         """
         Return the Actual Image from the simulator as a numpy array.
         """
         im = np.array(self.getActual(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
-        return im
+        return np.maximum(im,self.bgcolour)
     def getDistortedImage(self,reflines=True,mask=False,showmask=False):
         """
         Return the Distorted Image from the simulator as a numpy array.
@@ -112,4 +115,4 @@ class CosmoSim(cs.CosmoSim):
             print( "Masking not supported for this lens model." )
         im = np.array(self.getDistorted(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
-        return im
+        return np.maximum(im,self.bgcolour)

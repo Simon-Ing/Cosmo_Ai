@@ -99,8 +99,7 @@ void LensModel::update() {
 
     // Make Distorted Image
     // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(),
-          cv::Scalar::all(bgcolour));
+    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type() ) ;
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
