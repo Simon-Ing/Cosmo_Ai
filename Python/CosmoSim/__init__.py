@@ -53,6 +53,8 @@ class CosmoSim(cs.CosmoSim):
     def close(self):
         """
         Terminate the worker thread.
+        This should be called before terminating the program,
+        because stale threads would otherwise block.
         """
         print ( "CosmoSim object closing" )
         self._continue = False

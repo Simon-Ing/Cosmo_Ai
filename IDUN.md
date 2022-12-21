@@ -5,14 +5,13 @@ title: Running CosmoSim on IDUN
 IDUN is the shared HPC cluster at NTNU, and these notes are thus
 only intended for NTNU users.
 
++ See `idunbuild.sh` for current recipe.
+
 The base system has been set up to use conan to manage dependencies,
 but some conan packages depend on system libraries which cannot be
 installed at IDUN.  Therefore conan should not be used, and 
 `CMakeLists.txt` has been set up with a conditional on the host
 name, with a specific setup for IDUN.
-
-The `idunbuild.sh` scripts builds on IDUN and installs the binaries
-in the bin directory under the working directory:
 
 # Notes
 
