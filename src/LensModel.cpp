@@ -99,7 +99,8 @@ void LensModel::update() {
 
     // Make Distorted Image
     // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat::zeros(nrows*2, ncols*2, imgApparent.type());
+    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(),
+          cv::Scalar::all(bgcolour));
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
@@ -143,6 +144,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 void LensModel::setMaskMode(bool b) {
    maskMode = b ; 
 }
+void LensModel::setBGColour(int b) { bgcolour = b ; }
 void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.

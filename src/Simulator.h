@@ -19,6 +19,8 @@ protected:
     double einsteinR;
     int nterms;
 
+    int bgcolour = 0;
+
     double actualX{};
     double actualY{};
     double actualAbs{};
@@ -50,6 +52,7 @@ public:
     void update();
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
+    void setBGColour( int ) ;
 
     void updateXY(double, double, double, double) ;
     void setXY(double, double, double, double) ;
