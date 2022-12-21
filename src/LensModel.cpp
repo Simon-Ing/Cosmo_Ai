@@ -64,12 +64,20 @@ cv::Mat LensModel::getApparent() { return source->getImage() ; }
 cv::Mat LensModel::getDistorted() { return imgDistorted ; }
 
 cv::Mat LensModel::getDistorted( double app ) { 
+   /* This is intended to change the centre of the convergence ring,
+    * and draw a different section of the image.
+    * TESTING ONLY.
+    * The logic is probably faulty. */ 
    apparentAbs = app ;
    this->update() ;
    return imgDistorted ; 
 }
 
 cv::Mat LensModel::getSecondary() { 
+   /* This only makes sense in the Point Mass model.
+    * It uses the same logic as getDistorted(double) above, and
+    * is probably faulty. 
+    */
    apparentAbs = apparentAbs2 ;
    this->update() ;
    return imgDistorted ; }

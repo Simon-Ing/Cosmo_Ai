@@ -1,5 +1,9 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
+/* CLI interface to generate distorted image.
+ * This is deprecated in favour datagen.py.
+ */
+
 #include <unistd.h>
 #include <string>
 #include "Simulator.h"
