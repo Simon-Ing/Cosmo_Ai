@@ -154,8 +154,11 @@ images to test the behaviour of the Roulettes model.  In particular,
 
 ## Scripts
 
++ `Amplitudes_gen.py` generates the 50.txt file, which is used by all
+  the libraries to get formulæ for alpha and beta.
 + `montage.sh` concatenates the different images for one source 
-  for easier display
+  for easier display.
+    + This has not been tested with the latest updates.
 + `triangle.sh` generates images from a triangle source (testing)
 
 ## Old versions
