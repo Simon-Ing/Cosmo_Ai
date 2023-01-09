@@ -100,6 +100,8 @@ class ImagePane(ttk.Frame):
     def close(self):
         """
         Terminate the update thread.
+        This should be called before terminating the program,
+        because stale threads would otherwise block.
         """
         print ( "CosmoSim View object closing" )
         self._continue = False

@@ -53,6 +53,15 @@ sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxa
 
 It is also necessary to install pybind11.
 
+## Python module
+
+Python modules are under `Python`.
+The binary module `CosmoSim.so` needs to be installed under
+`Python/CosmoSim` manually (for now).
+The install target of cmake installs it under `lib` with the
+standard library.
+
+
 ## Notes
 
 Adjustmentss may be needed depending on the version of conan.
@@ -96,12 +105,10 @@ The two GUI tools are similar and pretty self explanatory.
 The images shown are the actual source on the left and the distorted (lensed)
 image on the right.
 
-## Image Generator 
-
-New version
+## Image Generator (CLI)
 
 ```sh
-Python/datagen.sh [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
+Python/datagen.sh -S sourcemodel -L lensmodel -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name -R -C
 Python/datagen.py --csvfile Datasets/debug.csv --mask -R -C
 Python/datagen.py --help
 ```
@@ -110,7 +117,12 @@ The second form generates images in bulk by parsing the CSV file.
 Parameters which are constant for all images may be given on the 
 command line instead of the CSV file.
 
-+ `-S` uses SphereSimulator instead of the default point mass simulator
++ `lensmodel` is `p` for point mass (exact), `r` for Roulette (point mass),
+  or `s` for SIS (Roulette).
++ `sourcemodel` is `s` for sphere, `e` for ellipse, or `t` for
+   triangle.
++ `-C` centres the image on the centre of mass (centre of light)
++ `-R` draw the axes cross
 + `x` and `y` are the coordinates of the actual source
 + `s` is the standard deviation of the source
 + `chi` is the distance to the lens in percent of the distance to the source
@@ -120,8 +132,10 @@ command line instead of the CSV file.
 + `imageSize` size of output image in pixels.  The image will be
   `imageSize`$\times$`imageSize` pixels.
 + `name` is the name of the simulation, and used to generate filenames.
++ `--help` for a complete list of options.
 
-To bulk generate images, two scripts have been provided:
+To bulk generate images the following script creates a CSV file
+to use with the `--csvfile` option above.
 
 + `Scripts/datasetgen.py` makes a CSV file of random parameter sets.
   It should be tweaked to get the desired distribution.
@@ -140,9 +154,11 @@ images to test the behaviour of the Roulettes model.  In particular,
 
 ## Scripts
 
++ `Amplitudes_gen.py` generates the 50.txt file, which is used by all
+  the libraries to get formulæ for alpha and beta.
 + `montage.sh` concatenates the different images for one source 
-  for easier display
-+ `triangle.sh` generates images from a triangle source (testing)
+  for easier display.
+    + This has not been tested with the latest updates.
 
 ## Old versions
 
@@ -173,6 +189,8 @@ Tags
 - v0.1.0, v0.2.0, v1.0.0 are versions made by the u/g students
   Spring 2022.
 - v1.0.1 is cleaned up to be able to build v1.0.0
+- v2.0.0 (19 Dec 2022) provides the new GUI and CLI tools written
+  in Python, with several new features and corrected models.
 
 # Components
 
