@@ -45,7 +45,6 @@ FetchContent_Declare(
         pybind11
         GIT_REPOSITORY https://github.com/pybind/pybind11.git
         GIT_TAG        v2.10.3
-        FIND_PACKAGE_ARGS NAMES pybind11
 )
 FetchContent_MakeAvailable(pybind11)
 
