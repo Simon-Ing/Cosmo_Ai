@@ -19,6 +19,8 @@ if( ${host} MATCHES "idun.*")
 
 	find_package( OpenCV REQUIRED )
 	include_directories( ${OpenCV_INCLUDE_DIRS} )
+	find_package( Python COMPONENTS Development Interpreter ) 
+	include_directories( ${Python_INCLUDE_DIRS} )
 
 	message("LLIBS=${LLIBS}")
 	message("OpenCV_LIBS=${OpenCV_LIBS}")
