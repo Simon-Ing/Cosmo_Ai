@@ -21,14 +21,12 @@ Provided a full C++ installation is available with cmake and conan,
 the system is built with
 
 ```sh
-mkdir build && cd build
-conan install ..
-cmake -DCMAKE_BUILD_TYPE=Release ..
-cmake --build .
-cmake --install . --prefix ..
+conan install . -if build
+cmake . -B build
+cmake --build build
 ```
 
-Binaries will be located under bin/.
+Binaries will be located under build/bin/ and libraries under build/lib.
 
 The [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
 recommends the following settings (before building):
