@@ -6,7 +6,7 @@ message("CMakeLists.txt - CosmoSim - Starting ...")
 cmake_minimum_required(VERSION 3.15)
 project(CosmoAi LANGUAGES CXX VERSION 1.1.0)
 
-add_definitions("-std=c++11")
+set(CMAKE_CXX_STANDARD 17)
 
 cmake_host_system_information(RESULT host QUERY HOSTNAME)
 # set(host "foobar")
