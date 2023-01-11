@@ -1,7 +1,11 @@
 #ifndef COSMOSIM_SOURCE_H
 #define COSMOSIM_SOURCE_H
 
+#if __has_include("opencv4/opencv2/opencv.hpp")
 #include "opencv4/opencv2/opencv.hpp"
+#else
+#include "opencv2/opencv.hpp"
+#endif
 
 class Source {
 

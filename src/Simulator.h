@@ -2,7 +2,11 @@
 #define COSMOSIM_H
 
 #include "Source.h"
+#if __has_include("opencv4/opencv2/opencv.hpp")
 #include "opencv4/opencv2/opencv.hpp"
+#else
+#include "opencv2/opencv.hpp"
+#endif
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
 
