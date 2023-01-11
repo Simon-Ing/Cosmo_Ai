@@ -49,21 +49,13 @@ sudo pip3 install conan
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
 
-## Python module
-
-Python modules are under `Python`.
-The binary module `CosmoSim.so` needs to be installed under
-`Python/CosmoSim` manually (for now).
-The install target of cmake installs it under `lib` with the
-standard library.
-
 
 ## Notes
 
-Adjustmentss may be needed depending on the version of conan.
-Currently it is set up to use wayland/1.21.0 to override a
+Adjustments may be needed depending on the version of conan.
+Currently, it is set up to use wayland/1.21.0 to override a
 transitive dependency on wayland/1.20.0 which failed with the
-latest conan. We should possibly upgrade the other dependencies
+latest conan on linux. We should possibly upgrade the other dependencies
 and remove wayland.
 
 ## Installation without Conan
@@ -97,7 +89,7 @@ There are two tools, a GUI tool and a CLI too.
   using the GUI API from OpenCV.
 + `Python/CosmoGUI.py` - new version implemented in Python using tkinter.
 
-The two GUI tools are similar and pretty self explanatory.  
+The two GUI tools are similar and pretty self-explanatory.  
 The images shown are the actual source on the left and the distorted (lensed)
 image on the right.
 
