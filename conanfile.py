@@ -5,7 +5,6 @@ from conans.tools import OSInfo
 
 class CosmoSimConan(ConanFile):
     name = "CosmoSim"
-    author = "Lars Ivar Hatledal"
     license = "MIT"
 
     settings = "os", "compiler", "build_type", "arch"
