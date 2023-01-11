@@ -4,6 +4,9 @@
 #Jetbrains IDE files
 .idea
 
+# Generated python modules
+CosmoSimPy.*.pyd
+
 # Compiled Object files
 *.slo
 *.lo

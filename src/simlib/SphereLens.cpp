@@ -1,10 +1,12 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "Simulator.h"
+#include "cosmosim/Simulator.h"
+
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
-#include <thread>
 #include <symengine/parser.h>
+
+#include <thread>
 #include <fstream>
 
 double factorial_(unsigned int n);

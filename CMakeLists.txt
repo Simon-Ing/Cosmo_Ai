@@ -8,8 +8,13 @@ project(CosmoAi LANGUAGES CXX VERSION 1.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Place target artifacts into bin and lib folders
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
 cmake_host_system_information(RESULT host QUERY HOSTNAME)
-# set(host "foobar")
 message("Running on ${host}")
 
 # Symengine and OpenCV
@@ -30,18 +35,6 @@ else()
       conan_basic_setup()
 endif()
 
-
-add_executable(makeimage src/makeimage.cpp)
-add_executable(Simulator src/Simulator.cpp)
-set(SimLibFiles
-   src/simaux.cpp 
-   src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
-   src/TriangleSource.cpp
-   src/LensModel.cpp src/PointMassLens.cpp src/SphereLens.cpp 
-   src/RoulettePMLens.cpp
-   src/Window.cpp)
-add_library(SimLib ${SimLibFiles})
-
 include(FetchContent)
 FetchContent_Declare(
         pybind11
@@ -51,20 +44,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pybind11)
 add_subdirectory("${CMAKE_BINARY_DIR}/_deps/pybind11-src")
 
-pybind11_add_module(CosmoSimPy MODULE src/CosmoSim.cpp ${SimLibFiles})
 
-# Link Libraries
-if( ${host} MATCHES "idun.*")
-   target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
-   target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
-   target_link_libraries(SimLib ${OpenCV_LIBS} ${LLIBS})
-   target_link_libraries(CosmoSimPy PRIVATE ${OpenCV_LIBS} ${LLIBS})
-else()
-   target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
-   target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
-   target_link_libraries(SimLib ${CONAN_LIBS})
-   target_link_libraries(CosmoSimPy PRIVATE ${CONAN_LIBS})
-endif()
+add_subdirectory(src)
 
 
 if(${UNIX})
@@ -75,6 +56,3 @@ else()
     message(FATAL_ERROR "Compiler and system are not supported")
 endif()
 
-# Install targets
-install( TARGETS makeimage Simulator DESTINATION bin)
-install( TARGETS SimLib CosmoSimPy DESTINATION lib)

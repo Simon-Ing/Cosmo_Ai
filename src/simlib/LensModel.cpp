@@ -3,11 +3,13 @@
  * Einar Leite Austnes, and Simon Nedreberg Runde
  */
 
-#include "Simulator.h"
+#include "cosmosim/Simulator.h"
+
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
-#include <thread>
 #include <symengine/parser.h>
+
+#include <thread>
 #include <fstream>
 
 #define DEBUG 0

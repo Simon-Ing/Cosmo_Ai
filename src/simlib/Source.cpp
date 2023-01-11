@@ -6,7 +6,8 @@
  * of a range of source models.
  */
 
-#include "Source.h"
+#include "cosmosim/Source.h"
+
 #include <thread>
 
 

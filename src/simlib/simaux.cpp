@@ -1,6 +1,6 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "Simulator.h"
+#include "cosmosim/Simulator.h"
 
 // Add some lines to the image for reference
 void refLines(cv::Mat& target) {
