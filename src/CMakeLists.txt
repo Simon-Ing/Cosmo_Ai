@@ -11,25 +11,31 @@ set(SimLibFiles
         simlib/TriangleSource.cpp
         simlib/Window.cpp
         )
+
 add_library(SimLib ${SimLibFiles})
 target_include_directories(SimLib PUBLIC "${CMAKE_SOURCE_DIR}/include")
+if (${host} MATCHES "idun.*")
+    target_link_libraries(SimLib PUBLIC ${OpenCV_LIBS} ${LLIBS})
+else ()
+    target_link_libraries(SimLib PUBLIC ${CONAN_LIBS})
+endif ()
 
 
 # Python Bindings
 pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp)
 target_link_libraries(CosmoSimPy PRIVATE SimLib)
 
-add_executable(makeimage makeimage/makeimage.cpp)
-add_executable(Simulator simulator/Simulator.cpp)
 
-# Link Libraries
-if (${host} MATCHES "idun.*")
-    target_link_libraries(SimLib PUBLIC ${OpenCV_LIBS} ${LLIBS})
-else ()
-    target_link_libraries(SimLib PUBLIC ${CONAN_LIBS})
-endif ()
-target_link_libraries(makeimage PRIVATE SimLib)
-target_link_libraries(Simulator PRIVATE SimLib)
+if (COSMOSIM_BUILD_MAKEIMAGE)
+    add_executable(makeimage makeimage/makeimage.cpp)
+    target_link_libraries(makeimage PRIVATE SimLib)
+endif()
+
+if (COSMOSIM_BUILD_SIMULATOR)
+    target_link_libraries(Simulator PRIVATE SimLib)
+    add_executable(Simulator simulator/Simulator.cpp)
+endif()
+
 
 # copy CosmoSimPy.*.pyd into Python directory
 add_custom_command(TARGET CosmoSimPy POST_BUILD

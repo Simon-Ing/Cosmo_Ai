@@ -6,6 +6,9 @@ message("CMakeLists.txt - CosmoSim - Starting ...")
 cmake_minimum_required(VERSION 3.15)
 project(CosmoAi LANGUAGES CXX VERSION 1.1.0)
 
+option(COSMOSIM_BUILD_SIMULATOR "Build native cosmosim simulator executable" OFF)
+option(COSMOSIM_BUILD_MAKEIMAGE "Build native cosmosim makeimage executable" OFF)
+
 set(CMAKE_CXX_STANDARD 17)
 
 # Place target artifacts into bin and lib folders
