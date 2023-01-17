@@ -25,13 +25,11 @@ add_executable(Simulator simulator/Simulator.cpp)
 # Link Libraries
 if (${host} MATCHES "idun.*")
     target_link_libraries(SimLib PUBLIC ${OpenCV_LIBS} ${LLIBS})
-    target_link_libraries(makeimage PRIVATE SimLib)
-    target_link_libraries(Simulator PRIVATE SimLib)
 else ()
     target_link_libraries(SimLib PUBLIC ${CONAN_LIBS})
-    target_link_libraries(makeimage PRIVATE SimLib)
-    target_link_libraries(Simulator PRIVATE SimLib)
 endif ()
+target_link_libraries(makeimage PRIVATE SimLib)
+target_link_libraries(Simulator PRIVATE SimLib)
 
 # copy CosmoSimPy.*.pyd into Python directory
 add_custom_command(TARGET CosmoSimPy POST_BUILD
