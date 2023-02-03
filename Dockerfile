@@ -19,7 +19,4 @@ RUN conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets li
 
 RUN git clone -b develop https://github.com/CosmoAI-AES/CosmoSim.git
 WORKDIR CosmoSim
-RUN conan install . -if build
-RUN cmake . -B build
-RUN cmake --build build
-
+RUN sh build.sh
