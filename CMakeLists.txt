@@ -46,8 +46,8 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/pybind/pybind11.git
         GIT_TAG        v2.10.3
 )
-FetchContent_MakeAvailable(pybind11)
-add_subdirectory("${CMAKE_BINARY_DIR}/_deps/pybind11-src")
+FetchContent_populate(pybind11)
+add_subdirectory("${pybind11_SOURCE_DIR}")
 
 pybind11_add_module(CosmoSimPy MODULE src/CosmoSim.cpp ${SimLibFiles})
 
