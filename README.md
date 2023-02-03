@@ -296,6 +296,18 @@ The `SphereSimulator` overrides the constructor and the two virtual functions.
 The constructor loads the formulæ for `\alpha` and `\beta` which are calculated
 by `calculateAlphaBeta()` when parameters change.
 
+# Using the Docker images
+
+Docker images have been created to build and run the new python GUI.
+It should be possible to build and run them as follows, assuming a Unix like system.
+
+```sh
+cd docker-sim && docker build -t dockersim .
+docker build -t dockergui .
+docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u $(id -u):$(id -g) cosmogui
+```
+
+
 # Contributors
 
 + **Idea and Current Maintainance** Hans Georg Schaathun <hasc@ntnu.no>
