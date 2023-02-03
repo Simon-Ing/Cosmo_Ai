@@ -70,7 +70,8 @@ else()
 endif()
 
 # Install targets
-install( TARGETS SimLib CosmoSimPy DESTINATION lib)
+install( TARGETS SimLib DESTINATION lib)
+install( TARGETS CosmoSimPy DESTINATION Python/CosmoSim)
 
 ### add_executable(makeimage src/makeimage.cpp)
 ### add_executable(Simulator src/Simulator.cpp)
