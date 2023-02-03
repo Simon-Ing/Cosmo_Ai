@@ -101,13 +101,13 @@ void LensModel::update() {
 
     // Make Distorted Image
     // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type() ) ;
+    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
     parallelDistort(imgApparent, imgD);
 
     // Correct the rotation applied to the source image
     cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
-    imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols));
+    imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
 
     std::cout << "update() (x,y) = (" << actualX << ", " << actualY << ")\n" ;
     std::cout << rot << "\n" ;
