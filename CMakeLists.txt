@@ -47,7 +47,6 @@ FetchContent_Declare(
 FetchContent_populate(pybind11)
 add_subdirectory("${pybind11_SOURCE_DIR}")
 
-pybind11_add_module(CosmoSimPy MODULE src/CosmoSim.cpp ${SimLibFiles})
 
 add_subdirectory(src)
 
