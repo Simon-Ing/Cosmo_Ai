@@ -17,6 +17,6 @@ RUN pip3 install conan
 RUN conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
 RUN conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
 
-RUN git clone -b develop https://github.com/CosmoAI-AES/CosmoSim.git
+RUN git clone -b  develop https://github.com/CosmoAI-AES/CosmoSim.git
 WORKDIR CosmoSim
 RUN sh build.sh
