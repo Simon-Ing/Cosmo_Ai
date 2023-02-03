@@ -161,12 +161,11 @@ cv::Mat CosmoSim::getDistorted(bool refLinesMode) {
                   cv::Scalar::all(255));
       cv::resize(im,ret,cv::Size(basesize,basesize) ) ;
       im = ret ;
-   // } else {
+   } else {
       // It is necessary to clone because the distorted image is created
       // by cropping, and the pixmap is thus larger than the image,
       // causing subsequent conversion to a numpy array to be misaligned. 
-      // im = sim->getDistorted().clone() ;
-      // Cloning now in the LensModel class
+      im = sim->getDistorted().clone() ;
    }
    if (refLinesMode) refLines(im) ;
    return im;

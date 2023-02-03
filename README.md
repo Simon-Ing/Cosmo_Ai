@@ -26,7 +26,9 @@ cmake . -B build
 cmake --build build
 ```
 
-Binaries will be located under build/bin/ and libraries under build/lib.
+This builds the C++ library and the Python library (wrapper).  The code to
+build the legacy executables written entirely in C++ has been commented out 
+in CMakeLists.txt.
 
 The [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
 recommends the following settings (before building):

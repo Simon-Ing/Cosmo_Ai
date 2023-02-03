@@ -31,8 +31,6 @@ else()
 endif()
 
 
-add_executable(makeimage src/makeimage.cpp)
-add_executable(Simulator src/Simulator.cpp)
 set(SimLibFiles
    src/simaux.cpp 
    src/Source.cpp src/SphericalSource.cpp src/EllipsoidSource.cpp
@@ -55,13 +53,9 @@ pybind11_add_module(CosmoSimPy MODULE src/CosmoSim.cpp ${SimLibFiles})
 
 # Link Libraries
 if( ${host} MATCHES "idun.*")
-   target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
-   target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
    target_link_libraries(SimLib ${OpenCV_LIBS} ${LLIBS})
    target_link_libraries(CosmoSimPy PRIVATE ${OpenCV_LIBS} ${LLIBS})
 else()
-   target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
-   target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
    target_link_libraries(SimLib ${CONAN_LIBS})
    target_link_libraries(CosmoSimPy PRIVATE ${CONAN_LIBS})
 endif()
@@ -76,5 +70,15 @@ else()
 endif()
 
 # Install targets
-install( TARGETS makeimage Simulator DESTINATION bin)
 install( TARGETS SimLib CosmoSimPy DESTINATION lib)
+
+### add_executable(makeimage src/makeimage.cpp)
+### add_executable(Simulator src/Simulator.cpp)
+### if( ${host} MATCHES "idun.*")
+###    target_link_libraries(makeimage ${OpenCV_LIBS} ${LLIBS} SimLib)
+###    target_link_libraries(Simulator ${OpenCV_LIBS} ${LLIBS} SimLib)
+### else()
+###    target_link_libraries(makeimage ${CONAN_LIBS} SimLib)
+###    target_link_libraries(Simulator ${CONAN_LIBS} SimLib)
+### endif()
+### install( TARGETS makeimage Simulator DESTINATION bin)
