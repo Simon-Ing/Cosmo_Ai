@@ -4,9 +4,12 @@
  * This is deprecated in favour datagen.py.
  */
 
+
+#include "cosmosim/Simulator.h"
+
 #include <unistd.h>
 #include <string>
-#include "Simulator.h"
+
 
 std::string convertToString(char*) ;
 

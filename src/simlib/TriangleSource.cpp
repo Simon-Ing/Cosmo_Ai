@@ -1,6 +1,7 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "Simulator.h"
+#include "cosmosim/Simulator.h"
+
 #include <thread>
 
 TriangleSource::TriangleSource( int sz, double sig, double thet ) :

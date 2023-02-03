@@ -3,8 +3,8 @@
 #ifndef COSMOSIM_FACADE_H
 #define COSMOSIM_FACADE_H
 
-#include "Simulator.h"
-#include "Source.h"
+#include "cosmosim/Simulator.h"
+#include "cosmosim/Source.h"
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,

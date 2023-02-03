@@ -1,10 +1,12 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "Simulator.h"
+#include "cosmosim/Simulator.h"
+
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
-#include <thread>
 #include <symengine/parser.h>
+
+#include <thread>
 #include <fstream>
 
 /* The following is a default implementation for the point mass lens. 

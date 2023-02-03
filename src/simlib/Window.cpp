@@ -29,12 +29,14 @@
  * the `Window` and `Simulator` objects.
  */
 
-#include "Simulator.h"
-#include "Window.h"
+#include "cosmosim/Simulator.h"
+#include "cosmosim/Window.h"
+
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
-#include <thread>
 #include <symengine/parser.h>
+
+#include <thread>
 #include <fstream>
 
 Window::Window() :

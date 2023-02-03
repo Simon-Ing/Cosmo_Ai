@@ -4,6 +4,9 @@
 #Jetbrains IDE files
 .idea
 
+# Generated python modules
+CosmoSimPy.*.pyd
+
 # Compiled Object files
 *.slo
 *.lo
@@ -403,8 +406,7 @@ FodyWeavers.xsd
 /cosmo_ai/Scripts
 /cosmo_ai/pyvenv.cfg
 /cosmo_ai/Lib/site-packages
-/cmake-build-debug/
-/cmake-build-release/
+/cmake-build-*/
 /venv/
 /.idea/CosmoAi.iml
 /Python/test/

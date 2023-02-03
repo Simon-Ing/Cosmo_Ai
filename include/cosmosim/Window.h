@@ -3,6 +3,8 @@
 #ifndef COSMOSIM_WINDOW_H
 #define COSMOSIM_WINDOW_H
 
+#include "Simulator.h"
+
 class Window {
 private:
     int mode, srcmode;

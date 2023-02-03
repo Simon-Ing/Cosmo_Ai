@@ -2,7 +2,8 @@
 
 /* The SphericalSource class implements a a Spherical, Gaussian mass, */
 
-#include "Source.h"
+#include "cosmosim/Source.h"
+
 #include <thread>
 
 SphericalSource::SphericalSource(int sz,double sig) :
