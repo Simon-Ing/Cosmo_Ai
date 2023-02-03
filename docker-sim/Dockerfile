@@ -1,17 +1,18 @@
 FROM  danger89/cmake:4.5
 
 RUN apt-get update
-RUN apt-get install -y libgtk2.0-dev libva-dev libx11-xcb-dev \
+RUN apt-get install -y \
+     libgtk2.0-dev libva-dev \
+     libx11-xcb-dev libvdpau-dev \
+     apt-utils build-essential \
      libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev \
      libxpm-dev libxres-dev libxtst-dev libxvmc-dev \
      libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev \
      libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev \
      libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev \
      libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev \
-     libxcb-util0-dev libvdpau-dev \
-     libxss-dev libxxf86vm-dev \
-     apt-utils \
-     pybind11-dev build-essential
+     libxcb-util0-dev \
+     libxss-dev libxxf86vm-dev 
 
 RUN pip3 install conan 
 RUN conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI

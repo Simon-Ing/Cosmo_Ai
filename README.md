@@ -294,7 +294,7 @@ Docker images have been created to build and run the new python GUI.
 It should be possible to build and run them as follows, assuming a Unix like system.
 
 ```sh
-cd docker-sim && docker build -t dockersim .
+( cd docker-sim && docker build -t dockersim . )
 docker build -t dockergui .
 docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u $(id -u):$(id -g) cosmogui
 ```
