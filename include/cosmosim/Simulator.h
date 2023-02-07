@@ -56,6 +56,7 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
+    void update( cv::Mat );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;

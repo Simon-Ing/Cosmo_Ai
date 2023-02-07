@@ -85,11 +85,13 @@ cv::Mat LensModel::getSecondary() {
    return imgDistorted ; }
 
 void LensModel::update() {
+    update( getApparent() ) ;
+}
+
+void LensModel::update( cv::Mat imgApparent ) {
 
     auto startTime = std::chrono::system_clock::now();
     
-    cv::Mat imgApparent = getApparent() ;
-
     std::cout << "update() x=" << actualX << "; y= " << actualY 
               << "; R=" << actualAbs << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
