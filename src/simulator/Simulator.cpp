@@ -1,6 +1,6 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "cosmosim/Window.h"
+#include "Window.h"
 
 
 int main()

@@ -9,7 +9,6 @@ set(SimLibFiles
         simlib/SphereLens.cpp
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
-        simlib/Window.cpp
         )
 
 add_library(SimLib ${SimLibFiles})
@@ -34,7 +33,7 @@ endif()
 
 if (COSMOSIM_BUILD_SIMULATOR)
     target_link_libraries(Simulator PRIVATE SimLib)
-    add_executable(Simulator simulator/Simulator.cpp)
+    add_executable(Simulator simulator/Simulator.cpp simulator/Window.cpp)
 endif()
 
 
