@@ -15,9 +15,16 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         compiler_version: [9]
+        python-version: [3.10]
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
 
       - name: Install prerequisites
         run: |
@@ -58,6 +65,7 @@ jobs:
         run: |
           cmake . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
+
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
@@ -72,9 +80,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-2019]
+        python-version: [3.10]
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
 
       - name: Install prerequisites
         run: |
@@ -86,6 +101,7 @@ jobs:
         run: |
           cmake . -A x64 -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
+
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
@@ -93,24 +109,37 @@ jobs:
           path: build/lib/CosmoSimPy.*.pyd
 
 
-  conan-on-darwin:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-11]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install prerequisites
-        run: |
-          pip3 install conan
-      - name: Run conan
-        run: |
-          conan install . -s build_type=Release -if build -b missing
-      - name: Configure and build
-        run: |
-          cmake . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
+#  conan-on-darwin:
+#
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [macos-11]
+#        python-version: [3.10]
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Setup Python 3.x
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#          architecture: 'x64'
+#
+#      - name: Install prerequisites
+#        run: |
+#          pip3 install conan
+#      - name: Run conan
+#        run: |
+#          conan install . -s build_type=Release -if build -b missing
+#      - name: Configure and build
+#        run: |
+#          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+#          cmake --build build
+#
+#      - name: Archive Python link library
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: python-link-library
+#          path: build/lib/CosmoSimPy.*
