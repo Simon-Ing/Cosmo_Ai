@@ -16,8 +16,10 @@ import pandas as pd
 
 def setParameters(sim,row):
     if row.get("y",None) != None:
+        print( "XY", row["x"], row["y"] )
         sim.setXY( row["x"], row["y"] )
     elif row.get("phi",None) != None:
+        print( "Polar", row["x"], row["phi"] )
         sim.setPolar( row["x"], row["phi"] )
     if row.get("source",None) != None:
         sim.setSourceMode( row["source"] )

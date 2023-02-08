@@ -23,7 +23,16 @@ SphereLens::SphereLens(bool centred) :
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
-
+SphereLens::SphereLens(std::string fn, bool centred) :
+   filename(fn),
+   LensModel::LensModel(centred)
+{ 
+    std::cout << "Instantiating SphereLens ... \n" ;
+    initAlphasBetas();
+}
+void SphereLens::setFile( std::string fn ) {
+    filename = fn ;
+} 
 void SphereLens::initAlphasBetas() {
 
     auto x = SymEngine::symbol("x");
@@ -31,7 +40,6 @@ void SphereLens::initAlphasBetas() {
     auto g = SymEngine::symbol("g");
     auto c = SymEngine::symbol("c");
 
-    std::string filename("50.txt");
     std::ifstream input;
     input.open(filename);
 

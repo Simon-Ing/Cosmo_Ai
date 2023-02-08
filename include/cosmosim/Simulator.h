@@ -114,6 +114,8 @@ class SphereLens : public LensModel {
   public:
     SphereLens();
     SphereLens(bool);
+    SphereLens(std::string,bool);
+    void setFile(std::string) ;
   protected:
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
@@ -121,6 +123,7 @@ class SphereLens : public LensModel {
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
   private:
+    std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
 

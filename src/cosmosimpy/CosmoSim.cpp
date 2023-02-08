@@ -8,7 +8,8 @@
 namespace py = pybind11;
 
 CosmoSim::CosmoSim() {
-   std::cout << "CosmoSim Constructor does nothing\n" ;
+   std::cout << "CosmoSim Constructor\n" ;
+   rPos = -1 ;
 }
 
 void helloworld() {
@@ -29,10 +30,13 @@ void CosmoSim::diagnostics() {
    return ;
 }
 
+void CosmoSim::setFile( std::string fn ) {
+    filename = fn ;
+} 
 
 void CosmoSim::setCHI(int c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
-void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; }
+void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
@@ -46,7 +50,7 @@ void CosmoSim::initLens() {
    switch ( lensmode ) {
        case CSIM_LENS_SPHERE:
          std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
-         sim = new SphereLens(centred) ;
+         sim = new SphereLens(filename,centred) ;
          break ;
        case CSIM_LENS_PM_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" << lensmode << ")\n" ;
@@ -108,7 +112,11 @@ bool CosmoSim::runSim() {
    sim->setBGColour( bgcolour ) ;
    sim->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
-   sim->setXY( xPos, yPos, chi, einsteinR ) ;
+   if ( rPos < 0 ) {
+      sim->setXY( xPos, yPos, chi, einsteinR ) ;
+   } else {
+      sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
+   }
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
    sim->update() ;
@@ -198,6 +206,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setImageSize", &CosmoSim::setImageSize)
         .def("setResolution", &CosmoSim::setResolution)
         .def("setBGColour", &CosmoSim::setBGColour)
+        .def("setFile", &CosmoSim::setFile)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

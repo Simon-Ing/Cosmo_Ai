@@ -3,6 +3,7 @@
 import CosmoSim.CosmoSimPy as cs
 import numpy as np
 import threading as th
+import os
 
 LensSpec = cs.LensSpec
 SourceSpec = cs.SourceSpec
@@ -45,6 +46,8 @@ class CosmoSim(cs.CosmoSim):
     """
     def __init__(self,*a,**kw):
         super().__init__(*a,**kw)
+        dir = os.path.dirname(os.path.abspath(__file__))
+        super().setFile(  os.path.join( dir, "50.txt" ) )
         self._continue = True
         self.updateEvent = th.Event()
         self.simEvent = th.Event()

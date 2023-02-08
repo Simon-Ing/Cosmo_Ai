@@ -32,10 +32,12 @@ private:
 
     void initSource() ;
     void initLens() ;
+    std::string filename = "50.txt" ;
 
 public:
     CosmoSim();
 
+    void setFile(std::string) ;
     void setXY(double, double) ;
     void setPolar(int, int) ;
     void setCHI(int);
