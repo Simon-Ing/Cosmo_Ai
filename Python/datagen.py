@@ -49,15 +49,15 @@ def makeSingle(sim,args,name=None):
     if args.reflines:
         drawAxes(im)
 
-    fn = os.path.join(args.directory,"image-" + name + ".png" ) 
+    fn = os.path.join(args.directory,"image-" + str(name) + ".png" ) 
     cv.imwrite(fn,im)
 
     if args.actual:
-       fn = os.path.join(args.directory,"actual-" + name + ".png" ) 
+       fn = os.path.join(args.directory,"actual-" + str(name) + ".png" ) 
        im = sim.getActualImage( reflines=args.reflines )
        cv.imwrite(fn,im)
     if args.apparent:
-       fn = os.path.join(args.directory,"apparent-" + name + ".png" ) 
+       fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
 
