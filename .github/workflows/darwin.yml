@@ -5,37 +5,37 @@ on: [release, workflow_dispatch]
 
 jobs:
 
-conan-on-darwin:
+  conan-on-darwin:
 
-  runs-on: ${{ matrix.os }}
-  strategy:
-    fail-fast: false
-    matrix:
-      os: [macos-11]
-      python-version: ['3.10']
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-11]
+        python-version: ['3.10']
+  
+    steps:
+      - uses: actions/checkout@v3
 
-  steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup Python 3.x
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-        architecture: 'x64'
-
-    - name: Install prerequisites
-      run: |
-        pip3 install conan
-    - name: Run conan
-      run: |
-        conan install . -s build_type=Release -if build -b missing
-    - name: Configure and build
-      run: |
-        cmake . -B build -DCMAKE_BUILD_TYPE=Release
-        cmake --build build
-
-    - name: Archive Python link library
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-link-library
-        path: build/lib/CosmoSimPy.*
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+  
+      - name: Install prerequisites
+        run: |
+          pip3 install conan
+      - name: Run conan
+        run: |
+          conan install . -s build_type=Release -if build -b missing
+      - name: Configure and build
+        run: |
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+  
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-link-library
+          path: build/lib/CosmoSimPy.*
