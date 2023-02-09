@@ -14,8 +14,16 @@ The intention is to be able to use the synthetic datasets to train
 machine learning models which can in turn be used to map the dark
 matter of the Universe.  This is work in progress.
 
+# Running from Precompiled Distribution
 
-# Build and Run
+1.  Make sure you have Python 3.10 installed.
+2.  Download and unpack `CosmoSimPy.zip` from the latest 
+    [release](https://github.com/CosmoAI-AES/CosmoSim/releases/)
+3.  Run `CosmoSimPy/CosmoGUI.py` in python.  This is the GUI tool.
+4.  The `CosmoSimPy/datagen.py` is the CLI tool and should be run
+    on the command line; see below.
+
+# Building from Source
 
 Provided a full C++ installation is available with cmake and conan,
 the system is built with
