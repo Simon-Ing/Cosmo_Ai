@@ -448,3 +448,5 @@ bin
 # Test
 t
 tt
+/CosmoSimPy
+*.zip
