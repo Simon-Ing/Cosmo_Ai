@@ -2,7 +2,7 @@
 #SBATCH --partition=CPUQ           # Use a CPU
 #SBATCH --account=ie-idi
 #SBATCH --time=8:00:00            # Max wall time
-#SBATCH --nodes=1
+#SBATCH --nodes=24
 #SBATCH -c1
 #SBATCH --job-name="AmmplitudesCosmoSim"    
 #SBATCH --output=amplitudes.out
@@ -26,5 +26,5 @@ module list
 source $HOME/torch-3.9.6/bin/activate
 
 
-time python3 Python/datagen.py --csvfile Datasets/performance.csv
+time python3 Python/Amplitudes_gen.py 200 24
 
