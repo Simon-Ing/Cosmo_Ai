@@ -3,6 +3,11 @@
 """
 Generate the 50.txt file containing expressions for alpha and beta
 for the SIS model in Roulettes.
+
+Usage: `python3 Amplitudes_gen.py [n [nproc]]`
+
+- `n` is the maximum number of terms
+- `nproc` is the number of threads
 """
 
 import multiprocessing as mp
@@ -14,7 +19,14 @@ from sympy import simplify, symbols, sqrt, diff, factor
 # from symengine import diff
 
 
-n = 50#int(sys.argv[1])
+if len(sys.argv) < 2:
+   n = 50
+else:
+   n = int(sys.argv[1])
+if len(sys.argv) < 3:
+   nproc = 50
+else:
+   nproc = int(sys.argv[2])
 
 fn = str(n) + '.txt'
 
@@ -66,7 +78,7 @@ def main():
     #must use Manager queue here, or will not work
     manager = mp.Manager()
     q = manager.Queue()
-    with mp.Pool(processes=n) as pool:
+    with mp.Pool(processes=nproc) as pool:
 
         # use a separate process to write to file to avoid ksgjladsfkghldøf
         pool.apply_async(listener, (q,))
@@ -103,8 +115,11 @@ def main():
 
     #now we are done, kill the listener
     q.put('kill')
+    print( "Issued kill signal" )
     pool.close()
+    print( "Pool closed" )
     pool.join()
+    print( "Pool joined" )
 
     print(time.time() - start)
 
