@@ -1,9 +1,10 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ           # Use a CPU
 #SBATCH --account=ie-idi
-#SBATCH --time=8:00:00            # Max wall time
-#SBATCH --nodes=24
-#SBATCH -c1
+#SBATCH --time=2:00:00            # Max wall time
+#SBATCH --mem=128000
+#SBATCH --nodes=1
+#SBATCH -c24
 #SBATCH --job-name="AmmplitudesCosmoSim"    
 #SBATCH --output=amplitudes.out
 #SBATCH --mail-user=hasc@ntnu.no
