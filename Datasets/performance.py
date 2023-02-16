@@ -7,7 +7,7 @@ import argparse
 
 
 
-def getline(idx,chi=0,nterms=16):
+def getline(idx,chi=0):
     if 0 == chi:
         chi = randint(30,70)
 
@@ -30,10 +30,10 @@ def getline(idx,chi=0,nterms=16):
     srcmode = "s"
     lensmode = "s"
     return f'"{idx:06}",image-{idx:06}.png,{srcmode},{lensmode},{chi},' \
-         + f'{R},{phi},{einsteinR},{sigma},{sigma2},{theta},{nterms},{x},{y}'
+         + f'{R},{phi},{einsteinR},{sigma},{sigma2},{theta},{x},{y}'
 
 header = ( "index,filename,source,lens,chi,"
-         + "R,phi,einsteinR,sigma,sigma2,theta,nterms,x,y\n"
+         + "R,phi,einsteinR,sigma,sigma2,theta,x,y\n"
          )
 
 def main():
@@ -48,13 +48,7 @@ def main():
             help="First image number to generate")
     parser.add_argument('-n', '--count',
             help="Number of images image to generate")
-    parser.add_argument('-m', '--nterms',
-            help="Truncation point")
     args = parser.parse_args()
-    if args.nterms:
-        nterms = int(args.nterms)
-    else:
-        nterms = 50
     if args.start:
         idxstart = int(args.start)
     else:
@@ -69,7 +63,7 @@ def main():
     with open(fn, 'w') as f:
       f.write(header)
       for i in range(idxstart,idxend):
-        l = getline(i+1,chi=50,nterms=nterms)
+        l = getline(i+1,chi=50)
         f.write(l)
         f.write("\n")
 
