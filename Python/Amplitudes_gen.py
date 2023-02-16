@@ -19,20 +19,12 @@ from sympy import simplify, symbols, sqrt, diff, factor
 # from symengine import diff
 
 
-if len(sys.argv) < 2:
-   n = 50
-else:
-   n = int(sys.argv[1])
-if len(sys.argv) < 3:
-   nproc = 50
-else:
-   nproc = int(sys.argv[2])
 
-fn = str(n) + '.txt'
-
-def listener(q):
+def listener(fn,q):
     '''listens for messages on the q, writes to file. '''
+    print( "Listener stars", fn ) 
     with open(fn, 'w') as f:
+        print( "Opened file", fn ) 
         while 1:
             # print(f'Jobs running: {}')
             m = q.get()
@@ -42,6 +34,8 @@ def listener(q):
                 break
             f.write(str(m) + '\n')
             f.flush()
+        print( "File writer terminated", fn ) 
+    print( "hit_except", hit_except )
 
 
 def simpl(x):
@@ -68,6 +62,17 @@ def main():
 
     global num_processes
 
+    if len(sys.argv) < 2:
+       n = 50
+    else:
+       n = int(sys.argv[1])
+    if len(sys.argv) < 3:
+       nproc = n
+    else:
+       nproc = int(sys.argv[2])
+    
+    fn = str(n) + '.txt'
+
     start = time.time()
 
 
@@ -81,7 +86,7 @@ def main():
     with mp.Pool(processes=nproc) as pool:
 
         # use a separate process to write to file to avoid ksgjladsfkghldøf
-        pool.apply_async(listener, (q,))
+        pool.apply_async(listener, (fn,q,))
 
         jobs = []
         for m in range(0, n+1):
@@ -106,8 +111,6 @@ def main():
 
             job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, g, q))
             jobs.append(job)
-
-
 
     # collect results from the workers through the pool result queue
         for job in jobs:

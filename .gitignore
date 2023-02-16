@@ -450,3 +450,5 @@ t
 tt
 /CosmoSimPy
 *.zip
+[0-9]*.txt
+*.slurm.[eo]*

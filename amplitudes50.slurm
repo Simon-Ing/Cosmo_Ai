@@ -1,11 +1,11 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ           # Use a CPU
 #SBATCH --account=ie-idi
-#SBATCH --time=8:00:00            # Max wall time
+#SBATCH --time=1:00:00            # Max wall time
 #SBATCH --mem=256000
 #SBATCH --nodes=1
-#SBATCH -c24
-#SBATCH --job-name="AmmplitudesCosmoSim"    
+#SBATCH -c20
+#SBATCH --job-name="Ammplitudes50CosmoSim"    
 #SBATCH --output=amplitudes.out
 #SBATCH --mail-user=hasc@ntnu.no
 #SBATCH --mail-type=ALL
@@ -27,5 +27,5 @@ module list
 source $HOME/torch-3.9.6/bin/activate
 
 
-time python3 Python/Amplitudes_gen.py 100 24
+time python3 Python/Amplitudes_gen.py 50 20
 
