@@ -43,10 +43,10 @@ protected:
     cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
-    std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> alphas_l;
-    std::array<std::array<LambdaRealDoubleVisitor, 52>, 51> betas_l;
-    std::array<std::array<double, 52>, 51> alphas_val;
-    std::array<std::array<double, 52>, 51> betas_val;
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
+    std::array<std::array<double, 202>, 201> alphas_val;
+    std::array<std::array<double, 202>, 201> betas_val;
 
 private:
     bool centredMode = false ;
