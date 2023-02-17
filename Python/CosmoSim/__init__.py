@@ -44,10 +44,13 @@ class CosmoSim(cs.CosmoSim):
     it wraps functions returning images, to convert the data to 
     numpy arrays.
     """
-    def __init__(self,*a,**kw):
+    def __init__(self,*a,fn=None,**kw):
         super().__init__(*a,**kw)
         dir = os.path.dirname(os.path.abspath(__file__))
-        super().setFile(  os.path.join( dir, "50.txt" ) )
+        if fn == None:
+            super().setFile( os.path.join( dir, "50.txt" ) )
+        else:
+            super().setFile( fn )
         self._continue = True
         self.updateEvent = th.Event()
         self.simEvent = th.Event()

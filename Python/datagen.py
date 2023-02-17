@@ -101,6 +101,7 @@ if __name__ == "__main__":
     parser.add_argument('-D', '--directory',default="./",
             help="directory path (for output files)")
 
+    parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
     parser.add_argument('-i', '--csvfile',
@@ -108,7 +109,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    sim = CosmoSim()
+    if args.amplitudes:
+       sim = CosmoSim(fn=args.amplitudes)
+    else:
+       sim = CosmoSim()
     if args.phi:
         sim.setPolar( int(args.x), int(args.phi) )
     else:
