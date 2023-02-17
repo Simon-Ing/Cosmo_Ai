@@ -109,10 +109,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    print( "Instantiate Simulator ... " )
     if args.amplitudes:
        sim = CosmoSim(fn=args.amplitudes)
     else:
        sim = CosmoSim()
+    print( "Done" )
     if args.phi:
         sim.setPolar( int(args.x), int(args.phi) )
     else:
