@@ -1,8 +1,8 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ           # Use a CPU
-#SBATCH --account=ie-idi
+#SBATCH --account=share-ie-idi
 #SBATCH --time=1:00:00            # Max wall time
-#SBATCH --mem=256000
+#SBATCH --mem=128000
 #SBATCH --nodes=1
 #SBATCH -c12
 #SBATCH --job-name="performance-Cosmo"    
@@ -24,6 +24,8 @@ echo "Array Task ID:     $SLURM_ARRAY_TASK_ID"
 
 idx=`printf "%02i" $SLURM_ARRAY_TASK_ID`
 echo "Index:             $idx"
+
+cat /proc/cpuinfo
 
 module purge
 # module load SciPy-bundle/2021.05-foss-2021a
