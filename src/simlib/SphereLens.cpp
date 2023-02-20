@@ -67,15 +67,14 @@ void SphereLens::initAlphasBetas() {
 }
 
 void SphereLens::calculateAlphaBeta() {
-    double GAMMA = einsteinR/2.0;
     std::cout << "SphereLens calculateAlphaBeta\n" ;
 
-    // calculate all amplitudes for given X, Y, GAMMA
+    // calculate all amplitudes for given X, Y, einsteinR
     // This is done here to before the code is parallellised
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
-            alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, GAMMA});
-            betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, GAMMA});
+            alphas_val[m][s] = alphas_l[m][s].call({apparentAbs*CHI, 0, einsteinR});
+            betas_val[m][s] = betas_l[m][s].call({apparentAbs*CHI, 0, einsteinR});
         }
     }
 }
