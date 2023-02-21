@@ -8,16 +8,6 @@ import os
 LensSpec = cs.LensSpec
 SourceSpec = cs.SourceSpec
 
-lensValues = {
-        "Point Mass (exact)" : LensSpec.PointMass,
-        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (roulettes)" : LensSpec.SIS,
-        }
-sourceValues = {
-        "Spherical" : SourceSpec.Sphere,
-        "Ellipsoid" : SourceSpec.Ellipse,
-        "Triangle" : SourceSpec.Triangle }
-
 lensDict = {
         "Point Mass (exact)" : LensSpec.PointMass,
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
@@ -38,11 +28,17 @@ sourceDict = {
 
 maxmlist = [ 50, 100, 200 ]
 def getFileName(maxm):
+    """
+    Get the filename for the amplitudes files.
+    The argument `maxm` is the maximum number of terms (nterms) to be
+    used in the simulator.
+    """
+    dir = os.path.dirname(os.path.abspath(__file__))
     for m in maxmlist:
         m0 = m
-        if maxm < m:
+        if maxm <= m:
             return( os.path.join( dir, f"{m}.txt" ) )
-    raise Exception, f"Cannot support m > {m0}."
+    raise Exception( f"Cannot support m > {m0}." )
     
 
 class CosmoSim(cs.CosmoSim):
@@ -54,7 +50,6 @@ class CosmoSim(cs.CosmoSim):
     """
     def __init__(self,*a,maxm=50,fn=None,**kw):
         super().__init__(*a,**kw)
-        dir = os.path.dirname(os.path.abspath(__file__))
         if fn == None:
             super().setFile( getFileName( maxm ) )
         else:

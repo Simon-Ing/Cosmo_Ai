@@ -113,7 +113,7 @@ if __name__ == "__main__":
     if args.amplitudes:
        sim = CosmoSim(fn=args.amplitudes)
     elif args.nterms:
-       sim = CosmoSim(maxm=args.nterms)
+       sim = CosmoSim(maxm=int(args.nterms))
     else:
        sim = CosmoSim()
     print( "Done" )
