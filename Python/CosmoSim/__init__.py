@@ -36,6 +36,14 @@ sourceDict = {
         }
 
 
+maxmlist = [ 50, 100, 200 ]
+def getFileName(maxm):
+    for m in maxmlist:
+        m0 = m
+        if maxm < m:
+            return( os.path.join( dir, f"{m}.txt" ) )
+    raise Exception, f"Cannot support m > {m0}."
+    
 
 class CosmoSim(cs.CosmoSim):
     """
@@ -44,11 +52,11 @@ class CosmoSim(cs.CosmoSim):
     it wraps functions returning images, to convert the data to 
     numpy arrays.
     """
-    def __init__(self,*a,fn=None,**kw):
+    def __init__(self,*a,maxm=50,fn=None,**kw):
         super().__init__(*a,**kw)
         dir = os.path.dirname(os.path.abspath(__file__))
         if fn == None:
-            super().setFile( os.path.join( dir, "50.txt" ) )
+            super().setFile( getFileName( maxm ) )
         else:
             super().setFile( fn )
         self._continue = True

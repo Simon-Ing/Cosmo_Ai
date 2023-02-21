@@ -112,6 +112,8 @@ if __name__ == "__main__":
     print( "Instantiate Simulator ... " )
     if args.amplitudes:
        sim = CosmoSim(fn=args.amplitudes)
+    elif args.nterms:
+       sim = CosmoSim(maxm=args.nterms)
     else:
        sim = CosmoSim()
     print( "Done" )
