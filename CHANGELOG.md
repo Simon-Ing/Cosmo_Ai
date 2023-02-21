@@ -6,6 +6,8 @@
 
 ### Added
 
+- Support for more than 50 terms (nterms>50).
+
 ### Changed
 
 ### Fixed
