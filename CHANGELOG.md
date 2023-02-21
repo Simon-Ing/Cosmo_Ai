@@ -10,7 +10,12 @@
 
 ### Changed
 
+- Removed the superfluous variable GAMMA (= einsteinR/2) in C++;
+  the variable g in the amplitudes is now equal to einsteinR.
+
 ### Fixed
+
+- More comments in the amplitudes.py script (previously Amplitudes_gen.py)
 
 ## [2.0.1] - 2023-02-08
 
