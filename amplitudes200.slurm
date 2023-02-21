@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ           # Use a CPU
 #SBATCH --account=ie-idi
-#SBATCH --time=12:00:00            # Max wall time
+#SBATCH --time=32:00:00            # Max wall time
 #SBATCH --mem=256000
 #SBATCH --nodes=1
 #SBATCH -c48
@@ -27,5 +27,5 @@ module list
 source $HOME/torch-3.9.6/bin/activate
 
 
-time python3 Python/Amplitudes_gen.py 200 48
+time python3 Python/amplitudes.py 200 48
 

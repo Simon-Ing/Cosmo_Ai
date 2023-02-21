@@ -2,7 +2,7 @@
 #SBATCH --partition=CPUQ           # Use a CPU
 #SBATCH --account=share-ie-idi
 #SBATCH --time=1:00:00            # Max wall time
-#SBATCH --mem=128000
+#SBATCH --mem=512000
 #SBATCH --nodes=1
 #SBATCH -c12
 #SBATCH --job-name="performance-Cosmo"    
@@ -41,5 +41,5 @@ source $HOME/torch-3.9.6/bin/activate
 ## PD=$HOME/git/cosmoai/CosmoSim/Scripts/
 ## export PATH=$BD:$PD:$PATH
 
-time python3 Python/datagen.py --csvfile Datasets/performance.csv  --mask --nterms 200 --amplitudes Python/CosmoSim/200.txt
+time python3 Python/datagen.py --csvfile Datasets/performance.csv  --mask --nterms 50 --amplitudes Python/CosmoSim/100.txt
 

@@ -27,5 +27,5 @@ module list
 source $HOME/torch-3.9.6/bin/activate
 
 
-time python3 Python/Amplitudes_gen.py 50 20
+time python3 Python/amplitudes.py 50 20
 
