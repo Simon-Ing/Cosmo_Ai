@@ -11,6 +11,7 @@
 
 double factorial_(unsigned int n);
 
+/*
 RoulettePMCLens::RoulettePMCLens() :
    PixMapLens::PixMapLens()
 { 
@@ -33,6 +34,7 @@ RoulettePMCLens::RoulettePMCLens(std::string fn, bool centred) :
 void RoulettePMCLens::setFile( std::string fn ) {
     filename = fn ;
 } 
+*/
 void RoulettePMCLens::initAlphasBetas() {
 
     auto x = SymEngine::symbol("x");

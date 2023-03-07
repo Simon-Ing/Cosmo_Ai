@@ -34,10 +34,12 @@ protected:
 
 class RoulettePMCLens : public PixMapLens { 
 public:
+    using PixMapLens::PixMapLens ;
+    /*
     RoulettePMCLens();
     RoulettePMCLens(bool);
     RoulettePMCLens(std::string,bool);
-    void setFile(std::string) ;
+    */
 protected:
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
@@ -45,7 +47,6 @@ protected:
     virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 private:
-    std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
 
