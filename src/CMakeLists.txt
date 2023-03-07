@@ -9,6 +9,9 @@ set(SimLibFiles
         simlib/SphereLens.cpp
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
+        simlib/PixMapLens.cpp
+        simlib/PMCLens.cpp
+        simlib/RoulettePMCLens.cpp
         )
 
 add_library(SimLib ${SimLibFiles})
