@@ -4,6 +4,8 @@
 
 ## [Unreleased] - yyyy-mm-dd
 
+## [2.0.2] - 2023-02-22
+
 ### Added
 
 - Support for more than 50 terms (nterms>50).
