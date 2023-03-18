@@ -18,9 +18,9 @@ def comparefiles(f1,f2):
     im1 = cv.imread(f1).astype(np.float64)
     im2 = cv.imread(f2).astype(np.float64)
     diff = im1 - im2
-    print( "Max diff ", np.max(diff) )
-    print( "Min diff ", np.min(diff) )
-    print( "Euclidean distance", cv.norm(diff) )
+    print( f"{f1}: "
+         + f"Pixel diff: max={np.max(diff)}/min={np.min(diff)}; " 
+         + f"Euclidean distance {cv.norm(diff)}" )
 
 
 if __name__ == "__main__":
