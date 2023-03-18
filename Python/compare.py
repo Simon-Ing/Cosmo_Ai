@@ -1,0 +1,46 @@
+#! /usr/bin/env python3
+
+"""
+Take an image and return an image with only the 
+largest connected component.
+
+This is depecrated as the the new makeimage.py script includes
+the post-processing.
+"""
+
+import cv2 as cv
+import sys
+import os
+import numpy as np
+import argparse
+
+def comparefiles(f1,f2):
+    im1 = cm.imread(f1).astype(np.float64)
+    im2 = cm.imread(f2).astype(np.float64)
+    diff = im1 - im2
+    print( "Max diff ", np.max(diff) )
+    print( "Min diff ", np.min(diff) )
+    print( "Euclidean distance", cv.norm(diff) )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+          prog = 'CosmoSim compare',
+          description = 'Compare images for debugging purposes',
+          epilog = '')
+
+    parser.add_argument('dir1')
+    parser.add_argument('dir2')
+    args = parser.parse_args()
+
+    for fn in os.listdir(dir1):
+        f1 = os.path.join(dir1,filename)
+        if not os.path.isfile(f1): 
+            print( "Not a file: ", f1 )
+            break
+        f2 = os.path.join(dir2,filename)
+        if not os.path.isfile(f2): 
+            print( "Not a file: ", f2 )
+            break
+        comparefiles(f1,f2)
+
