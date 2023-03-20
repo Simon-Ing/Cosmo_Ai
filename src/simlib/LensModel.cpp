@@ -5,12 +5,7 @@
 
 #include "cosmosim/Simulator.h"
 
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
-#include <symengine/parser.h>
-
 #include <thread>
-#include <fstream>
 
 #define DEBUG 0
 

@@ -2,13 +2,6 @@
 
 #include "cosmosim/Simulator.h"
 
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
-#include <symengine/parser.h>
-
-#include <thread>
-#include <fstream>
-
 /* The following is a default implementation for the point mass lens. 
  * It would be better to make the class abstract and move this definition to the 
  * subclass. */
