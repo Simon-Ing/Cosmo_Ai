@@ -48,6 +48,13 @@ class SphereLens : public RouletteLens {
     std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
+class RouletteSISLens : public SphereLens { 
+  public:
+    RouletteSISLens();
+    RouletteSISLens(bool);
+    RouletteSISLens(std::string,bool);
+};
+
 
 class SampledLens : public RouletteLens, public LensMap { 
 public:

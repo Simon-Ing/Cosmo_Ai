@@ -3,6 +3,7 @@ set(SimLibFiles
         simlib/LensMap.cpp
         simlib/SampledLens.cpp
         simlib/SampledSISLens.cpp
+        simlib/RouletteSISLens.cpp
         simlib/PMCLens.cpp
         simlib/RouletteLens.cpp
         simlib/EllipsoidSource.cpp
