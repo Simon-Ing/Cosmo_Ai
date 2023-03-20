@@ -12,7 +12,7 @@ cv::Point2d getOrigin( cv::Point R, double phi, double x0, double y0 ) {
 }
 void RouletteLens::maskImage( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point2d origo = getOrigin( cv::Point2d( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Point2d origo = getOrigin( getCentre(), phi, imgD.cols()/2, imgD.rows()/2 ) ;
       cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
       cv::circle( mask, origo, getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
@@ -20,7 +20,7 @@ void RouletteLens::maskImage( cv::InputOutputArray imgD ) {
 }
 void RouletteLens::markMask( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point2d origo = getOrigin( cv::Point2d( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Point2d origo = getOrigin( getCentre(), phi, imgD.cols()/2, imgD.rows()/2 ) ;
       cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
