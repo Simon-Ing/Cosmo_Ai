@@ -6,6 +6,10 @@
 
 ## [2.0.3] - 2023-03-20
 
+### Added
+
+- Test framework to compare output images.
+
 ### Fixed
 
 - Integer division in c_p/c_m in SphereLens changed to floating point. 
