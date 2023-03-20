@@ -13,7 +13,7 @@
 
 class LensModel {
 private:
-    cv::Point2f eta ;  // Actual position in the source plane
+    cv::Point2d eta ;  // Actual position in the source plane
 protected:
     double CHI;
     Source *source ;
@@ -22,8 +22,7 @@ protected:
 
     int bgcolour = 0;
 
-    cv::Point2f nu ;   // Apparent position in the source plane
-    double actualAbs{};
+    cv::Point2d nu ;   // Apparent position in the source plane
     double phi{};
     double apparentAbs{};
     double apparentAbs2{};
@@ -52,10 +51,10 @@ public:
     void setBGColour( int ) ;
 
     virtual double getNuAbs() const ;
-    virtual cv::Point2f getNu() const ;
+    virtual cv::Point2d getNu() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
-    cv::Point2f getEta() const ;
+    cv::Point2d getEta() const ;
 
 
     void updateXY(double, double, double, double) ;
@@ -82,7 +81,7 @@ public:
 
 protected:
     virtual void calculateAlphaBeta() ;
-    virtual cv::Point2f getDistortedPos(double r, double theta) const = 0 ;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 private:
@@ -94,7 +93,7 @@ class PointMassLens : public LensModel {
 public:
     using LensModel::LensModel ;
 protected:
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
 

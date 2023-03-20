@@ -41,12 +41,12 @@ cv::Mat LensModel::getActual() {
      double y0 = imgApparent.rows/2 ;
 
      cv::Point2f srcTri[3], dstTri[3];
-     srcTri[0] = cv::Point2f( x0, y0 );
-     dstTri[0] = cv::Point2f( x0+eta.x, y0-eta.y );
-     srcTri[1] = cv::Point2f( x0-getEtaAbs(), y0 );
-     dstTri[1] = cv::Point2f( x0, y0 );
-     srcTri[2] = cv::Point2f( x0-getEtaAbs(), y0-getEtaAbs() );
-     dstTri[2] = cv::Point2f( x0-eta.y, y0-eta.x );
+     srcTri[0] = cv::Point2d( x0, y0 );
+     dstTri[0] = cv::Point2d( x0+eta.x, y0-eta.y );
+     srcTri[1] = cv::Point2d( x0-getEtaAbs(), y0 );
+     dstTri[1] = cv::Point2d( x0, y0 );
+     srcTri[2] = cv::Point2d( x0-getEtaAbs(), y0-getEtaAbs() );
+     dstTri[2] = cv::Point2d( x0-eta.y, y0-eta.x );
      cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
      std::cout << "getActual() (x,y)=(" << eta.x << "," << eta.y << ")\n" 
@@ -154,7 +154,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
         for (int col = 0; col < dst.cols; col++) {
 
             int row_, col_;  // pixel co-ordinates in the apparent image
-            cv::Point2f pos ;
+            cv::Point2d pos ;
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
@@ -226,11 +226,10 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
     // Actual position in source plane
-    eta = cv::Point2f( X, Y ) ;
+    eta = cv::Point2d( X, Y ) ;
 
     // Calculate Polar Co-ordinates
-    actualAbs = sqrt(eta.x * eta.x + Y * Y );
-    phi = atan2(Y, eta.x); // Angle relative to x-axis
+    phi = atan2(eta.y, eta.x); // Angle relative to x-axis
 
     std::cout << "[setXY] eta.y=" << eta.y 
               << "; actualY=" << Y 
@@ -252,11 +251,10 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
 
-    actualAbs = R ;
     phi = PI*theta/180 ;
 
     // Actual position in source plane
-    eta = cv::Point2f( R*cos(phi), R*sin(phi) ) ;
+    eta = cv::Point2d( R*cos(phi), R*sin(phi) ) ;
 
     std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
@@ -278,9 +276,9 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 double LensModel::getCentre( ) {
   return centredMode ? tentativeCentre : apparentAbs ;
 }
-cv::Point2f LensModel::getNu() const { return nu ; }
+cv::Point2d LensModel::getNu() const { return nu ; }
 double LensModel::getNuAbs() const { return apparentAbs ; }
-cv::Point2f LensModel::getEta() const {
+cv::Point2d LensModel::getEta() const {
    return eta ;
 }
 double LensModel::getEtaSquare() const {

@@ -4,15 +4,15 @@
 
 double factorial_(unsigned int n);
 
-cv::Point getOrigin( cv::Point R, double phi, double x0, double y0 ) {
+cv::Point2d getOrigin( cv::Point R, double phi, double x0, double y0 ) {
       double c = cos(phi), s = R.x*sin(phi) ;
       double x = x0 + R.x*c - R.y*s,
              y = y0 - (R.x*s + R.y*c) ;
-      return cv::Point( x, y ) ;
+      return cv::Point2d( x, y ) ;
 }
 void RouletteLens::maskImage( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point origo = getOrigin( cv::Point2f( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Point2d origo = getOrigin( cv::Point2d( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
       cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
       cv::circle( mask, origo, getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
@@ -20,14 +20,14 @@ void RouletteLens::maskImage( cv::InputOutputArray imgD ) {
 }
 void RouletteLens::markMask( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point origo = getOrigin( cv::Point2f( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Point2d origo = getOrigin( cv::Point2d( getCentre(), 0 ), phi, imgD.cols()/2, imgD.rows()/2 ) ;
       cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
 
 // Calculate the main formula for the SIS model
-cv::Point2f RouletteLens::getDistortedPos(double r, double theta) const {
+cv::Point2d RouletteLens::getDistortedPos(double r, double theta) const {
     double nu1 = r*cos(theta) ;
     double nu2 = r*sin(theta) ;
 
@@ -50,6 +50,6 @@ cv::Point2f RouletteLens::getDistortedPos(double r, double theta) const {
     }
     // The return value should be normalised coordinates in the source plane.
     // We have calculated the coordinates in the lens plane.
-    return cv::Point2f( nu1/CHI, nu2/CHI ) ;
+    return cv::Point2d( nu1/CHI, nu2/CHI ) ;
 }
 double RouletteLens::getMaskRadius() const { return getNuAbs() ; }

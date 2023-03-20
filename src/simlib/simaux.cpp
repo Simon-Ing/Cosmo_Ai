@@ -60,11 +60,11 @@ void gradient(cv::InputArray src, cv::OutputArray outX, cv::OutputArray outY) {
    // Sobel(src, out, ddepth, 0, 1, ksize, scale, delta, BORDER_DEFAULT);
 }
 
-cv::Point2f imageCoordinate( cv::Point2f pt, cv::Mat im ) {
+cv::Point2d imageCoordinate( cv::Point2d pt, cv::Mat im ) {
    int ncols=im.cols, nrows=im.rows ;
-   return cv::Point2f( nrows/2 - pt.y, pt.x + ncols/2 ) ;
+   return cv::Point2d( nrows/2 - pt.y, pt.x + ncols/2 ) ;
 }
-cv::Point2f pointCoordinate( cv::Point2f pt, cv::Mat im ) {
+cv::Point2d pointCoordinate( cv::Point2d pt, cv::Mat im ) {
    int ncols=im.cols, nrows=im.rows ;
-   return cv::Point2f( pt.y - ncols/2, nrows/2 - pt.x ) ;
+   return cv::Point2d( pt.y - ncols/2, nrows/2 - pt.x ) ;
 }

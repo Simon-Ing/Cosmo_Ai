@@ -14,7 +14,7 @@ void SampledLens::calculateAlphaBeta() {
     double C ;
     cv::Mat psi = getPsi() ;
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
-    cv::Point2f ij = imageCoordinate( CHI*getNu(), psi ) ;
+    cv::Point2d ij = imageCoordinate( CHI*getNu(), psi ) ;
 
     std::cout << "[SampledLens] calculateAlphaBeta\n" ;
 
@@ -61,8 +61,8 @@ void SampledLens::calculateAlphaBeta() {
 
 
 void SampledLens::updateApparentAbs( ) {
-   cv::Point2f chieta = CHI*getEta() ;
-   cv::Point2f xi0, xi1 = chieta ;
+   cv::Point2d chieta = CHI*getEta() ;
+   cv::Point2d xi0, xi1 = chieta ;
    cv::Mat psiX, psiY ;
    int cont = 1, count = 0, maxcount = 200 ;
    double dist, dist0=pow(10,12), threshold = 0.02 ;
@@ -93,10 +93,10 @@ void SampledLens::updateApparentAbs( ) {
     * and allow for subpixel accuracy.
    for ( int i=0 ; i < nrows ; ++i ) {
       for ( int j=0 ; j < ncols ; ++j ) {
-         cv::Point2f ij(i,j) ;
-         cv::Point2f xy = pointCoordinate( ij, psi ) ;
+         cv::Point2d ij(i,j) ;
+         cv::Point2d xy = pointCoordinate( ij, psi ) ;
          double x = psiY.at<double>( ij ), y = psiX.at<double>( ij ) ;
-         cv::Point2f xitmp = chieta + cv::Point2f( x, y ) ;
+         cv::Point2d xitmp = chieta + cv::Point2d( x, y ) ;
          dist = cv::norm( cv::Mat(xitmp-xy), cv::NORM_L2 ) ;
          std::cout << "[SampledLens] (i,j)=(" << i << "," << j << ") xitmp= " 
                    << xitmp << "; dist=" << dist << "\n" ;
@@ -113,11 +113,11 @@ void SampledLens::updateApparentAbs( ) {
    /** This block makes a fix-point iteration to find \xi. */
    while ( cont ) {
       xi0 = xi1 ;
-      cv::Point2f ij = imageCoordinate( xi0, psi ) ;
+      cv::Point2d ij = imageCoordinate( xi0, psi ) ;
       double x = psiY.at<double>( ij ), y = psiX.at<double>( ij ) ;
       std::cout << "[SampledLens] Fix pt it'n " << count
            << "; xi0=" << xi0 << "; Delta eta = " << x << ", " << y << "\n" ;
-      xi1 = chieta + cv::Point2f( x, y ) ;
+      xi1 = chieta + cv::Point2d( x, y ) ;
       dist = cv::norm( cv::Mat(xi1-xi0), cv::NORM_L2 ) ;
       if ( dist < threshold ) cont = 0 ;
       if ( ++count > maxcount ) cont = 0 ;
@@ -137,7 +137,7 @@ void SampledLens::updatePsi() { return ; }
 double SampledLens::getNuAbs() const {
    return cv::norm( cv::Mat(nu), cv::NORM_L2 ) ;
 }
-cv::Point2f SampledLens::getNu() const {
+cv::Point2d SampledLens::getNu() const {
    return nu ;
 }
 

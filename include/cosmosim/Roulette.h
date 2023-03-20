@@ -18,7 +18,7 @@ protected:
     std::array<std::array<double, 202>, 201> alphas_val;
     std::array<std::array<double, 202>, 201> betas_val;
 
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual double getMaskRadius() const ;
@@ -28,7 +28,7 @@ class RoulettePMLens : public RouletteLens {
 public:
     using RouletteLens::RouletteLens ;
 protected:
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
 
@@ -54,7 +54,7 @@ public:
     using RouletteLens::RouletteLens ;
     virtual void update( cv::Mat );
     virtual double getNuAbs() const ;
-    virtual cv::Point2f getNu() const ;
+    virtual cv::Point2d getNu() const ;
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;

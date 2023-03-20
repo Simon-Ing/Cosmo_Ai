@@ -81,5 +81,5 @@ void SphereLens::calculateAlphaBeta() {
 
 
 void SphereLens::updateApparentAbs( ) {
-    apparentAbs = actualAbs + einsteinR/CHI ;
+    apparentAbs = getEtaAbs() + einsteinR/CHI ;
 }

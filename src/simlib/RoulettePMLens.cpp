@@ -5,7 +5,7 @@
 /* The following is a default implementation for the point mass lens. 
  * It would be better to make the class abstract and move this definition to the 
  * subclass. */
-cv::Point2f RoulettePMLens::getDistortedPos(double r, double theta) const {
+cv::Point2d RoulettePMLens::getDistortedPos(double r, double theta) const {
     double R = getNuAbs() * CHI ;
 
     double nu1 = r*cos(theta) ;
@@ -21,7 +21,7 @@ cv::Point2f RoulettePMLens::getDistortedPos(double r, double theta) const {
     }
     // The return value should be normalised coordinates in the source plane.
     // We have calculated the coordinates in the lens plane.
-    return cv::Point2f( nu1 / CHI, nu2 / CHI ) ;
+    return cv::Point2d( nu1 / CHI, nu2 / CHI ) ;
 }
 
 void RoulettePMLens::updateApparentAbs( ) {
