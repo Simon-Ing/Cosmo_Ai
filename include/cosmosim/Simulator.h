@@ -12,7 +12,8 @@
 #define PI 3.14159265358979323846
 
 class LensModel {
-
+private:
+    cv::Point2f eta ;  // Actual position in the source plane
 protected:
     double CHI;
     Source *source ;
@@ -21,7 +22,6 @@ protected:
 
     int bgcolour = 0;
 
-    cv::Point2f eta ;  // Actual position in the source plane
     cv::Point2f nu ;   // Apparent position in the source plane
     double actualX{};
     double actualY{};

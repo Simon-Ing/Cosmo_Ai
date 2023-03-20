@@ -30,7 +30,7 @@ LensModel::~LensModel() {
 cv::Mat LensModel::getActual() { 
    cv::Mat imgApparent = getApparent() ;
 
-   if ( actualX == 0 && actualY == 0 ) {
+   if ( eta.x == 0 && actualY == 0 ) {
       return getApparent() ;
    } else {
      cv::Mat imgActual 
@@ -42,14 +42,14 @@ cv::Mat LensModel::getActual() {
 
      cv::Point2f srcTri[3], dstTri[3];
      srcTri[0] = cv::Point2f( x0, y0 );
-     dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
+     dstTri[0] = cv::Point2f( x0+eta.x, y0-actualY );
      srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
      dstTri[1] = cv::Point2f( x0, y0 );
      srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
-     dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
+     dstTri[2] = cv::Point2f( x0-actualY, y0-eta.x );
      cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
-     std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" 
+     std::cout << "getActual() (x,y)=(" << eta.x << "," << actualY << ")\n" 
                << rot << "\n" ;
 
      cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
@@ -87,7 +87,7 @@ void LensModel::update( cv::Mat imgApparent ) {
 
     auto startTime = std::chrono::system_clock::now();
     
-    std::cout << "update() x=" << actualX << "; y= " << actualY 
+    std::cout << "update() x=" << eta.x << "; y= " << actualY 
               << "; R=" << actualAbs << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
 
@@ -106,7 +106,7 @@ void LensModel::update( cv::Mat imgApparent ) {
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
     imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
 
-    std::cout << "update() (x,y) = (" << actualX << ", " << actualY << ")\n" ;
+    std::cout << "update() (x,y) = (" << eta.x << ", " << actualY << ")\n" ;
     std::cout << rot << "\n" ;
 
     // Calculate run time for this function and print diagnostic output
@@ -228,12 +228,13 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     // Actual position in source plane
     actualX = X ;
     actualY = Y ;
+    eta = cv::Point( X, Y ) ;
 
     // Calculate Polar Co-ordinates
-    actualAbs = sqrt(actualX * actualX + actualY * actualY); 
-    phi = atan2(actualY, actualX); // Angle relative to x-axis
+    actualAbs = sqrt(eta.x * eta.x + actualY * actualY); 
+    phi = atan2(actualY, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] Set position x=" << actualX << "; y=" << actualY
+    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << actualY
               << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
     updateApparentAbs() ;
 }
@@ -254,8 +255,9 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     // Actual position in source plane
     actualX = R*cos(phi) ;
     actualY = R*sin(phi) ;
+    eta = cv::Point( R*cos(phi), R*sin(phi) ) ;
 
-    std::cout << "[setPolar] Set position x=" << actualX << "; y=" << actualY
+    std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << actualY
               << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
 
     updateApparentAbs() ;
@@ -283,6 +285,6 @@ double LensModel::getEtaAbs() const {
    return actualAbs ;
 }
 cv::Point2f LensModel::getEta() const {
-   return cv::Point2f( actualAbs, 0 ) ;
+   return eta ;
 }
 double LensModel::getMaskRadius() const { return 1024*1024 ; }
