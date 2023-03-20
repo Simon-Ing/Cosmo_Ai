@@ -19,7 +19,6 @@ protected:
     std::array<std::array<double, 202>, 201> betas_val;
 
     virtual cv::Point2f getDistortedPos(double r, double theta) const;
-
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual double getMaskRadius() const ;
