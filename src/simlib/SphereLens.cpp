@@ -80,7 +80,7 @@ void SphereLens::calculateAlphaBeta() {
 }
 
 // Calculate the main formula for the SIS model
-std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) const {
+cv::Point2f SphereLens::getDistortedPos(double r, double theta) const {
     double nu1 = r*cos(theta) ;
     double nu2 = r*sin(theta) ;
 
@@ -103,9 +103,7 @@ std::pair<double, double> SphereLens::getDistortedPos(double r, double theta) co
     }
     // The return value should be normalised coordinates in the source plane.
     // We have calculated the coordinates in the lens plane.
-    nu1 /= CHI ;
-    nu2 /= CHI ;
-    return {nu1, nu2};
+    return cv::Point2f( nu1/CHI, nu2/CHI ) ;
 }
 
 void SphereLens::updateApparentAbs( ) {

@@ -157,7 +157,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
         for (int col = 0; col < dst.cols; col++) {
 
             int row_, col_;  // pixel co-ordinates in the apparent image
-            std::pair<double, double> pos ;
+            cv::Point2f pos ;
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
@@ -176,8 +176,8 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
               pos = this->getDistortedPos(r, theta);
 
               // Translate to array index in the source plane
-              row_ = (int) round(src.rows / 2.0 - pos.second);
-              col_ = (int) round(src.cols / 2.0 + pos.first);
+              row_ = (int) round(src.rows / 2.0 - pos.y);
+              col_ = (int) round(src.cols / 2.0 + pos.x);
   
               // If (x', y') within source, copy value to imgDistorted
               if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {

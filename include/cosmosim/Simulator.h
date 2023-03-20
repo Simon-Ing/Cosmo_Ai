@@ -85,7 +85,7 @@ public:
 
 protected:
     virtual void calculateAlphaBeta() ;
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0 ;
+    virtual cv::Point2f getDistortedPos(double r, double theta) const = 0 ;
 
 private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
@@ -97,7 +97,7 @@ class PointMassLens : public LensModel {
 public:
     using LensModel::LensModel ;
 protected:
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
 
@@ -105,7 +105,7 @@ class RoulettePMLens : public PointMassLens {
 public:
     using PointMassLens::PointMassLens ;
 protected:
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void updateApparentAbs() ;
 };
@@ -120,7 +120,7 @@ class SphereLens : public LensModel {
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void calculateAlphaBeta();
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
   private:
     std::string filename = "50.txt" ;
