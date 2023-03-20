@@ -106,7 +106,7 @@ image on the right.
 ## Image Generator (CLI)
 
 ```sh
-Python/datagen.sh -S sourcemodel -L lensmodel -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name -R -C
+Python/datagen.py -S sourcemodel -L lensmodel -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name -R -C
 Python/datagen.py --csvfile Datasets/debug.csv --mask -R -C
 Python/datagen.py --help
 ```

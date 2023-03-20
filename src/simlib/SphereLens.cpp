@@ -91,8 +91,8 @@ cv::Point2f SphereLens::getDistortedPos(double r, double theta) const {
         for (int s = (m+1)%2; s <= (m+1); s+=2){
             double alpha = alphas_val[m][s];
             double beta = betas_val[m][s];
-            int c_p = 1 + s/(m + 1);
-            int c_m = 1 - s/(m + 1);
+            double c_p = 1.0 + s/(m + 1.0);
+            double c_m = 1.0 - s/(m + 1.0);
             subTerm1 += 0.5*( (alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p 
                             + (alpha*cos((s+1)*theta) + beta*sin((s+1)*theta))*c_m );
             subTerm2 += 0.5*( (-alpha*sin((s-1)*theta) + beta*cos((s-1)*theta))*c_p 

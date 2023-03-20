@@ -7,12 +7,21 @@
 ### Added
 
 - Support for sampled lens models using the Roulette formalism
-- Test framework to compare output images.
 
 ### Changed
 
 - Cleaned up code to make variable names more consistent with 
   mathematical papers
+
+## [2.0.3] - 2023-03-20
+
+### Added
+
+- Test framework to compare output images.
+
+### Fixed
+
+- Integer division in c_p/c_m in SphereLens changed to floating point. 
 
 ## [2.0.2] - 2023-02-22
 
