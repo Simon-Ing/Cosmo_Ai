@@ -26,8 +26,6 @@ void RouletteLens::markMask( cv::InputOutputArray imgD ) {
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
 
-double RouletteLens::getMaskRadius() const { return getNuAbs() ; }
-
 // Calculate the main formula for the SIS model
 cv::Point2f RouletteLens::getDistortedPos(double r, double theta) const {
     double nu1 = r*cos(theta) ;
@@ -54,3 +52,4 @@ cv::Point2f RouletteLens::getDistortedPos(double r, double theta) const {
     // We have calculated the coordinates in the lens plane.
     return cv::Point2f( nu1/CHI, nu2/CHI ) ;
 }
+double RouletteLens::getMaskRadius() const { return getNuAbs() ; }

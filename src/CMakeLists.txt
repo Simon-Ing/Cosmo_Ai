@@ -1,19 +1,19 @@
 
 set(SimLibFiles
+        simlib/LensMap.cpp
+        simlib/SampledLens.cpp
+        simlib/SampledSISLens.cpp
+        simlib/PMCLens.cpp
+        simlib/RouletteLens.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp
+        simlib/RoulettePMLens.cpp
         simlib/simaux.cpp
         simlib/Source.cpp
         simlib/SphereLens.cpp
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
-        simlib/LensMap.cpp
-        simlib/PMCLens.cpp
-        simlib/SampledLens.cpp
-        simlib/SampledSISLens.cpp
-        simlib/RouletteLens.cpp
-        simlib/RoulettePMLens.cpp
         )
 
 add_library(SimLib ${SimLibFiles})
