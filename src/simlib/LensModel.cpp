@@ -30,7 +30,7 @@ LensModel::~LensModel() {
 cv::Mat LensModel::getActual() { 
    cv::Mat imgApparent = getApparent() ;
 
-   if ( eta.x == 0 && actualY == 0 ) {
+   if ( eta.x == 0 && eta.y == 0 ) {
       return getApparent() ;
    } else {
      cv::Mat imgActual 
