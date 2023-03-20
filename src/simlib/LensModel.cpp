@@ -121,6 +121,7 @@ void LensModel::update( cv::Mat imgApparent ) {
 /* This just splits the image space in chunks and runs distort() in parallel */
 void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
+    double maskRadius = getMaskRadius() ;
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
     if ( maskRadius > dst.rows/2.0 ) maskRadius = dst.rows/2.0 ;
@@ -147,6 +148,7 @@ void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
+    double maskRadius = getMaskRadius() ;
     int R = getCentre() ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
@@ -273,3 +275,4 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 double LensModel::getCentre( ) {
   return centredMode ? tentativeCentre : apparentAbs ;
 }
+double LensModel::getMaskRadius() const { return 1024*1024 ; }

@@ -4,6 +4,7 @@
 #define COSMOSIM_FACADE_H
 
 #include "cosmosim/Simulator.h"
+#include "cosmosim/Roulette.h"
 #include "cosmosim/Source.h"
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,

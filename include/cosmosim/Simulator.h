@@ -34,7 +34,9 @@ protected:
     double apparentAbs{};
     double apparentAbs2{};
     bool maskMode = false ;
-    double maskRadius = 1024*1024 ;
+    // double maskRadius = 1024*1024 ;
+    virtual double getMaskRadius() const ;
+
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
@@ -100,34 +102,6 @@ protected:
     virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
-
-class RoulettePMLens : public PointMassLens { 
-public:
-    using PointMassLens::PointMassLens ;
-protected:
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void updateApparentAbs() ;
-};
-
-class SphereLens : public LensModel { 
-  public:
-    SphereLens();
-    SphereLens(bool);
-    SphereLens(std::string,bool);
-    void setFile(std::string) ;
-  protected:
-    virtual void maskImage( cv::InputOutputArray ) ;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void calculateAlphaBeta();
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
-    virtual void updateApparentAbs() ;
-  private:
-    std::string filename = "50.txt" ;
-    void initAlphasBetas();
-};
-
-
 
 /* simaux */
 void refLines(cv::Mat&) ;
