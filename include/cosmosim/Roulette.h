@@ -59,11 +59,12 @@ class RouletteSISLens : public SphereLens {
 class SampledLens : public RouletteLens, public LensMap { 
 public:
     using RouletteLens::RouletteLens ;
+    SampledLens();
+    SampledLens(bool);
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
     virtual void updatePsi() ;
-    bool rotatedMode = false ;
 };
 class SampledSISLens : public SampledLens {
 public:
