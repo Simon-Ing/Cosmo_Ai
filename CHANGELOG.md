@@ -4,6 +4,12 @@
 
 ## [Unreleased] - yyyy-mm-dd
 
+## [2.0.3] - 2023-03-20
+
+### Fixed
+
+- Integer division in c_p/c_m in SphereLens changed to floating point. 
+
 ## [2.0.2] - 2023-02-22
 
 ### Added
