@@ -15,6 +15,7 @@ from CosmoSim import CosmoSim
 import pandas as pd
 
 def setParameters(sim,row):
+    print( row ) 
     if row.get("y",None) != None:
         print( "XY", row["x"], row["y"] )
         sim.setXY( row["x"], row["y"] )

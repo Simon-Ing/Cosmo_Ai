@@ -29,7 +29,6 @@ protected:
     double apparentAbs{};
     double apparentAbs2{};
     bool maskMode = false ;
-    // double maskRadius = 1024*1024 ;
     virtual double getMaskRadius() const ;
 
 
@@ -48,12 +47,13 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
-    void update( cv::Mat );
+    virtual void update( cv::Mat );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
 
     virtual double getNuAbs() const ;
+    virtual cv::Point2f getNu() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2f getEta() const ;
@@ -75,7 +75,7 @@ public:
     void setSource(Source*) ;
     double getCentre() ;
 
-    cv::Mat getActual() ;
+    virtual cv::Mat getActual() ;
     cv::Mat getApparent() ;
     cv::Mat getDistorted() ;
     cv::Mat getDistorted( double ) ;

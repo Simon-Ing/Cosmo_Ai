@@ -9,8 +9,6 @@
 #include <thread>
 #include <fstream>
 
-double factorial_(unsigned int n);
-
 SphereLens::SphereLens() :
    RouletteLens::RouletteLens()
 { 

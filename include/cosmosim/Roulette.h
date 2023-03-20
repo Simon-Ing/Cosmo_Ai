@@ -50,7 +50,7 @@ class SphereLens : public RouletteLens {
     void initAlphasBetas();
 };
 
-class SampledLens : public RouletteLens, public LensMap {
+class SampledLens : public RouletteLens, public LensMap { 
 public:
     using RouletteLens::RouletteLens ;
     virtual void update( cv::Mat );

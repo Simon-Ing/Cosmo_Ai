@@ -280,14 +280,15 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 double LensModel::getCentre( ) {
   return centredMode ? tentativeCentre : apparentAbs ;
 }
+cv::Point2f LensModel::getNu() const { return nu ; }
 double LensModel::getNuAbs() const { return apparentAbs ; }
+cv::Point2f LensModel::getEta() const {
+   return eta ;
+}
 double LensModel::getEtaSquare() const {
    return eta.x*eta.x + eta.y*eta.y ;
 }
 double LensModel::getEtaAbs() const {
    return sqrt( eta.x*eta.x + eta.y*eta.y ) ;
-}
-cv::Point2f LensModel::getEta() const {
-   return eta ;
 }
 double LensModel::getMaskRadius() const { return 1024*1024 ; }
