@@ -2,8 +2,6 @@
 
 #include "cosmosim/Simulator.h"
 
-#include <thread>
-
 TriangleSource::TriangleSource( int sz, double sig, double thet ) :
         sigma(sig),
         theta(thet),
