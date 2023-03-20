@@ -45,7 +45,7 @@ cv::Mat LensModel::getActual() {
      dstTri[0] = cv::Point2f( x0+eta.x, y0-actualY );
      srcTri[1] = cv::Point2f( x0-getEtaAbs(), y0 );
      dstTri[1] = cv::Point2f( x0, y0 );
-     srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
+     srcTri[2] = cv::Point2f( x0-getEtaAbs(), y0-getEtaAbs() );
      dstTri[2] = cv::Point2f( x0-actualY, y0-eta.x );
      cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
