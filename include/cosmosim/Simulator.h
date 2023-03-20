@@ -47,8 +47,6 @@ protected:
 
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
-    std::array<std::array<double, 202>, 201> alphas_val;
-    std::array<std::array<double, 202>, 201> betas_val;
 
 private:
     bool centredMode = false ;
@@ -62,6 +60,8 @@ public:
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
+
+    virtual double getNuAbs() const ;
 
     void updateXY(double, double, double, double) ;
     void setXY(double, double, double, double) ;

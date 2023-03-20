@@ -275,4 +275,5 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 double LensModel::getCentre( ) {
   return centredMode ? tentativeCentre : apparentAbs ;
 }
+double LensModel::getNuAbs() const { return apparentAbs ; }
 double LensModel::getMaskRadius() const { return 1024*1024 ; }

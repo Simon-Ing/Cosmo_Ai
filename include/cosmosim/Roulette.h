@@ -18,20 +18,22 @@ protected:
     std::array<std::array<double, 202>, 201> alphas_val;
     std::array<std::array<double, 202>, 201> betas_val;
 
+    virtual cv::Point2f getDistortedPos(double r, double theta) const;
+
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual double getMaskRadius() const ;
 };
 
-class RoulettePMLens : public PointMassLens { 
+class RoulettePMLens : public RouletteLens { 
 public:
-    using PointMassLens::PointMassLens ;
+    using RouletteLens::RouletteLens ;
 protected:
     virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
 
-class SphereLens : public LensModel { 
+class SphereLens : public RouletteLens { 
   public:
     SphereLens();
     SphereLens(bool);
@@ -39,7 +41,6 @@ class SphereLens : public LensModel {
     void setFile(std::string) ;
   protected:
     virtual void calculateAlphaBeta();
-    virtual cv::Point2f getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
   private:
     std::string filename = "50.txt" ;
