@@ -1,0 +1,14 @@
+
+1.  Test program
+    - print \nabla\psi
+    - Print mass map and psi map
+2.  P/Ben David: sign \psi
+3.  Comparison of Roulette SIS and PM
+4.  Distinguish between True xi and Rotated xi (on the x-axis)
+5.  Validate distort
+    - Note Source image is drawn at the origin
+    - check rotations - origin is fixed?
+6.  Document flow of image transformations
+7.  Clarify local co-ordinate system
+    - origin in the centre of the image
+    - horizontal first axis, vertical second axis

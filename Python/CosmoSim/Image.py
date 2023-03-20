@@ -8,7 +8,7 @@ Post-processing functions for images.
 import numpy as np
 
 def centreImage(im):
-  m,n = im.shape
+  m,n = im.shape[:2]
   ps = [ (x,y) for x in range(m) for y in range(n) ]
   s = im.sum()
   xs = [ x*im[x,y] for (x,y) in ps ]
@@ -37,7 +37,7 @@ def centreImage(im):
   return centred
 
 def drawAxes(im):
-  m,n = im.shape
+  m,n = im.shape[:2]
   im[int(round(m/2)),:] = 127
   im[:,(round(n/2))] = 127
   return im

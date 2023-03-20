@@ -4,6 +4,16 @@
 
 ## [Unreleased] - yyyy-mm-dd
 
+### Added
+
+- Support for sampled lens models using the Roulette formalism
+- Test framework to compare output images.
+
+### Changed
+
+- Cleaned up code to make variable names more consistent with 
+  mathematical papers
+
 ## [2.0.2] - 2023-02-22
 
 ### Added
