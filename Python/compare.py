@@ -44,16 +44,15 @@ if __name__ == "__main__":
     else:
       for fn in os.listdir(args.dir1):
         f1 = os.path.join(args.dir1,fn)
-        if not os.path.isfile(f1): 
-            print( "Not a file: ", f1 )
-            break
         f2 = os.path.join(args.dir2,fn)
-        if not os.path.isfile(f2): 
-            print( "Not a file: ", f2 )
-            break
         if args.dir3 == None:
             f3 = None
         else:
             f3 = os.path.join(args.dir3,fn)
-        comparefiles(f1,f2,f3)
+        if not os.path.isfile(f1): 
+            print( "Not a file: ", f1 )
+        elif not os.path.isfile(f2): 
+            print( "Not a file: ", f2 )
+        else:
+          comparefiles(f1,f2,f3)
 
