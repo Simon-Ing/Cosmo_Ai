@@ -42,11 +42,11 @@ cv::Mat LensModel::getActual() {
 
      cv::Point2f srcTri[3], dstTri[3];
      srcTri[0] = cv::Point2f( x0, y0 );
-     dstTri[0] = cv::Point2f( x0+eta.x, y0-actualY );
+     dstTri[0] = cv::Point2f( x0+eta.x, y0-eta.y );
      srcTri[1] = cv::Point2f( x0-getEtaAbs(), y0 );
      dstTri[1] = cv::Point2f( x0, y0 );
      srcTri[2] = cv::Point2f( x0-getEtaAbs(), y0-getEtaAbs() );
-     dstTri[2] = cv::Point2f( x0-actualY, y0-eta.x );
+     dstTri[2] = cv::Point2f( x0-eta.y, y0-eta.x );
      cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
      std::cout << "getActual() (x,y)=(" << eta.x << "," << eta.y << ")\n" 
