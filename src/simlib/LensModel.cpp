@@ -29,12 +29,12 @@ LensModel::~LensModel() {
 /* Getters for the images */
 cv::Mat LensModel::getActual() { 
    cv::Mat imgApparent = getApparent() ;
+   cv::Mat imgActual 
+        = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
 
    if ( eta.x == 0 && eta.y == 0 ) {
-      return getApparent() ;
-   } else {
-     cv::Mat imgActual 
-        = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
+      return imgApparent ;
+   } else if ( rotatedMode ) {
 
      // (x0,y0) is the centre of the image in pixel coordinates 
      double x0 = imgApparent.cols/2 ;
@@ -53,8 +53,12 @@ cv::Mat LensModel::getActual() {
                << rot << "\n" ;
 
      cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
-     return imgActual ; 
+   } else {
+     cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
+     std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
+     cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
    }
+   return imgActual ; 
    exit(1) ;
 }
 cv::Mat LensModel::getApparent() { return source->getImage() ; }
@@ -93,21 +97,27 @@ void LensModel::update( cv::Mat imgApparent ) {
 
     this->calculateAlphaBeta() ;
 
-    int nrows = imgApparent.rows ;
-    int ncols = imgApparent.cols ;
+    if ( rotatedMode ) {
+       int nrows = imgApparent.rows ;
+       int ncols = imgApparent.cols ;
 
-    // Make Distorted Image
-    // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
-    parallelDistort(imgApparent, imgD);
-
-    // Correct the rotation applied to the source image
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
-    cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
-    imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
+       // Make Distorted Image
+       // We work in a double sized image to avoid cropping
+       cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
+       parallelDistort(imgApparent, imgD);
+   
+       // Correct the rotation applied to the source image
+       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
+       std::cout << "raotatedMode=true\n" << rot << "\n" ;
+       cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    
+           // crop distorted image
+       imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
+    } else {
+       imgDistorted = cv::Mat::zeros(imgApparent.size(), imgApparent.type()) ;
+       parallelDistort(imgApparent, imgDistorted);
+    }
 
     std::cout << "update() (x,y) = (" << eta.x << ", " << eta.y << ")\n" ;
-    std::cout << rot << "\n" ;
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();

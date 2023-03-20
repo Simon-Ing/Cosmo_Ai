@@ -22,6 +22,7 @@ protected:
     Source *source ;
     double einsteinR;
     int nterms;
+    bool rotatedMode = true ;
 
     int bgcolour = 0;
 
@@ -47,7 +48,7 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
-    virtual void update( cv::Mat );
+    void update( cv::Mat );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
@@ -74,7 +75,7 @@ public:
     void setSource(Source*) ;
     double getCentre() ;
 
-    virtual cv::Mat getActual() ;
+    cv::Mat getActual() ;
     cv::Mat getApparent() ;
     cv::Mat getDistorted() ;
     cv::Mat getDistorted( double ) ;
