@@ -3,7 +3,6 @@ set(SimLibFiles
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp
-        simlib/RoulettePMLens.cpp
         simlib/simaux.cpp
         simlib/Source.cpp
         simlib/SphereLens.cpp
@@ -11,7 +10,7 @@ set(SimLibFiles
         simlib/TriangleSource.cpp
         simlib/PixMapLens.cpp
         simlib/PMCLens.cpp
-        simlib/RoulettePMCLens.cpp
+        simlib/RoulettePMLens.cpp
         )
 
 add_library(SimLib ${SimLibFiles})
