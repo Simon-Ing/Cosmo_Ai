@@ -47,10 +47,10 @@ def func(n, m, s, alpha, beta, x, y, g, q):
         alpha_ = factor(c * (diff(alpha, x) + diff(beta, y)))
         beta_ = factor(c * (diff(beta, x) - diff(alpha, y)))
         alpha, beta = alpha_, beta_
-        print(f'm: {m} s: {s}')# alpha: {alpha} beta: {beta} c: {c}')
-        # print("gen write job")
+        print(f'm: {m} s: {s}') # alpha: {alpha} beta: {beta} c: {c}')
+
         res = f'{m}:{s}:{alpha}:{beta}'
-        # print(f'{m}, {s} Done')
+        # print ( "Inner", res )
         q.put(res)
 
 def main():
@@ -101,12 +101,15 @@ def main():
             else:
                 # This is the base case (m+1,s+1) of the inner recursion
                 c = (m + 1.0) / (m + s + 1.0) 
+                # Should there not be an extra factor 2 for s==1 above?
+                # - maybe it does not matter because s=m+1 and m>1.
                 alpha_ = factor(c * (diff(alpha, x) - diff(beta, y)))
                 beta_ = factor(c * (diff(beta, x) + diff(alpha, y)))
                 alpha, beta = alpha_, beta_
 
 
             res = f'{m}:{s}:{alpha}:{beta}'
+            # print ( "Outer", res )
             q.put(res)
 
             job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, g, q))
