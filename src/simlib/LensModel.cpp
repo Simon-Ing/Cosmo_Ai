@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> *
+/* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> *
  * Building on code by Simon Ingebrigtsen, Sondre Westbø Remøy,
  * Einar Leite Austnes, and Simon Nedreberg Runde
  */
@@ -43,13 +43,13 @@ cv::Mat LensModel::getActual() {
      cv::Point2f srcTri[3], dstTri[3];
      srcTri[0] = cv::Point2f( x0, y0 );
      dstTri[0] = cv::Point2f( x0+eta.x, y0-actualY );
-     srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
+     srcTri[1] = cv::Point2f( x0-getEtaAbs(), y0 );
      dstTri[1] = cv::Point2f( x0, y0 );
      srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
      dstTri[2] = cv::Point2f( x0-actualY, y0-eta.x );
      cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
 
-     std::cout << "getActual() (x,y)=(" << eta.x << "," << actualY << ")\n" 
+     std::cout << "getActual() (x,y)=(" << eta.x << "," << eta.y << ")\n" 
                << rot << "\n" ;
 
      cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
@@ -87,8 +87,8 @@ void LensModel::update( cv::Mat imgApparent ) {
 
     auto startTime = std::chrono::system_clock::now();
     
-    std::cout << "update() x=" << eta.x << "; y= " << actualY 
-              << "; R=" << actualAbs << "; theta=" << phi
+    std::cout << "update() x=" << eta.x << "; y= " << eta.y 
+              << "; R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
 
     this->calculateAlphaBeta() ;
@@ -106,7 +106,7 @@ void LensModel::update( cv::Mat imgApparent ) {
     cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
     imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
 
-    std::cout << "update() (x,y) = (" << eta.x << ", " << actualY << ")\n" ;
+    std::cout << "update() (x,y) = (" << eta.x << ", " << eta.y << ")\n" ;
     std::cout << rot << "\n" ;
 
     // Calculate run time for this function and print diagnostic output
@@ -234,8 +234,8 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     actualAbs = sqrt(eta.x * eta.x + actualY * actualY); 
     phi = atan2(actualY, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << actualY
-              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
+    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << eta.y
+              << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
     updateApparentAbs() ;
 }
 void LensModel::updateXY( double X, double Y, double chi, double er ) {
@@ -257,8 +257,8 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     actualY = R*sin(phi) ;
     eta = cv::Point( R*cos(phi), R*sin(phi) ) ;
 
-    std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << actualY
-              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
+    std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
+              << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 
     updateApparentAbs() ;
 }
