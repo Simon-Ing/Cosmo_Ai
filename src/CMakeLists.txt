@@ -10,6 +10,8 @@ set(SimLibFiles
         simlib/TriangleSource.cpp
         simlib/LensMap.cpp
         simlib/PMCLens.cpp
+        simlib/SampledLens.cpp
+        simlib/SampledSISLens.cpp
         simlib/RouletteLens.cpp
         simlib/RoulettePMLens.cpp
         )

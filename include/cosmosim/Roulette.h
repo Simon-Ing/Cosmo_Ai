@@ -50,4 +50,25 @@ class SphereLens : public RouletteLens {
     void initAlphasBetas();
 };
 
+class SampledLens : public RouletteLens, public LensMap {
+public:
+    using RouletteLens::RouletteLens ;
+    virtual void update( cv::Mat );
+    virtual double getNuAbs() const ;
+    virtual cv::Point2f getNu() const ;
+protected:
+    virtual void calculateAlphaBeta();
+    virtual void updateApparentAbs() ;
+    virtual cv::Mat getActual() ;
+    virtual void updatePsi() ;
+};
+class SampledSISLens : public SampledLens {
+public:
+    using SampledLens::SampledLens ;
+protected:
+private:
+    double psifunction( double, double ) ;
+    virtual void updatePsi() ;
+};
+
 #endif // ROULETTE_H

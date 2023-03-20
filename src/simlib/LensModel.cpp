@@ -276,4 +276,13 @@ double LensModel::getCentre( ) {
   return centredMode ? tentativeCentre : apparentAbs ;
 }
 double LensModel::getNuAbs() const { return apparentAbs ; }
+double LensModel::getEtaSquare() const {
+   return actualAbs*actualAbs ;
+}
+double LensModel::getEtaAbs() const {
+   return actualAbs ;
+}
+cv::Point2f LensModel::getEta() const {
+   return cv::Point2f( actualAbs, 0 ) ;
+}
 double LensModel::getMaskRadius() const { return 1024*1024 ; }
