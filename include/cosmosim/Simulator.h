@@ -14,6 +14,9 @@
 class LensModel {
 private:
     cv::Point2d eta ;  // Actual position in the source plane
+    bool centredMode = false ;
+    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
+
 protected:
     double CHI;
     Source *source ;
@@ -28,7 +31,6 @@ protected:
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
 
-
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
     double tentativeCentre = 0;
@@ -36,8 +38,9 @@ protected:
     cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
-private:
-    bool centredMode = false ;
+    virtual void calculateAlphaBeta() ;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
+    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 public:
     LensModel();
@@ -54,7 +57,6 @@ public:
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;
-
 
     void updateXY(double, double, double, double) ;
     void setXY(double, double, double, double) ;
@@ -77,15 +79,6 @@ public:
     cv::Mat getDistorted() ;
     cv::Mat getDistorted( double ) ;
     cv::Mat getSecondary() ; // Made for testing
-
-protected:
-    virtual void calculateAlphaBeta() ;
-    virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
-    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
-
-private:
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
-
 };
 
 class PointMassLens : public LensModel { 
