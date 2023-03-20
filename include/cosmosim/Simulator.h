@@ -86,10 +86,10 @@ public:
 protected:
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2f getDistortedPos(double r, double theta) const = 0 ;
+    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 private:
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
-    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
 
 };
 
