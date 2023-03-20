@@ -218,6 +218,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "Ellipse", CSIM_LENS_ELLIPSE )
        .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
        .value( "PointMass", CSIM_LENS_PM )
+       .value( "Sampled", CSIM_LENS_SAMPLED )
+       .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/

@@ -13,6 +13,8 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_ELLIPSE,
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_PM,
+                  CSIM_LENS_SAMPLED,
+                  CSIM_LENS_SAMPLED_SIS,
                   CSIM_NOLENS } ;
 
 class CosmoSim {
