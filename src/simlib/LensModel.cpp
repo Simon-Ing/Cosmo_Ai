@@ -226,7 +226,6 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
     // Actual position in source plane
-    actualX = X ;
     actualY = Y ;
     eta = cv::Point2f( X, Y ) ;
 
@@ -258,7 +257,6 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     phi = PI*theta/180 ;
 
     // Actual position in source plane
-    actualX = R*cos(phi) ;
     actualY = R*sin(phi) ;
     eta = cv::Point2f( R*cos(phi), R*sin(phi) ) ;
 
