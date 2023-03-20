@@ -2,7 +2,6 @@
 1.  Test program
     - print \nabla\psi
     - Print mass map and psi map
-2.  Fix getCentre()
 2.  P/Ben David: sign \psi
 3.  Comparison of Roulette PM and exact PM
 4.  Distinguish between True xi and Rotated xi (on the x-axis)
