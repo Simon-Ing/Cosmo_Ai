@@ -279,10 +279,10 @@ double LensModel::getCentre( ) {
 }
 double LensModel::getNuAbs() const { return apparentAbs ; }
 double LensModel::getEtaSquare() const {
-   return actualAbs*actualAbs ;
+   return eta.x*eta.x + eta.y*eta.y ;
 }
 double LensModel::getEtaAbs() const {
-   return actualAbs ;
+   return sqrt( eta.x*eta.x + eta.y*eta.y ) ;
 }
 cv::Point2f LensModel::getEta() const {
    return eta ;
