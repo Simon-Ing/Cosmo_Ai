@@ -8,7 +8,7 @@ set(SimLibFiles
         simlib/SphereLens.cpp
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
-        simlib/PixMapLens.cpp
+        simlib/LensMap.cpp
         simlib/PMCLens.cpp
         simlib/RoulettePMLens.cpp
         )
