@@ -134,13 +134,6 @@ void SampledLens::updateApparentAbs( ) {
 }
 void SampledLens::updatePsi() { return ; }
 
-double SampledLens::getNuAbs() const {
-   return cv::norm( cv::Mat(nu), cv::NORM_L2 ) ;
-}
-cv::Point2d SampledLens::getNu() const {
-   return nu ;
-}
-
 /* Getters for the images */
 cv::Mat SampledLens::getActual() { 
    cv::Mat imgApparent = getApparent() ;

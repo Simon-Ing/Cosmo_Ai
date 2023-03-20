@@ -24,7 +24,6 @@ protected:
 
     cv::Point2d nu ;   // Apparent position in the source plane
     double phi{};
-    double apparentAbs{};
     double apparentAbs2{};
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
@@ -50,8 +49,8 @@ public:
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
 
-    virtual double getNuAbs() const ;
-    virtual cv::Point2d getNu() const ;
+    double getNuAbs() const ;
+    cv::Point2d getNu() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;

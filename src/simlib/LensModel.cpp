@@ -65,7 +65,7 @@ cv::Mat LensModel::getDistorted( double app ) {
     * and draw a different section of the image.
     * TESTING ONLY.
     * The logic is probably faulty. */ 
-   apparentAbs = app ;
+   nu = cv::Point2d( app, 0 ) ;
    this->update() ;
    return imgDistorted ; 
 }
@@ -75,7 +75,7 @@ cv::Mat LensModel::getSecondary() {
     * It uses the same logic as getDistorted(double) above, and
     * is probably faulty. 
     */
-   apparentAbs = apparentAbs2 ;
+   nu = cv::Point2d( apparentAbs2, 0 ) ;
    this->update() ;
    return imgDistorted ; }
 
@@ -274,10 +274,12 @@ void LensModel::markMask( cv::InputOutputArray r ) {
    throw NotImplemented() ;
 }
 double LensModel::getCentre( ) {
-  return centredMode ? tentativeCentre : apparentAbs ;
+  return centredMode ? tentativeCentre : getNuAbs() ;
 }
 cv::Point2d LensModel::getNu() const { return nu ; }
-double LensModel::getNuAbs() const { return apparentAbs ; }
+double LensModel::getNuAbs() const { 
+   return sqrt( nu.x*nu.x + nu.y*nu.y ) ;
+}
 cv::Point2d LensModel::getEta() const {
    return eta ;
 }

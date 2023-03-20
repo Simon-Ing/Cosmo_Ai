@@ -53,8 +53,6 @@ class SampledLens : public RouletteLens, public LensMap {
 public:
     using RouletteLens::RouletteLens ;
     virtual void update( cv::Mat );
-    virtual double getNuAbs() const ;
-    virtual cv::Point2d getNu() const ;
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
