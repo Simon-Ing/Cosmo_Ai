@@ -167,7 +167,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // relative to CoM (origin)
             double r = sqrt(x * x + y * y);
 
-            if ( maskMode && r > maskRadius*CHI ) {
+            if ( maskMode && r > maskRadius ) {
             } else {
               double theta = x == 0 ? PI/2 : atan2(y, x);
               pos = this->getDistortedPos(r, theta);

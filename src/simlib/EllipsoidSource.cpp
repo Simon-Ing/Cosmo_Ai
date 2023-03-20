@@ -1,7 +1,6 @@
 /* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "cosmosim/Simulator.h"
-
 #include <thread>
 
 EllipsoidSource::EllipsoidSource( int sz, double sig1, double sig2, double thet ) :
