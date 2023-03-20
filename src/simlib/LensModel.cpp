@@ -226,15 +226,14 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
     // Actual position in source plane
-    actualY = Y ;
     eta = cv::Point2f( X, Y ) ;
 
     // Calculate Polar Co-ordinates
-    actualAbs = sqrt(eta.x * eta.x + actualY * actualY );
-    phi = atan2(actualY, eta.x); // Angle relative to x-axis
+    actualAbs = sqrt(eta.x * eta.x + Y * Y );
+    phi = atan2(Y, eta.x); // Angle relative to x-axis
 
     std::cout << "[setXY] eta.y=" << eta.y 
-              << "; actualY=" << actualY 
+              << "; actualY=" << Y 
               << "; eta=" << eta 
               << "\n" ;
 
@@ -257,7 +256,6 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     phi = PI*theta/180 ;
 
     // Actual position in source plane
-    actualY = R*sin(phi) ;
     eta = cv::Point2f( R*cos(phi), R*sin(phi) ) ;
 
     std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
