@@ -9,12 +9,6 @@
 #include "opencv2/opencv.hpp"
 #endif
 
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
-
-using namespace SymEngine;
-
-
 #define PI 3.14159265358979323846
 
 class LensModel {
@@ -44,9 +38,6 @@ protected:
 
     cv::Mat imgApparent;
     cv::Mat imgDistorted;
-
-    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
-    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
 
 private:
     bool centredMode = false ;

@@ -43,6 +43,9 @@ class SphereLens : public RouletteLens {
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
   private:
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
+
     std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
