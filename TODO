@@ -8,12 +8,15 @@
     - High resolution sampling
     - Review debug.csv
 3.  Alternative reference point for roulette
+4.  Documentation in paper
+    - Update UML class diagram
+    - Document flow of image transformations
 4.  P/Ben David: sign \psi
 5.  Distinguish between True xi and Rotated xi (on the x-axis)
-5.  Validate distort
+6.  Validate distort
     - Note Source image is drawn at the origin
     - check rotations - origin is fixed?
-6.  Document flow of image transformations
 7.  Clarify local co-ordinate system
     - origin in the centre of the image
     - horizontal first axis, vertical second axis
+    - validate code
