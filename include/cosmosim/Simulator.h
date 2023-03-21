@@ -64,7 +64,7 @@ public:
     void setPolar(double, double, double, double) ;
     void setCHI(double) ;
     void setEinsteinR(double) ;
-    virtual void updateApparentAbs()  = 0 ;
+    virtual void updateApparentAbs() = 0 ;
     virtual void maskImage( ) ;
     virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
