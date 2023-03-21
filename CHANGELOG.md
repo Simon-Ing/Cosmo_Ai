@@ -13,6 +13,11 @@
 - Cleaned up code to make variable names more consistent with 
   mathematical papers
 
+### Fixed
+
+- Several unfortunate uses of integers and single-precision floats
+  have been changed to double for the sake of precision.
+
 ## [2.0.3] - 2023-03-20
 
 ### Added
