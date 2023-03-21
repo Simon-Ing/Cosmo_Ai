@@ -108,7 +108,7 @@ void LensModel::update( cv::Mat imgApparent ) {
    
        // Correct the rotation applied to the source image
        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
-       std::cout << "raotatedMode=true\n" << rot << "\n" ;
+       std::cout << "rotatedMode=true\n" << rot << "\n" ;
        cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    
            // crop distorted image
        imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
@@ -160,6 +160,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // (row,col) are pixel co-ordinates
     double maskRadius = getMaskRadius()*CHI ;
     cv::Point2d centre = getCentre() ;
+    std::cout << "[LensModel] distort() centre=" << centre << "\n" ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
@@ -169,7 +170,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
             double x = (col - dst.cols / 2.0 - centre.x) * CHI;
-            double y = (dst.rows / 2.0 - row + centre.y) * CHI;
+            double y = (dst.rows / 2.0 - row - centre.y) * CHI;
             // (x,y) are coordinates in the lens plane, and hence the
             // multiplication by CHI
 

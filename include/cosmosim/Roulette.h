@@ -49,6 +49,8 @@ class SphereLens : public RouletteLens {
     void initAlphasBetas();
 };
 class RouletteSISLens : public SphereLens { 
+  protected:
+    virtual void updateApparentAbs() ;
   public:
     RouletteSISLens();
     RouletteSISLens(bool);
