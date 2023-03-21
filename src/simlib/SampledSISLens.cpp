@@ -18,8 +18,8 @@ void SampledSISLens::updatePsi() {
 
    for ( int i=0 ; i<nrows ; ++i ) {
       for ( int j=0 ; j<ncols ; ++j ) {
-         cv::Point2f ij( i, j ) ;
-         cv::Point2f xy = pointCoordinate( ij, psi ) ;
+         cv::Point2d ij( i, j ) ;
+         cv::Point2d xy = pointCoordinate( ij, psi ) ;
 	 psi.at<double>( ij ) = psifunction( xy.x, xy.y ) ;
       }
    }

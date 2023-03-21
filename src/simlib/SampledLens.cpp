@@ -28,15 +28,15 @@ void SampledLens::calculateAlphaBeta() {
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( CHI*getNu(), psi ) ;
 
-    std::cout << "[SampledLens] calculateAlphaBeta\n" ;
+    std::cout << "[SampledLens::calculateAlpaBeta] xi in image space is " << ij << "\n" ;
 
     for ( mp = 0; mp <= nterms; mp++){
         s = mp+1 ; m = mp ;
         if ( mp == 0 ) {
           // This is the outer base case, for m=0, s=1
           gradient(psi, matBouter, matAouter) ;
-          matAouter *= -1 ;
-          matBouter *= -1 ;
+          // matAouter *= -1 ;
+          // matBouter *= -1 ;
         } else {
           gradient(matAouter, matAy, matAx) ;
           gradient(matBouter, matBy, matBx) ;
@@ -126,7 +126,7 @@ void SampledLens::updateApparentAbs( ) {
    while ( cont ) {
       xi0 = xi1 ;
       cv::Point2d ij = imageCoordinate( xi0, psi ) ;
-      double x = psiY.at<double>( ij ), y = psiX.at<double>( ij ) ;
+      double x = -psiY.at<double>( ij ), y = -psiX.at<double>( ij ) ;
       std::cout << "[SampledLens] Fix pt it'n " << count
            << "; xi0=" << xi0 << "; Delta eta = " << x << ", " << y << "\n" ;
       xi1 = chieta + cv::Point2d( x, y ) ;
