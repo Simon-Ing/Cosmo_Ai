@@ -11,12 +11,14 @@ SourceSpec = cs.SourceSpec
 lensDict = {
         "Point Mass (exact)" : LensSpec.PointMass,
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (roulettes)" : LensSpec.SIS,
+        "SIS (rotated)" : LensSpec.SIS,
+        "SIS (roulettes)" : LensSpec.SISRoulettes,
         "Sampled" : LensSpec.Sampled,
         "Sampled SIS" : LensSpec.SampledSIS,
         "p" : LensSpec.PointMass,
         "r" : LensSpec.PointMassRoulettes,
         "s" : LensSpec.SIS,
+        "sr" : LensSpec.SISRoulettes,
         "sp" : LensSpec.Sampled,
         "ss" : LensSpec.SampledSIS,
         }

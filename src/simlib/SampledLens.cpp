@@ -3,8 +3,20 @@
 #include "cosmosim/Roulette.h"
 
 #include <thread>
-
 #include "simaux.h"
+
+SampledLens::SampledLens() :
+   RouletteLens::RouletteLens()
+{ 
+    std::cout << "Instantiating SampledLens ... \n" ;
+    rotatedMode = false ;
+}
+SampledLens::SampledLens(bool centred) :
+   RouletteLens::RouletteLens(centred)
+{ 
+    std::cout << "Instantiating SampledLens ... \n" ;
+    rotatedMode = false ;
+}
 
 void SampledLens::calculateAlphaBeta() {
 

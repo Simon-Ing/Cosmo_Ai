@@ -11,6 +11,7 @@ enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_TRIANGLE } ;
 enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_ELLIPSE,
+                  CSIM_LENS_SIS_ROULETTE, 
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_PM,
                   CSIM_LENS_SAMPLED,

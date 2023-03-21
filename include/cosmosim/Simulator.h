@@ -34,7 +34,7 @@ protected:
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
-    double tentativeCentre = 0;
+    cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
     cv::Mat imgApparent;
     cv::Mat imgDistorted;
@@ -73,7 +73,7 @@ public:
     void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
-    double getCentre() ;
+    cv::Point2d getCentre() ;
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;

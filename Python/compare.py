@@ -36,23 +36,23 @@ if __name__ == "__main__":
             help="Compare individual files")
     parser.add_argument('dir1')
     parser.add_argument('dir2')
-    parser.add_argument('dir3')
+    parser.add_argument("-d",'--diff',required=False)
     args = parser.parse_args()
 
     if args.files:
-        comparefiles(args.dir1,args.dir2,args.dir3)
+        comparefiles(args.dir1,args.dir2,args.diff)
     else:
       for fn in os.listdir(args.dir1):
         f1 = os.path.join(args.dir1,fn)
         f2 = os.path.join(args.dir2,fn)
-        if args.dir3 == None:
+        if args.diff == None:
             f3 = None
         else:
-            f3 = os.path.join(args.dir3,fn)
+            f3 = os.path.join(args.diff,fn)
         if not os.path.isfile(f1): 
             print( "Not a file: ", f1 )
         elif not os.path.isfile(f2): 
             print( "Not a file: ", f2 )
         else:
-          comparefiles(f1,f2,f3)
+            comparefiles(f1,f2,f3)
 
