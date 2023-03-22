@@ -4,10 +4,10 @@ dir=$1
 test $dir || dir=Test/`date "+%Y%m%d"`
 mkdir -p $dir
 
-baseline=Test/baseline20230320
+baseline=Test/baseline20230322
 # baseline=Test/v2.0.3
 
-F=mask centred reflines
+F="mask centred reflines"
 
 
 for flag in $F plain 
@@ -20,6 +20,7 @@ python3 Python/datagen.py --directory="$dir"/plain --csvfile Datasets/debug.csv 
 
 for flag in $F
 do
+  echo $flag
   python3 Python/datagen.py --$flag --directory="$dir"/$flag --csvfile Datasets/debug.csv  || exit 2
 done
 
@@ -27,5 +28,8 @@ test -d $baseline || exit 3
 
 for flag in $F plain 
 do
+   echo $flag
    python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag
 done
+
+echo $F
