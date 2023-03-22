@@ -6,7 +6,8 @@ dir=$1
 test $dir || dir=Test/`date "+%Y%m%d"`
 mkdir -p $dir
 
-baseline=Test/baseline20230322
+baseline=$2
+test $baseline || baseline=Test/baseline20230322
 # baseline=Test/v2.0.3
 
 F="mask centred reflines"
