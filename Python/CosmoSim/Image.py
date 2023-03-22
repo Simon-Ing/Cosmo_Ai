@@ -11,14 +11,14 @@ def centreImage(im):
   m,n = im.shape[:2]
   ps = [ (x,y) for x in range(m) for y in range(n) ]
   s = im.sum()
-  xs = [ x*im[x,y] for (x,y) in ps ]
-  ys = [ y*im[x,y] for (x,y) in ps ]
+  xs = [ np.sum(x*im[x,y]) for (x,y) in ps ]
+  ys = [ np.sum(y*im[x,y]) for (x,y) in ps ]
   xm = int(round(sum(xs)/s - m/2))
   ym = int(round(sum(ys)/s - n/2))
   
 
-  centred = np.zeros( (m,n) )
-  c1 = np.zeros( (m,n) )
+  centred = np.zeros( im.shape )
+  c1 = np.zeros( im.shape )
 
   if xm > 0:
       c1[:-xm,:] = im[xm:,:]
