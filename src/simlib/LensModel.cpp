@@ -4,6 +4,7 @@
  */
 
 #include "cosmosim/Simulator.h"
+#include "simaux.h"
 
 #include <thread>
 
@@ -151,15 +152,21 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
-    double maskRadius = getMaskRadius()*CHI ;
-    int lower=0, rng=dst.rows, rng1 ; 
+    double maskRadius = getMaskRadius() ;
+    int lower=0, rng=src.rows, rng1 ; 
     if ( maskMode ) {
-        double y = getNu().y, mrng ;
-        lower = floor( dst.rows/2 - y - maskRadius ) ;
-        mrng = dst.rows - lower ;
+        double mrng ;
+        cv::Point2d ij = imageCoordinate( getNu(), src ) ;
+        std::cout << "mask " << ij << " - " << getNu() << "\n" ;
+        lower = floor( ij.x - maskRadius ) ;
+        if ( lower < 0 ) lower = 0 ;
+        mrng = src.rows - lower ;
         rng = ceil( 2.0*maskRadius ) + 1 ;
         if ( rng > mrng ) rng = mrng ;
-    }
+        std::cout << maskRadius << " - " << lower << "/" << rng << "\n" ;
+    } else {
+        std::cout << "[LensModel] No mask \n" ;
+    } 
     rng1 = ceil( rng/ n_threads ) ;
     for (int i = 0; i < n_threads; i++) {
         int begin = lower+rng1*i, end = begin+rng1 ;
