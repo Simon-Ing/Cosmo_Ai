@@ -11,6 +11,7 @@ class CosmoSimConan(ConanFile):
     generators = "cmake"
     requires = (
         "symengine/0.9.0",
+        "xz_utils/5.4.0",
         "opencv/4.5.5",
         "zlib/1.2.13"
     )

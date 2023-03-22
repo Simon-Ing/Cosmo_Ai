@@ -1,5 +1,7 @@
 #! /bin/sh
 
+( cd ../.. && cmake --build build )
+
 pdir=../../Python
 dir1=Exact
 dir2=Roulette
