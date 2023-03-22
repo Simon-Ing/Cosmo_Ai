@@ -28,13 +28,15 @@ LensModel::~LensModel() {
 
 /* Getters for the images */
 cv::Mat LensModel::getActual() { 
-   cv::Mat imgApparent = getApparent() ;
+   cv::Mat imgApparent = getSource() ;
    cv::Mat imgActual 
         = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
 
-   if ( eta.x == 0 && eta.y == 0 ) {
-      return imgApparent ;
-   } else if ( rotatedMode ) {
+   /*
+   if ( rotatedMode ) {
+     if ( eta.x == 0 && eta.y == 0 ) {
+        return imgApparent ;
+     }
 
      // (x0,y0) is the centre of the image in pixel coordinates 
      double x0 = imgApparent.cols/2 ;
@@ -54,14 +56,30 @@ cv::Mat LensModel::getActual() {
 
      cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
    } else {
+   */
      cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
      std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
      cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
-   }
    return imgActual ; 
    exit(1) ;
 }
-cv::Mat LensModel::getApparent() { return source->getImage() ; }
+cv::Mat LensModel::getSource() { 
+   return source->getImage() ;
+}
+cv::Mat LensModel::getApparent() { 
+   cv::Mat src, dst ;
+   src = source->getImage() ;
+   if ( rotatedMode ) {
+       int nrows = src.rows ;
+       int ncols = src.cols ;
+       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows/2, ncols/2),
+             360-phi*180/PI, 1) ;
+       cv::warpAffine(src, dst, rot, src.size() ) ;
+      return dst ;
+   } else {
+      return src ;
+   }
+}
 cv::Mat LensModel::getDistorted() { return imgDistorted ; }
 
 cv::Mat LensModel::getDistorted( double app ) { 

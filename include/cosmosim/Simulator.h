@@ -77,6 +77,7 @@ public:
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
+    cv::Mat getSource() ;
     cv::Mat getDistorted() ;
     cv::Mat getDistorted( double ) ;
     cv::Mat getSecondary() ; // Made for testing
