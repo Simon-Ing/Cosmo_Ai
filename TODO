@@ -6,7 +6,6 @@
     - Rotation comparison
     - Comparison of Roulette PM and exact PM
     - High resolution sampling
-    - Review debug.csv
 3.  Alternative reference point for roulette
 4.  Documentation in paper
     - Document flow of image transformations
