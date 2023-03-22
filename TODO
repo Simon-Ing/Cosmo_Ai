@@ -3,13 +3,11 @@
     - print \nabla\psi
     - Print mass map and psi map
 2.  Clean up test scripts
-    - Rotation comparison
     - Comparison of Roulette PM and exact PM
-    - High resolution sampling
-3.  Alternative reference point for roulette
+3.  High resolution sampling
+4.  Alternative reference point for roulette
 4.  Documentation in paper
     - Document flow of image transformations
-4.  P/Ben David: sign \psi
 5.  Distinguish between True xi and Rotated xi (on the x-axis)
 6.  Validate distort
     - Note Source image is drawn at the origin

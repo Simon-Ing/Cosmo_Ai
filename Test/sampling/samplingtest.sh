@@ -1,7 +1,7 @@
 #! /bin/sh
 
 pdir=../../Python
-dir1=SphereModel
+dir1=SampledSIS
 dir2=RouletteSIS
 diffdir=diff
 

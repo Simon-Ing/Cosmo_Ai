@@ -1,0 +1,8 @@
+index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"s01",image-s01.png,s,50,50,50,40,10,0,0,12
+"s02",image-s02.png,s,50,35,24,20,12,0,0,12
+"s03",image-s03.png,e,50,42,-25,16,8,15,40,12
+"s04",image-s04.png,e,50,-38,28,21,5,15,75,12
+"s05",image-s05.png,s,50,50,50,40,10,0,0,28
+"s06",image-s06.png,s,50,35,24,20,12,0,0,28
+"s07",image-s07.png,s,50,-20,-20,10,15,0,0,28

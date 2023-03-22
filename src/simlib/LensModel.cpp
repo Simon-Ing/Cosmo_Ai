@@ -138,7 +138,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     if ( maskMode ) {
         double y = getNu().y, mrng ;
         lower = floor( dst.rows/2 - y - maskRadius ) ;
-        mrng = n.rows - lower ;
+        mrng = dst.rows - lower ;
         rng = ceil( 2.0*maskRadius ) + 1 ;
         if ( rng > mrng ) rng = mrng ;
     }
@@ -165,7 +165,6 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // (row,col) are pixel co-ordinates
     double maskRadius = getMaskRadius()*CHI ;
     cv::Point2d centre = getCentre() ;
-    std::cout << "[LensModel] distort() centre=" << centre << "\n" ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
