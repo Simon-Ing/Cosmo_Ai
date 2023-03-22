@@ -1,5 +1,7 @@
 #! /bin/sh
 
+cmake --build build
+
 dir=$1
 test $dir || dir=Test/`date "+%Y%m%d"`
 mkdir -p $dir
@@ -18,13 +20,12 @@ done
 
 python3 Python/datagen.py --directory="$dir"/plain --csvfile Datasets/debug.csv  || exit 1
 
-for flag in $F
-do
-  echo $flag
-  python3 Python/datagen.py --$flag --directory="$dir"/$flag --csvfile Datasets/debug.csv  || exit 2
-done
+python3 Python/datagen.py --mask --directory="$dir"/mask --csvfile Datasets/debug.csv  || exit 2
+python3 Python/datagen.py --reflines --centred --directory="$dir"/centred \
+   --csvfile Datasets/debug.csv  || exit 3
+python3 Python/datagen.py --reflines --directory="$dir"/reflines --csvfile Datasets/debug.csv  || exit 4
 
-test -d $baseline || exit 3
+test -d $baseline || exit 5
 
 for flag in $F plain 
 do

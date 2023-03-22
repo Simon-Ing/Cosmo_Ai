@@ -134,10 +134,16 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
     double maskRadius = getMaskRadius()*CHI ;
-    if ( maskRadius > dst.rows/2.0 ) maskRadius = dst.rows/2.0 ;
-    int lower = maskMode ? floor( dst.rows/2.0 - maskRadius ) : 0,
-         rng = maskMode ? ceil( 2.0*maskRadius ) + 1 : dst.rows,
-         rng1 = ceil( rng/ n_threads ) ;
+    // if ( maskRadius > dst.rows/2.0 ) maskRadius = dst.rows/2.0 ;
+    int lower=0, rng=dst.rows, rng1 ; 
+    if ( maskMode ) {
+        double y = getNu().y, mrng ;
+        lower = floor( dst.rows/2 - y - maskRadius ) ;
+        mrng = n.rows - lower ;
+        rng = ceil( 2.0*maskRadius ) + 1 ;
+        if ( rng > mrng ) rng = mrng ;
+    }
+    rng1 = ceil( rng/ n_threads ) ;
     for (int i = 0; i < n_threads; i++) {
         int begin = lower+rng1*i, end = begin+rng1 ;
         std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
