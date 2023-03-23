@@ -292,6 +292,7 @@ cv::Point2d LensModel::getXi() const {
    return CHI*getNu() ;
 }
 double LensModel::getXiAbs() const { 
+   cv::Point2d xi = getXi() ;
    return sqrt( xi.x*xi.x + xi.y*xi.y ) ;
 }
 cv::Point2d LensModel::getNu() const { 
