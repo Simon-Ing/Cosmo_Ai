@@ -63,7 +63,6 @@ public:
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;
 
-    void updateXY(double, double, double, double) ;
     void setXY(double, double, double, double) ;
     void setPolar(double, double, double, double) ;
     void setCHI(double) ;

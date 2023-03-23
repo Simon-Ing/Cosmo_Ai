@@ -251,10 +251,7 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
     updateApparentAbs() ;
 }
-void LensModel::updateXY( double X, double Y, double chi, double er ) {
-    setXY( X, Y, chi, er ) ;
-    update() ;
-}
+
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
 void LensModel::setPolar( double R, double theta, double chi, double er ) {
