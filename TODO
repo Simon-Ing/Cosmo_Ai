@@ -1,7 +1,6 @@
 
 1.  Test GUI
     - then make new baseline
-2.  Change sign on psi.
 3.  Test and clean up mass map and psi map
     - export raw psi/kappa and make 3D plots
     - compile a demo
