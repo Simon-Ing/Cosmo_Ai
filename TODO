@@ -1,5 +1,6 @@
 
 1.  Test GUI
+    - then make new baseline
 2.  Change sign on psi.
 3.  Test and clean up mass map and psi map
     - export raw psi/kappa and make 3D plots
@@ -8,9 +9,8 @@
 4.  Alternative reference point for roulette
     -  Clean up the secondary image
 5.  Prepare release
-    - check workflow targets
+    - Which issues should be fixed?
     - CHANGELOG
-    - which issues should be fixed?
 6.  Documentation in paper
     - Document flow of image transformations
 7.  Validate distort
