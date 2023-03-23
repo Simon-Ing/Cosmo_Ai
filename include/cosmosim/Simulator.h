@@ -38,7 +38,6 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
     virtual void calculateAlphaBeta() ;

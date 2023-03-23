@@ -94,14 +94,15 @@ cv::Mat LensModel::getSecondary() {
    this->update() ;
    return imgDistorted ; }
 
-void LensModel::update( cv::Point2d xi ) {
-   return updateInner() ;
-}
 void LensModel::update( ) {
    // updateApparentAbs() ;
    return updateInner() ;
 }
+void LensModel::update( cv::Point2d xi ) {
+   return updateInner() ;
+}
 void LensModel::updateInner( ) {
+    cv::Mat imgApparent = getApparent() ;
 
     auto startTime = std::chrono::system_clock::now();
     
@@ -329,15 +330,17 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 cv::Point2d LensModel::getCentre( ) const {
   return centredMode ? tentativeCentre : getNu() ;
 }
-cv::Point2d LensModel::getNu() const { return nu ; }
 cv::Point2d LensModel::getXi() const { 
    return CHI*getNu() ;
 }
-double LensModel::getNuAbs() const { 
-   return sqrt( nu.x*nu.x + nu.y*nu.y ) ;
-}
 double LensModel::getXiAbs() const { 
    return CHI*getNuAbs() ;
+}
+cv::Point2d LensModel::getNu() const { 
+   return nu ;
+}
+double LensModel::getNuAbs() const { 
+   return sqrt( nu.x*nu.x + nu.y*nu.y ) ;
 }
 cv::Point2d LensModel::getEta() const {
    return eta ;
