@@ -73,9 +73,7 @@ public:
     virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
-    void updateNterms(int);
     void setNterms(int);
-    void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
     cv::Point2d getCentre() const ;
 

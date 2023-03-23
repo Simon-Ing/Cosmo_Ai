@@ -227,11 +227,6 @@ void LensModel::setEinsteinR(double r) {
    einsteinR = r ;
    updateApparentAbs() ;
 }
-/* Updater - setter + run update() */
-void LensModel::updateNterms(int n) {
-   nterms = n ;
-   update() ;
-}
 
 /* D. Position (eta) setters */
 
@@ -276,13 +271,6 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 
     updateApparentAbs() ;
-}
-
-
-/* E.  Deprecated.  This is used only in legacy programs */
-void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
-   nterms = n ;
-   updateXY(X,Y,chi,er);
 }
 
 
