@@ -138,10 +138,10 @@ void SampledLens::updateApparentAbs( ) {
    if ( dist > threshold ) {
       std::cout << "Bad approximation of xi: xi0=" << xi0 
             << "; xi1=" << xi1 << "; dist=" << dist 
-            << "; nu=" << nu << "\n" ;
+            << "; nu=" << getNu() << "\n" ;
    } else {
       std::cout << "[SampledLens] Good approximation: xi0=" << xi0 
-            << "; xi1=" << xi1 << "; nu=" << nu << "\n" ;
+            << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
    }
 }
 void SampledLens::updatePsi() { return ; }

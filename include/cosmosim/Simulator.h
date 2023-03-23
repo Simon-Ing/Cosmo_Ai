@@ -15,11 +15,13 @@ class LensModel {
 private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d xi ;   // Local origin in the lens plane
+    cv::Point2d nu ;   // Apparent position in the source plane
 
     bool centredMode = false ; // centredMode is never used
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
+    void updateInner();
 
 protected:
     double CHI;
@@ -27,14 +29,14 @@ protected:
     double einsteinR;
     int nterms;
     bool rotatedMode = true ;
+    double phi{};
 
     int bgcolour = 0;
 
-    cv::Point2d nu ;   // Apparent position in the source plane
-    double phi{};
     double apparentAbs2{};
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
+    void setNu( cv::Point2d ) ;
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
@@ -50,11 +52,9 @@ public:
     ~LensModel();
     void update();
     void update( cv::Point2d );
-    void updateInner();
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
-    void setNu( cv::Point2d ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;
