@@ -129,7 +129,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
         double mrng ;
         cv::Point2d origin = getCentre() ;
         cv::Point2d ij = imageCoordinate( origin, dst ) ;
-        std::cout << "mask " << ij << " - " << origin() << "\n" ;
+        std::cout << "mask " << ij << " - " << origin << "\n" ;
         lower = floor( ij.x - maskRadius ) ;
         if ( lower < 0 ) lower = 0 ;
         mrng = dst.rows - lower ;

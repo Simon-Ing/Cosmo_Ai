@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cmake --build build
+cmake --build build || exit 10
 
 dir=$1
 test $dir || dir=Test/`date "+%Y%m%d"`
