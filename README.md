@@ -40,10 +40,7 @@ cmake . -B build
 cmake --build build
 ```
 
-This builds the C++ library and the Python library (wrapper).  The code to
-build the legacy executables written entirely in C++ has been commented out 
-in CMakeLists.txt.
-
+This builds the C++ library and the Python library (wrapper).
 The [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
 recommends the following settings (before building):
 
@@ -162,21 +159,6 @@ to use with the `--csvfile` option above.
   for easier display.
     + This has not been tested with the latest updates.
 
-### Legacy versions
-
-There is an old version written in C++ and accompanying Bourne shell
-scripts for post-processing and bulk processing of CSV files.
-
-```sh
-bin/makeimage [-S] -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name
-Python/centreimage.py [file ...]
-```
-
-The `centreimage.py` script post-processes images to centre them on
-the centre of light and optionally remove artifacts.
-In the new python script, all the functionality has been integrated
-in one script.
-
 # Versions
 
 The main branches are
@@ -230,11 +212,6 @@ be approximation errors.
 + `CosmoSim.cpp` defines the `CosmoSimPy` class with python bindigs.
   This class operates as a facade to the library, and does not 
   expose the individual classes.
-+ Legacy
-    + `Window.cpp` is the GUI window.
-    + `Simulator.cpp` for the GUI Simulator tool, which does run on Debian, although the spherical model seems to be wrong.
-    + `makeimage.cpp` is the CLI Tool. 
-       This is deprecated in favour of the `datagen.py` python script.
 
 ### Python Components
 
@@ -318,7 +295,7 @@ by `calculateAlphaBeta()` when parameters change.
 
 ## Roulette Test (experimental)
 
-The `roulettetest` program is similar to `makeimage`, but can generate extra
+The `roulettetest` program is similar to the old `makeimage`, but can generate extra
 images to test the behaviour of the Roulettes model.  In particular,
 
 + `-A` takes a comma separated list of floating point values, which are taken
