@@ -7,6 +7,9 @@
 ### Added
 
 - Support for sampled lens models using the Roulette formalism
+- New test suite to compare different implementations of 
+  similar models, such as eact and roulette point mass,
+  sampled and functional SIS, and SIS with and without rotation
 
 ### Changed
 
@@ -17,6 +20,7 @@
 
 - Several unfortunate uses of integers and single-precision floats
   have been changed to double for the sake of precision.
+- Fixed centring of image for coloured sources
 
 ## [2.0.3] - 2023-03-20
 

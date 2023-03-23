@@ -5,6 +5,10 @@
     - print \nabla\psi
 3.  Alternative reference point for roulette
     -  Clean up the secondary image
+3.  Prepare release
+    - check workflow targets
+    - CHANGELOG
+    - which issues should be fixed?
 4.  Documentation in paper
     - Document flow of image transformations
 5.  Validate distort
