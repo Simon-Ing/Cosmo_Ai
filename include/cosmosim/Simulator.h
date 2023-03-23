@@ -14,9 +14,12 @@
 class LensModel {
 private:
     cv::Point2d eta ;  // Actual position in the source plane
+    cv::Point2d xi ;   // Local origin in the lens plane
+
     bool centredMode = false ;
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
+    cv::Mat imgDistorted;
 
 protected:
     double CHI;
@@ -27,7 +30,6 @@ protected:
 
     int bgcolour = 0;
 
-    cv::Point2d xi ;   // Local origin in the lens plane
     cv::Point2d nu ;   // Apparent position in the source plane
     double phi{};
     double apparentAbs2{};
@@ -38,7 +40,6 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    cv::Mat imgDistorted;
 
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
@@ -78,8 +79,8 @@ public:
     void setSource(Source*) ;
     cv::Point2d getCentre() const ;
 
-    cv::Mat getActual() ;
-    cv::Mat getApparent() ;
+    cv::Mat getActual() const ;
+    cv::Mat getApparent() const ;
     cv::Mat getSource() const ;
     cv::Mat getDistorted() const ;
     cv::Mat getSecondary() ; // Made for testing

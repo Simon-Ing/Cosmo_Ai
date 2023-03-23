@@ -28,46 +28,20 @@ LensModel::~LensModel() {
 }
 
 /* Getters for the images */
-cv::Mat LensModel::getActual() { 
+cv::Mat LensModel::getActual() const {
    cv::Mat imgApparent = getSource() ;
    cv::Mat imgActual 
         = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
-
-   /*
-   if ( rotatedMode ) {
-     if ( eta.x == 0 && eta.y == 0 ) {
-        return imgApparent ;
-     }
-
-     // (x0,y0) is the centre of the image in pixel coordinates 
-     double x0 = imgApparent.cols/2 ;
-     double y0 = imgApparent.rows/2 ;
-
-     cv::Point2f srcTri[3], dstTri[3];
-     srcTri[0] = cv::Point2d( x0, y0 );
-     dstTri[0] = cv::Point2d( x0+eta.x, y0-eta.y );
-     srcTri[1] = cv::Point2d( x0-getEtaAbs(), y0 );
-     dstTri[1] = cv::Point2d( x0, y0 );
-     srcTri[2] = cv::Point2d( x0-getEtaAbs(), y0-getEtaAbs() );
-     dstTri[2] = cv::Point2d( x0-eta.y, y0-eta.x );
-     cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
-
-     std::cout << "getActual() (x,y)=(" << eta.x << "," << eta.y << ")\n" 
-               << rot << "\n" ;
-
-     cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
-   } else {
-   */
-     cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
-     std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
-     cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
+   cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
+   std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
+   cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
    return imgActual ; 
-   exit(1) ;
+
 }
 cv::Mat LensModel::getSource() const {
    return source->getImage() ;
 }
-cv::Mat LensModel::getApparent() { 
+cv::Mat LensModel::getApparent() const {
    cv::Mat src, dst ;
    src = source->getImage() ;
    if ( rotatedMode ) {
