@@ -11,6 +11,7 @@
         - Separate actual position (eta) and local source plane origin
             - eta is fixed; origin can change
             - recalculate nu (apparentAbs) and thus xi when the origin is changed
+            - setter for xi - recalculate local source origin (eta') 
 5.  Prepare release
     - Which issues should be fixed?
     - CHANGELOG
