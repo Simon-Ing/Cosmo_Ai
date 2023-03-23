@@ -27,6 +27,7 @@ protected:
 
     int bgcolour = 0;
 
+    cv::Point2d xi ;   // Local origin in the lens plane
     cv::Point2d nu ;   // Apparent position in the source plane
     double phi{};
     double apparentAbs2{};
@@ -37,7 +38,6 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    cv::Mat imgApparent;
     cv::Mat imgDistorted;
 
     virtual void calculateAlphaBeta() ;
@@ -48,13 +48,16 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
-    void update( cv::Mat );
+    void update( cv::Point2d );
+    void updateInner();
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;
+    double getXiAbs() const ;
+    cv::Point2d getXi() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;
