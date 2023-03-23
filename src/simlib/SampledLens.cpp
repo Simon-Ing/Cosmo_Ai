@@ -24,7 +24,7 @@ void SampledLens::calculateAlphaBeta() {
 
     int mp, m, s ;
     double C ;
-    cv::Mat psi = getPsi() ;
+    cv::Mat psi = -getPsi() ;
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( CHI*getNu(), psi ) ;
 
@@ -88,7 +88,7 @@ void SampledLens::updateApparentAbs( ) {
              << "; size: " << psi.size() << "\n" ;
 
    /** Differentiate the lens potential */
-   gradient( psi, psiX, psiY ) ;
+   gradient( -psi, psiX, psiY ) ;
    std::cout << "Types: " << psiX.type() << "/" << psiY.type() 
              << "/" << psi.type() << "\n" ;
 
