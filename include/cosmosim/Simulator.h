@@ -16,7 +16,7 @@ private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d xi ;   // Local origin in the lens plane
 
-    bool centredMode = false ;
+    bool centredMode = false ; // centredMode is never used
     void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
