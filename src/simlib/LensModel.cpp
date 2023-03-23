@@ -180,11 +180,6 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void LensModel::setMaskMode(bool b) {
-   maskMode = b ; 
-}
-void LensModel::setBGColour(int b) { bgcolour = b ; }
-void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
@@ -229,10 +224,27 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
-void LensModel::updateNterms(int n) {
-   nterms = n ;
-   update() ;
+/* Initialiser.  The default implementation does nothing.
+ * This is correct for any subclass that does not need the alpha/beta tables. */
+void LensModel::calculateAlphaBeta() { }
+
+
+/** *** Setters *** */
+
+/* A.  Mode setters */
+void LensModel::setMaskMode(bool b) {
+   maskMode = b ; 
 }
+void LensModel::setBGColour(int b) { bgcolour = b ; }
+void LensModel::setCentred(bool b) { centredMode = b ; }
+
+/* B. Source model setter */
+void LensModel::setSource(Source *src) {
+    if ( source != NULL ) delete source ;
+    source = src ;
+}
+
+/* C. Lens Model setter */
 void LensModel::setNterms(int n) {
    nterms = n ;
 }
@@ -244,20 +256,13 @@ void LensModel::setEinsteinR(double r) {
    einsteinR = r ;
    updateApparentAbs() ;
 }
-void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
+/* Updater - setter + run update() */
+void LensModel::updateNterms(int n) {
    nterms = n ;
-   updateXY(X,Y,chi,er);
+   update() ;
 }
 
-
-void LensModel::setSource(Source *src) {
-    if ( source != NULL ) delete source ;
-    source = src ;
-}
-
-/* Default implementation doing nothing.
- * This is correct for any subclass that does not need the alpha/beta tables. */
-void LensModel::calculateAlphaBeta() { }
+/* D. Position (eta) setters */
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
@@ -301,6 +306,16 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
 
     updateApparentAbs() ;
 }
+
+
+/* E.  Deprecated.  This is used only in legacy programs */
+void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
+   nterms = n ;
+   updateXY(X,Y,chi,er);
+}
+
+
+/* Masking */
 void LensModel::maskImage( ) {
     maskImage( imgDistorted ) ;
 }
@@ -313,7 +328,9 @@ void LensModel::maskImage( cv::InputOutputArray r ) {
 void LensModel::markMask( cv::InputOutputArray r ) {
    throw NotImplemented() ;
 }
-cv::Point2d LensModel::getCentre( ) {
+
+/* Getters */
+cv::Point2d LensModel::getCentre( ) const {
   return centredMode ? tentativeCentre : getNu() ;
 }
 cv::Point2d LensModel::getNu() const { return nu ; }

@@ -73,7 +73,7 @@ public:
     void setNterms(int);
     void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
-    cv::Point2d getCentre() ;
+    cv::Point2d getCentre() const ;
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;

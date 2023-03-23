@@ -7,6 +7,10 @@
     - print \nabla\psi
 4.  Alternative reference point for roulette
     -  Clean up the secondary image
+        - Separate lens parameters and position - separate Simulator class and lens model?
+        - Separate actual position (eta) and local source plane origin
+            - eta is fixed; origin can change
+            - recalculate nu (apparentAbs) and thus xi when the origin is changed
 5.  Prepare release
     - Which issues should be fixed?
     - CHANGELOG
