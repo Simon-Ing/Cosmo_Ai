@@ -66,8 +66,7 @@ void SphereLens::initAlphasBetas() {
 
 void SphereLens::calculateAlphaBeta() {
     std::cout << "SphereLens calculateAlphaBeta\n" ;
-    cv::Point2d xi = getNu()*CHI ;
-    // double xiabs = getNuAbs()*CHI ;
+    cv::Point2d xi = getXi() ;
 
     // calculate all amplitudes for given X, Y, einsteinR
     // This is done here to before the code is parallellised

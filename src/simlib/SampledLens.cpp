@@ -26,7 +26,7 @@ void SampledLens::calculateAlphaBeta() {
     double C ;
     cv::Mat psi = -getPsi() ;
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
-    cv::Point2d ij = imageCoordinate( CHI*getNu(), psi ) ;
+    cv::Point2d ij = imageCoordinate( getXi(), psi ) ;
 
     std::cout << "[SampledLens::calculateAlpaBeta] xi in image space is " << ij << "\n" ;
 

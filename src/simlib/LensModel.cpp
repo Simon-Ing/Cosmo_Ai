@@ -64,7 +64,7 @@ cv::Mat LensModel::getActual() {
    return imgActual ; 
    exit(1) ;
 }
-cv::Mat LensModel::getSource() { 
+cv::Mat LensModel::getSource() const {
    return source->getImage() ;
 }
 cv::Mat LensModel::getApparent() { 
@@ -81,16 +81,8 @@ cv::Mat LensModel::getApparent() {
       return src ;
    }
 }
-cv::Mat LensModel::getDistorted() { return imgDistorted ; }
-
-cv::Mat LensModel::getDistorted( double app ) { 
-   /* This is intended to change the centre of the convergence ring,
-    * and draw a different section of the image.
-    * TESTING ONLY.
-    * The logic is probably faulty. */ 
-   nu = cv::Point2d( app, 0 ) ;
-   this->update() ;
-   return imgDistorted ; 
+cv::Mat LensModel::getDistorted() const {
+   return imgDistorted ;
 }
 
 cv::Mat LensModel::getSecondary() { 
@@ -102,11 +94,14 @@ cv::Mat LensModel::getSecondary() {
    this->update() ;
    return imgDistorted ; }
 
-void LensModel::update() {
-    update( getApparent() ) ;
+void LensModel::update( cv::Point2d xi ) {
+   return updateInner() ;
 }
-
-void LensModel::update( cv::Mat imgApparent ) {
+void LensModel::update( ) {
+   // updateApparentAbs() ;
+   return updateInner() ;
+}
+void LensModel::updateInner( ) {
 
     auto startTime = std::chrono::system_clock::now();
     
@@ -156,6 +151,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int lower=0, rng=dst.rows, rng1 ; 
     if ( maskMode ) {
         double mrng ;
+        // getNu() should be replaced by getXi()/CHI
         cv::Point2d ij = imageCoordinate( getNu(), dst ) ;
         std::cout << "mask " << ij << " - " << getNu() << "\n" ;
         lower = floor( ij.x - maskRadius ) ;
@@ -334,8 +330,14 @@ cv::Point2d LensModel::getCentre( ) const {
   return centredMode ? tentativeCentre : getNu() ;
 }
 cv::Point2d LensModel::getNu() const { return nu ; }
+cv::Point2d LensModel::getXi() const { 
+   return CHI*getNu() ;
+}
 double LensModel::getNuAbs() const { 
    return sqrt( nu.x*nu.x + nu.y*nu.y ) ;
+}
+double LensModel::getXiAbs() const { 
+   return CHI*getNuAbs() ;
 }
 cv::Point2d LensModel::getEta() const {
    return eta ;

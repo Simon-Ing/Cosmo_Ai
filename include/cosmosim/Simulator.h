@@ -27,6 +27,7 @@ protected:
 
     int bgcolour = 0;
 
+    cv::Point2d xi ;   // Local origin in the lens plane
     cv::Point2d nu ;   // Apparent position in the source plane
     double phi{};
     double apparentAbs2{};
@@ -48,13 +49,16 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
-    void update( cv::Mat );
+    void update( cv::Point2d );
+    void updateInner();
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;
+    double getXiAbs() const ;
+    cv::Point2d getXi() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;
@@ -77,9 +81,8 @@ public:
 
     cv::Mat getActual() ;
     cv::Mat getApparent() ;
-    cv::Mat getSource() ;
-    cv::Mat getDistorted() ;
-    cv::Mat getDistorted( double ) ;
+    cv::Mat getSource() const ;
+    cv::Mat getDistorted() const ;
     cv::Mat getSecondary() ; // Made for testing
 };
 
