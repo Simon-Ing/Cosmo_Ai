@@ -127,9 +127,9 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int lower=0, rng=dst.rows, rng1 ; 
     if ( maskMode ) {
         double mrng ;
-        // getNu() should be replaced by getXi()/CHI
-        cv::Point2d ij = imageCoordinate( getNu(), dst ) ;
-        std::cout << "mask " << ij << " - " << getNu() << "\n" ;
+        cv::Point2d origin = getCentre() ;
+        cv::Point2d ij = imageCoordinate( origin, dst ) ;
+        std::cout << "mask " << ij << " - " << origin() << "\n" ;
         lower = floor( ij.x - maskRadius ) ;
         if ( lower < 0 ) lower = 0 ;
         mrng = dst.rows - lower ;
@@ -284,13 +284,15 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 
 /* Getters */
 cv::Point2d LensModel::getCentre( ) const {
-  return centredMode ? tentativeCentre : getNu() ;
+   // TODO This needs to be modified to take xi into account
+   return centredMode ? tentativeCentre : getNu() ;
 }
 cv::Point2d LensModel::getXi() const { 
+   // TODO This needs to be changed to allow for a configurable xi
    return CHI*getNu() ;
 }
 double LensModel::getXiAbs() const { 
-   return CHI*getNuAbs() ;
+   return sqrt( xi.x*xi.x + xi.y*xi.y ) ;
 }
 cv::Point2d LensModel::getNu() const { 
    return nu ;
