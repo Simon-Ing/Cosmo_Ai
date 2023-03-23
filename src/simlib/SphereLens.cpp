@@ -81,6 +81,6 @@ void SphereLens::calculateAlphaBeta() {
 
 void SphereLens::updateApparentAbs( ) {
     double r = getEtaAbs() + einsteinR/CHI ;
-    nu = cv::Point2d( r, 0 ) ;
+    setNu( cv::Point2d( r, 0 ) ) ;
     // nu = cv::Point2d( r*cos(phi), r*sin(phi) ) ;
 }

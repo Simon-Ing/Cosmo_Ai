@@ -284,12 +284,15 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 
 /* Getters */
 cv::Point2d LensModel::getCentre( ) const {
-   // TODO This needs to be modified to take xi into account
-   return centredMode ? tentativeCentre : getNu() ;
+   cv::Point2d xichi =  getXi()/CHI ;
+   if ( centredMode ) {
+      return tentativeCentre + xichi - getNu() ;
+   } else {
+      return xichi ;
+   }
 }
 cv::Point2d LensModel::getXi() const { 
-   // TODO This needs to be changed to allow for a configurable xi
-   return CHI*getNu() ;
+   return xi ;
 }
 double LensModel::getXiAbs() const { 
    cv::Point2d xi = getXi() ;
@@ -311,3 +314,7 @@ double LensModel::getEtaAbs() const {
    return sqrt( eta.x*eta.x + eta.y*eta.y ) ;
 }
 double LensModel::getMaskRadius() const { return 1024*1024 ; }
+void LensModel::setNu( cv::Point2d n ) {
+   nu = n ;
+   xi = nu*CHI ;
+}

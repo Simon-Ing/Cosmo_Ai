@@ -54,6 +54,7 @@ public:
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
+    void setNu( cv::Point2d ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;

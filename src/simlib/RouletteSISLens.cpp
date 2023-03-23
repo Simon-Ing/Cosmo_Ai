@@ -29,6 +29,5 @@ RouletteSISLens::RouletteSISLens(std::string fn, bool centred) :
 }
 void RouletteSISLens::updateApparentAbs( ) {
     double r = getEtaAbs() + einsteinR/CHI ;
-    // nu = cv::Point2d( r, 0 ) ;
-    nu = cv::Point2d( r*cos(phi), r*sin(phi) ) ;
+    setNu( cv::Point2d( r*cos(phi), r*sin(phi) ) ) ;
 }

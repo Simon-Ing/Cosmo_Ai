@@ -134,7 +134,7 @@ void SampledLens::updateApparentAbs( ) {
       if ( dist < threshold ) cont = 0 ;
       if ( ++count > maxcount ) cont = 0 ;
    }
-   nu = xi1/CHI ;
+   setNu( xi1/CHI ) ;
    if ( dist > threshold ) {
       std::cout << "Bad approximation of xi: xi0=" << xi0 
             << "; xi1=" << xi1 << "; dist=" << dist 

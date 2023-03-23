@@ -31,6 +31,6 @@ void RoulettePMLens::updateApparentAbs( ) {
 
     double root = sqrt(0.25*getEtaSquare() + einsteinR*einsteinR/(CHI*CHI));
 
-    nu = tentativeCentre =  cv::Point2d( getEtaAbs()/2 + root, 0 ) ;
+    setNu( tentativeCentre =  cv::Point2d( getEtaAbs()/2 + root, 0 ) ) ;
     apparentAbs2 = getEtaAbs()/2 - root ;
 }
