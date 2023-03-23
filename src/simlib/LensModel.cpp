@@ -69,10 +69,11 @@ cv::Mat LensModel::getSecondary() {
    return imgDistorted ; }
 
 void LensModel::update( ) {
-   // updateApparentAbs() ;
+   updateApparentAbs() ;
    return updateInner() ;
 }
 void LensModel::update( cv::Point2d xi ) {
+   throw NotImplemented() ;
    return updateInner() ;
 }
 void LensModel::updateInner( ) {
@@ -221,11 +222,9 @@ void LensModel::setNterms(int n) {
 }
 void LensModel::setCHI(double chi) {
    CHI = chi ;
-   updateApparentAbs() ;
 }
 void LensModel::setEinsteinR(double r) {
    einsteinR = r ;
-   updateApparentAbs() ;
 }
 
 /* D. Position (eta) setters */
@@ -249,7 +248,6 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
 
     std::cout << "[setXY] Set position x=" << eta.x << "; y=" << eta.y
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
-    updateApparentAbs() ;
 }
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
@@ -267,7 +265,6 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 
-    updateApparentAbs() ;
 }
 
 

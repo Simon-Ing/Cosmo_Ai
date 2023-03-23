@@ -40,7 +40,7 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-
+    virtual void updateApparentAbs() = 0 ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
 
@@ -62,19 +62,19 @@ public:
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;
+    cv::Point2d getCentre() const ;
 
     void setXY(double, double, double, double) ;
     void setPolar(double, double, double, double) ;
     void setCHI(double) ;
     void setEinsteinR(double) ;
-    virtual void updateApparentAbs() = 0 ;
+    void setNterms(int);
+    void setSource(Source*) ;
+
     virtual void maskImage( ) ;
     virtual void markMask( ) ;
     virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
-    void setNterms(int);
-    void setSource(Source*) ;
-    cv::Point2d getCentre() const ;
 
     cv::Mat getActual() const ;
     cv::Mat getApparent() const ;
