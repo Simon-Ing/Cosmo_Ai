@@ -35,7 +35,7 @@ protected:
 
     int bgcolour = 0;
 
-    double apparentAbs2{};
+    double apparentAbs2 = 0;
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
     void setNu( cv::Point2d ) ;
@@ -54,6 +54,7 @@ public:
     LensModel(bool);
     ~LensModel();
     void update();
+    void updateSecondary();
     void update( cv::Point2d );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
@@ -84,7 +85,6 @@ public:
     cv::Mat getApparent() const ;
     cv::Mat getSource() const ;
     cv::Mat getDistorted() const ;
-    cv::Mat getSecondary() ; // Made for testing
 };
 
 class PointMassLens : public LensModel { 

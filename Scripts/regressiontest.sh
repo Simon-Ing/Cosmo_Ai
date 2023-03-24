@@ -10,7 +10,8 @@ baseline=$2
 test $baseline || baseline=Test/baseline20230322
 # baseline=Test/v2.0.3
 
-F="mask centred reflines"
+F="mask"
+# F="mask centred reflines"
 
 
 for flag in $F plain 

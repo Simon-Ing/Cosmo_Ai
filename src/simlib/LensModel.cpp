@@ -59,15 +59,13 @@ cv::Mat LensModel::getDistorted() const {
    return imgDistorted ;
 }
 
-cv::Mat LensModel::getSecondary() { 
-   /* This only makes sense in the Point Mass model.
-    * It uses the same logic as getDistorted(double) above, and
-    * is probably faulty. 
-    */
-   nu = cv::Point2d( apparentAbs2, 0 ) ;
-   this->update() ;
-   return imgDistorted ; }
-
+void LensModel::updateSecondary( ) {
+   if ( apparentAbs2 == 0 ) {
+      throw NotSupported() ;
+   }
+   throw NotImplemented() ;
+   return updateInner() ;
+}
 void LensModel::update( ) {
    updateApparentAbs() ;
    return updateInner() ;
