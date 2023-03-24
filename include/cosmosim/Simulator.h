@@ -78,9 +78,10 @@ public:
     void setSource(Source*) ;
 
     virtual void maskImage( ) ;
+    virtual void maskImage( double ) ;
     virtual void markMask( ) ;
-    virtual void maskImage( cv::InputOutputArray ) ;
     virtual void markMask( cv::InputOutputArray ) ;
+    virtual void maskImage( cv::InputOutputArray, double ) ;
 
     cv::Mat getActual() const ;
     cv::Mat getApparent() const ;

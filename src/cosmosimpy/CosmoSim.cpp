@@ -176,8 +176,8 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
    }
    return im ;
 }
-void CosmoSim::maskImage() {
-          sim->maskImage() ;
+void CosmoSim::maskImage( double scale ) {
+          sim->maskImage( scale ) ;
 }
 void CosmoSim::showMask() {
           sim->markMask() ;

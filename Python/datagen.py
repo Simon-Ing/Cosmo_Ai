@@ -42,6 +42,22 @@ def makeSingle(sim,args,name=None):
     if name == None: name = args.name
     sim.runSim()
     makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
+    if args.join:
+        # sim.setMaskMode(False)
+        sim.runSim()
+        # sim.maskImage(0.9)
+        joinim = sim.getDistorted(False)
+        # joinim = sim.getDistortedImage(False)
+        for i in range(5):
+           sim.moveSim(rot=(i+1)*np.pi/3,scale=1)
+           # sim.maskImage(0.9)
+           im = sim.getDistorted(False)
+           # im = sim.getDistortedImage(False)
+           joinim = np.maximum(joinim,im)
+        fn = os.path.join(args.directory,"join-" + str(name) + ".png" ) 
+        if args.reflines:
+            drawAxes(joinim)
+        cv.imwrite(fn,joinim)
     if args.family:
         sim.moveSim(rot=-np.pi/4,scale=1)
         makeOutput(sim,args,name=f"{name}-45+1")
@@ -115,6 +131,8 @@ if __name__ == "__main__":
 
     parser.add_argument('-f', '--family',action='store_true',
             help="Several images moving the viewpoint")
+    parser.add_argument('-J', '--join',action='store_true',
+            help="Join several images from different viewpoints")
     parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")

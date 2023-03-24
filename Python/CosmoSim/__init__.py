@@ -83,6 +83,8 @@ class CosmoSim(cs.CosmoSim):
         return super().setSourceMode( int( sourceDict[s] ) ) 
     def moveSim(self,rot,scale):
         return super().moveSim( float(rot), float(scale) )
+    def maskImage(self,scale=1):
+        return super().maskImage( float(scale) )
     def setLensMode(self,s):
         return super().setLensMode( int( lensDict[s] ) ) 
     def setBGColour(self,s):

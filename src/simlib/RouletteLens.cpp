@@ -1,6 +1,7 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "cosmosim/Roulette.h"
+#include "simaux.h"
 
 double factorial_(unsigned int n);
 
@@ -10,12 +11,14 @@ cv::Point2d getOrigin( cv::Point R, double phi, double x0, double y0 ) {
              y = y0 - (R.x*s + R.y*c) ;
       return cv::Point2d( x, y ) ;
 }
-void RouletteLens::maskImage( cv::InputOutputArray imgD ) {
+void RouletteLens::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point2d origo = getOrigin( getCentre(), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d centre = getCentre() ;
+      cv::Point2d origo = imageCoordinate( centre, imgDistorted ) ;
       cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
-      cv::circle( mask, origo, getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
+      cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
       black.copyTo( imgD, mask ) ;
 }
 void RouletteLens::markMask( cv::InputOutputArray imgD ) {
@@ -56,4 +59,5 @@ cv::Point2d RouletteLens::getDistortedPos(double r, double theta) const {
 double RouletteLens::getMaskRadius() const { 
    // Should this depend on the source position or the local origin?
    return getNuAbs() ; 
+   // return getXiAbs()/CHI ; 
 }

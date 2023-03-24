@@ -58,7 +58,7 @@ public:
     bool moveSim( double, double ) ;
     void diagnostics();
 
-    void maskImage() ;
+    void maskImage(double) ;
     void showMask() ;
     void setMaskMode(bool) ;
 

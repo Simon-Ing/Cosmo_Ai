@@ -272,12 +272,15 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
 
 /* Masking */
 void LensModel::maskImage( ) {
-    maskImage( imgDistorted ) ;
+    maskImage( imgDistorted, 1 ) ;
+}
+void LensModel::maskImage( double scale ) {
+    maskImage( imgDistorted, scale ) ;
 }
 void LensModel::markMask( ) {
     markMask( imgDistorted ) ;
 }
-void LensModel::maskImage( cv::InputOutputArray r ) {
+void LensModel::maskImage( cv::InputOutputArray r, double scale ) {
    throw NotImplemented() ;
 }
 void LensModel::markMask( cv::InputOutputArray r ) {

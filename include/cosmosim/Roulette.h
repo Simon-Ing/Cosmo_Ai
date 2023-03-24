@@ -20,7 +20,7 @@ protected:
 
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void markMask( cv::InputOutputArray ) ;
-    virtual void maskImage( cv::InputOutputArray ) ;
+    virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
 };
 
