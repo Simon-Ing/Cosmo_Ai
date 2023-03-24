@@ -160,8 +160,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
-            int row_, col_;  // pixel co-ordinates in the apparent image
-            cv::Point2d pos ;
+            cv::Point2d pos, ij ;
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
@@ -180,15 +179,14 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
               pos = this->getDistortedPos(r, theta);
 
               // Translate to array index in the source plane
-              row_ = (int) round(src.rows / 2.0 - pos.y);
-              col_ = (int) round(src.cols / 2.0 + pos.x);
+              ij = imageCoordinate( pos, src ) ;
   
               // If (x', y') within source, copy value to imgDistorted
-              if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+              if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
-                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>(row_, col_);
+                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
                  } else {
-                    dst.at<uchar>(row, col) = src.at<uchar>(row_, col_);
+                    dst.at<uchar>(row, col) = src.at<uchar>( ij );
                  }
               }
             }
