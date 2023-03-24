@@ -452,3 +452,4 @@ tt
 *.zip
 [0-9]*.txt
 *.slurm.[eo]*
+_deps
