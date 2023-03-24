@@ -77,11 +77,16 @@ void LensModel::update( cv::Point2d xi ) {
 void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
-    auto startTime = std::chrono::system_clock::now();
     
-    std::cout << "update() x=" << eta.x << "; y= " << eta.y 
+    std::cout << "[LensModel::update()] x=" << eta.x << "; y= " << eta.y 
               << "; R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
+    std::cout << "[LensModel::update()] xi=" << getXi()   << "\n" ;
+    std::cout << "[LensModel::update()] eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
+    std::cout << "[LensModel::update()] nu=" << getNu()   << "\n" ;
+    std::cout << "[LensModel::update()] centre=" << getCentre() << "\n" ;
+
+    auto startTime = std::chrono::system_clock::now();
 
     this->calculateAlphaBeta() ;
 
@@ -154,7 +159,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
     double maskRadius = getMaskRadius()*CHI ;
-    cv::Point2d centre = getCentre() ;
+    cv::Point2d xi = getXi() ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
@@ -162,8 +167,8 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
-            double x = (col - dst.cols / 2.0 - centre.x) * CHI;
-            double y = (dst.rows / 2.0 - row - centre.y) * CHI;
+            double x = (col - dst.cols / 2.0 ) * CHI - xi.x;
+            double y = (dst.rows / 2.0 - row ) * CHI - xi.y;
             // (x,y) are coordinates in the lens plane, and hence the
             // multiplication by CHI
 
@@ -175,11 +180,12 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             } else {
               double theta = x == 0 ? PI/2 : atan2(y, x);
               pos = this->getDistortedPos(r, theta);
+              pos += etaOffset ;
 
               // Translate to array index in the source plane
               ij = imageCoordinate( pos, src ) ;
   
-              // If (x', y') within source, copy value to imgDistorted
+              // If the pixel is within range, copy value from src to dst
               if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
                     dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
