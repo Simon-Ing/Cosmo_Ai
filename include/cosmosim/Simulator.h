@@ -24,7 +24,8 @@ private:
 
 protected:
     cv::Point2d xi ;   // Local origin in the lens plane
-    cv::Point2d etaPrime ;  // Reference point corresponding to xi
+    cv::Point2d etaOffset = cv::Point2d(0,0) ;
+        // Offset in the source plane resulting from moving xi
     double CHI;
     Source *source ;
     double einsteinR;

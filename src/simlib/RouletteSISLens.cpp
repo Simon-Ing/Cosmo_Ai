@@ -34,5 +34,7 @@ void RouletteSISLens::updateApparentAbs( ) {
 void RouletteSISLens::setXi( cv::Point2d x ) {
    xi = x ;
    double angle = atan2( x.y, x.x ) ;
-   etaPrime = xi + einsteinR*cv::Point2d( cos(angle), sin(angle) ) ;
+   etaOffset = xi + einsteinR*cv::Point2d( cos(angle), sin(angle) ) ;
+   etaOffset /= CHI ;
+   etaOffset -= getNu() ;
 }
