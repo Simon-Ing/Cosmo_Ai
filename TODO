@@ -1,8 +1,10 @@
 
-1.  New script features to test moving xi
-    - xi := 2xi
-    - rotate xi 45° 
-    - xi at secondary image [ this requires setXi for RoulettePM ]
+1.  Multiple viewpoints
+    - debug
+    - compose images
+1.  Secondary Image
+    - setXi for RoulettePM 
+    - test script
 1.  Test GUI
     - then make new baseline
 3.  Test and clean up mass map and psi map
