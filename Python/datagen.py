@@ -41,14 +41,18 @@ def setParameters(sim,row):
 def makeSingle(sim,args,name=None):
     if name == None: name = args.name
     sim.runSim()
-    makeOutput(sim,args,name)
+    makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
     if args.family:
-        makeOutput(sim,args,name=f"{name}-45+1",rot=-np.pi/4,scale=1)
-        makeOutput(sim,args,name=f"{name}+45+1",rot=+np.pi/4,scale=1)
-        makeOutput(sim,args,name=f"{name}+0-1",rot=0,scale=-1)
-        makeOutput(sim,args,name=f"{name}+0+2",rot=0,scale=2)
+        sim.moveSim(rot=-np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}-45+1")
+        sim.moveSim(rot=+np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}+45+1")
+        sim.moveSim(rot=0,scale=-1)
+        makeOutput(sim,args,name=f"{name}+0-1")
+        sim.moveSim(rot=0,scale=2)
+        makeOutput(sim,args,name=f"{name}+0+2")
 
-def makeOutput(sim,args,name=None,rot=0,scale=1):
+def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
     im = sim.getDistortedImage( 
                     reflines=False,
                     showmask=args.showmask
@@ -62,11 +66,11 @@ def makeOutput(sim,args,name=None,rot=0,scale=1):
     fn = os.path.join(args.directory,"image-" + str(name) + ".png" ) 
     cv.imwrite(fn,im)
 
-    if args.actual:
+    if actual:
        fn = os.path.join(args.directory,"actual-" + str(name) + ".png" ) 
        im = sim.getActualImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-    if args.apparent:
+    if apparent:
        fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)

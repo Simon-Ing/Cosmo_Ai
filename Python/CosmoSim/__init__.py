@@ -81,6 +81,8 @@ class CosmoSim(cs.CosmoSim):
         return self.updateEvent
     def setSourceMode(self,s):
         return super().setSourceMode( int( sourceDict[s] ) ) 
+    def moveSim(self,rot,scale):
+        return super().moveSim( float(rot), float(scale) )
     def setLensMode(self,s):
         return super().setLensMode( int( lensDict[s] ) ) 
     def setBGColour(self,s):

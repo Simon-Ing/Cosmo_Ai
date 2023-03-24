@@ -313,6 +313,7 @@ double LensModel::getMaskRadius() const { return 1024*1024 ; }
 void LensModel::setNu( cv::Point2d n ) {
    nu = n ;
    xi = nu*CHI ;
+   etaOffset = cv::Point2d( 0, 0 ) ;
 }
 void LensModel::setXi( cv::Point2d x ) {
    if ( rotatedMode ) {

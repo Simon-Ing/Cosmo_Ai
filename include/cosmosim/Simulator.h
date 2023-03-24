@@ -39,6 +39,7 @@ protected:
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
     void setNu( cv::Point2d ) ;
+    virtual void setXi( cv::Point2d ) ;
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
@@ -58,7 +59,6 @@ public:
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
-    virtual void setXi( cv::Point2d ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;

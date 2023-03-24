@@ -3,23 +3,13 @@
 cmake --build build
 
 dir=$1
-test $dir || dir=Test/sampled`date "+%Y%m%d"`
+test $dir || dir=Test/current`date "+%Y%m%d"`
 mkdir -p $dir
 
-fn=/tmp/ts.csv 
+fn=Test/spheres.csv
 
-cat > $fn <<EOF
-index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
-"sampled01",image-sampled01.png,s,ss,50,50,50,70,20,0,0,32
-"s01",image-s01.png,s,s,50,50,50,70,20,0,0,32
-"nr01",image-nrs01.png,s,sr,50,50,50,70,20,0,0,32
-"sampled05",image-sampled05.png,s,ss,50,10,20,7,20,0,0,32
-"sampled06",image-sampled06.png,s,ss,50,50,25,7,20,0,0,32
-"s05",image-s05.png,s,s,50,10,20,7,20,0,0,32
-"s06",image-s06.png,s,s,50,50,25,7,20,0,0,32
-EOF
-
-python3 Python/datagen.py --directory="$dir" --csvfile $fn --actual --apparent --reflines
+python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines
+# python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
 
 # "ss15",image-ss15.png,t,ss,50,10,0,7,20,0,0,16

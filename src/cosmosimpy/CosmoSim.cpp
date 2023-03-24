@@ -143,9 +143,8 @@ bool CosmoSim::moveSim( double rot, double scale ) {
            xi.x*sin(rot) + xi.y*cos(rot)
          );
    xi1 *= scale ;
-   sim->setXi( xi1 ) ;
    Py_BEGIN_ALLOW_THREADS
-   sim->update() ;
+   sim->update( xi1 ) ;
    Py_END_ALLOW_THREADS
    return true ;
 }
@@ -224,6 +223,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getApparent", &CosmoSim::getSource)
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("runSim", &CosmoSim::runSim)
+        .def("moveSim", &CosmoSim::moveSim)
         .def("diagnostics", &CosmoSim::diagnostics)
         .def("maskImage", &CosmoSim::maskImage)
         .def("showMask", &CosmoSim::showMask)
