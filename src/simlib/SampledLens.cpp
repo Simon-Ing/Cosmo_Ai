@@ -144,4 +144,7 @@ void SampledLens::updateApparentAbs( ) {
             << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
    }
 }
+void SampledLens::setXi( cv::Point2d ) {
+   throw NotImplemented() ;
+}
 void SampledLens::updatePsi() { return ; }

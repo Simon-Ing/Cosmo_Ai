@@ -14,7 +14,6 @@
 class LensModel {
 private:
     cv::Point2d eta ;  // Actual position in the source plane
-    cv::Point2d xi ;   // Local origin in the lens plane
     cv::Point2d nu ;   // Apparent position in the source plane
 
     bool centredMode = false ; // centredMode is never used
@@ -24,6 +23,8 @@ private:
     void updateInner();
 
 protected:
+    cv::Point2d xi ;   // Local origin in the lens plane
+    cv::Point2d etaPrime ;  // Reference point corresponding to xi
     double CHI;
     Source *source ;
     double einsteinR;
@@ -42,6 +43,7 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
+    virtual void setXi( cv::Point2d ) ;
     virtual void updateApparentAbs() = 0 ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
@@ -99,6 +101,11 @@ class NotImplemented : public std::logic_error
 {
 public:
     NotImplemented() : std::logic_error("Function not yet implemented") { };
+};
+class NotSupported : public std::logic_error
+{
+public:
+    NotSupported() : std::logic_error("Operation not supported in this context.") { };
 };
 
 #endif // COSMOSIM_H

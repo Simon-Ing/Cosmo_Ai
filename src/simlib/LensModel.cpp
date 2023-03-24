@@ -73,7 +73,7 @@ void LensModel::update( ) {
    return updateInner() ;
 }
 void LensModel::update( cv::Point2d xi ) {
-   throw NotImplemented() ;
+   setXi( xi ) ;
    return updateInner() ;
 }
 void LensModel::updateInner( ) {
@@ -317,4 +317,12 @@ double LensModel::getMaskRadius() const { return 1024*1024 ; }
 void LensModel::setNu( cv::Point2d n ) {
    nu = n ;
    xi = nu*CHI ;
+}
+void LensModel::setXi( cv::Point2d x ) {
+   if ( rotatedMode ) {
+      std::cout << "Alternative viewpoints cannot be supported in rotated mode.\n" ;
+      throw NotSupported() ;
+   } else {
+      throw NotImplemented() ;
+   }
 }

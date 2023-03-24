@@ -51,6 +51,7 @@ class SphereLens : public RouletteLens {
 class RouletteSISLens : public SphereLens { 
   protected:
     virtual void updateApparentAbs() ;
+    virtual void setXi( cv::Point2d ) ;
   public:
     RouletteSISLens();
     RouletteSISLens(bool);
@@ -67,6 +68,7 @@ protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
     virtual void updatePsi() ;
+    virtual void setXi( cv::Point2d ) ;
 };
 class SampledSISLens : public SampledLens {
 public:
