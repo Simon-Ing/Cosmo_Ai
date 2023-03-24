@@ -18,10 +18,11 @@ index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s08",image-s08.png,s,50,30,0,12,15,0,0,50
 "s11",image-s01.png,s,50,30,30,40,20,0,0,50
 "s12",image-s02.png,s,50,35,24,30,30,0,0,50
-"s13",image-s02.png,s,50,40,40,60,20,0,0,50
+"s13",image-s02.png,s,50,40,40,60,40,0,0,50
+"s14",image-s02.png,e,50,40,40,60,60,6,135,50
 EOF
 
-python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines
+python3 Python/datagen.py --imagesize 600 -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines
 # python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
 
