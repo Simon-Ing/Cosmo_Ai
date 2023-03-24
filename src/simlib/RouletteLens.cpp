@@ -3,14 +3,6 @@
 #include "cosmosim/Roulette.h"
 #include "simaux.h"
 
-double factorial_(unsigned int n);
-
-cv::Point2d getOrigin( cv::Point R, double phi, double x0, double y0 ) {
-      double c = cos(phi), s = R.x*sin(phi) ;
-      double x = x0 + R.x*c - R.y*s,
-             y = y0 - (R.x*s + R.y*c) ;
-      return cv::Point2d( x, y ) ;
-}
 void RouletteLens::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteLens::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
@@ -23,7 +15,9 @@ void RouletteLens::maskImage( cv::InputOutputArray imgD, double scale ) {
 }
 void RouletteLens::markMask( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
-      cv::Point2d origo = getOrigin( getCentre(), phi, imgD.cols()/2, imgD.rows()/2 ) ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d centre = getCentre() ;
+      cv::Point2d origo = imageCoordinate( centre, imgDistorted ) ;
       cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
