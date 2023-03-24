@@ -135,7 +135,20 @@ bool CosmoSim::runSim() {
    Py_END_ALLOW_THREADS
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;
-} 
+}
+bool CosmoSim::moveSim( double rot, double scale ) { 
+   cv::Point2d xi = sim->getXi(), xi1 ;
+   xi1 = cv::Point2d( 
+           xi.x*cos(rot) - xi.y*sin(rot),
+           xi.x*sin(rot) + xi.y*cos(rot)
+         );
+   xi1 *= scale ;
+   sim->setXi( xi1 ) ;
+   Py_BEGIN_ALLOW_THREADS
+   sim->update() ;
+   Py_END_ALLOW_THREADS
+   return true ;
+}
 cv::Mat CosmoSim::getSource(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;

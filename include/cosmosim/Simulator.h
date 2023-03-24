@@ -44,7 +44,6 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    virtual void setXi( cv::Point2d ) ;
     virtual void updateApparentAbs() = 0 ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
@@ -58,6 +57,7 @@ public:
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
+    virtual void setXi( cv::Point2d ) ;
 
     double getNuAbs() const ;
     cv::Point2d getNu() const ;

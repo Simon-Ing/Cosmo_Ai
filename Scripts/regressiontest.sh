@@ -10,7 +10,10 @@ baseline=$2
 test $baseline || baseline=Test/baseline20230322
 # baseline=Test/v2.0.3
 
-F="mask centred reflines"
+F=mask
+# F="mask centred reflines"
+# centred and reflines are done in python and are not needed
+# when validating C++ code
 
 
 for flag in $F plain 
