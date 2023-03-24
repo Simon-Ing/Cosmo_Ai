@@ -55,6 +55,7 @@ public:
     void setSourceParameters(int,int,int);
 
     bool runSim();
+    bool moveSim( double, double ) ;
     void diagnostics();
 
     void maskImage() ;

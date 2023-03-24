@@ -41,7 +41,14 @@ def setParameters(sim,row):
 def makeSingle(sim,args,name=None):
     if name == None: name = args.name
     sim.runSim()
+    makeOutput(sim,args,name)
+    if args.family:
+        makeOutput(sim,args,name=f"{name}-45+1",rot=-np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}+45+1",rot=+np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}+0-1",rot=0,scale=-1)
+        makeOutput(sim,args,name=f"{name}+0+2",rot=0,scale=2)
 
+def makeOutput(sim,args,name=None,rot=0,scale=1):
     im = sim.getDistortedImage( 
                     reflines=False,
                     showmask=args.showmask
@@ -102,6 +109,8 @@ if __name__ == "__main__":
     parser.add_argument('-D', '--directory',default="./",
             help="directory path (for output files)")
 
+    parser.add_argument('-f', '--family',action='store_true',
+            help="Several images moving the viewpoint")
     parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
