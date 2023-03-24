@@ -43,7 +43,7 @@ public:
     void setFile(std::string) ;
     void setXY(double, double) ;
     void setPolar(int, int) ;
-    void setCHI(int);
+    void setCHI(double);
     void setNterms(int);
     void setImageSize(int);
     void setResolution(int);
@@ -51,8 +51,8 @@ public:
 
     void setSourceMode(int);
     void setLensMode(int);
-    void setEinsteinR(int);
-    void setSourceParameters(int,int,int);
+    void setEinsteinR(double);
+    void setSourceParameters(double,double,double);
 
     bool runSim();
     bool moveSim( double, double ) ;

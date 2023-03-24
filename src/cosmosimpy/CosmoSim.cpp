@@ -34,7 +34,7 @@ void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
 } 
 
-void CosmoSim::setCHI(int c) { chi = c/100.0 ; }
+void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
@@ -79,13 +79,13 @@ void CosmoSim::initLens() {
     oldlensmode = lensmode ;
     return ;
 }
-void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
+void CosmoSim::setEinsteinR(double r) { einsteinR = r ; }
 void CosmoSim::setImageSize(int sz ) { size = sz ; }
 void CosmoSim::setResolution(int sz ) { 
    basesize = sz ; 
    std::cout << "[setResolution] basesize=" << basesize << "; size=" << size << "\n" ;
 }
-void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
+void CosmoSim::setSourceParameters(double s1, double s2, double theta ) {
    sourceSize = s1 ;
    if ( s2 >= 0 ) sourceSize2 = s2 ;
    if ( theta >= 0 ) sourceTheta = theta ;

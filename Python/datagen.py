@@ -45,12 +45,13 @@ def makeSingle(sim,args,name=None):
     if args.join:
         # sim.setMaskMode(False)
         sim.runSim()
-        # sim.maskImage(0.9)
+        sim.maskImage(float(args.maskscale))
         joinim = sim.getDistorted(False)
         # joinim = sim.getDistortedImage(False)
-        for i in range(5):
-           sim.moveSim(rot=(i+1)*np.pi/3,scale=1)
-           # sim.maskImage(0.9)
+        nc = int(args.components)
+        for i in range(1,nc):
+           sim.moveSim(rot=2*i*np.pi/nc,scale=1)
+           sim.maskImage(float(args.maskscale))
            im = sim.getDistorted(False)
            # im = sim.getDistortedImage(False)
            joinim = np.maximum(joinim,im)
@@ -128,6 +129,10 @@ if __name__ == "__main__":
             help="simulation name")
     parser.add_argument('-D', '--directory',default="./",
             help="directory path (for output files)")
+    parser.add_argument('-O', '--maskscale',default="0.9",
+            help="Scaling factor for the mask radius")
+    parser.add_argument('-c', '--components',default="6",
+            help="Number of components for joined image")
 
     parser.add_argument('-f', '--family',action='store_true',
             help="Several images moving the viewpoint")
@@ -150,19 +155,19 @@ if __name__ == "__main__":
        sim = CosmoSim()
     print( "Done" )
     if args.phi:
-        sim.setPolar( int(args.x), int(args.phi) )
+        sim.setPolar( float(args.x), float(args.phi) )
     else:
-        sim.setXY( int(args.x), int(args.y) )
+        sim.setXY( float(args.x), float(args.y) )
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
-    sim.setSourceParameters( int(args.sigma),
-            int(args.sigma2), int(args.theta) )
+    sim.setSourceParameters( float(args.sigma),
+            float(args.sigma2), float(args.theta) )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
     if args.chi:
-        sim.setCHI( int(args.chi) )
+        sim.setCHI( float(args.chi) )
     if args.einsteinradius:
-        sim.setEinsteinR( int(args.einsteinradius) )
+        sim.setEinsteinR( float(args.einsteinradius) )
     if args.imagesize:
         sim.setImageSize( int(args.imagesize) )
     if args.nterms:

@@ -6,8 +6,8 @@
 void RouletteLens::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteLens::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
-      cv::Point2d centre = getCentre() ;
-      cv::Point2d origo = imageCoordinate( centre, imgDistorted ) ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
       cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
       cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
       cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
@@ -16,8 +16,8 @@ void RouletteLens::maskImage( cv::InputOutputArray imgD, double scale ) {
 void RouletteLens::markMask( cv::InputOutputArray imgD ) {
       std::cout << "RouletteLens::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
-      cv::Point2d centre = getCentre() ;
-      cv::Point2d origo = imageCoordinate( centre, imgDistorted ) ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
       cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
@@ -52,6 +52,6 @@ cv::Point2d RouletteLens::getDistortedPos(double r, double theta) const {
 }
 double RouletteLens::getMaskRadius() const { 
    // Should this depend on the source position or the local origin?
-   return getNuAbs() ; 
-   // return getXiAbs()/CHI ; 
+   // return getNuAbs() ; 
+   return getXiAbs()/CHI ; 
 }

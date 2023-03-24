@@ -23,7 +23,7 @@ index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s15",image-s15.png,e,50,40,40,60,60,6,135,40
 EOF
 
-python3 Python/datagen.py --imagesize 600 -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --mask
+python3 Python/datagen.py --imagesize 600 -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --maskscale 0.85 --components 8
 # python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
 
