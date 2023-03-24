@@ -6,7 +6,17 @@ dir=$1
 test $dir || dir=Test/current`date "+%Y%m%d"`
 mkdir -p $dir
 
-fn=Test/spheres.csv
+fn=/tmp/spheres.csv
+
+cat > $fn <<EOF
+index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"s01",image-s01.png,s,50,50,50,40,10,0,0,50
+"s02",image-s02.png,s,50,35,24,20,12,0,0,50
+"s03",image-s03.png,e,50,42,-25,16,8,15,40,50
+"s04",image-s04.png,e,50,-38,28,21,5,15,75,50
+"s07",image-s07.png,s,50,-20,-20,10,15,0,0,50
+"s08",image-s08.png,s,50,30,0,12,15,0,0,50
+EOF
 
 python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --family --reflines
 # python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines

@@ -64,6 +64,7 @@ public:
     cv::Point2d getNu() const ;
     double getXiAbs() const ;
     cv::Point2d getXi() const ;
+    cv::Point2d getTrueXi() const ;
     double getEtaAbs() const ;
     double getEtaSquare() const ;
     cv::Point2d getEta() const ;

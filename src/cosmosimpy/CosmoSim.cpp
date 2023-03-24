@@ -137,7 +137,7 @@ bool CosmoSim::runSim() {
    return true ;
 }
 bool CosmoSim::moveSim( double rot, double scale ) { 
-   cv::Point2d xi = sim->getXi(), xi1 ;
+   cv::Point2d xi = sim->getTrueXi(), xi1 ;
    xi1 = cv::Point2d( 
            xi.x*cos(rot) - xi.y*sin(rot),
            xi.x*sin(rot) + xi.y*cos(rot)
