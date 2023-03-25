@@ -144,7 +144,17 @@ void SampledLens::updateApparentAbs( ) {
             << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
    }
 }
-void SampledLens::setXi( cv::Point2d ) {
-   throw NotImplemented() ;
+void SampledLens::setXi( cv::Point2d xi1 ) {
+   cv::Point2d chieta, xy, ij ; 
+   cv::Mat psiX, psiY ;
+
+   this->updatePsi() ;
+   gradient( -psi, psiX, psiY ) ;
+   ij = imageCoordinate( xi1, psi ) ;
+   xy = cv::Point2d( psiY.at<double>( ij ), psiX.at<double>( ij ) );
+   chieta = xi1 - xy ;
+
+   xi = xi1 ;
+   etaOffset = chieta/CHI - getEta() ;
 }
 void SampledLens::updatePsi() { return ; }
