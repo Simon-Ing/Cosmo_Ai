@@ -16,6 +16,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_PM,
                   CSIM_LENS_PURESAMPLED,
+                  CSIM_LENS_PURESAMPLED_SIS,
                   CSIM_LENS_SAMPLED,
                   CSIM_LENS_SAMPLED_SIS,
                   CSIM_NOLENS } ;

@@ -44,5 +44,13 @@ protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const ;
 };
 
+class PureSampledSISLens : public PureSampledLens {
+public:
+    using PureSampledLens::PureSampledLens ;
+protected:
+private:
+    double psifunction( double, double ) ;
+    virtual void updatePsi() ;
+};
 
 #endif // PIXMAP_H

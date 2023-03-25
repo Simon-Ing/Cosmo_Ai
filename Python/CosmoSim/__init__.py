@@ -15,12 +15,17 @@ lensDict = {
         "SIS (roulettes)" : LensSpec.SISRoulettes,
         "Sampled" : LensSpec.Sampled,
         "Sampled SIS" : LensSpec.SampledSIS,
+        "PureSampled" : LensSpec.PureSampled,
+        "PureSampled SIS" : LensSpec.PureSampledSIS,
+        "p" : LensSpec.PointMass,
         "p" : LensSpec.PointMass,
         "r" : LensSpec.PointMassRoulettes,
         "s" : LensSpec.SIS,
         "sr" : LensSpec.SISRoulettes,
         "sp" : LensSpec.Sampled,
         "ss" : LensSpec.SampledSIS,
+        "ps" : LensSpec.PureSampled,
+        "pss" : LensSpec.PureSampledSIS,
         }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,
