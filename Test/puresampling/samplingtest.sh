@@ -6,7 +6,7 @@ opt=$*
 
 pdir=../../Python
 dir1=PureSampledSIS
-dir2=SampledSIS
+dir2=RouletteSIS
 diffdir=diff
 
 mkdir -p $dir1 $dir2 $diffdir
