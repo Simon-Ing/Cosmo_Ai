@@ -12,7 +12,7 @@ void PureSampledSISLens::updatePsi() {
    int nrows = im.rows ;
    int ncols = im.cols ;
 
-   std::cout << "[SampledSISLens] updatePsi\n" ;
+   std::cout << "[PureSampledSISLens] updatePsi\n" ;
 
    psi = cv::Mat::zeros(im.size(), CV_64F );
 
@@ -23,6 +23,9 @@ void PureSampledSISLens::updatePsi() {
 	 psi.at<double>( ij ) = psifunction( xy.x, xy.y ) ;
       }
    }
+   psiX = cv::Mat::zeros(psi.size(),psi.type()) ;
+   psiY = cv::Mat::zeros(psi.size(),psi.type()) ;
+   gradient( -psi, psiX, psiY ) ;
 
    return ; 
 }

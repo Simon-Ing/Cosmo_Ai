@@ -77,7 +77,6 @@ void LensModel::update( cv::Point2d xi ) {
 void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
-    
     std::cout << "[LensModel::update()] x=" << eta.x << "; y= " << eta.y 
               << "; R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
