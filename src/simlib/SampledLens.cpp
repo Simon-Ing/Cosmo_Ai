@@ -134,7 +134,6 @@ void SampledLens::updateApparentAbs( ) {
       if ( dist < threshold ) cont = 0 ;
       if ( ++count > maxcount ) cont = 0 ;
    }
-   setNu( xi1/CHI ) ;
    if ( dist > threshold ) {
       std::cout << "Bad approximation of xi: xi0=" << xi0 
             << "; xi1=" << xi1 << "; dist=" << dist 
@@ -143,6 +142,7 @@ void SampledLens::updateApparentAbs( ) {
       std::cout << "[SampledLens] Good approximation: xi0=" << xi0 
             << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
    }
+   setNu( xi1/CHI ) ;
 }
 void SampledLens::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
@@ -151,7 +151,7 @@ void SampledLens::setXi( cv::Point2d xi1 ) {
    this->updatePsi() ;
    gradient( -psi, psiX, psiY ) ;
    ij = imageCoordinate( xi1, psi ) ;
-   xy = cv::Point2d( psiY.at<double>( ij ), psiX.at<double>( ij ) );
+   xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
    chieta = xi1 - xy ;
 
    xi = xi1 ;
