@@ -1,6 +1,7 @@
 
 set(SimLibFiles
         simlib/LensMap.cpp
+        simlib/PureSampledLens.cpp
         simlib/SampledLens.cpp
         simlib/SampledSISLens.cpp
         simlib/RouletteSISLens.cpp

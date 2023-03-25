@@ -17,12 +17,13 @@ private:
     cv::Point2d nu ;   // Apparent position in the source plane
 
     bool centredMode = false ; // centredMode is never used
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
     void updateInner();
 
 protected:
+    virtual void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
+
     cv::Point2d xi ;   // Local origin in the lens plane
     cv::Point2d etaOffset = cv::Point2d(0,0) ;
         // Offset in the source plane resulting from moving xi

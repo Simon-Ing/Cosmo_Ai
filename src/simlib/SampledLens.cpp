@@ -157,4 +157,3 @@ void SampledLens::setXi( cv::Point2d xi1 ) {
    xi = xi1 ;
    etaOffset = chieta/CHI - getEta() ;
 }
-void SampledLens::updatePsi() { return ; }
