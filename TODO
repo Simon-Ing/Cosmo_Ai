@@ -1,24 +1,20 @@
 
-1.  Mask smaller circle for splicing images
 1.  Secondary Image
     - setXi for RoulettePM 
     - test script
-1.  Test GUI
+2.  Test GUI
     - then make new baseline
 3.  Test and clean up mass map and psi map
     - export raw psi/kappa and make 3D plots
     - compile a demo
     - print \nabla\psi
-5.  Prepare release
+4.  Prepare release
     - Which issues should be fixed?
     - CHANGELOG
-6.  Documentation in paper
+5.  Documentation in paper
     - Document flow of image transformations
-7.  Validate distort
-    - Note Source image is drawn at the origin
-    - check rotations - origin is fixed?
-8.  Clarify local co-ordinate system
+6.  Clarify local co-ordinate system
     - origin in the centre of the image
     - horizontal first axis, vertical second axis
     - validate code
-9.  High resolution sampling
+7.  High resolution sampling
