@@ -67,7 +67,6 @@ public:
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
-    virtual void updatePsi() ;
     virtual void setXi( cv::Point2d ) ;
 };
 class SampledSISLens : public SampledLens {
