@@ -56,3 +56,7 @@ void PureSampledLens::distort(int begin, int end, const cv::Mat& src, cv::Mat& d
         }
     }
 }
+
+cv::Point2d PureSampledLens::getDistortedPos(double r, double theta) const {
+   throw NotImplemented() ;
+};

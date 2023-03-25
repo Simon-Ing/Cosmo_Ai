@@ -4,6 +4,7 @@
 #define COSMOSIM_FACADE_H
 
 #include "cosmosim/Roulette.h"
+#include "cosmosim/PixMap.h"
 #include "cosmosim/Source.h"
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,
@@ -14,6 +15,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_SIS_ROULETTE, 
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_PM,
+                  CSIM_LENS_PURESAMPLED,
                   CSIM_LENS_SAMPLED,
                   CSIM_LENS_SAMPLED_SIS,
                   CSIM_NOLENS } ;

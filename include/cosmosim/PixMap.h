@@ -41,6 +41,7 @@ protected:
     virtual void updateApparentAbs() ;
     cv::Point2d calculateEta( cv::Point2d ) ;
     void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const ;
 };
 
 

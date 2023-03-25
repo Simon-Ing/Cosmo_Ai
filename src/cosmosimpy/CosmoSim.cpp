@@ -64,6 +64,10 @@ void CosmoSim::initLens() {
          std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
          sim = new PointMassLens(centred) ;
          break ;
+       case CSIM_LENS_PURESAMPLED:
+         std::cout << "Running Pure Sampled Lens (mode=" << lensmode << ")\n" ;
+         sim = new PureSampledLens(centred) ;
+         break ;
        case CSIM_LENS_SAMPLED:
          std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
          sim = new SampledLens(centred) ;
