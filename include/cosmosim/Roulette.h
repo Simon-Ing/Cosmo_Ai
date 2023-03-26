@@ -3,6 +3,7 @@
 
 #include "Simulator.h"
 #include "PixMap.h"
+#include "Lens.h"
 
 #include <symengine/expression.h>
 #include <symengine/lambda_double.h>
@@ -61,21 +62,24 @@ class RouletteSISLens : public SphereLens {
 
 class SampledRouletteLens : public RouletteLens, public LensMap { 
 public:
-    using RouletteLens::RouletteLens ;
     SampledRouletteLens();
     SampledRouletteLens(bool);
+    void setLens( Lens * ) ;
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
     virtual void setXi( cv::Point2d ) ;
+    virtual void updatePsi() ;
+private:
+    Lens *lens ;
 };
 class SampledSISLens : public SampledRouletteLens {
 public:
     using SampledRouletteLens::SampledRouletteLens ;
 protected:
+    virtual void updatePsi() ;
 private:
     double psifunction( double, double ) ;
-    virtual void updatePsi() ;
 };
 
 #endif // ROULETTE_H

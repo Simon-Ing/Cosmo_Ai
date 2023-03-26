@@ -157,3 +157,25 @@ void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    xi = xi1 ;
    etaOffset = chieta/CHI - getEta() ;
 }
+void SampledRouletteLens::setLens( Lens *l ) {
+   lens = l ;
+}
+void SampledRouletteLens::updatePsi() { 
+   cv::Mat im = getApparent() ;
+   int nrows = im.rows ;
+   int ncols = im.cols ;
+
+   std::cout << "[SampledSISLens] updatePsi\n" ;
+
+   psi = cv::Mat::zeros(im.size(), CV_64F );
+
+   for ( int i=0 ; i<nrows ; ++i ) {
+      for ( int j=0 ; j<ncols ; ++j ) {
+         cv::Point2d ij( i, j ) ;
+         cv::Point2d xy = pointCoordinate( ij, psi ) ;
+	 psi.at<double>( ij ) = lens->psifunction( xy.x, xy.y ) ;
+      }
+   }
+
+   return ; 
+}
