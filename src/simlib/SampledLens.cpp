@@ -5,20 +5,20 @@
 #include <thread>
 #include "simaux.h"
 
-SampledLens::SampledLens() :
+SampledRouletteLens::SampledRouletteLens() :
    RouletteLens::RouletteLens()
 { 
-    std::cout << "Instantiating SampledLens ... \n" ;
+    std::cout << "Instantiating SampledRouletteLens ... \n" ;
     rotatedMode = false ;
 }
-SampledLens::SampledLens(bool centred) :
+SampledRouletteLens::SampledRouletteLens(bool centred) :
    RouletteLens::RouletteLens(centred)
 { 
-    std::cout << "Instantiating SampledLens ... \n" ;
+    std::cout << "Instantiating SampledRouletteLens ... \n" ;
     rotatedMode = false ;
 }
 
-void SampledLens::calculateAlphaBeta() {
+void SampledRouletteLens::calculateAlphaBeta() {
 
     // Calculate all amplitudes for given X, Y, einsteinR
 
@@ -28,7 +28,7 @@ void SampledLens::calculateAlphaBeta() {
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( getXi(), psi ) ;
 
-    std::cout << "[SampledLens::calculateAlpaBeta] xi in image space is " << ij << "\n" ;
+    std::cout << "[SampledRouletteLens::calculateAlpaBeta] xi in image space is " << ij << "\n" ;
 
     for ( mp = 0; mp <= nterms; mp++){
         s = mp+1 ; m = mp ;
@@ -72,7 +72,7 @@ void SampledLens::calculateAlphaBeta() {
 }
 
 
-void SampledLens::updateApparentAbs( ) {
+void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
    cv::Point2d xi0, xi1 = chieta ;
    cv::Mat psiX, psiY ;
@@ -83,7 +83,7 @@ void SampledLens::updateApparentAbs( ) {
    this->updatePsi() ;
    int ncols=psi.cols, nrows=psi.rows ;
 
-   std::cout << "[SampledLens] updateApparentAbs()"
+   std::cout << "[SampledRouletteLens] updateApparentAbs()"
              << " chi*eta = " << chieta 
              << "; size: " << psi.size() << "\n" ;
 
@@ -96,9 +96,9 @@ void SampledLens::updateApparentAbs( ) {
    double minVal, maxVal;
    cv::Point minLoc, maxLoc;
    minMaxLoc( psiX, &minVal, &maxVal, &minLoc, &maxLoc ) ;
-   std::cout << "[SampledLens] psiX min=" << minVal << "; max=" << maxVal << "\n" ;
+   std::cout << "[SampledRouletteLens] psiX min=" << minVal << "; max=" << maxVal << "\n" ;
    minMaxLoc( psiY, &minVal, &maxVal, &minLoc, &maxLoc ) ;
-   std::cout << "[SampledLens] psiY min=" << minVal << "; max=" << maxVal << "\n" ;
+   std::cout << "[SampledRouletteLens] psiY min=" << minVal << "; max=" << maxVal << "\n" ;
    
    /** This block performs a linear search for \xi.
     * It seems to work, but fix-point iteration should be faster
@@ -110,12 +110,12 @@ void SampledLens::updateApparentAbs( ) {
          double x = psiY.at<double>( ij ), y = psiX.at<double>( ij ) ;
          cv::Point2d xitmp = chieta + cv::Point2d( x, y ) ;
          dist = cv::norm( cv::Mat(xitmp-xy), cv::NORM_L2 ) ;
-         std::cout << "[SampledLens] (i,j)=(" << i << "," << j << ") xitmp= " 
+         std::cout << "[SampledRouletteLens] (i,j)=(" << i << "," << j << ") xitmp= " 
                    << xitmp << "; dist=" << dist << "\n" ;
          if ( dist < dist0 ) {
             dist0 = dist ;
             xi0 = xitmp ;
-            std::cout << "[SampledLens] xitmp= " << xitmp 
+            std::cout << "[SampledRouletteLens] xitmp= " << xitmp 
                       << "xy= " << xy << "; dist=" << dist0 << "\n" ;
          } 
       }
@@ -127,7 +127,7 @@ void SampledLens::updateApparentAbs( ) {
       xi0 = xi1 ;
       cv::Point2d ij = imageCoordinate( xi0, psi ) ;
       double x = -psiY.at<double>( ij ), y = -psiX.at<double>( ij ) ;
-      std::cout << "[SampledLens] Fix pt it'n " << count
+      std::cout << "[SampledRouletteLens] Fix pt it'n " << count
            << "; xi0=" << xi0 << "; Delta eta = " << x << ", " << y << "\n" ;
       xi1 = chieta + cv::Point2d( x, y ) ;
       dist = cv::norm( cv::Mat(xi1-xi0), cv::NORM_L2 ) ;
@@ -139,12 +139,12 @@ void SampledLens::updateApparentAbs( ) {
             << "; xi1=" << xi1 << "; dist=" << dist 
             << "; nu=" << getNu() << "\n" ;
    } else {
-      std::cout << "[SampledLens] Good approximation: xi0=" << xi0 
+      std::cout << "[SampledRouletteLens] Good approximation: xi0=" << xi0 
             << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
    }
    setNu( xi1/CHI ) ;
 }
-void SampledLens::setXi( cv::Point2d xi1 ) {
+void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
    cv::Mat psiX, psiY ;
 

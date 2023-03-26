@@ -74,7 +74,7 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_SAMPLED:
          std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
-         sim = new SampledLens(centred) ;
+         sim = new SampledRouletteLens(centred) ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
