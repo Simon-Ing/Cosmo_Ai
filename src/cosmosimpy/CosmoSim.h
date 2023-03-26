@@ -44,7 +44,7 @@ private:
     void initLens() ;
     std::string filename = "50.txt" ;
 
-    Lens *lens ;
+    Lens *lens = NULL ;
 
 public:
     CosmoSim();

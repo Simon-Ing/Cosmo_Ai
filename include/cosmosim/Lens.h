@@ -4,7 +4,7 @@
 class Lens { 
 
 private:
-   double CHI, einsteinR ;
+   double einsteinR ;
 
 public:
     virtual double psifunction( double, double ) = 0 ;
@@ -19,9 +19,9 @@ class SIS : public Lens {
 private:
 
 public:
-    virtual double psifunction( double, double ) = 0 ;
-    virtual double psiXfunction( double, double ) = 0 ;
-    virtual double psiYfunction( double, double ) = 0 ;
+    virtual double psifunction( double, double ) ;
+    virtual double psiXfunction( double, double ) ;
+    virtual double psiYfunction( double, double ) ;
 };
 
 

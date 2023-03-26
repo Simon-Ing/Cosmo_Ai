@@ -44,10 +44,23 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
+   PureSampledSISLens *s0 = NULL ;
+   SampledSISLens *ssim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
    if ( sim ) delete sim ;
+   switch ( psimode ) {
+       case CSIM_PSI_SIS:
+          lens = new SIS() ;
+          break ;
+       case CSIM_NOPSI:
+          lens = NULL ;
+          break ;
+       default:
+         std::cout << "No such lens model!\n" ;
+         throw NotImplemented();
+   }
    switch ( lensmode ) {
        case CSIM_LENS_SPHERE:
          std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
@@ -58,7 +71,8 @@ void CosmoSim::initLens() {
          sim = new RouletteSISLens(filename,centred) ;
          break ;
        case CSIM_LENS_PM_ROULETTE:
-         std::cout << "Running Roulette Point Mass Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Roulette Point Mass Lens (mode=" 
+                   << lensmode << ")\n" ;
          sim = new RoulettePMLens(centred) ;
          break ;
        case CSIM_LENS_PM:
@@ -71,7 +85,9 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_PURESAMPLED_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         sim = new PureSampledSISLens(centred) ;
+         s0 = new PureSampledSISLens(centred) ;
+         s0->setLens( lens = new SIS() ) ;
+         sim = s0 ;
          break ;
        case CSIM_LENS_SAMPLED:
          std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
@@ -79,7 +95,9 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         sim = new SampledSISLens(centred) ;
+         ssim = new SampledSISLens(centred) ;
+         ssim->setLens( lens = new SIS() ) ;
+         sim = ssim ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;
