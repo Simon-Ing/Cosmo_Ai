@@ -1,17 +1,21 @@
 #ifndef LENS_H
 #define LENS_H
 
-class Lens { 
+#include "cosmosim/PixMap.h"
+
+class Lens {
 
 private:
    double einsteinR ;
+   cv::Mat psi, psiX, psiY ;
 
 public:
     virtual double psifunction( double, double ) = 0 ;
     virtual double psiXfunction( double, double ) = 0 ;
     virtual double psiYfunction( double, double ) = 0 ;
-    virtual void updatePsi() ;
-    virtual void setEinsteinR( double ) ;
+    virtual void updatePsi( cv::Size ) ;
+    virtual void updatePsi( ) ;
+    void setEinsteinR( double ) ;
 };
 
 class SIS : public Lens { 

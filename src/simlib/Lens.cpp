@@ -1,15 +1,20 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "cosmosim/PixMap.h"
+#include "cosmosim/Lens.h"
+#include "simaux.h"
 
-void Lens::updatePsi() { 
-   cv::Mat im = getApparent() ;
-   int nrows = im.rows ;
-   int ncols = im.cols ;
+void Lens::updatePsi( ) { 
+   return updatePsi( cv::Size(400,400) ) ;
+}
+void Lens::updatePsi( cv::Size size ) { 
+   // cv::Mat im = getApparent() ;
+   int nrows = size.height ;
+   int ncols = size.width ;
 
    std::cout << "[SampledSISLens] updatePsi\n" ;
 
-   psi = cv::Mat::zeros(im.size(), CV_64F );
+   psi = cv::Mat::zeros(size, CV_64F );
 
    for ( int i=0 ; i<nrows ; ++i ) {
       for ( int j=0 ; j<ncols ; ++j ) {
@@ -21,4 +26,4 @@ void Lens::updatePsi() {
 
    return ; 
 }
-void setEinsteinR( double r ) { einsteinR = r ; }
+void Lens::setEinsteinR( double r ) { einsteinR = r ; }
