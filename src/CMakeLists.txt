@@ -3,7 +3,7 @@ set(SimLibFiles
         simlib/LensMap.cpp
         simlib/PureSampledLens.cpp
         simlib/PureSampledSISLens.cpp
-        simlib/SampledLens.cpp
+        simlib/SampledRouletteLens.cpp
         simlib/SampledSISLens.cpp
         simlib/RouletteSISLens.cpp
         simlib/PMCLens.cpp
