@@ -39,6 +39,7 @@ void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::setLensFunction(int m) { psimode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
@@ -137,6 +138,9 @@ bool CosmoSim::runSim() {
    } else {
       sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
    }
+   if ( lens != NULL ) {
+      lens->setEinsteinR( einsteinR ) ;
+   }
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
    sim->update() ;
@@ -220,6 +224,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     py::class_<CosmoSim>(m, "CosmoSim")
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
+        .def("setLensFunction", &CosmoSim::setLensFunction)
         .def("setSourceMode", &CosmoSim::setSourceMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)

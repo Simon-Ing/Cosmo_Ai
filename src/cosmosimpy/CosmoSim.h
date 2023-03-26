@@ -6,6 +6,7 @@
 #include "cosmosim/Roulette.h"
 #include "cosmosim/PixMap.h"
 #include "cosmosim/Source.h"
+#include "cosmosim/Lens.h"
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,
@@ -20,12 +21,15 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_SAMPLED,
                   CSIM_LENS_SAMPLED_SIS,
                   CSIM_NOLENS } ;
+enum PsiSpec    { CSIM_PSI_SIS,
+                  CSIM_NOPSI } ;
 
 class CosmoSim {
 private:
     int size=512, basesize=512 ;
     double chi=0.5 ;
-    int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
+    int psimode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
+    int lensmode=CSIM_PSI_SIS ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
@@ -40,6 +44,8 @@ private:
     void initLens() ;
     std::string filename = "50.txt" ;
 
+    Lens *lens ;
+
 public:
     CosmoSim();
 
@@ -53,6 +59,7 @@ public:
     void setBGColour(int);
 
     void setSourceMode(int);
+    void setLensFunction(int);
     void setLensMode(int);
     void setEinsteinR(double);
     void setSourceParameters(double,double,double);

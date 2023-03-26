@@ -21,3 +21,4 @@ void Lens::updatePsi() {
 
    return ; 
 }
+void setEinsteinR( double r ) { einsteinR = r ; }
