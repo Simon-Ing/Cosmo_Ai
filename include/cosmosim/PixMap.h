@@ -7,7 +7,7 @@
 class LensMap { 
 
 protected:
-    cv::Mat psi, einsteinMap, massMap ;
+    cv::Mat psi, psiX, psiY, einsteinMap, massMap ;
 
 private:
 
