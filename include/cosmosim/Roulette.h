@@ -73,13 +73,5 @@ protected:
 private:
     Lens *lens ;
 };
-class SampledSISLens : public SampledRouletteLens {
-public:
-    using SampledRouletteLens::SampledRouletteLens ;
-protected:
-    virtual void updatePsi() ;
-private:
-    double psifunction( double, double ) ;
-};
 
 #endif // ROULETTE_H

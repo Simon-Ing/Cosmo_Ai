@@ -45,7 +45,7 @@ void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
    PureSampledSISLens *s0 = NULL ;
-   SampledSISLens *ssim = NULL ;
+   SampledRouletteLens *ssim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
@@ -95,7 +95,7 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         ssim = new SampledSISLens(centred) ;
+         ssim = new SampledRouletteLens(centred) ;
          ssim->setLens( lens = new SIS() ) ;
          sim = ssim ;
          break ;
