@@ -6,6 +6,7 @@
 class Lens {
 
 private:
+protected:
    double einsteinR ;
    cv::Mat psi, psiX, psiY ;
 
