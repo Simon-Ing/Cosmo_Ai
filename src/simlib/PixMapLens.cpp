@@ -4,10 +4,6 @@
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
-void PixMapLens::updatePsi( cv::Size size ) { 
-   return ; 
-}
-
 void LensMap::setPsi( cv::Mat map ) {
    cv::Mat tmp ;
    std::cout << "[LensMap] setPsi()\n" ;

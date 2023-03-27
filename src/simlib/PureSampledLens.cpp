@@ -1,6 +1,6 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "cosmosim/PixMap.h"
+#include "cosmosim/SampledLens.h"
 
 #include <thread>
 #include "simaux.h"
@@ -20,10 +20,11 @@ PureSampledLens::PureSampledLens(bool centred) :
 
 void PureSampledLens::updateApparentAbs( ) {
     std::cout << "[PureSampledLens] updateApparentAbs() updates psi.\n" ;
-    this->updatePsi() ;
+    lens->updatePsi() ;
 }
 cv::Point2d PureSampledLens::calculateEta( cv::Point2d xi ) {
    cv::Point2d chieta, xy, ij ; 
+   cv::Mat psi = lens->getPsi() ;
 
    ij = imageCoordinate( xi, psi ) ;
    xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );

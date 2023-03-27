@@ -4,7 +4,7 @@
 #define COSMOSIM_FACADE_H
 
 #include "cosmosim/Roulette.h"
-#include "cosmosim/PixMap.h"
+#include "cosmosim/SampledLens.h"
 #include "cosmosim/Source.h"
 #include "cosmosim/Lens.h"
 

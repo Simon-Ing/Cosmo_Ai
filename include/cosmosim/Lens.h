@@ -32,7 +32,6 @@ class PixMapLens : public Lens {
 public:
     void setPsi( cv::Mat ) ;
     void loadPsi( std::string ) ;
-    virtual void updatePsi( cv::Size ) ;
 } ;
 
 class SIS : public PsiFunctionLens { 
