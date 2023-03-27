@@ -13,6 +13,7 @@ private:
 
 public:
     // void setEinsteinMap( cv::Mat ) ;
+public:
     void setPsi( cv::Mat ) ;
     void loadPsi( std::string ) ;
     cv::Mat getPsi( ) const ;

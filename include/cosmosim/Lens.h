@@ -8,18 +8,34 @@ class Lens {
 private:
 protected:
    double einsteinR ;
-   cv::Mat psi, psiX, psiY ;
+   cv::Mat psi, psiX, psiY, einsteinMap, massMap ;
 
+public:
+    virtual void updatePsi( cv::Size ) ;
+    virtual void updatePsi( ) ;
+    void setEinsteinR( double ) ;
+
+    cv::Mat getPsi( ) const ;
+    cv::Mat getPsiImage( ) const ;
+    cv::Mat getMassMap( ) const ;
+    cv::Mat getMassImage() const ;
+    cv::Mat getEinsteinMap( ) const ;
+};
+class PsiFunctionLens : public Lens {
 public:
     virtual double psifunction( double, double ) = 0 ;
     virtual double psiXfunction( double, double ) = 0 ;
     virtual double psiYfunction( double, double ) = 0 ;
     virtual void updatePsi( cv::Size ) ;
-    virtual void updatePsi( ) ;
-    void setEinsteinR( double ) ;
-};
+} ;
+class PixMapLens : public Lens {
+public:
+    void setPsi( cv::Mat ) ;
+    void loadPsi( std::string ) ;
+    virtual void updatePsi( cv::Size ) ;
+} ;
 
-class SIS : public Lens { 
+class SIS : public PsiFunctionLens { 
 
 private:
 

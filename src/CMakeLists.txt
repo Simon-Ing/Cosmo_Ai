@@ -2,6 +2,8 @@
 set(SimLibFiles
         simlib/LensMap.cpp
         simlib/Lens.cpp
+        simlib/PsiFunctionLens.cpp
+        simlib/PixMapLens.cpp
         simlib/SIS.cpp
         simlib/PureSampledLens.cpp
         simlib/PureSampledSISLens.cpp

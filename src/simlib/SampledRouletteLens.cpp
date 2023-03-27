@@ -24,7 +24,7 @@ void SampledRouletteLens::calculateAlphaBeta() {
 
     int mp, m, s ;
     double C ;
-    cv::Mat psi = -getPsi() ;
+    cv::Mat psi = -lens->getPsi() ;
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( getXi(), psi ) ;
 
@@ -75,12 +75,13 @@ void SampledRouletteLens::calculateAlphaBeta() {
 void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
    cv::Point2d xi0, xi1 = chieta ;
-   cv::Mat psiX, psiY ;
+   cv::Mat psi, psiX, psiY ;
    int cont = 1, count = 0, maxcount = 200 ;
    double dist, dist0=pow(10,12), threshold = 0.02 ;
 
    /* Get the lens potential */
-   this->updatePsi() ;
+   lens->updatePsi() ;
+   psi = lens->getPsi() ;
    int ncols=psi.cols, nrows=psi.rows ;
 
    std::cout << "[SampledRouletteLens] updateApparentAbs()"
@@ -146,9 +147,10 @@ void SampledRouletteLens::updateApparentAbs( ) {
 }
 void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
-   cv::Mat psiX, psiY ;
+   cv::Mat psi, psiX, psiY ;
 
-   this->updatePsi() ;
+   lens->updatePsi() ;
+   psi = lens->getPsi() ;
    gradient( -psi, psiX, psiY ) ;
    ij = imageCoordinate( xi1, psi ) ;
    xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
@@ -159,23 +161,4 @@ void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
 }
 void SampledRouletteLens::setLens( Lens *l ) {
    lens = l ;
-}
-void SampledRouletteLens::updatePsi() { 
-   cv::Mat im = getApparent() ;
-   int nrows = im.rows ;
-   int ncols = im.cols ;
-
-   std::cout << "[SampledSISLens] updatePsi\n" ;
-
-   psi = cv::Mat::zeros(im.size(), CV_64F );
-
-   for ( int i=0 ; i<nrows ; ++i ) {
-      for ( int j=0 ; j<ncols ; ++j ) {
-         cv::Point2d ij( i, j ) ;
-         cv::Point2d xy = pointCoordinate( ij, psi ) ;
-	 psi.at<double>( ij ) = lens->psifunction( xy.x, xy.y ) ;
-      }
-   }
-
-   return ; 
 }
