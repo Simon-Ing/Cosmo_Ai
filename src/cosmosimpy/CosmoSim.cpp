@@ -35,10 +35,14 @@ void CosmoSim::setFile( std::string fn ) {
 } 
 
 cv::Mat CosmoSim::getPsiMap( ) {
-   return lens->getPsi() ;
+   cv::Mat im = lens->getPsi() ;
+   std::cout << "[getPsiMap] " << im.type() << "\n" ;
+   return im ;
 } 
 cv::Mat CosmoSim::getMassMap( ) {
-   return lens->getMassMap() ;
+   cv::Mat im = lens->getMassMap() ;
+   std::cout << "[getMassMap] " << im.type() << "\n" ;
+   return im ;
 } 
 
 void CosmoSim::setCHI(double c) { chi = c/100.0 ; }

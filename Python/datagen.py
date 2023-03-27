@@ -72,20 +72,28 @@ def makeSingle(sim,args,name=None):
         makeOutput(sim,args,name=f"{name}+0+2")
     if args.psiplot:
         a = sim.getPsiMap()
+        print(a.shape, a.dtype)
+        print(a)
         nx,ny = a.shape
         X, Y = np.meshgrid( range(nx), range(ny) )
         hf = plt.figure()
         ha = hf.add_subplot(111, projection='3d')
         ha.plot_surface(X, Y, a)
-        plt.imwrite( f"psi-{name}.svg" )
+        fn = os.path.join(args.directory,"psi-" + str(name) + ".svg" ) 
+        plt.savefig( fn )
+        plt.close()
     if args.kappaplot:
         a = sim.getMassMap()
+        print(a.shape, a.dtype)
+        print(a)
         nx,ny = a.shape
         X, Y = np.meshgrid( range(nx), range(ny) )
         hf = plt.figure()
         ha = hf.add_subplot(111, projection='3d')
         ha.plot_surface(X, Y, a)
-        plt.imwrite( f"kappa-{name}.svg" )
+        fn = os.path.join(args.directory,"kappa-" + str(name) + ".svg" ) 
+        plt.savefig( fn )
+        plt.close()
 
 
 def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
