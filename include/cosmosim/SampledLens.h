@@ -12,12 +12,22 @@ public:
     void setLens( Lens* ) ;
 protected:
     virtual void updateApparentAbs() ;
-    cv::Point2d calculateEta( cv::Point2d ) ;
-    void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
+    virtual cv::Point2d calculateEta( cv::Point2d ) ;
+    virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const ;
     cv::Mat psiX, psiY ;
-private:
     Lens *lens ;
+private:
+};
+
+class PsiFunctionModel : public PureSampledLens { 
+public:
+    using PureSampledLens::PureSampledLens ;
+protected:
+    virtual void updateApparentAbs() ;
+    virtual cv::Point2d calculateEta( cv::Point2d ) ;
+    virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
+private:
 };
 
 #endif // SAMPLED_LENS_H
