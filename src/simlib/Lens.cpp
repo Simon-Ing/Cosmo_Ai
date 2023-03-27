@@ -48,7 +48,3 @@ cv::Mat Lens::getEinsteinMap() const {
    throw NotImplemented() ;
    // return einsteinMap ;
 }
-
-void Lens::updatePsi() { 
-   return ;
-}
