@@ -12,10 +12,10 @@ void Lens::updatePsi( cv::Size size ) {
 }
 void Lens::setEinsteinR( double r ) { einsteinR = r ; }
 
-cv::Mat LensMap::getPsi() const {
+cv::Mat Lens::getPsi() const {
    return psi ;
 }
-cv::Mat LensMap::getPsiImage() const {
+cv::Mat Lens::getPsiImage() const {
    cv::Mat im, ps = getPsi() ;
    double minVal, maxVal;
    cv::Point minLoc, maxLoc;
@@ -26,10 +26,10 @@ cv::Mat LensMap::getPsiImage() const {
    ps.convertTo( im, CV_8S ) ;
    return im ;
 }
-cv::Mat LensMap::getMassMap() const {
+cv::Mat Lens::getMassMap() const {
    return massMap ;
 }
-cv::Mat LensMap::getMassImage() const {
+cv::Mat Lens::getMassImage() const {
    cv::Mat im, k ;
    double minVal, maxVal;
    cv::Point minLoc, maxLoc;
@@ -44,11 +44,11 @@ cv::Mat LensMap::getMassImage() const {
    k.convertTo( im, CV_8S ) ;
    return im ;
 }
-cv::Mat LensMap::getEinsteinMap() const {
+cv::Mat Lens::getEinsteinMap() const {
    throw NotImplemented() ;
    // return einsteinMap ;
 }
 
-void LensMap::updatePsi() { 
+void Lens::updatePsi() { 
    return ;
 }
