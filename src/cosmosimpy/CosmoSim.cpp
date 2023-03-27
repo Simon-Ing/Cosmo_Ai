@@ -89,6 +89,12 @@ void CosmoSim::initLens() {
          s0->setLens( lens = new SIS() ) ;
          sim = s0 ;
          break ;
+       case CSIM_LENS_PSIFUNCTION_SIS:
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         s0 = new PsiFunctionModel(centred) ;
+         s0->setLens( lens = new SIS() ) ;
+         sim = s0 ;
+         break ;
        case CSIM_LENS_SAMPLED:
          std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
          sim = new SampledRouletteLens(centred) ;
@@ -279,6 +285,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampled", CSIM_LENS_PURESAMPLED )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
+       .value( "PsiFunction", CSIM_LENS_PSIFUNCTION )
+       .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
