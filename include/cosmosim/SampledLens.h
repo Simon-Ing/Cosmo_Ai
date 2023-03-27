@@ -22,10 +22,12 @@ private:
 class PsiFunctionModel : public PureSampledModel { 
 public:
     using PureSampledModel::PureSampledModel ;
+    void setPsiFunctionLens( PsiFunctionLens* ) ;
 protected:
     virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
 private:
+    PsiFunctionLens *psilens ;
 };
 
 #endif // SAMPLED_LENS_H

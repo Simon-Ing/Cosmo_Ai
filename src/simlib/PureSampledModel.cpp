@@ -29,9 +29,7 @@ cv::Point2d PureSampledModel::calculateEta( cv::Point2d xi ) {
    cv::Mat psiX = lens->getPsiX() ;
    cv::Mat psiY = lens->getPsiY() ;
 
-   // std::cout << "[PureSampledModel] calculateEta().\n" ;
    ij = imageCoordinate( xi, psi ) ;
-   // std::cout << "[PureSampledModel] calculateEta() " << ij << ".\n" ;
    xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
    chieta = xi - xy ;
 
@@ -45,14 +43,11 @@ void PureSampledModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& 
 
             cv::Point2d eta, xi, ij, targetPos ;
 
-
-            // std::cout << "[PureSampledModel] distort() " << row << col << ".\n" ;
             targetPos = cv::Point2d( col - dst.cols / 2.0,
                   dst.rows / 2.0 - row ) ;
             xi = -CHI*targetPos ;
             eta = calculateEta( xi ) + getEta() ;
             ij = imageCoordinate( eta, src ) ;
-            // std::cout << "[PureSampledModel] distort() " << ij << ".\n" ;
   
             if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {

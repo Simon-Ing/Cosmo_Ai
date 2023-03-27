@@ -27,12 +27,12 @@ public:
     cv::Mat getMassImage() const ;
     cv::Mat getEinsteinMap( ) const ;
 
-    virtual double psifunction( double, double ) = 0 ;
-    virtual double psiXfunction( double, double ) = 0 ;
-    virtual double psiYfunction( double, double ) = 0 ;
 };
 class PsiFunctionLens : public Lens {
 public:
+    virtual double psifunction( double, double ) = 0 ;
+    virtual double psiXfunction( double, double ) = 0 ;
+    virtual double psiYfunction( double, double ) = 0 ;
     virtual void updatePsi( cv::Size ) ;
 } ;
 class PixMapLens : public Lens {
