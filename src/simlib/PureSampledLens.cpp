@@ -57,6 +57,8 @@ void PureSampledLens::distort(int begin, int end, const cv::Mat& src, cv::Mat& d
     }
 }
 
+/* getDistortedPos() is not used for the sampled lens model, but
+ * it has to be defined, since it is declared for the superclass.  */
 cv::Point2d PureSampledLens::getDistortedPos(double r, double theta) const {
    throw NotImplemented() ;
 };

@@ -20,10 +20,10 @@ public:
     void setEinsteinR( double ) ;
 
     cv::Mat getPsi( ) const ;
-    cv::Mat getPsiImage( ) const ;
     cv::Mat getMassMap( ) const ;
-    cv::Mat getMassImage() const ;
-    cv::Mat getEinsteinMap( ) const ;
+    cv::Mat getEinsteinMap( ) const ; // Not implemented
+    cv::Mat getPsiImage( ) const ;  // Discouraged
+    cv::Mat getMassImage() const ;  // Discouraged
 
     virtual double psifunction( double, double ) = 0 ;
     virtual double psiXfunction( double, double ) = 0 ;
