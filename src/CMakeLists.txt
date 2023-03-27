@@ -1,6 +1,5 @@
 
 set(SimLibFiles
-        simlib/LensMap.cpp
         simlib/Lens.cpp
         simlib/PsiFunctionLens.cpp
         simlib/PixMapLens.cpp
@@ -8,7 +7,6 @@ set(SimLibFiles
         simlib/PureSampledLens.cpp
         simlib/SampledRouletteLens.cpp
         simlib/RouletteSISLens.cpp
-        simlib/PMCLens.cpp
         simlib/RouletteLens.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
@@ -20,6 +18,9 @@ set(SimLibFiles
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
         )
+     # Currently unused:
+     #    simlib/LensMap.cpp
+     #    simlib/PMCLens.cpp
 
 add_library(SimLib ${SimLibFiles})
 set_target_properties(SimLib PROPERTIES POSITION_INDEPENDENT_CODE ON)
