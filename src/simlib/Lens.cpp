@@ -32,6 +32,9 @@ cv::Mat Lens::getPsiImage() const {
    return im ;
 }
 cv::Mat Lens::getMassMap() const {
+   cv::Mat massMap = getPsiX() ;
+   massMap += getPsiY() ;
+   massMap /= 2 ;
    return massMap ;
 }
 cv::Mat Lens::getMassImage() const {

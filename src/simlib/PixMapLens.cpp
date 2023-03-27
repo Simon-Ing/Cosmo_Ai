@@ -11,11 +11,7 @@ void PixMapLens::setPsi( cv::Mat map ) {
    // diffY( psi, tmp ) ; diffY( tmp, psiY ) ;
    Sobel(psi,psiX,CV_64FC1, 2, 0, 3, 1.0/8) ;
    Sobel(psi,psiY,CV_64FC1, 0, 2, 3, 1.0/8) ;
-   massMap = ( psiX + psiY ) / 2 ;
-
-   // Calculate einsteinMap 
 }
 void PixMapLens::loadPsi( std::string fn ) {
    setPsi( cv::imread( fn ) ) ;
-   // Calculate einsteinMap and massMap here
 }
