@@ -34,6 +34,13 @@ void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
 } 
 
+cv::Mat CosmoSim::getPsiMap( ) {
+   return lens->getPsi() ;
+} 
+cv::Mat CosmoSim::getMassMap( ) {
+   return lens->getMassMap() ;
+} 
+
 void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
@@ -272,6 +279,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setResolution", &CosmoSim::setResolution)
         .def("setBGColour", &CosmoSim::setBGColour)
         .def("setFile", &CosmoSim::setFile)
+        .def("getPsiMap", &CosmoSim::getPsiMap)
+        .def("getMassMap", &CosmoSim::getMassMap)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

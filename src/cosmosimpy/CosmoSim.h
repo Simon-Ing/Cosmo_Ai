@@ -78,6 +78,9 @@ public:
     cv::Mat getActual(bool) ;
     cv::Mat getDistorted(bool) ;
 
+    cv::Mat getPsiMap() ;
+    cv::Mat getMassMap() ;
+
 };
 
 #endif // COSMOSIM_FACADE_H
