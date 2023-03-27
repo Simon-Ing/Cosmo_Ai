@@ -42,3 +42,15 @@ index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "ss13",image-ss13.png,t,ss,50, 57,-47,50,47,0,75,16
 "ss14",image-ss14.png,t,ss,50,-60,-50,25, 5,0,60,16
 "ss15",image-ss15.png,t,ss,50,-20, -3,48,27,0,115,16
+"s021",image-s021.png,s,pss,50, 24,-68,48,21,0,0,16
+"s022",image-s022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"s023",image-s023.png,s,pss,50, 57,-47,50,47,0,0,16
+"s024",image-s024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"s025",image-s025.png,s,pss,50,-20, -3,48,27,0,0,16
+"s026",image-s026.png,s,pss,50,-30,-25,20,20,0,0,16
+"f021",image-f021.png,s,pss,50, 24,-68,48,21,0,0,16
+"f022",image-f022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"f023",image-f023.png,s,pss,50, 57,-47,50,47,0,0,16
+"f024",image-f024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"f025",image-f025.png,s,pss,50,-20, -3,48,27,0,0,16
+"f026",image-f026.png,s,pss,50,-30,-25,20,20,0,0,16
