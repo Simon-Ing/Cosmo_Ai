@@ -6,7 +6,10 @@
 
 ### Added
 
-- Support for sampled lens models using the Roulette formalism
+- Support for sampled lens models both using the Roulette formalism
+  and calculating pixel for pixel.
+- New PsiFunctionLens defining the lens in terms of computational 
+  definitions of the lensing potential (psi) and its derivatives.
 - New test suite to compare different implementations of 
   similar models, such as eact and roulette point mass,
   sampled and functional SIS, and SIS with and without rotation
@@ -15,6 +18,7 @@
 
 - Cleaned up code to make variable names more consistent with 
   mathematical papers
+- Refactoring, using a Lens class separate from the LensModel
 
 ### Fixed
 
