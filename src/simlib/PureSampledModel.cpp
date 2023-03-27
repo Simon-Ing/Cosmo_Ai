@@ -5,46 +5,54 @@
 #include <thread>
 #include "simaux.h"
 
-PureSampledLens::PureSampledLens() :
+PureSampledModel::PureSampledModel() :
    LensModel::LensModel()
 { 
-    std::cout << "Instantiating PureSampledLens ... \n" ;
+    std::cout << "Instantiating PureSampledModel ... \n" ;
     rotatedMode = false ;
 }
-PureSampledLens::PureSampledLens(bool centred) :
+PureSampledModel::PureSampledModel(bool centred) :
    LensModel::LensModel(centred)
 { 
-    std::cout << "Instantiating PureSampledLens ... \n" ;
+    std::cout << "Instantiating PureSampledModel ... \n" ;
     rotatedMode = false ;
 }
 
-void PureSampledLens::updateApparentAbs( ) {
-    std::cout << "[PureSampledLens] updateApparentAbs() updates psi.\n" ;
-    lens->updatePsi() ;
+void PureSampledModel::updateApparentAbs( ) {
+    std::cout << "[PureSampledModel] updateApparentAbs() updates psi.\n" ;
+    cv::Mat im = getActual() ;
+    lens->updatePsi(im.size()) ;
 }
-cv::Point2d PureSampledLens::calculateEta( cv::Point2d xi ) {
+cv::Point2d PureSampledModel::calculateEta( cv::Point2d xi ) {
    cv::Point2d chieta, xy, ij ; 
    cv::Mat psi = lens->getPsi() ;
+   cv::Mat psiX = lens->getPsiX() ;
+   cv::Mat psiY = lens->getPsiY() ;
 
+   // std::cout << "[PureSampledModel] calculateEta().\n" ;
    ij = imageCoordinate( xi, psi ) ;
+   // std::cout << "[PureSampledModel] calculateEta() " << ij << ".\n" ;
    xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
    chieta = xi - xy ;
 
    return chieta/CHI ;
 }
-void PureSampledLens::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
+void PureSampledModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
-    std::cout << "[PureSampledLens] distort().\n" ;
+    // std::cout << "[PureSampledModel] distort().\n" ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
             cv::Point2d eta, xi, ij, targetPos ;
 
+
+            // std::cout << "[PureSampledModel] distort() " << row << col << ".\n" ;
             targetPos = cv::Point2d( col - dst.cols / 2.0,
                   dst.rows / 2.0 - row ) ;
             xi = -CHI*targetPos ;
             eta = calculateEta( xi ) + getEta() ;
             ij = imageCoordinate( eta, src ) ;
+            // std::cout << "[PureSampledModel] distort() " << ij << ".\n" ;
   
             if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
@@ -57,9 +65,9 @@ void PureSampledLens::distort(int begin, int end, const cv::Mat& src, cv::Mat& d
     }
 }
 
-cv::Point2d PureSampledLens::getDistortedPos(double r, double theta) const {
+cv::Point2d PureSampledModel::getDistortedPos(double r, double theta) const {
    throw NotImplemented() ;
 };
-void PureSampledLens::setLens( Lens *l ) {
+void PureSampledModel::setLens( Lens *l ) {
    lens = l ;
 }

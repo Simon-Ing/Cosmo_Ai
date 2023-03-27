@@ -8,7 +8,7 @@ void PsiFunctionLens::updatePsi( cv::Size size ) {
    int nrows = size.height ;
    int ncols = size.width ;
 
-   std::cout << "[SampledSISLens] updatePsi\n" ;
+   std::cout << "[PsiFunctionLens] updatePsi\n" ;
 
    psi = cv::Mat::zeros(size, CV_64F );
 
@@ -19,6 +19,7 @@ void PsiFunctionLens::updatePsi( cv::Size size ) {
 	 psi.at<double>( ij ) = psifunction( xy.x, xy.y ) ;
       }
    }
+   gradient( -psi, psiX, psiY ) ;
 
    return ; 
 }

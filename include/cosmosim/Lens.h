@@ -20,6 +20,8 @@ public:
     void setEinsteinR( double ) ;
 
     cv::Mat getPsi( ) const ;
+    cv::Mat getPsiX( ) const ;
+    cv::Mat getPsiY( ) const ;
     cv::Mat getPsiImage( ) const ;
     cv::Mat getMassMap( ) const ;
     cv::Mat getMassImage() const ;

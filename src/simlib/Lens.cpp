@@ -14,6 +14,12 @@ void Lens::setEinsteinR( double r ) { einsteinR = r ; }
 cv::Mat Lens::getPsi() const {
    return psi ;
 }
+cv::Mat Lens::getPsiX() const {
+   return psiX ;
+}
+cv::Mat Lens::getPsiY() const {
+   return psiY ;
+}
 cv::Mat Lens::getPsiImage() const {
    cv::Mat im, ps = getPsi() ;
    double minVal, maxVal;
