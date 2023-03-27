@@ -1,10 +1,9 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "cosmosim/PixMap.h"
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
-void LensMap::setPsi( cv::Mat map ) {
+void PixMapLens::setPsi( cv::Mat map ) {
    cv::Mat tmp ;
    std::cout << "[LensMap] setPsi()\n" ;
    psi = map ;
@@ -16,7 +15,7 @@ void LensMap::setPsi( cv::Mat map ) {
 
    // Calculate einsteinMap 
 }
-void LensMap::loadPsi( std::string fn ) {
+void PixMapLens::loadPsi( std::string fn ) {
    setPsi( cv::imread( fn ) ) ;
    // Calculate einsteinMap and massMap here
 }

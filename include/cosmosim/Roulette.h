@@ -2,7 +2,6 @@
 #define ROULETTE_H
 
 #include "Simulator.h"
-#include "PixMap.h"
 #include "Lens.h"
 
 #include <symengine/expression.h>

@@ -1,7 +1,11 @@
 #ifndef LENS_H
 #define LENS_H
 
-#include "cosmosim/PixMap.h"
+#if __has_include("opencv4/opencv2/opencv.hpp")
+#include "opencv4/opencv2/opencv.hpp"
+#else
+#include "opencv2/opencv.hpp"
+#endif
 
 class Lens {
 

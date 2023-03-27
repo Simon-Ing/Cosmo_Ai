@@ -35,5 +35,4 @@ protected:
 
 };
 
-
 #endif // PIXMAP_H

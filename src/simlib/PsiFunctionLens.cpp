@@ -1,6 +1,5 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "cosmosim/PixMap.h"
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
