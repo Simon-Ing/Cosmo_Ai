@@ -20,17 +20,19 @@ public:
     void setEinsteinR( double ) ;
 
     cv::Mat getPsi( ) const ;
+    cv::Mat getPsiX( ) const ;
+    cv::Mat getPsiY( ) const ;
     cv::Mat getMassMap( ) const ;
     cv::Mat getEinsteinMap( ) const ; // Not implemented
     cv::Mat getPsiImage( ) const ;  // Discouraged
     cv::Mat getMassImage() const ;  // Discouraged
 
-    virtual double psifunction( double, double ) = 0 ;
-    virtual double psiXfunction( double, double ) = 0 ;
-    virtual double psiYfunction( double, double ) = 0 ;
 };
 class PsiFunctionLens : public Lens {
 public:
+    virtual double psifunction( double, double ) = 0 ;
+    virtual double psiXfunction( double, double ) = 0 ;
+    virtual double psiYfunction( double, double ) = 0 ;
     virtual void updatePsi( cv::Size ) ;
 } ;
 class PixMapLens : public Lens {

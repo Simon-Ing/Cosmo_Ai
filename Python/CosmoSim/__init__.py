@@ -26,6 +26,8 @@ lensDict = {
         "ss" : LensSpec.SampledSIS,
         "ps" : LensSpec.PureSampled,
         "pss" : LensSpec.PureSampledSIS,
+        "fs" : LensSpec.PsiFunctionSIS,
+        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
         }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,

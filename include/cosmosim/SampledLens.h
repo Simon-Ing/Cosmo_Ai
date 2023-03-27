@@ -4,30 +4,30 @@
 #include "Simulator.h"
 #include "Lens.h"
 
-class PureSampledLens : public LensModel { 
+class PureSampledModel : public LensModel { 
 public:
     using LensModel::LensModel ;
-    PureSampledLens();
-    PureSampledLens(bool);
+    PureSampledModel();
+    PureSampledModel(bool);
     void setLens( Lens* ) ;
 protected:
     virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
     virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const ;
-    cv::Mat psiX, psiY ;
     Lens *lens ;
 private:
 };
 
-class PsiFunctionModel : public PureSampledLens { 
+class PsiFunctionModel : public PureSampledModel { 
 public:
-    using PureSampledLens::PureSampledLens ;
+    using PureSampledModel::PureSampledModel ;
+    void setPsiFunctionLens( PsiFunctionLens* ) ;
 protected:
     virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
-    virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
 private:
+    PsiFunctionLens *psilens ;
 };
 
 #endif // SAMPLED_LENS_H

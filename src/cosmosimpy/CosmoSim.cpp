@@ -44,7 +44,9 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
-   PureSampledLens *s0 = NULL ;
+   PureSampledModel *s0 = NULL ;
+   PsiFunctionModel *s1 = NULL ;
+   PsiFunctionLens *l1 = NULL ;
    SampledRouletteLens *ssim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
@@ -81,13 +83,20 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_PURESAMPLED:
          std::cout << "Running Pure Sampled Lens (mode=" << lensmode << ")\n" ;
-         sim = new PureSampledLens(centred) ;
+         sim = new PureSampledModel(centred) ;
          break ;
        case CSIM_LENS_PURESAMPLED_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         s0 = new PureSampledLens(centred) ;
+         s0 = new PureSampledModel(centred) ;
          s0->setLens( lens = new SIS() ) ;
          sim = s0 ;
+         break ;
+       case CSIM_LENS_PSIFUNCTION_SIS:
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         s1 = new PsiFunctionModel(centred) ;
+         s1->setPsiFunctionLens( l1 = new SIS() ) ;
+         lens = l1 ;
+         sim = s1 ;
          break ;
        case CSIM_LENS_SAMPLED:
          std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
@@ -279,6 +288,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampled", CSIM_LENS_PURESAMPLED )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
+       .value( "PsiFunction", CSIM_LENS_PSIFUNCTION )
+       .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
