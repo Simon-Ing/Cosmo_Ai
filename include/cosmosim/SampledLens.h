@@ -26,7 +26,7 @@ public:
 protected:
     virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
-    virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
+    // virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
 private:
 };
 
