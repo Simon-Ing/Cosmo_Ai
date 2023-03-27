@@ -135,13 +135,17 @@ class CosmoSim(cs.CosmoSim):
         Return a matrix representation of the sampled lensing potential.
         """
         im = np.array(super().getPsiMap(),copy=False)
+        print(im.shape,im.dtype)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im
     def getMassMap(self):
         """
         Return a matrix representation of the sampled mass density.
         """
+        # im = super().getMassMap()
+        # print(type(im))
         im = np.array(super().getMassMap(),copy=False)
+        print(im.shape,im.dtype)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return im
     def getDistortedImage(self,reflines=True,mask=False,showmask=False):
