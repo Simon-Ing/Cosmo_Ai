@@ -8,6 +8,8 @@ import cv2 as cv
 import sys
 import os
 import numpy as np
+import matplotlib.pyplot as plt
+
 import argparse
 from CosmoSim.Image import centreImage, drawAxes
 from CosmoSim import CosmoSim
@@ -68,6 +70,23 @@ def makeSingle(sim,args,name=None):
         makeOutput(sim,args,name=f"{name}+0-1")
         sim.moveSim(rot=0,scale=2)
         makeOutput(sim,args,name=f"{name}+0+2")
+    if args.psiplot:
+        a = sim.getPsiMap()
+        nx,ny = a.shape
+        X, Y = np.meshgrid( range(nx), range(ny) )
+        hf = plt.figure()
+        ha = hf.add_subplot(111, projection='3d')
+        ha.plot_surface(X, Y, a)
+        plt.imwrite( f"psi-{name}.svg" )
+    if args.kappaplot:
+        a = sim.getMassMap()
+        nx,ny = a.shape
+        X, Y = np.meshgrid( range(nx), range(ny) )
+        hf = plt.figure()
+        ha = hf.add_subplot(111, projection='3d')
+        ha.plot_surface(X, Y, a)
+        plt.imwrite( f"kappa-{name}.svg" )
+
 
 def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
     im = sim.getDistortedImage( 
@@ -133,6 +152,11 @@ if __name__ == "__main__":
             help="Scaling factor for the mask radius")
     parser.add_argument('-c', '--components',default="6",
             help="Number of components for joined image")
+
+    parser.add_argument('-P', '--psiplot',action='store_true',
+            help="Plot lens potential as 3D surface")
+    parser.add_argument('-K', '--kappaplot',action='store_true',
+            help="Plot mass distribution as 3D surface")
 
     parser.add_argument('-f', '--family',action='store_true',
             help="Several images moving the viewpoint")
