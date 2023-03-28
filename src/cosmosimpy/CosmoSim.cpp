@@ -309,7 +309,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
         .def_buffer([](cv::Mat& im) -> pybind11::buffer_info {
               int t = im.type() ;
-              if ( (t|CV_64F) == CV_64F ) {
+              if ( (t&CV_64F) == CV_64F ) {
                 std::cout << "[CosmoSimPy] CV_64F\n" ;
                 return pybind11::buffer_info(
                     // Pointer to buffer
