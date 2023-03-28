@@ -29,6 +29,15 @@ lensDict = {
         "fs" : LensSpec.PsiFunctionSIS,
         "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
         }
+lensValues = {
+        "Point Mass (exact)" : LensSpec.PointMass,
+        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
+        "SIS (rotated)" : LensSpec.SIS,
+        "SIS (roulettes)" : LensSpec.SISRoulettes,
+        "Sampled SIS" : LensSpec.SampledSIS,
+        "PureSampled SIS" : LensSpec.PureSampledSIS,
+        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,
         "Ellipsoid" : SourceSpec.Ellipse,
@@ -36,6 +45,11 @@ sourceDict = {
         "s" : SourceSpec.Sphere,
         "e" : SourceSpec.Ellipse,
         "t" : SourceSpec.Triangle,
+        }
+sourceValues = {
+        "Spherical" : SourceSpec.Sphere,
+        "Ellipsoid" : SourceSpec.Ellipse,
+        "Triangle" : SourceSpec.Triangle,
         }
 
 
