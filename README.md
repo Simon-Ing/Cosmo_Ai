@@ -22,7 +22,7 @@ matter of the Universe.  This is work in progress.
 2.  Download and unpack `CosmoSimPy.zip` from 
     [v2.0.2.](https://github.com/CosmoAI-AES/CosmoSim/releases/tag/v2.0.2)
     or
-    [the latestrelease](https://github.com/CosmoAI-AES/CosmoSim/releases/).
+    [the latest release](https://github.com/CosmoAI-AES/CosmoSim/releases/).
     Temporary problems with the build on github, may mean that there is no
     precompiled version with the latest release.
 3.  Run `CosmoSimPy/CosmoGUI.py` in python.  This is the GUI tool.
