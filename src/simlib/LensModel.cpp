@@ -56,6 +56,9 @@ cv::Mat LensModel::getApparent() const {
    }
 }
 cv::Mat LensModel::getDistorted() const {
+   std::cout << "[LensModel.getDistorted()] image type "
+      << imgDistorted.type() << " - " 
+      << imgDistorted.size() << "\n" ;
    return imgDistorted ;
 }
 
