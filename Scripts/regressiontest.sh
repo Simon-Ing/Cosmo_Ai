@@ -22,12 +22,15 @@ do
    mkdir -p Test/diff/$flag
 done
 
-python3 Python/datagen.py --directory="$dir"/plain --csvfile Datasets/debug.csv  || exit 1
+python3 Python/datagen.py --directory="$dir"/plain \
+   --csvfile Datasets/debug.csv  || exit 1
 
-python3 Python/datagen.py --mask --directory="$dir"/mask --csvfile Datasets/debug.csv  || exit 2
+python3 Python/datagen.py --mask --directory="$dir"/mask \
+   --csvfile Datasets/debug.csv  || exit 2
 python3 Python/datagen.py --reflines --centred --directory="$dir"/centred \
    --csvfile Datasets/debug.csv  || exit 3
-python3 Python/datagen.py --reflines --directory="$dir"/reflines --csvfile Datasets/debug.csv  || exit 4
+python3 Python/datagen.py --reflines --directory="$dir"/reflines \
+   --csvfile Datasets/debug.csv  || exit 4
 
 test -d $baseline || exit 5
 
