@@ -80,13 +80,12 @@ void LensModel::update( cv::Point2d xi ) {
 void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
-    std::cout << "[LensModel::update()] x=" << eta.x << "; y= " << eta.y 
-              << "; R=" << getEtaAbs() << "; theta=" << phi
+    std::cout << "[LensModel::update()] R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
-    std::cout << "[LensModel::update()] xi=" << getXi()   << "\n" ;
-    std::cout << "[LensModel::update()] eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
-    std::cout << "[LensModel::update()] nu=" << getNu()   << "\n" ;
-    std::cout << "[LensModel::update()] centre=" << getCentre() << "\n" ;
+    std::cout << "[LensModel::update()] xi=" << getXi()   
+              << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
+    std::cout << "[LensModel::update()] nu=" << getNu()   
+              << "; centre=" << getCentre() << "\n" ;
 
     auto startTime = std::chrono::system_clock::now();
 
@@ -103,7 +102,6 @@ void LensModel::updateInner( ) {
    
        // Correct the rotation applied to the source image
        cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
-       std::cout << "rotatedMode=true\n" << rot << "\n" ;
        cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    
            // crop distorted image
        imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
@@ -111,8 +109,6 @@ void LensModel::updateInner( ) {
        imgDistorted = cv::Mat::zeros(imgApparent.size(), imgApparent.type()) ;
        parallelDistort(imgApparent, imgDistorted);
     }
-
-    std::cout << "update() (x,y) = (" << eta.x << ", " << eta.y << ")\n" ;
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
