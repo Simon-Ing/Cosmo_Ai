@@ -34,31 +34,90 @@ void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
 } 
 
-void CosmoSim::setCHI(int c) { chi = c/100.0 ; }
+cv::Mat CosmoSim::getPsiMap( ) {
+   cv::Mat im = lens->getPsi() ;
+   std::cout << "[getPsiMap] " << im.type() << "\n" ;
+   return im ;
+} 
+cv::Mat CosmoSim::getMassMap( ) {
+   cv::Mat im = lens->getMassMap() ;
+   std::cout << "[getMassMap] " << im.type() << "\n" ;
+   return im ;
+} 
+
+void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::setLensFunction(int m) { psimode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
+   PureSampledModel *s0 = NULL ;
+   PsiFunctionModel *s1 = NULL ;
+   PsiFunctionLens *l1 = NULL ;
+   SampledRouletteLens *ssim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
    if ( sim ) delete sim ;
+   switch ( psimode ) {
+       case CSIM_PSI_SIS:
+          lens = new SIS() ;
+          break ;
+       case CSIM_NOPSI:
+          lens = NULL ;
+          break ;
+       default:
+         std::cout << "No such lens model!\n" ;
+         throw NotImplemented();
+   }
    switch ( lensmode ) {
        case CSIM_LENS_SPHERE:
          std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
          sim = new SphereLens(filename,centred) ;
          break ;
+       case CSIM_LENS_SIS_ROULETTE:
+         std::cout << "Running Roulette SIS Lens (mode=" << lensmode << ")\n" ;
+         sim = new RouletteSISLens(filename,centred) ;
+         break ;
        case CSIM_LENS_PM_ROULETTE:
-         std::cout << "Running Roulette Point Mass Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Roulette Point Mass Lens (mode=" 
+                   << lensmode << ")\n" ;
          sim = new RoulettePMLens(centred) ;
          break ;
        case CSIM_LENS_PM:
          std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
          sim = new PointMassLens(centred) ;
+         break ;
+       case CSIM_LENS_PURESAMPLED:
+         std::cout << "Running Pure Sampled Lens (mode=" << lensmode << ")\n" ;
+         sim = new PureSampledModel(centred) ;
+         break ;
+       case CSIM_LENS_PURESAMPLED_SIS:
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         s0 = new PureSampledModel(centred) ;
+         s0->setLens( lens = new SIS() ) ;
+         sim = s0 ;
+         break ;
+       case CSIM_LENS_PSIFUNCTION_SIS:
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         s1 = new PsiFunctionModel(centred) ;
+         s1->setPsiFunctionLens( l1 = new SIS() ) ;
+         lens = l1 ;
+         sim = s1 ;
+         break ;
+       case CSIM_LENS_SAMPLED:
+         std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
+         sim = new SampledRouletteLens(centred) ;
+         break ;
+       case CSIM_LENS_SAMPLED_SIS:
+         std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         ssim = new SampledRouletteLens(centred) ;
+         ssim->setLens( lens = new SIS() ) ;
+         sim = ssim ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;
@@ -67,13 +126,13 @@ void CosmoSim::initLens() {
     oldlensmode = lensmode ;
     return ;
 }
-void CosmoSim::setEinsteinR(int r) { einsteinR = r ; }
+void CosmoSim::setEinsteinR(double r) { einsteinR = r ; }
 void CosmoSim::setImageSize(int sz ) { size = sz ; }
 void CosmoSim::setResolution(int sz ) { 
    basesize = sz ; 
    std::cout << "[setResolution] basesize=" << basesize << "; size=" << size << "\n" ;
 }
-void CosmoSim::setSourceParameters(int s1, int s2, int theta ) {
+void CosmoSim::setSourceParameters(double s1, double s2, double theta ) {
    sourceSize = s1 ;
    if ( s2 >= 0 ) sourceSize2 = s2 ;
    if ( theta >= 0 ) sourceTheta = theta ;
@@ -117,17 +176,32 @@ bool CosmoSim::runSim() {
    } else {
       sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
    }
+   if ( lens != NULL ) {
+      lens->setEinsteinR( einsteinR ) ;
+   }
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
    sim->update() ;
    Py_END_ALLOW_THREADS
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
    return true ;
-} 
-cv::Mat CosmoSim::getApparent(bool refLinesMode) {
+}
+bool CosmoSim::moveSim( double rot, double scale ) { 
+   cv::Point2d xi = sim->getTrueXi(), xi1 ;
+   xi1 = cv::Point2d( 
+           xi.x*cos(rot) - xi.y*sin(rot),
+           xi.x*sin(rot) + xi.y*cos(rot)
+         );
+   xi1 *= scale ;
+   Py_BEGIN_ALLOW_THREADS
+   sim->update( xi1 ) ;
+   Py_END_ALLOW_THREADS
+   return true ;
+}
+cv::Mat CosmoSim::getSource(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
-   cv::Mat im = sim->getApparent() ;
+   cv::Mat im = sim->getSource() ;
    if (refLinesMode) {
       im = im.clone() ;
       refLines(im) ;
@@ -152,8 +226,8 @@ cv::Mat CosmoSim::getActual(bool refLinesMode) {
    }
    return im ;
 }
-void CosmoSim::maskImage() {
-          sim->maskImage() ;
+void CosmoSim::maskImage( double scale ) {
+          sim->maskImage( scale ) ;
 }
 void CosmoSim::showMask() {
           sim->markMask() ;
@@ -188,6 +262,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     py::class_<CosmoSim>(m, "CosmoSim")
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
+        .def("setLensFunction", &CosmoSim::setLensFunction)
         .def("setSourceMode", &CosmoSim::setSourceMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
@@ -196,9 +271,10 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setXY", &CosmoSim::setXY)
         .def("setPolar", &CosmoSim::setPolar)
         .def("getActual", &CosmoSim::getActual)
-        .def("getApparent", &CosmoSim::getApparent)
+        .def("getApparent", &CosmoSim::getSource)
         .def("getDistorted", &CosmoSim::getDistorted)
         .def("runSim", &CosmoSim::runSim)
+        .def("moveSim", &CosmoSim::moveSim)
         .def("diagnostics", &CosmoSim::diagnostics)
         .def("maskImage", &CosmoSim::maskImage)
         .def("showMask", &CosmoSim::showMask)
@@ -207,6 +283,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setResolution", &CosmoSim::setResolution)
         .def("setBGColour", &CosmoSim::setBGColour)
         .def("setFile", &CosmoSim::setFile)
+        .def("getPsiMap", &CosmoSim::getPsiMap)
+        .def("getMassMap", &CosmoSim::getMassMap)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
@@ -217,30 +295,60 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SIS", CSIM_LENS_SPHERE )
        .value( "Ellipse", CSIM_LENS_ELLIPSE )
        .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
+       .value( "SISRoulettes", CSIM_LENS_SIS_ROULETTE ) 
        .value( "PointMass", CSIM_LENS_PM )
+       .value( "Sampled", CSIM_LENS_SAMPLED )
+       .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
+       .value( "PureSampled", CSIM_LENS_PURESAMPLED )
+       .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
+       .value( "PsiFunction", CSIM_LENS_PSIFUNCTION )
+       .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
     pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
         .def_buffer([](cv::Mat& im) -> pybind11::buffer_info {
-            return pybind11::buffer_info(
-                // Pointer to buffer
-                im.data,
-                // Size of one scalar
-                sizeof(unsigned char),
-                // Python struct-style format descriptor
-                pybind11::format_descriptor<unsigned char>::format(),
-                // Number of dimensions
-                3,
-                // Buffer dimensions
-                { im.rows, im.cols, im.channels() },
-                // Strides (in bytes) for each index
-                {
-                    sizeof(unsigned char) * im.channels() * im.cols,
-                    sizeof(unsigned char) * im.channels(),
-                    sizeof(unsigned char)
-                }
-            );
+              int t = im.type() ;
+              if ( (t&CV_64F) == CV_64F ) {
+                std::cout << "[CosmoSimPy] CV_64F\n" ;
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    im.data,
+                    // Size of one scalar
+                    sizeof(double),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<double>::format(),
+                    // Number of dimensions
+                    3,
+                        // Buffer dimensions
+                    { im.rows, im.cols, im.channels() },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(double) * im.channels() * im.cols,
+                        sizeof(double) * im.channels(),
+                        sizeof(unsigned char)
+                    }
+                    );
+              } else { // default is 8bit integer
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    im.data,
+                    // Size of one scalar
+                    sizeof(unsigned char),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<unsigned char>::format(),
+                    // Number of dimensions
+                    3,
+                        // Buffer dimensions
+                    { im.rows, im.cols, im.channels() },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(unsigned char) * im.channels() * im.cols,
+                        sizeof(unsigned char) * im.channels(),
+                        sizeof(unsigned char)
+                    }
+                 );
+              } ;
         });
     // Note.  The cv::Mat object returned needs to by wrapped in python:
     // `np.array(im, copy=False)` where `im` is the `Mat` object.

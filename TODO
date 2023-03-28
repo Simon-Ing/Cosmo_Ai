@@ -1,0 +1,20 @@
+
+1.  Secondary Image
+    - setXi for RoulettePM 
+    - test script
+2.  Test GUI
+    - then make new baseline
+3.  Test and clean up mass map and psi map
+    - export raw psi/kappa and make 3D plots
+    - compile a demo
+    - print \nabla\psi
+4.  Prepare release
+    - Which issues should be fixed?
+    - CHANGELOG
+5.  Documentation in paper
+    - Document flow of image transformations
+6.  Clarify local co-ordinate system
+    - origin in the centre of the image
+    - horizontal first axis, vertical second axis
+    - validate code
+7.  High resolution sampling

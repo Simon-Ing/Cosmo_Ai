@@ -1,6 +1,6 @@
 index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
-"0001",image-pm01.png,s,p,50, 24,-68,48,21,0,0,16
-"0002",image-pm02.png,s,p,50, 35,-29, 3,43,0,0,16
+"pm01",image-pm01.png,s,p,50, 24,-68,48,21,0,0,16
+"pm02",image-pm02.png,s,p,50, 35,-29, 3,43,0,0,16
 "0003",image-pm03.png,s,p,50, 57,-47,50,47,0,0,16
 "0004",image-pm04.png,s,p,50,-60,-50,25, 5,0,0,16
 "0005",image-pm05.png,s,p,50,-20, -3,48,27,0,0,16
@@ -9,11 +9,13 @@ index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s003",image-s003.png,s,s,50, 57,-47,50,47,0,0,16
 "s004",image-s004.png,s,s,50,-60,-50,25, 5,0,0,16
 "s005",image-s005.png,s,s,50,-20, -3,48,27,0,0,16
+"s006",image-s006.png,s,s,50,-30,-25,20,20,0,0,16
 "r001",image-r001.png,s,r,50, 24,-68,48,21,0,0,16
 "r002",image-r002.png,s,r,50, 35,-29, 3,43,0,0,16
 "r003",image-r003.png,s,r,50, 57,-47,50,47,0,0,16
 "r004",image-r004.png,s,r,50,-60,-50,25, 5,0,0,16
 "r005",image-r005.png,s,r,50,-20, -3,48,27,0,0,16
+"r006",image-r006.png,s,r,50,-30,-25,20,20,0,0,16
 "t011",image-t011.png,t,p,50, 24,-68,48,21,0,0,16
 "t012",image-t012.png,t,p,50, 35,-29, 3,43,0,30,16
 "t013",image-t013.png,t,p,50, 57,-47,50,47,0,75,16
@@ -29,3 +31,26 @@ index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "tr13",image-tr13.png,t,r,50, 57,-47,50,47,0,75,16
 "tr14",image-tr14.png,t,r,50,-60,-50,25, 5,0,60,16
 "tr15",image-tr15.png,t,r,50,-20, -3,48,27,0,115,16
+"ss01",image-ss01.png,s,ss,50, 24,-68,48,21,0,0,16
+"ss02",image-ss02.png,s,ss,50, 35,-29, 3,43,0,0,16
+"ss03",image-ss03.png,s,ss,50, 57,-47,50,47,0,0,16
+"ss04",image-ss04.png,s,ss,50,-60,-50,25, 5,0,0,16
+"ss05",image-ss05.png,s,ss,50,-20, -3,48,27,0,0,16
+"ss06",image-ss06.png,s,ss,50,-30,-25,20,20,0,0,16
+"ss11",image-ss11.png,t,ss,50, 24,-68,48,21,0,0,16
+"ss12",image-ss12.png,t,ss,50, 35,-29, 3,43,0,30,16
+"ss13",image-ss13.png,t,ss,50, 57,-47,50,47,0,75,16
+"ss14",image-ss14.png,t,ss,50,-60,-50,25, 5,0,60,16
+"ss15",image-ss15.png,t,ss,50,-20, -3,48,27,0,115,16
+"s021",image-s021.png,s,pss,50, 24,-68,48,21,0,0,16
+"s022",image-s022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"s023",image-s023.png,s,pss,50, 57,-47,50,47,0,0,16
+"s024",image-s024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"s025",image-s025.png,s,pss,50,-20, -3,48,27,0,0,16
+"s026",image-s026.png,s,pss,50,-30,-25,20,20,0,0,16
+"f021",image-f021.png,s,pss,50, 24,-68,48,21,0,0,16
+"f022",image-f022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"f023",image-f023.png,s,pss,50, 57,-47,50,47,0,0,16
+"f024",image-f024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"f025",image-f025.png,s,pss,50,-20, -3,48,27,0,0,16
+"f026",image-f026.png,s,pss,50,-30,-25,20,20,0,0,16

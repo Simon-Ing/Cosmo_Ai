@@ -9,125 +9,94 @@
 #include "opencv2/opencv.hpp"
 #endif
 
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
-
-using namespace SymEngine;
-
-
 #define PI 3.14159265358979323846
 
 class LensModel {
+private:
+    cv::Point2d eta ;  // Actual position in the source plane
+    cv::Point2d nu ;   // Apparent position in the source plane
+
+    bool centredMode = false ; // centredMode is never used
+    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
+    cv::Mat imgDistorted;
+    void updateInner();
 
 protected:
+    virtual void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
+
+    cv::Point2d xi ;   // Local origin in the lens plane
+    cv::Point2d etaOffset = cv::Point2d(0,0) ;
+        // Offset in the source plane resulting from moving xi
     double CHI;
     Source *source ;
     double einsteinR;
     int nterms;
+    bool rotatedMode = true ;
+    double phi{};
 
     int bgcolour = 0;
 
-    double actualX{};
-    double actualY{};
-    double actualAbs{};
-    double phi{};
-    double apparentAbs{};
-    double apparentAbs2{};
+    double apparentAbs2 = 0;
     bool maskMode = false ;
-    double maskRadius = 1024*1024 ;
+    virtual double getMaskRadius() const ;
+    void setNu( cv::Point2d ) ;
+    virtual void setXi( cv::Point2d ) ;
 
     // tentativeCentre is used as the shift when attempting 
     // to centre the distorted image in the image.
-    double tentativeCentre = 0;
+    cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    cv::Mat imgApparent;
-    cv::Mat imgDistorted;
-
-    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
-    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
-    std::array<std::array<double, 202>, 201> alphas_val;
-    std::array<std::array<double, 202>, 201> betas_val;
-
-private:
-    bool centredMode = false ;
+    virtual void updateApparentAbs() = 0 ;
+    virtual void calculateAlphaBeta() ;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
 
 public:
     LensModel();
     LensModel(bool);
     ~LensModel();
     void update();
-    void update( cv::Mat );
+    void updateSecondary();
+    void update( cv::Point2d );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
     void setBGColour( int ) ;
 
-    void updateXY(double, double, double, double) ;
+    double getNuAbs() const ;
+    cv::Point2d getNu() const ;
+    double getXiAbs() const ;
+    cv::Point2d getXi() const ;
+    cv::Point2d getTrueXi() const ;
+    double getEtaAbs() const ;
+    double getEtaSquare() const ;
+    cv::Point2d getEta() const ;
+    cv::Point2d getCentre() const ;
+
     void setXY(double, double, double, double) ;
     void setPolar(double, double, double, double) ;
     void setCHI(double) ;
     void setEinsteinR(double) ;
-    virtual void updateApparentAbs()  = 0 ;
-    virtual void maskImage( ) ;
-    virtual void markMask( ) ;
-    virtual void maskImage( cv::InputOutputArray ) ;
-    virtual void markMask( cv::InputOutputArray ) ;
-    void updateNterms(int);
     void setNterms(int);
-    void updateAll( double, double, double, double, int ) ;
     void setSource(Source*) ;
-    double getCentre() ;
 
-    cv::Mat getActual() ;
-    cv::Mat getApparent() ;
-    cv::Mat getDistorted() ;
-    cv::Mat getDistorted( double ) ;
-    cv::Mat getSecondary() ; // Made for testing
+    virtual void maskImage( ) ;
+    virtual void maskImage( double ) ;
+    virtual void markMask( ) ;
+    virtual void markMask( cv::InputOutputArray ) ;
+    virtual void maskImage( cv::InputOutputArray, double ) ;
 
-protected:
-    virtual void calculateAlphaBeta() ;
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const = 0 ;
-
-private:
-    void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
-    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
-
+    cv::Mat getActual() const ;
+    cv::Mat getApparent() const ;
+    cv::Mat getSource() const ;
+    cv::Mat getDistorted() const ;
 };
 
 class PointMassLens : public LensModel { 
 public:
     using LensModel::LensModel ;
 protected:
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
-
-class RoulettePMLens : public PointMassLens { 
-public:
-    using PointMassLens::PointMassLens ;
-protected:
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void updateApparentAbs() ;
-};
-
-class SphereLens : public LensModel { 
-  public:
-    SphereLens();
-    SphereLens(bool);
-    SphereLens(std::string,bool);
-    void setFile(std::string) ;
-  protected:
-    virtual void maskImage( cv::InputOutputArray ) ;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void calculateAlphaBeta();
-    virtual std::pair<double, double> getDistortedPos(double r, double theta) const;
-    virtual void updateApparentAbs() ;
-  private:
-    std::string filename = "50.txt" ;
-    void initAlphasBetas();
-};
-
-
 
 /* simaux */
 void refLines(cv::Mat&) ;
@@ -136,6 +105,11 @@ class NotImplemented : public std::logic_error
 {
 public:
     NotImplemented() : std::logic_error("Function not yet implemented") { };
+};
+class NotSupported : public std::logic_error
+{
+public:
+    NotSupported() : std::logic_error("Operation not supported in this context.") { };
 };
 
 #endif // COSMOSIM_H

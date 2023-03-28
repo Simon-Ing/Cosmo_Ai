@@ -1,5 +1,14 @@
 
 set(SimLibFiles
+        simlib/Lens.cpp
+        simlib/PsiFunctionLens.cpp
+        simlib/PsiFunctionModel.cpp
+        simlib/PixMapLens.cpp
+        simlib/SIS.cpp
+        simlib/PureSampledModel.cpp
+        simlib/SampledRouletteLens.cpp
+        simlib/RouletteSISLens.cpp
+        simlib/RouletteLens.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp
@@ -10,6 +19,9 @@ set(SimLibFiles
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
         )
+     # Currently unused:
+     #    simlib/LensMap.cpp
+     #    simlib/PMCLens.cpp
 
 add_library(SimLib ${SimLibFiles})
 set_target_properties(SimLib PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -24,17 +36,6 @@ endif ()
 # Python Bindings
 pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp)
 target_link_libraries(CosmoSimPy PRIVATE SimLib)
-
-
-if (COSMOSIM_BUILD_MAKEIMAGE)
-    add_executable(makeimage makeimage/makeimage.cpp)
-    target_link_libraries(makeimage PRIVATE SimLib)
-endif()
-
-if (COSMOSIM_BUILD_SIMULATOR)
-    target_link_libraries(Simulator PRIVATE SimLib)
-    add_executable(Simulator simulator/Simulator.cpp simulator/Window.cpp)
-endif()
 
 
 # copy CosmoSimPy.*.pyd into Python directory

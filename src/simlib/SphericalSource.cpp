@@ -4,8 +4,6 @@
 
 #include "cosmosim/Source.h"
 
-#include <thread>
-
 SphericalSource::SphericalSource(int sz,double sig) :
         Source::Source(sz),
         sigma(sig)

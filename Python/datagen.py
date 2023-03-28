@@ -8,6 +8,8 @@ import cv2 as cv
 import sys
 import os
 import numpy as np
+import matplotlib.pyplot as plt
+
 import argparse
 from CosmoSim.Image import centreImage, drawAxes
 from CosmoSim import CosmoSim
@@ -15,6 +17,7 @@ from CosmoSim import CosmoSim
 import pandas as pd
 
 def setParameters(sim,row):
+    print( row ) 
     if row.get("y",None) != None:
         print( "XY", row["x"], row["y"] )
         sim.setXY( row["x"], row["y"] )
@@ -40,7 +43,60 @@ def setParameters(sim,row):
 def makeSingle(sim,args,name=None):
     if name == None: name = args.name
     sim.runSim()
+    makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
+    if args.join:
+        # sim.setMaskMode(False)
+        sim.runSim()
+        sim.maskImage(float(args.maskscale))
+        joinim = sim.getDistorted(False)
+        # joinim = sim.getDistortedImage(False)
+        nc = int(args.components)
+        for i in range(1,nc):
+           sim.moveSim(rot=2*i*np.pi/nc,scale=1)
+           sim.maskImage(float(args.maskscale))
+           im = sim.getDistorted(False)
+           # im = sim.getDistortedImage(False)
+           joinim = np.maximum(joinim,im)
+        fn = os.path.join(args.directory,"join-" + str(name) + ".png" ) 
+        if args.reflines:
+            drawAxes(joinim)
+        cv.imwrite(fn,joinim)
+    if args.family:
+        sim.moveSim(rot=-np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}-45+1")
+        sim.moveSim(rot=+np.pi/4,scale=1)
+        makeOutput(sim,args,name=f"{name}+45+1")
+        sim.moveSim(rot=0,scale=-1)
+        makeOutput(sim,args,name=f"{name}+0-1")
+        sim.moveSim(rot=0,scale=2)
+        makeOutput(sim,args,name=f"{name}+0+2")
+    if args.psiplot:
+        a = sim.getPsiMap()
+        print(a.shape, a.dtype)
+        print(a)
+        nx,ny = a.shape
+        X, Y = np.meshgrid( range(nx), range(ny) )
+        hf = plt.figure()
+        ha = hf.add_subplot(111, projection='3d')
+        ha.plot_surface(X, Y, a)
+        fn = os.path.join(args.directory,"psi-" + str(name) + ".svg" ) 
+        plt.savefig( fn )
+        plt.close()
+    if args.kappaplot:
+        a = sim.getMassMap()
+        print(a.shape, a.dtype)
+        print(a)
+        nx,ny = a.shape
+        X, Y = np.meshgrid( range(nx), range(ny) )
+        hf = plt.figure()
+        ha = hf.add_subplot(111, projection='3d')
+        ha.plot_surface(X, Y, a)
+        fn = os.path.join(args.directory,"kappa-" + str(name) + ".svg" ) 
+        plt.savefig( fn )
+        plt.close()
 
+
+def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
     im = sim.getDistortedImage( 
                     reflines=False,
                     showmask=args.showmask
@@ -54,11 +110,11 @@ def makeSingle(sim,args,name=None):
     fn = os.path.join(args.directory,"image-" + str(name) + ".png" ) 
     cv.imwrite(fn,im)
 
-    if args.actual:
+    if actual:
        fn = os.path.join(args.directory,"actual-" + str(name) + ".png" ) 
        im = sim.getActualImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-    if args.apparent:
+    if apparent:
        fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
@@ -100,7 +156,20 @@ if __name__ == "__main__":
             help="simulation name")
     parser.add_argument('-D', '--directory',default="./",
             help="directory path (for output files)")
+    parser.add_argument('-O', '--maskscale',default="0.9",
+            help="Scaling factor for the mask radius")
+    parser.add_argument('-c', '--components',default="6",
+            help="Number of components for joined image")
 
+    parser.add_argument('-P', '--psiplot',action='store_true',default=False,
+            help="Plot lens potential as 3D surface")
+    parser.add_argument('-K', '--kappaplot',action='store_true',default=False,
+            help="Plot mass distribution as 3D surface")
+
+    parser.add_argument('-f', '--family',action='store_true',
+            help="Several images moving the viewpoint")
+    parser.add_argument('-J', '--join',action='store_true',
+            help="Join several images from different viewpoints")
     parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
@@ -118,19 +187,19 @@ if __name__ == "__main__":
        sim = CosmoSim()
     print( "Done" )
     if args.phi:
-        sim.setPolar( int(args.x), int(args.phi) )
+        sim.setPolar( float(args.x), float(args.phi) )
     else:
-        sim.setXY( int(args.x), int(args.y) )
+        sim.setXY( float(args.x), float(args.y) )
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
-    sim.setSourceParameters( int(args.sigma),
-            int(args.sigma2), int(args.theta) )
+    sim.setSourceParameters( float(args.sigma),
+            float(args.sigma2), float(args.theta) )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
     if args.chi:
-        sim.setCHI( int(args.chi) )
+        sim.setCHI( float(args.chi) )
     if args.einsteinradius:
-        sim.setEinsteinR( int(args.einsteinradius) )
+        sim.setEinsteinR( float(args.einsteinradius) )
     if args.imagesize:
         sim.setImageSize( int(args.imagesize) )
     if args.nterms:

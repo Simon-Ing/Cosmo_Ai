@@ -11,10 +11,32 @@ SourceSpec = cs.SourceSpec
 lensDict = {
         "Point Mass (exact)" : LensSpec.PointMass,
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (roulettes)" : LensSpec.SIS,
+        "SIS (rotated)" : LensSpec.SIS,
+        "SIS (roulettes)" : LensSpec.SISRoulettes,
+        "Sampled" : LensSpec.Sampled,
+        "Sampled SIS" : LensSpec.SampledSIS,
+        "PureSampled" : LensSpec.PureSampled,
+        "PureSampled SIS" : LensSpec.PureSampledSIS,
+        "p" : LensSpec.PointMass,
         "p" : LensSpec.PointMass,
         "r" : LensSpec.PointMassRoulettes,
         "s" : LensSpec.SIS,
+        "sr" : LensSpec.SISRoulettes,
+        "sp" : LensSpec.Sampled,
+        "ss" : LensSpec.SampledSIS,
+        "ps" : LensSpec.PureSampled,
+        "pss" : LensSpec.PureSampledSIS,
+        "fs" : LensSpec.PsiFunctionSIS,
+        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        }
+lensValues = {
+        "Point Mass (exact)" : LensSpec.PointMass,
+        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
+        "SIS (rotated)" : LensSpec.SIS,
+        "SIS (roulettes)" : LensSpec.SISRoulettes,
+        "Sampled SIS" : LensSpec.SampledSIS,
+        "PureSampled SIS" : LensSpec.PureSampledSIS,
+        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
         }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,
@@ -23,6 +45,11 @@ sourceDict = {
         "s" : SourceSpec.Sphere,
         "e" : SourceSpec.Ellipse,
         "t" : SourceSpec.Triangle,
+        }
+sourceValues = {
+        "Spherical" : SourceSpec.Sphere,
+        "Ellipsoid" : SourceSpec.Ellipse,
+        "Triangle" : SourceSpec.Triangle,
         }
 
 
@@ -75,6 +102,10 @@ class CosmoSim(cs.CosmoSim):
         return self.updateEvent
     def setSourceMode(self,s):
         return super().setSourceMode( int( sourceDict[s] ) ) 
+    def moveSim(self,rot,scale):
+        return super().moveSim( float(rot), float(scale) )
+    def maskImage(self,scale=1):
+        return super().maskImage( float(scale) )
     def setLensMode(self,s):
         return super().setLensMode( int( lensDict[s] ) ) 
     def setBGColour(self,s):
@@ -113,6 +144,24 @@ class CosmoSim(cs.CosmoSim):
         im = np.array(self.getActual(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return np.maximum(im,self.bgcolour)
+    def getPsiMap(self):
+        """
+        Return a matrix representation of the sampled lensing potential.
+        """
+        im = np.array(super().getPsiMap(),copy=False)
+        print(im.shape,im.dtype)
+        if im.shape[2] == 1 : im.shape = im.shape[:2]
+        return im
+    def getMassMap(self):
+        """
+        Return a matrix representation of the sampled mass density.
+        """
+        # im = super().getMassMap()
+        # print(type(im))
+        im = np.array(super().getMassMap(),copy=False)
+        print(im.shape,im.dtype)
+        if im.shape[2] == 1 : im.shape = im.shape[:2]
+        return im[2:-2,2:-2]
     def getDistortedImage(self,reflines=True,mask=False,showmask=False):
         """
         Return the Distorted Image from the simulator as a numpy array.

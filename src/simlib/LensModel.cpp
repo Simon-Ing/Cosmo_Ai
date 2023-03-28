@@ -1,16 +1,12 @@
-/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> *
+/* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> *
  * Building on code by Simon Ingebrigtsen, Sondre Westbø Remøy,
  * Einar Leite Austnes, and Simon Nedreberg Runde
  */
 
 #include "cosmosim/Simulator.h"
-
-#include <symengine/expression.h>
-#include <symengine/lambda_double.h>
-#include <symengine/parser.h>
+#include "simaux.h"
 
 #include <thread>
-#include <fstream>
 
 #define DEBUG 0
 
@@ -32,87 +28,87 @@ LensModel::~LensModel() {
 }
 
 /* Getters for the images */
-cv::Mat LensModel::getActual() { 
-   cv::Mat imgApparent = getApparent() ;
-
-   if ( actualX == 0 && actualY == 0 ) {
-      return getApparent() ;
-   } else {
-     cv::Mat imgActual 
+cv::Mat LensModel::getActual() const {
+   cv::Mat imgApparent = getSource() ;
+   cv::Mat imgActual 
         = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
+   cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
+   std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
+   cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
+   return imgActual ; 
 
-     // (x0,y0) is the centre of the image in pixel coordinates 
-     double x0 = imgApparent.cols/2 ;
-     double y0 = imgApparent.rows/2 ;
-
-     cv::Point2f srcTri[3], dstTri[3];
-     srcTri[0] = cv::Point2f( x0, y0 );
-     dstTri[0] = cv::Point2f( x0+actualX, y0-actualY );
-     srcTri[1] = cv::Point2f( x0-actualAbs, y0 );
-     dstTri[1] = cv::Point2f( x0, y0 );
-     srcTri[2] = cv::Point2f( x0-actualAbs, y0-actualAbs );
-     dstTri[2] = cv::Point2f( x0-actualY, y0-actualX );
-     cv::Mat rot = cv::getAffineTransform( srcTri, dstTri );
-
-     std::cout << "getActual() (x,y)=(" << actualX << "," << actualY << ")\n" 
-               << rot << "\n" ;
-
-     cv::warpAffine(imgApparent, imgActual, rot, imgApparent.size()) ;
-     return imgActual ; 
+}
+cv::Mat LensModel::getSource() const {
+   return source->getImage() ;
+}
+cv::Mat LensModel::getApparent() const {
+   cv::Mat src, dst ;
+   src = source->getImage() ;
+   if ( rotatedMode ) {
+       int nrows = src.rows ;
+       int ncols = src.cols ;
+       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows/2, ncols/2),
+             360-phi*180/PI, 1) ;
+       cv::warpAffine(src, dst, rot, src.size() ) ;
+      return dst ;
+   } else {
+      return src ;
    }
-   exit(1) ;
 }
-cv::Mat LensModel::getApparent() { return source->getImage() ; }
-cv::Mat LensModel::getDistorted() { return imgDistorted ; }
-
-cv::Mat LensModel::getDistorted( double app ) { 
-   /* This is intended to change the centre of the convergence ring,
-    * and draw a different section of the image.
-    * TESTING ONLY.
-    * The logic is probably faulty. */ 
-   apparentAbs = app ;
-   this->update() ;
-   return imgDistorted ; 
+cv::Mat LensModel::getDistorted() const {
+   std::cout << "[LensModel.getDistorted()] image type "
+      << imgDistorted.type() << " - " 
+      << imgDistorted.size() << "\n" ;
+   return imgDistorted ;
 }
 
-cv::Mat LensModel::getSecondary() { 
-   /* This only makes sense in the Point Mass model.
-    * It uses the same logic as getDistorted(double) above, and
-    * is probably faulty. 
-    */
-   apparentAbs = apparentAbs2 ;
-   this->update() ;
-   return imgDistorted ; }
-
-void LensModel::update() {
-    update( getApparent() ) ;
+void LensModel::updateSecondary( ) {
+   if ( apparentAbs2 == 0 ) {
+      throw NotSupported() ;
+   }
+   throw NotImplemented() ;
+   return updateInner() ;
 }
+void LensModel::update( ) {
+   updateApparentAbs() ;
+   return updateInner() ;
+}
+void LensModel::update( cv::Point2d xi ) {
+   setXi( xi ) ;
+   return updateInner() ;
+}
+void LensModel::updateInner( ) {
+    cv::Mat imgApparent = getApparent() ;
 
-void LensModel::update( cv::Mat imgApparent ) {
+    std::cout << "[LensModel::update()] R=" << getEtaAbs() << "; theta=" << phi
+              << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
+    std::cout << "[LensModel::update()] xi=" << getXi()   
+              << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
+    std::cout << "[LensModel::update()] nu=" << getNu()   
+              << "; centre=" << getCentre() << "\n" ;
 
     auto startTime = std::chrono::system_clock::now();
-    
-    std::cout << "update() x=" << actualX << "; y= " << actualY 
-              << "; R=" << actualAbs << "; theta=" << phi
-              << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
 
     this->calculateAlphaBeta() ;
 
-    int nrows = imgApparent.rows ;
-    int ncols = imgApparent.cols ;
+    if ( rotatedMode ) {
+       int nrows = imgApparent.rows ;
+       int ncols = imgApparent.cols ;
 
-    // Make Distorted Image
-    // We work in a double sized image to avoid cropping
-    cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
-    parallelDistort(imgApparent, imgD);
-
-    // Correct the rotation applied to the source image
-    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
-    cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    // crop distorted image
-    imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
-
-    std::cout << "update() (x,y) = (" << actualX << ", " << actualY << ")\n" ;
-    std::cout << rot << "\n" ;
+       // Make Distorted Image
+       // We work in a double sized image to avoid cropping
+       cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
+       parallelDistort(imgApparent, imgD);
+   
+       // Correct the rotation applied to the source image
+       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
+       cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    
+           // crop distorted image
+       imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
+    } else {
+       imgDistorted = cv::Mat::zeros(imgApparent.size(), imgApparent.type()) ;
+       parallelDistort(imgApparent, imgDistorted);
+    }
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
@@ -128,10 +124,23 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
     int n_threads = std::thread::hardware_concurrency();
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
-    if ( maskRadius > dst.rows/2.0 ) maskRadius = dst.rows/2.0 ;
-    int lower = maskMode ? floor( dst.rows/2.0 - maskRadius ) : 0,
-         rng = maskMode ? ceil( 2.0*maskRadius ) + 1 : dst.rows,
-         rng1 = ceil( rng/ n_threads ) ;
+    double maskRadius = getMaskRadius() ;
+    int lower=0, rng=dst.rows, rng1 ; 
+    if ( maskMode ) {
+        double mrng ;
+        cv::Point2d origin = getCentre() ;
+        cv::Point2d ij = imageCoordinate( origin, dst ) ;
+        std::cout << "mask " << ij << " - " << origin << "\n" ;
+        lower = floor( ij.x - maskRadius ) ;
+        if ( lower < 0 ) lower = 0 ;
+        mrng = dst.rows - lower ;
+        rng = ceil( 2.0*maskRadius ) + 1 ;
+        if ( rng > mrng ) rng = mrng ;
+        std::cout << maskRadius << " - " << lower << "/" << rng << "\n" ;
+    } else {
+        std::cout << "[LensModel] No mask \n" ;
+    } 
+    rng1 = ceil( rng/ n_threads ) ;
     for (int i = 0; i < n_threads; i++) {
         int begin = lower+rng1*i, end = begin+rng1 ;
         std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
@@ -144,25 +153,20 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
-void LensModel::setMaskMode(bool b) {
-   maskMode = b ; 
-}
-void LensModel::setBGColour(int b) { bgcolour = b ; }
-void LensModel::setCentred(bool b) { centredMode = b ; }
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
     // (row,col) are pixel co-ordinates
-    int R = getCentre() ;
+    double maskRadius = getMaskRadius()*CHI ;
+    cv::Point2d xi = getXi() ;
     for (int row = begin; row < end; row++) {
         for (int col = 0; col < dst.cols; col++) {
 
-            int row_, col_;  // pixel co-ordinates in the apparent image
-            std::pair<double, double> pos ;
+            cv::Point2d pos, ij ;
 
             // Set coordinate system with origin at the centre of mass
             // in the distorted image in the lens plane.
-            double x = (col - dst.cols / 2.0 - R) * CHI;
-            double y = (dst.rows / 2.0 - row) * CHI;
+            double x = (col - dst.cols / 2.0 ) * CHI - xi.x;
+            double y = (dst.rows / 2.0 - row ) * CHI - xi.y;
             // (x,y) are coordinates in the lens plane, and hence the
             // multiplication by CHI
 
@@ -170,21 +174,21 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
             // relative to CoM (origin)
             double r = sqrt(x * x + y * y);
 
-            if ( maskMode && r > maskRadius*CHI ) {
+            if ( maskMode && r > maskRadius ) {
             } else {
               double theta = x == 0 ? PI/2 : atan2(y, x);
               pos = this->getDistortedPos(r, theta);
+              pos += etaOffset ;
 
               // Translate to array index in the source plane
-              row_ = (int) round(src.rows / 2.0 - pos.second);
-              col_ = (int) round(src.cols / 2.0 + pos.first);
+              ij = imageCoordinate( pos, src ) ;
   
-              // If (x', y') within source, copy value to imgDistorted
-              if (row_ < src.rows && col_ < src.cols && row_ >= 0 && col_ >= 0) {
+              // If the pixel is within range, copy value from src to dst
+              if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
-                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>(row_, col_);
+                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
                  } else {
-                    dst.at<uchar>(row, col) = src.at<uchar>(row_, col_);
+                    dst.at<uchar>(row, col) = src.at<uchar>( ij );
                  }
               }
             }
@@ -192,35 +196,38 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     }
 }
 
-void LensModel::updateNterms(int n) {
-   nterms = n ;
-   update() ;
-}
-void LensModel::setNterms(int n) {
-   nterms = n ;
-}
-void LensModel::setCHI(double chi) {
-   CHI = chi ;
-   updateApparentAbs() ;
-}
-void LensModel::setEinsteinR(double r) {
-   einsteinR = r ;
-   updateApparentAbs() ;
-}
-void LensModel::updateAll( double X, double Y, double er, double chi, int n) {
-   nterms = n ;
-   updateXY(X,Y,chi,er);
-}
+/* Initialiser.  The default implementation does nothing.
+ * This is correct for any subclass that does not need the alpha/beta tables. */
+void LensModel::calculateAlphaBeta() { }
 
 
+/** *** Setters *** */
+
+/* A.  Mode setters */
+void LensModel::setMaskMode(bool b) {
+   maskMode = b ; 
+}
+void LensModel::setBGColour(int b) { bgcolour = b ; }
+void LensModel::setCentred(bool b) { centredMode = b ; }
+
+/* B. Source model setter */
 void LensModel::setSource(Source *src) {
     if ( source != NULL ) delete source ;
     source = src ;
 }
 
-/* Default implementation doing nothing.
- * This is correct for any subclass that does not need the alpha/beta tables. */
-void LensModel::calculateAlphaBeta() { }
+/* C. Lens Model setter */
+void LensModel::setNterms(int n) {
+   nterms = n ;
+}
+void LensModel::setCHI(double chi) {
+   CHI = chi ;
+}
+void LensModel::setEinsteinR(double r) {
+   einsteinR = r ;
+}
+
+/* D. Position (eta) setters */
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
@@ -229,21 +236,20 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
     // Actual position in source plane
-    actualX = X ;
-    actualY = Y ;
+    eta = cv::Point2d( X, Y ) ;
 
     // Calculate Polar Co-ordinates
-    actualAbs = sqrt(actualX * actualX + actualY * actualY); 
-    phi = atan2(actualY, actualX); // Angle relative to x-axis
+    phi = atan2(eta.y, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] Set position x=" << actualX << "; y=" << actualY
-              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
-    updateApparentAbs() ;
+    std::cout << "[setXY] eta.y=" << eta.y 
+              << "; actualY=" << Y 
+              << "; eta=" << eta 
+              << "\n" ;
+
+    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << eta.y
+              << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 }
-void LensModel::updateXY( double X, double Y, double chi, double er ) {
-    setXY( X, Y, chi, er ) ;
-    update() ;
-}
+
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
 void LensModel::setPolar( double R, double theta, double chi, double er ) {
@@ -251,30 +257,79 @@ void LensModel::setPolar( double R, double theta, double chi, double er ) {
     CHI = chi ;
     einsteinR = er ;
 
-    actualAbs = R ;
     phi = PI*theta/180 ;
 
     // Actual position in source plane
-    actualX = R*cos(phi) ;
-    actualY = R*sin(phi) ;
+    eta = cv::Point2d( R*cos(phi), R*sin(phi) ) ;
 
-    std::cout << "[setPolar] Set position x=" << actualX << "; y=" << actualY
-              << "; R=" << actualAbs << "; theta=" << phi << ".\n" ;
+    std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
+              << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 
-    updateApparentAbs() ;
 }
+
+
+/* Masking */
 void LensModel::maskImage( ) {
-    maskImage( imgDistorted ) ;
+    maskImage( imgDistorted, 1 ) ;
+}
+void LensModel::maskImage( double scale ) {
+    maskImage( imgDistorted, scale ) ;
 }
 void LensModel::markMask( ) {
     markMask( imgDistorted ) ;
 }
-void LensModel::maskImage( cv::InputOutputArray r ) {
+void LensModel::maskImage( cv::InputOutputArray r, double scale ) {
    throw NotImplemented() ;
 }
 void LensModel::markMask( cv::InputOutputArray r ) {
    throw NotImplemented() ;
 }
-double LensModel::getCentre( ) {
-  return centredMode ? tentativeCentre : apparentAbs ;
+
+/* Getters */
+cv::Point2d LensModel::getCentre( ) const {
+   cv::Point2d xichi =  getXi()/CHI ;
+   if ( centredMode ) {
+      return tentativeCentre + xichi - getNu() ;
+   } else {
+      return xichi ;
+   }
+}
+cv::Point2d LensModel::getXi() const { 
+   return xi ;
+}
+double LensModel::getXiAbs() const { 
+   cv::Point2d xi = getXi() ;
+   return sqrt( xi.x*xi.x + xi.y*xi.y ) ;
+}
+cv::Point2d LensModel::getTrueXi() const { 
+   return CHI*nu ;
+}
+cv::Point2d LensModel::getNu() const { 
+   return nu ;
+}
+double LensModel::getNuAbs() const { 
+   return sqrt( nu.x*nu.x + nu.y*nu.y ) ;
+}
+cv::Point2d LensModel::getEta() const {
+   return eta ;
+}
+double LensModel::getEtaSquare() const {
+   return eta.x*eta.x + eta.y*eta.y ;
+}
+double LensModel::getEtaAbs() const {
+   return sqrt( eta.x*eta.x + eta.y*eta.y ) ;
+}
+double LensModel::getMaskRadius() const { return 1024*1024 ; }
+void LensModel::setNu( cv::Point2d n ) {
+   nu = n ;
+   xi = nu*CHI ;
+   etaOffset = cv::Point2d( 0, 0 ) ;
+}
+void LensModel::setXi( cv::Point2d x ) {
+   if ( rotatedMode ) {
+      std::cout << "Alternative viewpoints cannot be supported in rotated mode.\n" ;
+      throw NotSupported() ;
+   } else {
+      throw NotImplemented() ;
+   }
 }

@@ -6,19 +6,25 @@ Post-processing functions for images.
 """
 
 import numpy as np
+import cv2
 
 def centreImage(im):
-  m,n = im.shape
+
+  if len(im.shape) > 2:
+     grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+  else:
+      grey = im
+  m,n = grey.shape
   ps = [ (x,y) for x in range(m) for y in range(n) ]
-  s = im.sum()
-  xs = [ x*im[x,y] for (x,y) in ps ]
-  ys = [ y*im[x,y] for (x,y) in ps ]
+  s = grey.sum()
+  xs = [ np.sum(x*grey[x,y]) for (x,y) in ps ]
+  ys = [ np.sum(y*grey[x,y]) for (x,y) in ps ]
   xm = int(round(sum(xs)/s - m/2))
   ym = int(round(sum(ys)/s - n/2))
   
 
-  centred = np.zeros( (m,n) )
-  c1 = np.zeros( (m,n) )
+  centred = np.zeros( im.shape )
+  c1 = np.zeros( im.shape )
 
   if xm > 0:
       c1[:-xm,:] = im[xm:,:]
@@ -37,7 +43,7 @@ def centreImage(im):
   return centred
 
 def drawAxes(im):
-  m,n = im.shape
+  m,n = im.shape[:2]
   im[int(round(m/2)),:] = 127
   im[:,(round(n/2))] = 127
   return im

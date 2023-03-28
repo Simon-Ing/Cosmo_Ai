@@ -57,7 +57,7 @@ jobs:
           libxcb-dri3-dev \
           libxcb-util-dev \
           libxcb-util0-dev
-          sudo pip3 install conan
+          sudo pip3 install conan==1.59
       - name: Run conan
         run: |
           conan install . -s build_type=Release -if build -b missing
@@ -93,7 +93,7 @@ jobs:
 
       - name: Install prerequisites
         run: |
-          pip3 install conan
+          pip3 install conan==1.59
       - name: Run conan
         run: |
           conan install . -s build_type=Release -if build -b missing

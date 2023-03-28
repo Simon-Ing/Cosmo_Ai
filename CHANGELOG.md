@@ -2,7 +2,31 @@
 # CosmoSim Change Log
 
 
-## [Unreleased] - yyyy-mm-dd
+## [2.1.0] - 2023-03-28
+
+### Added
+
+- Support for sampled lens models both using the Roulette formalism
+  and calculating pixel for pixel.
+- New PsiFunctionLens defining the lens in terms of computational 
+  definitions of the lensing potential (psi) and its derivatives.
+- New test suite to compare different implementations of 
+  similar models, such as eact and roulette point mass,
+  sampled and functional SIS, and SIS with and without rotation
+- Export of psi and kappa maps for some lens models.
+  The python script makes 3D surface plot of these maps.
+
+### Changed
+
+- Cleaned up code to make variable names more consistent with 
+  mathematical papers
+- Refactoring, using a Lens class separate from the LensModel
+
+### Fixed
+
+- Several unfortunate uses of integers and single-precision floats
+  have been changed to double for the sake of precision.
+- Fixed centring of image for coloured sources
 
 ## [2.0.3] - 2023-03-20
 
