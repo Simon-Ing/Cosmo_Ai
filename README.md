@@ -14,16 +14,22 @@ The intention is to be able to use the synthetic datasets to train
 machine learning models which can in turn be used to map the dark
 matter of the Universe.  This is work in progress.
 
-# Running from Precompiled Distribution
+# Making it Run
+
+## Running from Precompiled Distribution
 
 1.  Make sure you have Python 3.10 installed.
-2.  Download and unpack `CosmoSimPy.zip` from the latest 
-    [release](https://github.com/CosmoAI-AES/CosmoSim/releases/)
+2.  Download and unpack `CosmoSimPy.zip` from 
+    [v2.0.2.](https://github.com/CosmoAI-AES/CosmoSim/releases/tag/v2.0.2)
+    or
+    [the latestrelease](https://github.com/CosmoAI-AES/CosmoSim/releases/).
+    Temporary problems with the build on github, may mean that there is no
+    precompiled version with the latest release.
 3.  Run `CosmoSimPy/CosmoGUI.py` in python.  This is the GUI tool.
 4.  The `CosmoSimPy/datagen.py` is the CLI tool and should be run
     on the command line; see below.
 
-# Building from Source
+## Building from Source
 
 Provided a full C++ installation is available with cmake and conan,
 the system is built with
@@ -46,27 +52,21 @@ conan profile new default --detect  # Generates default profile detecting GCC an
 conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
 ```
 
-## Install Dependencies
+There are recurring problems with broken dependencies on conan.  This seems
+to be out of our control.  The building scripts suddenly break even with no
+change on our side.  
 
-The following dependencies were required on Debian 11.
-The critical part is conan (as well as cmake and make).
-Depending on the platform, conan may or may not install other dependencies.
-On Debian it just gives an error message explaining what to install.
+### Dependencies
+
+Using conan, it will tell you about any missing libraries that have to 
+be installed system level.  The following commands is what I needed on a
+Debian system, and may be good start saving some time.  
 
 ```sh
 sudo pip3 install conan
 
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
-
-
-## Notes
-
-Adjustments may be needed depending on the version of conan.
-Currently, it is set up to use wayland/1.21.0 to override a
-transitive dependency on wayland/1.20.0 which failed with the
-latest conan on linux. We should possibly upgrade the other dependencies
-and remove wayland.
 
 ## Installation without Conan
 
@@ -75,6 +75,17 @@ on the system.  We have set up cmake not to use conan when the
 hostname starts with `idun`, in which case the `idunbuild.sh`
 script can be used for installation.  This has been designed
 for the NTNU Idun cluster, but can be tweaked for other systems.
+
+## Using Docker 
+
+Docker images have been created to build and run the new python GUI.
+It should be possible to build and run them as follows, assuming a Unix like system.
+
+```sh
+( cd docker-sim && docker build -t dockersim . )
+docker build -t dockergui .
+docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u $(id -u):$(id -g) cosmogui
+```
 
 # Test
 
@@ -295,18 +306,6 @@ nothing, but the `Simulator` superclass may be made abstract in the future.
 The `SphereSimulator` overrides the constructor and the two virtual functions.
 The constructor loads the formulæ for `\alpha` and `\beta` which are calculated
 by `calculateAlphaBeta()` when parameters change.
-
-# Using the Docker images
-
-Docker images have been created to build and run the new python GUI.
-It should be possible to build and run them as follows, assuming a Unix like system.
-
-```sh
-( cd docker-sim && docker build -t dockersim . )
-docker build -t dockergui .
-docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u $(id -u):$(id -g) cosmogui
-```
-
 
 # Contributors
 
