@@ -13,6 +13,8 @@
 - New test suite to compare different implementations of 
   similar models, such as eact and roulette point mass,
   sampled and functional SIS, and SIS with and without rotation
+- Export of psi and kappa maps for some lens models.
+  The python script makes 3D surface plot of these maps.
 
 ### Changed
 
