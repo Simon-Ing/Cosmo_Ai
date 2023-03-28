@@ -1,6 +1,6 @@
 index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
-"0001",image-pm01.png,s,p,50, 24,-68,48,21,0,0,16
-"0002",image-pm02.png,s,p,50, 35,-29, 3,43,0,0,16
+"pm01",image-pm01.png,s,p,50, 24,-68,48,21,0,0,16
+"pm02",image-pm02.png,s,p,50, 35,-29, 3,43,0,0,16
 "0003",image-pm03.png,s,p,50, 57,-47,50,47,0,0,16
 "0004",image-pm04.png,s,p,50,-60,-50,25, 5,0,0,16
 "0005",image-pm05.png,s,p,50,-20, -3,48,27,0,0,16

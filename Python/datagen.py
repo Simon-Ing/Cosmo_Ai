@@ -161,9 +161,9 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--components',default="6",
             help="Number of components for joined image")
 
-    parser.add_argument('-P', '--psiplot',action='store_true',
+    parser.add_argument('-P', '--psiplot',action='store_true',default=False,
             help="Plot lens potential as 3D surface")
-    parser.add_argument('-K', '--kappaplot',action='store_true',
+    parser.add_argument('-K', '--kappaplot',action='store_true',default=False,
             help="Plot mass distribution as 3D surface")
 
     parser.add_argument('-f', '--family',action='store_true',
