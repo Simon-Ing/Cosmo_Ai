@@ -147,7 +147,7 @@ class CosmoSim(cs.CosmoSim):
         im = np.array(super().getMassMap(),copy=False)
         print(im.shape,im.dtype)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
-        return im
+        return im[2:-2,2:-2]
     def getDistortedImage(self,reflines=True,mask=False,showmask=False):
         """
         Return the Distorted Image from the simulator as a numpy array.

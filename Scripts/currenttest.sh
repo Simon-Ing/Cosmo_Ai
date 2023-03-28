@@ -35,3 +35,4 @@ python3 Python/datagen.py --imagesize 600 -L pss --directory="$dir" --csvfile $f
 # "s16",image-s16.png,t,s,50,50,0,7,20,0,0,16
 # "s17",image-s16.png,t,s,50,50,0,20,20,0,0,16
 
+echo $dir

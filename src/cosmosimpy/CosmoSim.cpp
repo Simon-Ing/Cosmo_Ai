@@ -308,24 +308,46 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
     pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
         .def_buffer([](cv::Mat& im) -> pybind11::buffer_info {
-            return pybind11::buffer_info(
-                // Pointer to buffer
-                im.data,
-                // Size of one scalar
-                sizeof(unsigned char),
-                // Python struct-style format descriptor
-                pybind11::format_descriptor<unsigned char>::format(),
-                // Number of dimensions
-                3,
-                // Buffer dimensions
-                { im.rows, im.cols, im.channels() },
-                // Strides (in bytes) for each index
-                {
-                    sizeof(unsigned char) * im.channels() * im.cols,
-                    sizeof(unsigned char) * im.channels(),
-                    sizeof(unsigned char)
-                }
-            );
+              int t = im.type() ;
+              if ( t|CV_64F == CV_64F ) {
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    im.data,
+                    // Size of one scalar
+                    sizeof(double),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<double>::format(),
+                    // Number of dimensions
+                    3,
+                        // Buffer dimensions
+                    { im.rows, im.cols, im.channels() },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(double) * im.channels() * im.cols,
+                        sizeof(double) * im.channels(),
+                        sizeof(unsigned char)
+                    }
+                    );
+              } else { // default is 8bit integer
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    im.data,
+                    // Size of one scalar
+                    sizeof(unsigned char),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<unsigned char>::format(),
+                    // Number of dimensions
+                    3,
+                        // Buffer dimensions
+                    { im.rows, im.cols, im.channels() },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(unsigned char) * im.channels() * im.cols,
+                        sizeof(unsigned char) * im.channels(),
+                        sizeof(unsigned char)
+                    }
+                 );
+              } ;
         });
     // Note.  The cv::Mat object returned needs to by wrapped in python:
     // `np.array(im, copy=False)` where `im` is the `Mat` object.

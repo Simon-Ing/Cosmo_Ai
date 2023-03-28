@@ -32,10 +32,10 @@ cv::Mat Lens::getPsiImage() const {
    return im ;
 }
 cv::Mat Lens::getMassMap() const {
-   cv::Mat massMap = getPsiX() ;
-   massMap += getPsiY() ;
-   massMap /= 2 ;
-   return massMap ;
+   cv::Mat psiX2, psiY2 ;
+   Sobel(psi,psiX,CV_64FC1, 2, 0, 3, 1.0/8) ;
+   Sobel(psi,psiY,CV_64FC1, 0, 2, 3, 1.0/8) ;
+   return ( psiX + psiY ) / 2 ;
 }
 cv::Mat Lens::getMassImage() const {
    cv::Mat im, k ;

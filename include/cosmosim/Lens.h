@@ -12,7 +12,7 @@ class Lens {
 private:
 protected:
    double einsteinR ;
-   cv::Mat psi, psiX, psiY, einsteinMap, massMap ;
+   cv::Mat psi, psiX, psiY, einsteinMap ;
 
 public:
     virtual void updatePsi( cv::Size ) ;
