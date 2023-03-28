@@ -453,3 +453,5 @@ tt
 [0-9]*.txt
 *.slurm.[eo]*
 _deps
+psi*.svg
+kappa*.svg
