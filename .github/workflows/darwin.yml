@@ -36,8 +36,7 @@ jobs:
           cmake --build build
       - name: Make application bundle
         run: |
-          pyinstaller Python/CosmoGUI.py
-  
+          pyinstaller --osx-bundle-identifier no.ntnu.iir.CosmoGUI Python/CosmoGUI.py
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
