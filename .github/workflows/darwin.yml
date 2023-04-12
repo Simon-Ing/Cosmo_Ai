@@ -26,6 +26,7 @@ jobs:
       - name: Install prerequisites
         run: |
           pip3 install conan==1.59
+          pip3 install pyinstaller
       - name: Run conan
         run: |
           conan install . -s build_type=Release -if build -b missing
@@ -33,9 +34,16 @@ jobs:
         run: |
           cmake . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
-  
+      - name: Make application bundle
+        run: |
+          pyinstaller --windowed --onedir --osx-bundle-identifier no.ntnu.iir.CosmoGUI Python/CosmoGUI.py
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
           name: python-link-library-${{ matrix.platform }}
           path: build/lib/CosmoSimPy.*
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoGUI
+          path: dist
