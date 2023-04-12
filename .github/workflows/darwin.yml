@@ -12,8 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-11]
-        python-version: ['3.10']
-  
+        python-version: ['3.9', '3.10']
+        platform: [x64, arm64]
     steps:
       - uses: actions/checkout@v3
 
@@ -37,5 +37,5 @@ jobs:
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
-          name: python-link-library
+          name: python-link-library-${{ matrix.platform }}
           path: build/lib/CosmoSimPy.*
