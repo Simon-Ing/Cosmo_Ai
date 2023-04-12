@@ -37,7 +37,7 @@ jobs:
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
-          name: CosmoSimPy-library-${{matrix.os}}
+          name: CosmoSimPy-library-${{matrix.os}}-${{matrix.platform}}
           path: build/lib/CosmoSimPy.*
 
   macos-app:
