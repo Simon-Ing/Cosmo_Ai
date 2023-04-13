@@ -22,6 +22,6 @@ std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
 std::array<std::array<double, 202>, 201> SIS::getBetas( cv::Point xi ) {
    throw NotImplemented() ;
 }
-void SIS::initAlphasBetas( cv::Point xi ) {
+void SIS::initAlphasBetas( ) {
    throw NotImplemented() ;
 }
