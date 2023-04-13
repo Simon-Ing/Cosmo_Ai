@@ -52,6 +52,9 @@ public:
     virtual double psifunction( double, double ) ;
     virtual double psiXfunction( double, double ) ;
     virtual double psiYfunction( double, double ) ;
+
+    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
+    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
 };
 
 
