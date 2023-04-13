@@ -27,6 +27,9 @@ public:
     cv::Mat getPsiImage( ) const ;  // Discouraged
     cv::Mat getMassImage() const ;  // Discouraged
 
+    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
+    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
+
 };
 class PsiFunctionLens : public Lens {
 public:

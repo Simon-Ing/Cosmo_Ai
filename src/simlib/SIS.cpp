@@ -15,3 +15,12 @@ double SIS::psiYfunction( double x, double y ) {
    return einsteinR*y/s ;
 }
 
+
+std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point xi ) {
+   throw NotImplemented() ;
+}
+
+std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point xi ) {
+   throw NotImplemented() ;
+}
+
