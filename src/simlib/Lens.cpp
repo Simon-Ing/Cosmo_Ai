@@ -65,6 +65,60 @@ std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point xi ) {
    throw NotImplemented() ;
 }
 
-void Lens::initAlphasBetas( ) {
+void Lens::setFile( std::string fn ) {
+    filename = fn ;
+} 
+void Lens::initAlphasBetas() {
+
+    auto x = SymEngine::symbol("x");
+    auto y = SymEngine::symbol("y");
+    auto g = SymEngine::symbol("g");
+    auto c = SymEngine::symbol("c");
+
+    std::ifstream input;
+    input.open(filename);
+
+    if (!input.is_open()) {
+        throw std::runtime_error("Could not open file: " + filename);
+    }
+
+    while (input) {
+        std::string m, s;
+        std::string alpha;
+        std::string beta;
+        std::getline(input, m, ':');
+        std::getline(input, s, ':');
+        std::getline(input, alpha, ':');
+        std::getline(input, beta);
+        if (input) {
+            auto alpha_sym = SymEngine::parse(alpha);
+            auto beta_sym = SymEngine::parse(beta);
+            // The following two variables are unused.
+            // SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
+            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *alpha_sym);
+            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *beta_sym);
+        }
+    }
+}
+
+std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
+    // calculate all amplitudes for given X, Y, einsteinR
+    for (int m = 1; m <= nterms; m++){
+        for (int s = (m+1)%2; s <= (m+1); s+=2){
+            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+            // betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
+        }
+    }
+    return alphas_val ;
+}
+std::array<std::array<double, 202>, 201> SIS::getBetas( cv::Point xi ) {
    throw NotImplemented() ;
+    // calculate all amplitudes for given X, Y, einsteinR
+    for (int m = 1; m <= nterms; m++){
+        for (int s = (m+1)%2; s <= (m+1); s+=2){
+            // alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
+        }
+    }
+    return betas_val ;
 }

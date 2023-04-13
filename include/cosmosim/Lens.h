@@ -10,8 +10,13 @@
 class Lens {
 
 private:
+    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
+    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
+    std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
 protected:
    double einsteinR ;
+   std::string filename = "50.txt" ;
    cv::Mat psi, psiX, psiY, einsteinMap ;
 
 public:
@@ -27,9 +32,9 @@ public:
     cv::Mat getPsiImage( ) const ;  // Discouraged
     cv::Mat getMassImage() const ;  // Discouraged
 
-    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
-    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
+
     void initAlphasBetas();
+    void setFile(std::string) ;
 
 };
 class PsiFunctionLens : public Lens {
@@ -54,8 +59,6 @@ public:
     virtual double psiXfunction( double, double ) ;
     virtual double psiYfunction( double, double ) ;
 
-    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
-    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
 };
 
 

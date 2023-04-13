@@ -16,12 +16,3 @@ double SIS::psiYfunction( double x, double y ) {
 }
 
 
-std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
-   throw NotImplemented() ;
-}
-std::array<std::array<double, 202>, 201> SIS::getBetas( cv::Point xi ) {
-   throw NotImplemented() ;
-}
-void SIS::initAlphasBetas( ) {
-   throw NotImplemented() ;
-}
