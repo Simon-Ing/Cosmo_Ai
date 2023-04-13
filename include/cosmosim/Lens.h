@@ -29,6 +29,7 @@ public:
 
     std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
     std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
+    void initAlphasBetas();
 
 };
 class PsiFunctionLens : public Lens {

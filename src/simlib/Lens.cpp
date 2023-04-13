@@ -57,12 +57,14 @@ cv::Mat Lens::getEinsteinMap() const {
    // return einsteinMap ;
 }
 
-
-std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
+std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point xi ) {
    throw NotImplemented() ;
 }
 
-std::array<std::array<double, 202>, 201> SIS::getBetas( cv::Point xi ) {
+std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point xi ) {
    throw NotImplemented() ;
 }
 
+void Lens::initAlphasBetas( cv::Point xi ) {
+   throw NotImplemented() ;
+}
