@@ -3,6 +3,9 @@
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
+#include <symengine/parser.h>
+#include <fstream>
+
 void Lens::updatePsi( ) { 
    return updatePsi( cv::Size(400,400) ) ;
 }
@@ -57,14 +60,6 @@ cv::Mat Lens::getEinsteinMap() const {
    // return einsteinMap ;
 }
 
-std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point xi ) {
-   throw NotImplemented() ;
-}
-
-std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point xi ) {
-   throw NotImplemented() ;
-}
-
 void Lens::setFile( std::string fn ) {
     filename = fn ;
 } 
@@ -101,7 +96,7 @@ void Lens::initAlphasBetas() {
     }
 }
 
-std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
+std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point2d xi ) {
     // calculate all amplitudes for given X, Y, einsteinR
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
@@ -111,7 +106,7 @@ std::array<std::array<double, 202>, 201> SIS::getAlphas( cv::Point xi ) {
     }
     return alphas_val ;
 }
-std::array<std::array<double, 202>, 201> SIS::getBetas( cv::Point xi ) {
+std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point2d xi ) {
    throw NotImplemented() ;
     // calculate all amplitudes for given X, Y, einsteinR
     for (int m = 1; m <= nterms; m++){

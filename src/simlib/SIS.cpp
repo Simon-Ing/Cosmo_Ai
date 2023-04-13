@@ -15,4 +15,3 @@ double SIS::psiYfunction( double x, double y ) {
    return einsteinR*y/s ;
 }
 
-

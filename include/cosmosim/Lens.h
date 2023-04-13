@@ -7,13 +7,21 @@
 #include "opencv2/opencv.hpp"
 #endif
 
+#include <symengine/expression.h>
+#include <symengine/lambda_double.h>
+
+using namespace SymEngine;
+
 class Lens {
 
 private:
-    std::array<std::array<double, 202>, 201> getAlphas( cv::Point xi ) ;
-    std::array<std::array<double, 202>, 201> getBetas( cv::Point xi ) ;
+    std::array<std::array<double, 202>, 201> getAlphas( cv::Point2d xi ) ;
+    std::array<std::array<double, 202>, 201> getBetas( cv::Point2d xi ) ;
+    std::array<std::array<double, 202>, 201> alphas_val;
+    std::array<std::array<double, 202>, 201> betas_val;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
+    int nterms;
 protected:
    double einsteinR ;
    std::string filename = "50.txt" ;
