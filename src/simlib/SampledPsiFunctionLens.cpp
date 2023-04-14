@@ -12,7 +12,7 @@ void SampledPsiFunctionLens::updatePsi( cv::Size size ) {
    int nrows = size.height ;
    int ncols = size.width ;
 
-   std::cout << "[SampledPsiFunctionLens] updatePsi\n" ;
+   std::cout << "[SampledPsiFunctionLens] updatePsi " << size << "\n" ;
 
    psi = cv::Mat::zeros(size, CV_64F );
 
