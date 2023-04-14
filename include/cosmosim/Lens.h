@@ -19,7 +19,7 @@ private:
     std::array<std::array<double, 202>, 201> betas_val;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
-    int nterms;
+    int nterms=20;
 protected:
    double einsteinR ;
    std::string filename = "50.txt" ;

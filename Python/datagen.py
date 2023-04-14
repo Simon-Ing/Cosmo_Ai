@@ -40,7 +40,7 @@ def setParameters(sim,row):
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
 
-def makeSingle(sim,args,name=None):
+def makeSingle(sim,args,name=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
     makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
@@ -173,6 +173,8 @@ if __name__ == "__main__":
     parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
+    parser.add_argument('-o', '--outfile',
+            help="Output CSV file")
     parser.add_argument('-i', '--csvfile',
             help="Dataset to generate (CSV file)")
 
@@ -204,6 +206,12 @@ if __name__ == "__main__":
         sim.setImageSize( int(args.imagesize) )
     if args.nterms:
         sim.setNterms( int(args.nterms) )
+    if args.outfile:
+        outstream = open(args.outfile,"wt")
+        outstream.write( "index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,"+
+                "alpha-0-1,beta-0-1" )
+    else:
+        outstream = None
 
     sim.setMaskMode( args.mask )
 
@@ -214,7 +222,8 @@ if __name__ == "__main__":
         print( "columns:", cols )
         for index,row in frame.iterrows():
             setParameters( sim, row )
-            makeSingle(sim,args,name=row["index"])
+            makeSingle(sim,args,name=row["index"],outstream=outstream)
     else:
-        makeSingle(sim,args)
+        makeSingle(sim,args,outstream=outstream)
     sim.close()
+    if outstream != None: outstream.close()

@@ -121,7 +121,7 @@ void LensModel::updateInner( ) {
 
 /* This just splits the image space in chunks and runs distort() in parallel */
 void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
-    int n_threads = 1 ; // std::thread::hardware_concurrency();
+    int n_threads = std::thread::hardware_concurrency();
     if ( DEBUG ) std::cout << "Running with " << n_threads << " threads.\n" ;
     std::vector<std::thread> threads_vec;
     double maskRadius = getMaskRadius() ;

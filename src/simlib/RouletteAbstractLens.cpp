@@ -53,8 +53,10 @@ cv::Point2d RouletteAbstractLens::getDistortedPos(double r, double theta) const 
     // return cv::Point2d( nu1/CHI, nu2/CHI ) ;
     cv::Point2d rpt = cv::Point2d( nu1/CHI, nu2/CHI ) ;
 
+    /*
     std::cout << "[getDistortedPos] (" << r << "," << theta << ") "
        << rpt << "\n" ;
+    */
     return rpt ;
 }
 double RouletteAbstractLens::getMaskRadius() const { 
