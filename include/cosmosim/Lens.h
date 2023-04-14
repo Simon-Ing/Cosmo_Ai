@@ -42,6 +42,7 @@ public:
     void initAlphasBetas();
     void calculateAlphaBeta( cv::Point2d xi );
     void setFile(std::string) ;
+    void setNterms(int) ;
 
     std::array<std::array<double, 202>, 201> getAlphas( cv::Point2d xi ) ;
     std::array<std::array<double, 202>, 201> getBetas( cv::Point2d xi ) ;

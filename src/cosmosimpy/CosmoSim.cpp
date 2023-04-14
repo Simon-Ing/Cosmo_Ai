@@ -186,6 +186,7 @@ bool CosmoSim::runSim() {
    initSource() ;
    sim->setBGColour( bgcolour ) ;
    sim->setNterms( nterms ) ;
+   if ( lens != NULL ) lens->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
    if ( rPos < 0 ) {
       sim->setXY( xPos, yPos, chi, einsteinR ) ;
