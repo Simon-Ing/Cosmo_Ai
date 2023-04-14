@@ -457,3 +457,4 @@ psi*.svg
 kappa*.svg
 
 dist
+*.spec

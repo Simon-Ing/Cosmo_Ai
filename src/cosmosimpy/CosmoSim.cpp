@@ -121,6 +121,7 @@ void CosmoSim::initLens() {
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          psisim = new PsiFunctionModel(centred) ;
+         psilens->setFile(filename) ;
          psisim->setPsiFunctionLens( psilens = new SIS() ) ;
          lens = psilens ;
          sim = psisim ;
@@ -132,6 +133,7 @@ void CosmoSim::initLens() {
          psilens = new SIS() ; 
          psilens->setFile(filename) ;
          lens = new SampledPsiFunctionLens( psilens ) ;
+         lens->setFile(filename) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_ROULETTE_SIS:
