@@ -1,13 +1,13 @@
 
 name: MacOS-arm64
 
-on: [release, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
 
   conan-on-darwin:
 
-    runs-on: [ macOS, ARM64 ]
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
           conan install . -s build_type=Release -if build -b missing
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release -DCROSS_COMPILE="-target arm64-apple-macos11"
           cmake --build build
       - name: Make application bundle
         run: |
