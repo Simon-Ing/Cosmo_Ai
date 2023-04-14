@@ -69,10 +69,8 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
-   PureSampledModel *s0 = NULL ;
    PsiFunctionModel *s1 = NULL ;
    PsiFunctionLens *l1 = NULL ;
-   SampledRouletteLens *ssim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
@@ -106,15 +104,10 @@ void CosmoSim::initLens() {
          std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
          sim = new PointMassLens(centred) ;
          break ;
-       case CSIM_LENS_PURESAMPLED:
-         std::cout << "Running Pure Sampled Lens (mode=" << lensmode << ")\n" ;
-         sim = new PureSampledModel(centred) ;
-         break ;
        case CSIM_LENS_PURESAMPLED_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         s0 = new PureSampledModel(centred) ;
-         s0->setLens( lens = new SIS() ) ;
-         sim = s0 ;
+         sim = new PureSampledModel(centred) ;
+         sim->setLens( lens = new SIS() ) ;
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
@@ -123,15 +116,15 @@ void CosmoSim::initLens() {
          lens = l1 ;
          sim = s1 ;
          break ;
-       case CSIM_LENS_SAMPLED:
-         std::cout << "Running Sampled Lens (mode=" << lensmode << ")\n" ;
-         sim = new SampledRouletteLens(centred) ;
-         break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         ssim = new SampledRouletteLens(centred) ;
-         ssim->setLens( lens = new SIS() ) ;
-         sim = ssim ;
+         sim = new SampledRouletteLens(centred) ;
+         sim->setLens( lens = new SIS() ) ;
+         break ;
+       case CSIM_LENS_ROULETTE_SIS:
+         std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         sim = new RouletteLens(centred) ;
+         sim->setLens( lens = new SIS() ) ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;
@@ -311,12 +304,10 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
        .value( "SISRoulettes", CSIM_LENS_SIS_ROULETTE ) 
        .value( "PointMass", CSIM_LENS_PM )
-       .value( "Sampled", CSIM_LENS_SAMPLED )
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
-       .value( "PureSampled", CSIM_LENS_PURESAMPLED )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
-       .value( "PsiFunction", CSIM_LENS_PSIFUNCTION )
        .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
+       .value( "RoluetteSIS", CSIM_LENS_ROULETTE_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/

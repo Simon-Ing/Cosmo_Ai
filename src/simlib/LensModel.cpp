@@ -333,3 +333,6 @@ void LensModel::setXi( cv::Point2d x ) {
       throw NotImplemented() ;
    }
 }
+void LensModel::setLens( Lens *l ) {
+   lens = l ;
+}

@@ -2,6 +2,7 @@
 #define COSMOSIM_H
 
 #include "Source.h"
+#include "Lens.h"
 
 #if __has_include("opencv4/opencv2/opencv.hpp")
 #include "opencv4/opencv2/opencv.hpp"
@@ -21,6 +22,7 @@ private:
     cv::Mat imgDistorted;
     void updateInner();
 
+
 protected:
     virtual void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
@@ -29,6 +31,7 @@ protected:
         // Offset in the source plane resulting from moving xi
     double CHI;
     Source *source ;
+    Lens *lens = NULL ;
     double einsteinR;
     int nterms;
     bool rotatedMode = true ;
@@ -88,6 +91,8 @@ public:
     cv::Mat getApparent() const ;
     cv::Mat getSource() const ;
     cv::Mat getDistorted() const ;
+
+    virtual void setLens( Lens* ) ;
 };
 
 class PointMassLens : public LensModel { 

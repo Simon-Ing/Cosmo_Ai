@@ -9,7 +9,6 @@ public:
     using LensModel::LensModel ;
     PureSampledModel();
     PureSampledModel(bool);
-    void setLens( Lens* ) ;
 protected:
     virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;

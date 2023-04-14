@@ -13,21 +13,20 @@ lensDict = {
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
         "SIS (rotated)" : LensSpec.SIS,
         "SIS (roulettes)" : LensSpec.SISRoulettes,
-        "Sampled" : LensSpec.Sampled,
         "Sampled SIS" : LensSpec.SampledSIS,
         "PureSampled" : LensSpec.PureSampled,
         "PureSampled SIS" : LensSpec.PureSampledSIS,
+        "Roulette SIS" : LensSpec.RouletteSIS,
+        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
         "p" : LensSpec.PointMass,
         "p" : LensSpec.PointMass,
         "r" : LensSpec.PointMassRoulettes,
         "s" : LensSpec.SIS,
         "sr" : LensSpec.SISRoulettes,
-        "sp" : LensSpec.Sampled,
         "ss" : LensSpec.SampledSIS,
-        "ps" : LensSpec.PureSampled,
         "pss" : LensSpec.PureSampledSIS,
         "fs" : LensSpec.PsiFunctionSIS,
-        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        "rs" : LensSpec.RouletteSIS,
         }
 lensValues = {
         "Point Mass (exact)" : LensSpec.PointMass,
@@ -37,6 +36,7 @@ lensValues = {
         "Sampled SIS" : LensSpec.SampledSIS,
         "PureSampled SIS" : LensSpec.PureSampledSIS,
         "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        "Roulette SIS (new)" : LensSpec.RouletteSIS,
         }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,

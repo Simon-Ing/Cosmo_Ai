@@ -22,7 +22,7 @@ void RouletteLens::calculateAlphaBeta() {
 }
 
 
-void RouletteSISLens::updateApparentAbs( ) {
+void RouletteLens::updateApparentAbs( ) {
     double r = lens->getXiAbs( getEtaAbs()*CHI + einsteinR)/CHI ;
     setNu( cv::Point2d( r*cos(phi), r*sin(phi) ) ) ;
 }

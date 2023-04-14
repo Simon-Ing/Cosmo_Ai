@@ -159,6 +159,3 @@ void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    xi = xi1 ;
    etaOffset = chieta/CHI - getEta() ;
 }
-void SampledRouletteLens::setLens( Lens *l ) {
-   lens = l ;
-}
