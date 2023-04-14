@@ -17,6 +17,14 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
+double CosmoSim::getAlphaXi( int m, int s ) {
+      if ( NULL == lens ) throw NotSupported();
+      return lens->getAlphaXi( m, s ) ;
+}
+double CosmoSim::getBetaXi( int m, int s ) {
+      if ( NULL == lens ) throw NotSupported();
+      return lens->getBetaXi( m, s ) ;
+}
 double CosmoSim::getAlpha(
       cv::Point2d xi, int m, int s 
  ) {
@@ -292,6 +300,10 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setFile", &CosmoSim::setFile)
         .def("getPsiMap", &CosmoSim::getPsiMap)
         .def("getMassMap", &CosmoSim::getMassMap)
+        .def("getAlpha", &CosmoSim::getAlpha)
+        .def("getBeta", &CosmoSim::getBeta)
+        .def("getAlphaXi", &CosmoSim::getAlphaXi)
+        .def("getBetaXi", &CosmoSim::getBetaXi)
         ;
 
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 

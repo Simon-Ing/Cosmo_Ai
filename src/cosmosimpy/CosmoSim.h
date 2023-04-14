@@ -81,6 +81,8 @@ public:
 
     double getAlpha( cv::Point2d xi, int m, int s ) ;
     double getBeta( cv::Point2d xi, int m, int s ) ;
+    double getAlphaXi( int m, int s ) ;
+    double getBetaXi( int m, int s ) ;
 
 };
 
