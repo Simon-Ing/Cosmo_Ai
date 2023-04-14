@@ -59,6 +59,7 @@ public:
 class SampledLens : public Lens {
 public:
     virtual void calculateAlphaBeta( cv::Point2d xi );
+    virtual double getXiAbs( double ) ;
 } ;
 
 class PsiFunctionLens : public SampledLens {

@@ -3,6 +3,9 @@
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
+double SampledLens::getXiAbs( double e ) {
+   throw NotImplemented() ;
+}
 void SampledLens::calculateAlphaBeta( cv::Point2d xi ) {
 
     // Calculate all amplitudes for given X, Y, einsteinR
