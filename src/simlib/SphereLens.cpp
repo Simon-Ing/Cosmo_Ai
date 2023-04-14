@@ -65,7 +65,7 @@ void SphereLens::initAlphasBetas() {
 }
 
 void SphereLens::calculateAlphaBeta() {
-    std::cout << "SphereLens calculateAlphaBeta\n" ;
+    std::cout << "[SphereLens.calculateAlphaBeta()] " << einsteinR << " - " << xi << "\n"  ;
     cv::Point2d xi = getXi() ;
 
     // calculate all amplitudes for given X, Y, einsteinR

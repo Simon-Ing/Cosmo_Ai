@@ -89,48 +89,22 @@ void Lens::initAlphasBetas() {
         if (input) {
             auto alpha_sym = SymEngine::parse(alpha);
             auto beta_sym = SymEngine::parse(beta);
-            // The following two variables are unused.
-            // SymEngine::LambdaRealDoubleVisitor alpha_num, beta_num;
             alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *alpha_sym);
             betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *beta_sym);
         }
     }
 }
 
-std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point2d xi ) {
-    // calculate all amplitudes for given X, Y, einsteinR
-    for (int m = 1; m <= nterms; m++){
-        for (int s = (m+1)%2; s <= (m+1); s+=2){
-            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
-            // betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
-        }
-    }
-    return alphas_val ;
-}
-std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point2d xi ) {
-    // calculate all amplitudes for given X, Y, einsteinR
-    for (int m = 1; m <= nterms; m++){
-        for (int s = (m+1)%2; s <= (m+1); s+=2){
-            // alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
-            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
-        }
-    }
-    return betas_val ;
-}
-double Lens::getAlpha( 
-      cv::Point2d xi, int m, int s 
-   ) {
+double Lens::getAlpha( cv::Point2d xi, int m, int s ) {
    return alphas_l[m][s].call({xi.x, xi.y, einsteinR});
 }
-double Lens::getBeta( 
-      cv::Point2d xi, int m, int s 
-   ) {
+double Lens::getBeta( cv::Point2d xi, int m, int s ) {
    return betas_l[m][s].call({xi.x, xi.y, einsteinR});
 }
 
 void Lens::calculateAlphaBeta( cv::Point2d xi ) {
-    std::cout << "Lens calculateAlphaBeta\n" ;
-    
+    std::cout << "[Lens.calculateAlphaBeta()] " << einsteinR << " - " << xi << "\n"  ;
+
     // calculate all amplitudes for given xi, einsteinR
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
