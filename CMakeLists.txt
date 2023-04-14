@@ -59,4 +59,5 @@ else()
     message(FATAL_ERROR "Compiler and system are not supported")
 endif()
 
+message("Cross-Compile Options: ${CROSS_COMPILE}")
 add_compile_options(${CROSS_COMPILE})
