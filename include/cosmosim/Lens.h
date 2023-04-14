@@ -15,15 +15,17 @@ using namespace SymEngine;
 class Lens {
 
 private:
-    std::array<std::array<double, 202>, 201> alphas_val;
-    std::array<std::array<double, 202>, 201> betas_val;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
-    int nterms=20;
+
 protected:
    double einsteinR ;
    std::string filename = "50.txt" ;
    cv::Mat psi, psiX, psiY, einsteinMap ;
+
+    std::array<std::array<double, 202>, 201> alphas_val;
+    std::array<std::array<double, 202>, 201> betas_val;
+    int nterms=20;
 
 public:
     virtual void updatePsi( cv::Size ) ;
@@ -53,14 +55,20 @@ public:
 
     virtual double getXiAbs( double ) ;
 };
-class PsiFunctionLens : public Lens {
+
+class SampledLens : public Lens {
+public:
+    virtual void calculateAlphaBeta( cv::Point2d xi );
+} ;
+
+class PsiFunctionLens : public SampledLens {
 public:
     virtual double psifunction( double, double ) = 0 ;
     virtual double psiXfunction( double, double ) = 0 ;
     virtual double psiYfunction( double, double ) = 0 ;
     virtual void updatePsi( cv::Size ) ;
 } ;
-class PixMapLens : public Lens {
+class PixMapLens : public SampledLens {
 public:
     void setPsi( cv::Mat ) ;
     void loadPsi( std::string ) ;
@@ -70,6 +78,8 @@ class SampledPsiFunctionLens : public Lens {
    private:
       PsiFunctionLens *lens ;
    public:
+      SampledPsiFunctionLens(PsiFunctionLens*) ;
+      virtual void updatePsi( cv::Size ) ;
 } ;
 
 class SIS : public PsiFunctionLens { 

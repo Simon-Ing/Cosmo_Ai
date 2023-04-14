@@ -20,8 +20,9 @@ SampledRouletteLens::SampledRouletteLens(bool centred) :
 
 void SampledRouletteLens::calculateAlphaBeta() {
 
-    // Calculate all amplitudes for given X, Y, einsteinR
+   return lens->calculateAlphaBeta( getXi() ) ;
 
+    // Calculate all amplitudes for given X, Y, einsteinR
     int mp, m, s ;
     double C ;
     cv::Mat psi = -lens->getPsi() ;
