@@ -18,7 +18,7 @@ SampledRouletteLens::SampledRouletteLens(bool centred) :
     rotatedMode = false ;
 }
 
-void RouletteLens::setLens( Lens *l ) {
+void SampledRouletteLens::setLens( Lens *l ) {
    lens = l ;
    lens->initAlphasBetas() ;
 } 
