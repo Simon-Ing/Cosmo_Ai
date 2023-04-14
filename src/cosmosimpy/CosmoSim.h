@@ -81,6 +81,9 @@ public:
     cv::Mat getPsiMap() ;
     cv::Mat getMassMap() ;
 
+    double getAlpha( cv::Point2d xi, int m, int s ) ;
+    double getBeta( cv::Point2d xi, int m, int s ) ;
+
 };
 
 #endif // COSMOSIM_FACADE_H

@@ -107,7 +107,6 @@ std::array<std::array<double, 202>, 201> Lens::getAlphas( cv::Point2d xi ) {
     return alphas_val ;
 }
 std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point2d xi ) {
-   throw NotImplemented() ;
     // calculate all amplitudes for given X, Y, einsteinR
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
@@ -116,4 +115,14 @@ std::array<std::array<double, 202>, 201> Lens::getBetas( cv::Point2d xi ) {
         }
     }
     return betas_val ;
+}
+double Lens::getAlpha( 
+      cv::Point2d xi, int m, int s 
+   ) {
+   return alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+}
+double Lens::getBeta( 
+      cv::Point2d xi, int m, int s 
+   ) {
+   return betas_l[m][s].call({xi.x, xi.y, einsteinR});
 }

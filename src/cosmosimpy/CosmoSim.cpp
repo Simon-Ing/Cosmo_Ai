@@ -16,6 +16,20 @@ void helloworld() {
    std::cout << "Hello World!\n" ;
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
+
+double CosmoSim::getAlpha(
+      cv::Point2d xi, int m, int s 
+ ) {
+      if ( NULL == lens ) throw NotSupported();
+      return lens->getAlpha( xi, m, s ) ;
+}
+double CosmoSim::getBeta( 
+      cv::Point2d xi, int m, int s 
+) {
+      if ( NULL == lens ) throw NotSupported();
+      return lens->getBeta( xi, m, s ) ;
+}
+
 void CosmoSim::diagnostics() {
    if ( src ) {
       cv::Mat im = src->getImage() ;
