@@ -6,6 +6,9 @@
 SampledPsiFunctionLens::SampledPsiFunctionLens( PsiFunctionLens *psilens ) {
    lens = psilens ;
 }
+void SampledPsiFunctionLens::setEinsteinR( double r ) {
+   lens->setEinsteinR( einsteinR = r ) ; 
+}
 
 void SampledPsiFunctionLens::updatePsi( cv::Size size ) { 
    // cv::Mat im = getApparent() ;

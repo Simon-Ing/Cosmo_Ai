@@ -30,7 +30,7 @@ protected:
 public:
     virtual void updatePsi( cv::Size ) ;
     virtual void updatePsi( ) ;
-    void setEinsteinR( double ) ;
+    virtual void setEinsteinR( double ) ;
 
     cv::Mat getPsi( ) const ;
     cv::Mat getPsiX( ) const ;
@@ -81,6 +81,7 @@ class SampledPsiFunctionLens : public SampledLens {
    public:
       SampledPsiFunctionLens(PsiFunctionLens*) ;
       virtual void updatePsi( cv::Size ) ;
+      virtual void setEinsteinR( double ) ;
 } ;
 
 class SIS : public PsiFunctionLens { 

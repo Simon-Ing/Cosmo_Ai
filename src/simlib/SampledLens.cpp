@@ -12,7 +12,9 @@ void SampledLens::calculateAlphaBeta( cv::Point2d xi ) {
 
     int mp, m, s ;
     double C ;
+    this->updatePsi() ;
     cv::Mat psi = -this->getPsi() ;
+    // std::cout << psi ;
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( xi, psi ) ;
 
