@@ -28,7 +28,8 @@ void SampledRouletteLens::calculateAlphaBeta() {
     cv::Mat matA, matB, matAouter, matBouter, matAx, matAy, matBx, matBy ;
     cv::Point2d ij = imageCoordinate( getXi(), psi ) ;
 
-    std::cout << "[SampledRouletteLens::calculateAlpaBeta] xi in image space is " << ij << "\n" ;
+    std::cout << "[SampledRouletteLens::calculateAlpaBeta] xi in image space is " << ij << 
+       "; nterms=" << nterms << "\n" ;
 
     for ( mp = 0; mp <= nterms; mp++){
         s = mp+1 ; m = mp ;
