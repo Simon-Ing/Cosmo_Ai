@@ -23,8 +23,9 @@ RouletteLens::RouletteLens(bool centred) :
 }
 
 void RouletteLens::setLens( Lens *l ) {
-   lens = l ;
-   lens->initAlphasBetas() ;
+    std::cout << "[RouletteLens.setLens()]\n" ;
+    lens = l ;
+    lens->initAlphasBetas() ;
 } 
 
 void RouletteLens::calculateAlphaBeta() {

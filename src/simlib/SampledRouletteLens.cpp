@@ -19,6 +19,7 @@ SampledRouletteLens::SampledRouletteLens(bool centred) :
 }
 
 void SampledRouletteLens::setLens( Lens *l ) {
+   std::cout << "[SampledRouletteLens.setLens()]\n" ;
    lens = l ;
    lens->initAlphasBetas() ;
 } 
