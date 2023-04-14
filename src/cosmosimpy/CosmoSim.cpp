@@ -78,8 +78,8 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
-   PsiFunctionModel *s1 = NULL ;
-   PsiFunctionLens *l1 = NULL ;
+   PsiFunctionModel *psisim = NULL ;
+   PsiFunctionLens *psilens = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;
@@ -120,15 +120,19 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
-         s1 = new PsiFunctionModel(centred) ;
-         s1->setPsiFunctionLens( l1 = new SIS() ) ;
-         lens = l1 ;
-         sim = s1 ;
+         psisim = new PsiFunctionModel(centred) ;
+         psisim->setPsiFunctionLens( psilens = new SIS() ) ;
+         lens = psilens ;
+         sim = psisim ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new SampledRouletteLens(centred) ;
          makeSIS( sim ) ;
+         psilens = new SIS() ; 
+         psilens->setFile(filename) ;
+         lens = new SampledPsiFunctionLens( psilens ) ;
+         sim->setLens(lens) ;
          break ;
        case CSIM_LENS_ROULETTE_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
