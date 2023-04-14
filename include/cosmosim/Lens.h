@@ -75,7 +75,7 @@ public:
     void loadPsi( std::string ) ;
 } ;
 
-class SampledPsiFunctionLens : public Lens {
+class SampledPsiFunctionLens : public SampledLens {
    private:
       PsiFunctionLens *lens ;
    public:
