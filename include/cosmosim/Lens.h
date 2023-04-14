@@ -66,6 +66,12 @@ public:
     void loadPsi( std::string ) ;
 } ;
 
+class SampledPsiFunctionLens : public Lens {
+   private:
+      PsiFunctionLens *lens ;
+   public:
+} ;
+
 class SIS : public PsiFunctionLens { 
 
 private:
