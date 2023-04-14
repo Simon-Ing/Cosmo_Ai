@@ -54,7 +54,6 @@ void CosmoSim::diagnostics() {
 
 void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
-    if ( lens ) lens->setFile( fn ) ;
 } 
 
 cv::Mat CosmoSim::getPsiMap( ) {
@@ -68,6 +67,7 @@ cv::Mat CosmoSim::getMassMap( ) {
    return im ;
 } 
 
+#define makeSIS(sim)  lens = new SIS() ; lens->setFile(filename) ; sim->setLens(lens) 
 void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
@@ -116,7 +116,7 @@ void CosmoSim::initLens() {
        case CSIM_LENS_PURESAMPLED_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new PureSampledModel(centred) ;
-         sim->setLens( lens = new SIS() ) ;
+         makeSIS( sim ) ;
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
@@ -128,12 +128,12 @@ void CosmoSim::initLens() {
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new SampledRouletteLens(centred) ;
-         sim->setLens( lens = new SIS() ) ;
+         makeSIS( sim ) ;
          break ;
        case CSIM_LENS_ROULETTE_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new RouletteLens(centred) ;
-         sim->setLens( lens = new SIS() ) ;
+         makeSIS( sim ) ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;

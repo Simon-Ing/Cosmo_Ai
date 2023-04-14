@@ -61,7 +61,8 @@ cv::Mat Lens::getEinsteinMap() const {
 }
 
 void Lens::setFile( std::string fn ) {
-    filename = fn ;
+   std::cout << "[Lens.setFile()] " << fn << "\n" ;
+   filename = fn ;
 } 
 void Lens::initAlphasBetas() {
 
