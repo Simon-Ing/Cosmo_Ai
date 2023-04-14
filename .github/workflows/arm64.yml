@@ -31,8 +31,8 @@ jobs:
           conan install . -s build_type=Release -if build -b missing
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_BUILD_TYPE=Release -DCROSS_COMPILE="-target arm64-apple-macos11" --log-level=DEBUG
-          cmake --build build --log-level=DEBUG
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release -DCROSS_COMPILE="-target arm64-apple-macos11" --log-level=DEBUG --verbose
+          cmake --build build --log-level=DEBUG --verbose
       - name: Make application bundle
         run: |
           pyinstaller --windowed --osx-bundle-identifier no.ntnu.iir.CosmoGUI Python/CosmoGUI.py
