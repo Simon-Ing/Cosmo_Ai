@@ -69,6 +69,8 @@ protected:
     virtual void updateApparentAbs() ;
     virtual void setXi( cv::Point2d ) ;
 
+  public:
+    virtual void setLens( Lens* ) ;
 };
 
 class RouletteLens : public RouletteAbstractLens { 

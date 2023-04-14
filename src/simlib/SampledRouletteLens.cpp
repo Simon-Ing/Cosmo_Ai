@@ -17,6 +17,11 @@ SampledRouletteLens::SampledRouletteLens(bool centred) :
     std::cout << "Instantiating SampledRouletteLens ... \n" ;
     rotatedMode = false ;
 }
+
+void RouletteLens::setLens( Lens *l ) {
+   lens = l ;
+   lens->initAlphasBetas() ;
+} 
 void SampledRouletteLens::calculateAlphaBeta() {
     std::cout << "SampledRouletteLens calculateAlphaBeta\n" ;
     cv::Point2d xi = getXi() ;
@@ -54,28 +59,6 @@ void SampledRouletteLens::updateApparentAbs( ) {
    minMaxLoc( psiY, &minVal, &maxVal, &minLoc, &maxLoc ) ;
    std::cout << "[SampledRouletteLens] psiY min=" << minVal << "; max=" << maxVal << "\n" ;
    
-   /** This block performs a linear search for \xi.
-    * It seems to work, but fix-point iteration should be faster
-    * and allow for subpixel accuracy.
-   for ( int i=0 ; i < nrows ; ++i ) {
-      for ( int j=0 ; j < ncols ; ++j ) {
-         cv::Point2d ij(i,j) ;
-         cv::Point2d xy = pointCoordinate( ij, psi ) ;
-         double x = psiY.at<double>( ij ), y = psiX.at<double>( ij ) ;
-         cv::Point2d xitmp = chieta + cv::Point2d( x, y ) ;
-         dist = cv::norm( cv::Mat(xitmp-xy), cv::NORM_L2 ) ;
-         std::cout << "[SampledRouletteLens] (i,j)=(" << i << "," << j << ") xitmp= " 
-                   << xitmp << "; dist=" << dist << "\n" ;
-         if ( dist < dist0 ) {
-            dist0 = dist ;
-            xi0 = xitmp ;
-            std::cout << "[SampledRouletteLens] xitmp= " << xitmp 
-                      << "xy= " << xy << "; dist=" << dist0 << "\n" ;
-         } 
-      }
-   }
-   */
-
    /** This block makes a fix-point iteration to find \xi. */
    while ( cont ) {
       xi0 = xi1 ;
