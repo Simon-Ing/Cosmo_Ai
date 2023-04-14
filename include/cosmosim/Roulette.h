@@ -38,7 +38,6 @@ class SphereLens : public RouletteAbstractLens {
     SphereLens();
     SphereLens(bool);
     SphereLens(std::string,bool);
-    void setFile(std::string) ;
   protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
@@ -46,7 +45,6 @@ class SphereLens : public RouletteAbstractLens {
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
 
-    std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
 class RouletteSISLens : public SphereLens { 

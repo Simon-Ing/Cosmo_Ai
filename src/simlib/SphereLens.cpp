@@ -28,9 +28,6 @@ SphereLens::SphereLens(std::string fn, bool centred) :
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
-void SphereLens::setFile( std::string fn ) {
-    filename = fn ;
-} 
 void SphereLens::initAlphasBetas() {
 
     auto x = SymEngine::symbol("x");
