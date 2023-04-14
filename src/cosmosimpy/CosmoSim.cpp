@@ -54,6 +54,7 @@ void CosmoSim::diagnostics() {
 
 void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
+    if ( lens ) lens->setFile( fn ) ;
 } 
 
 cv::Mat CosmoSim::getPsiMap( ) {
@@ -319,7 +320,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
        .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
-       .value( "RoluetteSIS", CSIM_LENS_ROULETTE_SIS )
+       .value( "RouletteSIS", CSIM_LENS_ROULETTE_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/

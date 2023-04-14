@@ -14,7 +14,6 @@ lensDict = {
         "SIS (rotated)" : LensSpec.SIS,
         "SIS (roulettes)" : LensSpec.SISRoulettes,
         "Sampled SIS" : LensSpec.SampledSIS,
-        "PureSampled" : LensSpec.PureSampled,
         "PureSampled SIS" : LensSpec.PureSampledSIS,
         "Roulette SIS" : LensSpec.RouletteSIS,
         "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
