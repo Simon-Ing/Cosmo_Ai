@@ -6,13 +6,13 @@
 #include "simaux.h"
 
 SampledRouletteLens::SampledRouletteLens() :
-   RouletteLens::RouletteLens()
+   RouletteAbstractLens::RouletteAbstractLens()
 { 
     std::cout << "Instantiating SampledRouletteLens ... \n" ;
     rotatedMode = false ;
 }
 SampledRouletteLens::SampledRouletteLens(bool centred) :
-   RouletteLens::RouletteLens(centred)
+   RouletteAbstractLens::RouletteAbstractLens(centred)
 { 
     std::cout << "Instantiating SampledRouletteLens ... \n" ;
     rotatedMode = false ;

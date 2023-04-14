@@ -10,20 +10,20 @@
 #include <fstream>
 
 SphereLens::SphereLens() :
-   RouletteLens::RouletteLens()
+   RouletteAbstractLens::RouletteAbstractLens()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
 SphereLens::SphereLens(bool centred) :
-   RouletteLens::RouletteLens(centred)
+   RouletteAbstractLens::RouletteAbstractLens(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();
 }
 SphereLens::SphereLens(std::string fn, bool centred) :
    filename(fn),
-   RouletteLens::RouletteLens(centred)
+   RouletteAbstractLens::RouletteAbstractLens(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     initAlphasBetas();

@@ -11,7 +11,8 @@ using namespace SymEngine;
 
 #define PI 3.14159265358979323846
 
-class RouletteLens : public LensModel { 
+
+class RouletteAbstractLens : public LensModel { 
 public:
     using LensModel::LensModel ;
 protected:
@@ -24,15 +25,15 @@ protected:
     virtual double getMaskRadius() const ;
 };
 
-class RoulettePMLens : public RouletteLens { 
+class RoulettePMLens : public RouletteAbstractLens { 
 public:
-    using RouletteLens::RouletteLens ;
+    using RouletteAbstractLens::RouletteAbstractLens ;
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
 };
 
-class SphereLens : public RouletteLens { 
+class SphereLens : public RouletteAbstractLens { 
   public:
     SphereLens();
     SphereLens(bool);
@@ -59,7 +60,7 @@ class RouletteSISLens : public SphereLens {
 };
 
 
-class SampledRouletteLens : public RouletteLens { 
+class SampledRouletteLens : public RouletteAbstractLens { 
 public:
     SampledRouletteLens();
     SampledRouletteLens(bool);
@@ -70,6 +71,18 @@ protected:
     virtual void setXi( cv::Point2d ) ;
 private:
     Lens *lens ;
+};
+
+class RouletteLens : public RouletteAbstractLens { 
+  public:
+
+    void setLens( Lens* ) ;
+  protected:
+    virtual void calculateAlphaBeta();
+    virtual void updateApparentAbs() ;
+  private:
+    Lens *lens ;
+
 };
 
 #endif // ROULETTE_H
