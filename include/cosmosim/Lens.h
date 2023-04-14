@@ -40,7 +40,7 @@ public:
 
 
     void initAlphasBetas();
-    void calculateAlphaBeta( cv::Point2d xi );
+    virtual void calculateAlphaBeta( cv::Point2d xi );
     void setFile(std::string) ;
     void setNterms(int) ;
 
