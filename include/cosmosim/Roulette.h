@@ -73,6 +73,8 @@ protected:
 
 class RouletteLens : public RouletteAbstractLens { 
   public:
+    RouletteLens();
+    RouletteLens(bool);
     virtual void setLens( Lens* ) ;
     using RouletteAbstractLens::RouletteAbstractLens ;
 

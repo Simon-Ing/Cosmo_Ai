@@ -51,7 +51,11 @@ cv::Point2d RouletteAbstractLens::getDistortedPos(double r, double theta) const 
     // The return value should be normalised coordinates in the source plane.
     // We have calculated the coordinates in the lens plane.
     // return cv::Point2d( nu1/CHI, nu2/CHI ) ;
-    return cv::Point2d( nu1/CHI, nu2/CHI ) ;
+    cv::Point2d rpt = cv::Point2d( nu1/CHI, nu2/CHI ) ;
+
+    std::cout << "[getDistortedPos] (" << r << "," << theta << ") "
+       << rpt << "\n" ;
+    return rpt ;
 }
 double RouletteAbstractLens::getMaskRadius() const { 
    // Should this depend on the source position or the local origin?

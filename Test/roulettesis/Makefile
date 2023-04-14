@@ -1,2 +1,4 @@
-test.log: test.sh
+test.log: test.sh build
 	sh $< | tee $@
+build:
+	cd ../../ ; make

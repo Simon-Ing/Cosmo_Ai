@@ -9,6 +9,19 @@
 #include <thread>
 #include <fstream>
 
+RouletteLens::RouletteLens() :
+   RouletteAbstractLens::RouletteAbstractLens()
+{ 
+    std::cout << "Instantiating RouletteLens ... \n" ;
+    rotatedMode = false ;
+}
+RouletteLens::RouletteLens(bool centred) :
+   RouletteAbstractLens::RouletteAbstractLens(centred)
+{ 
+    std::cout << "Instantiating RouletteLens ... \n" ;
+    rotatedMode = false ;
+}
+
 void RouletteLens::setLens( Lens *l ) {
    lens = l ;
    lens->initAlphasBetas() ;
