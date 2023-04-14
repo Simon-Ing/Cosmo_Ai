@@ -18,19 +18,11 @@ void RouletteLens::calculateAlphaBeta() {
     std::cout << "RouletteLens calculateAlphaBeta\n" ;
     cv::Point2d xi = getXi() ;
 
-    // calculate all amplitudes for given X, Y, einsteinR
-    // This is done here to before the code is parallellised
-    for (int m = 1; m <= nterms; m++){
-        for (int s = (m+1)%2; s <= (m+1); s+=2){
-            // alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
-            // betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
-        }
-    }
+    lens->calculateAlphaBeta( xi ) ;
 }
 
 
-void RouletteLens::updateApparentAbs( ) {
-    double r = getEtaAbs() + einsteinR/CHI ;
-    setNu( cv::Point2d( r, 0 ) ) ;
-    // nu = cv::Point2d( r*cos(phi), r*sin(phi) ) ;
+void RouletteSISLens::updateApparentAbs( ) {
+    double r = lens->getXiAbs( getEtaAbs()*CHI + einsteinR)/CHI ;
+    setNu( cv::Point2d( r*cos(phi), r*sin(phi) ) ) ;
 }

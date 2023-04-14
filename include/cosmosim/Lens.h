@@ -40,12 +40,17 @@ public:
 
 
     void initAlphasBetas();
+    void calculateAlphaBeta( cv::Point2d xi );
     void setFile(std::string) ;
 
     std::array<std::array<double, 202>, 201> getAlphas( cv::Point2d xi ) ;
     std::array<std::array<double, 202>, 201> getBetas( cv::Point2d xi ) ;
     double getAlpha( cv::Point2d xi, int m, int s ) ;
     double getBeta( cv::Point2d xi, int m, int s ) ;
+    double getAlphaXi( int m, int s ) ;
+    double getBetaXi( int m, int s ) ;
+
+    virtual double getXiAbs( double ) ;
 };
 class PsiFunctionLens : public Lens {
 public:
@@ -69,6 +74,7 @@ public:
     virtual double psiXfunction( double, double ) ;
     virtual double psiYfunction( double, double ) ;
 
+    virtual double getXiAbs( double ) ;
 };
 
 

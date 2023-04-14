@@ -23,6 +23,7 @@ protected:
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
+    Lens *lens = NULL ;
 };
 
 class RoulettePMLens : public RouletteAbstractLens { 
@@ -81,7 +82,6 @@ class RouletteLens : public RouletteAbstractLens {
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
   private:
-    Lens *lens ;
 
 };
 

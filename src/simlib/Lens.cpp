@@ -126,3 +126,24 @@ double Lens::getBeta(
    ) {
    return betas_l[m][s].call({xi.x, xi.y, einsteinR});
 }
+
+void Lens::calculateAlphaBeta( cv::Point2d xi ) {
+    std::cout << "Lens calculateAlphaBeta\n" ;
+    
+    // calculate all amplitudes for given xi, einsteinR
+    for (int m = 1; m <= nterms; m++){
+        for (int s = (m+1)%2; s <= (m+1); s+=2){
+            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
+        }
+    }
+}
+double Lens::getAlphaXi( int m, int s ) {
+   return alphas_val[m][s] ;
+}
+double Lens::getBetaXi( int m, int s ) {
+   return betas_val[m][s] ;
+}
+double Lens::getXiAbs( double e ) {
+   throw NotImplemented() ;
+}

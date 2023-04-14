@@ -3,6 +3,9 @@
 #include "cosmosim/Roulette.h"
 #include "simaux.h"
 
+#define alpha_(m,s)  ( NULL == this->lens ? alphas_val[m][s] : this->lens->getAlphaXi( m, s ) )
+#define beta_(m,s)  ( NULL == this->lens ? betas_val[m][s] : this->lens->getBetaXi( m, s ) )
+
 void RouletteAbstractLens::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteAbstractLens::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
@@ -33,8 +36,8 @@ cv::Point2d RouletteAbstractLens::getDistortedPos(double r, double theta) const 
         double subTerm1 = 0;
         double subTerm2 = 0;
         for (int s = (m+1)%2; s <= (m+1); s+=2){
-            double alpha = alphas_val[m][s];
-            double beta = betas_val[m][s];
+            double alpha = alpha_(m,s);
+            double beta = beta_(m,s);
             double c_p = 1.0 + s/(m + 1.0);
             double c_m = 1.0 - s/(m + 1.0);
             subTerm1 += 0.5*( (alpha*cos((s-1)*theta) + beta*sin((s-1)*theta))*c_p 
