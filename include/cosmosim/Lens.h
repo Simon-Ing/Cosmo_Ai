@@ -62,7 +62,7 @@ public:
     virtual double getXiAbs( double ) ;
 } ;
 
-class PsiFunctionLens : public SampledLens {
+class PsiFunctionLens : public Lens {
 public:
     virtual double psifunction( double, double ) = 0 ;
     virtual double psiXfunction( double, double ) = 0 ;
