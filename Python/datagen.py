@@ -100,8 +100,8 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         maxm = int(args.nterms)
         ab = sim.getAlphaBetas(maxm)
         r = [ row[x] for x in cols ]+ ab
-        line = ",".join(r)
-        line.append( "\n" )
+        line = ",".join( [ str(x) for x in r ] )
+        line += "\n"
         outstream.write( line )
 
 
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     if args.outfile:
         outstream = open(args.outfile,"wt")
         headers = ",".join( cols + getMSheaders(int(args.nterms)) )
-        headers.append("\n")
+        headers += "\n"
         outstream.write(headers)
     else:
         outstream = None

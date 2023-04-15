@@ -1,3 +1,4 @@
+index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "t011",image-t011.png,t,p,50, 24,-68,48,21,0,0,16
 "t012",image-t012.png,t,p,50, 35,-29, 3,43,0,30,16
 "t013",image-t013.png,t,p,50, 57,-47,50,47,0,75,16
