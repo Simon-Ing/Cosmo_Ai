@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 import argparse
 from CosmoSim.Image import centreImage, drawAxes
-from CosmoSim import CosmoSim
+from CosmoSim import CosmoSim,getMSheaders
 
 import pandas as pd
 
@@ -217,7 +217,7 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( cols + getMSheaders(int(args.nterms))
+        headers = ",".join( cols + getMSheaders(int(args.nterms)) )
         headers.append("\n")
         outstream.write(headers)
     else:
