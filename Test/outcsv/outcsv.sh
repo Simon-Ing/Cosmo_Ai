@@ -6,5 +6,6 @@ mkdir -p $dir
 
 
 python3 ../../Python/datagen.py --directory="$dir" \
+   --nterms 5 \
    --outfile "outfile.csv" --csvfile debug.csv  || exit 1
 

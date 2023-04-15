@@ -16,7 +16,7 @@ from CosmoSim import CosmoSim,getMSheaders
 
 import pandas as pd
 
-cols = [ "index", "filename", "source", "chi", "sigma", "sigma2", "theta" ]
+outcols = [ "index", "filename", "source", "chi", "sigma", "sigma2", "theta" ]
 
 def setParameters(sim,row):
     print( row ) 
@@ -99,7 +99,10 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
     if outstream:
         maxm = int(args.nterms)
         ab = sim.getAlphaBetas(maxm)
-        r = [ row[x] for x in cols ]+ ab
+        r = [ row[x] for x in outcols ]
+        print(r)
+        print(ab)
+        r += ab
         line = ",".join( [ str(x) for x in r ] )
         line += "\n"
         outstream.write( line )
@@ -217,7 +220,7 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( cols + getMSheaders(int(args.nterms)) )
+        headers = ",".join( outcols + getMSheaders(int(args.nterms)) )
         headers += "\n"
         outstream.write(headers)
     else:
@@ -234,6 +237,6 @@ if __name__ == "__main__":
             setParameters( sim, row )
             makeSingle(sim,args,name=row["index"],row=row,outstream=outstream)
     else:
-        makeSingle(sim,args,row=row,outstream=outstream)
+        makeSingle(sim,args)
     sim.close()
     if outstream != None: outstream.close()
