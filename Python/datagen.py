@@ -101,6 +101,8 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
         print(r)
+        r.append( centrepoint[0] )
+        r.append( centrepoint[1] )
         print(ab)
         r += ab
         line = ",".join( [ str(x) for x in r ] )
@@ -221,7 +223,7 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( outcols + getMSheaders(int(args.nterms)) )
+        headers = ",".join( outcols + [ "x", "y" ] + getMSheaders(int(args.nterms)) )
         headers += "\n"
         outstream.write(headers)
     else:
