@@ -86,6 +86,15 @@ class CosmoSim(cs.CosmoSim):
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
         self.bgcolour = 0
+    def getAlphas(self,maxm=2):
+        return [ self.getAlphaXi(m,s)
+                     for m in range(maxm+1)
+                     for s in range(1-m%2,m+2,2) ]
+    def getBetas(self,maxm=2):
+        return [ self.getBetaXi(m,s)
+                     for m in range(maxm+1)
+                     for s in range(1-m%2,m+2,2) ]
+
     def close(self):
         """
         Terminate the worker thread.
