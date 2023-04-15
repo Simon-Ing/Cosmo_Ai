@@ -18,24 +18,38 @@ void helloworld() {
 }
 
 double CosmoSim::getAlphaXi( int m, int s ) {
-      if ( NULL == lens ) throw NotSupported();
-      return lens->getAlphaXi( m, s ) ;
+      if ( NULL != psilens )
+          return psilens->getAlphaXi( m, s ) ;
+      else if ( NULL != lens )
+          return lens->getAlphaXi( m, s ) ;
+      else throw NotSupported();
 }
 double CosmoSim::getBetaXi( int m, int s ) {
-      if ( NULL == lens ) throw NotSupported();
-      return lens->getBetaXi( m, s ) ;
+      if ( NULL != psilens )
+          return psilens->getBetaXi( m, s ) ;
+      else if ( NULL != lens )
+          return lens->getBetaXi( m, s ) ;
+      else throw NotSupported();
 }
 double CosmoSim::getAlpha(
-      cv::Point2d xi, int m, int s 
+      double x, double y, int m, int s 
  ) {
-      if ( NULL == lens ) throw NotSupported();
-      return lens->getAlpha( xi, m, s ) ;
+      cv::Point2d xi = cv::Point2d( x, y ) ;
+      if ( NULL != psilens )
+          return psilens->getAlpha( xi, m, s ) ;
+      else if ( NULL != lens )
+          return lens->getAlpha( xi, m, s ) ;
+      else throw NotSupported();
 }
 double CosmoSim::getBeta( 
-      cv::Point2d xi, int m, int s 
+      double x, double y, int m, int s 
 ) {
-      if ( NULL == lens ) throw NotSupported();
-      return lens->getBeta( xi, m, s ) ;
+      cv::Point2d xi = cv::Point2d( x, y ) ;
+      if ( NULL != psilens )
+          return psilens->getBeta( xi, m, s ) ;
+      else if ( NULL != lens )
+          return lens->getBeta( xi, m, s ) ;
+      else throw NotSupported();
 }
 
 void CosmoSim::diagnostics() {
@@ -79,7 +93,6 @@ void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
    PsiFunctionModel *psisim = NULL ;
-   PsiFunctionLens *psilens = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( lensmode == oldlensmode ) return ;

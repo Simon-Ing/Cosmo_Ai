@@ -45,6 +45,7 @@ private:
     std::string filename = "50.txt" ;
 
     Lens *lens = NULL ;
+    PsiFunctionLens *psilens = NULL ;
 
 public:
     CosmoSim();
@@ -79,8 +80,8 @@ public:
     cv::Mat getPsiMap() ;
     cv::Mat getMassMap() ;
 
-    double getAlpha( cv::Point2d xi, int m, int s ) ;
-    double getBeta( cv::Point2d xi, int m, int s ) ;
+    double getAlpha( double x, double y, int m, int s ) ;
+    double getBeta( double x, double y, int m, int s ) ;
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
 
