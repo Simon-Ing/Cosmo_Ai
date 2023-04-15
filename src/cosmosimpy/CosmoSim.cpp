@@ -81,7 +81,6 @@ cv::Mat CosmoSim::getMassMap( ) {
    return im ;
 } 
 
-#define makeSIS(sim)  lens = new SIS() ; lens->setFile(filename) ; sim->setLens(lens) 
 void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
@@ -99,7 +98,9 @@ void CosmoSim::initLens() {
    if ( sim ) delete sim ;
    switch ( psimode ) {
        case CSIM_PSI_SIS:
-          lens = new SIS() ;
+          lens = psilens = new SIS() ;
+          lens->setFile(filename) ;
+          lens->initAlphasBetas() ;
           break ;
        case CSIM_NOPSI:
           lens = NULL ;
@@ -129,22 +130,17 @@ void CosmoSim::initLens() {
        case CSIM_LENS_PURESAMPLED_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new PureSampledModel(centred) ;
-         makeSIS( sim ) ;
+         sim->setLens(lens) ;
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          psisim = new PsiFunctionModel(centred) ;
-         psilens->setFile(filename) ;
-         psisim->setPsiFunctionLens( psilens = new SIS() ) ;
-         lens = psilens ;
+         psisim->setPsiFunctionLens( psilens ) ;
          sim = psisim ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new SampledRouletteLens(centred) ;
-         makeSIS( sim ) ;
-         psilens = new SIS() ; 
-         psilens->setFile(filename) ;
          lens = new SampledPsiFunctionLens( psilens ) ;
          lens->setFile(filename) ;
          sim->setLens(lens) ;
@@ -152,7 +148,7 @@ void CosmoSim::initLens() {
        case CSIM_LENS_ROULETTE_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
          sim = new RouletteLens(centred) ;
-         makeSIS( sim ) ;
+         sim->setLens(lens) ;
          break ;
        default:
          std::cout << "No such lens mode!\n" ;
