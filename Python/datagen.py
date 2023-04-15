@@ -16,6 +16,8 @@ from CosmoSim import CosmoSim
 
 import pandas as pd
 
+cols = [ "index", "filename", "source", "chi", "sigma", "sigma2", "theta" ]
+
 def setParameters(sim,row):
     print( row ) 
     if row.get("y",None) != None:
@@ -40,7 +42,7 @@ def setParameters(sim,row):
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
 
-def makeSingle(sim,args,name=None,outstream=None):
+def makeSingle(sim,args,name=None,row=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
     makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
@@ -94,6 +96,13 @@ def makeSingle(sim,args,name=None,outstream=None):
         fn = os.path.join(args.directory,"kappa-" + str(name) + ".svg" ) 
         plt.savefig( fn )
         plt.close()
+    if outstream:
+        maxm = int(args.nterms)
+        ab = sim.getAlphaBetas(maxm)
+        r = [ row[x] for x in cols ]+ ab
+        line = ",".join(r)
+        line.append( "\n" )
+        outstream.write( line )
 
 
 def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
@@ -208,8 +217,9 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        outstream.write( "index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,"+
-                "alpha-0-1,beta-0-1" )
+        headers = ",".join( cols + getMSheaders(int(args.nterms))
+        headers.append("\n")
+        outstream.write(headers)
     else:
         outstream = None
 
@@ -222,8 +232,8 @@ if __name__ == "__main__":
         print( "columns:", cols )
         for index,row in frame.iterrows():
             setParameters( sim, row )
-            makeSingle(sim,args,name=row["index"],outstream=outstream)
+            makeSingle(sim,args,name=row["index"],row=row,outstream=outstream)
     else:
-        makeSingle(sim,args,outstream=outstream)
+        makeSingle(sim,args,row=row,outstream=outstream)
     sim.close()
     if outstream != None: outstream.close()

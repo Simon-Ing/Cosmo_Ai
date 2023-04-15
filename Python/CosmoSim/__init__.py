@@ -51,6 +51,11 @@ sourceValues = {
         "Triangle" : SourceSpec.Triangle,
         }
 
+def getMS(maxm): return [ (m,s) for m in range(maxm+1)
+                                    for s in range(1-m%2,m+2,2) ]
+def getMSheaders(maxm): 
+    r = [ ( f"alpha[{{m}", f"{s}],beta[{{m},{s}]") for (m,s) in getms(maxm) ]
+    return [ x for p in r for x in p ]
 
 maxmlist = [ 50, 100, 200 ]
 def getFileName(maxm):
@@ -87,13 +92,12 @@ class CosmoSim(cs.CosmoSim):
         self.simThread.start()
         self.bgcolour = 0
     def getAlphas(self,maxm=2):
-        return [ self.getAlphaXi(m,s)
-                     for m in range(maxm+1)
-                     for s in range(1-m%2,m+2,2) ]
+        return [ self.getAlphaXi(m,s) for (m,s) in getMS(maxm) ]
     def getBetas(self,maxm=2):
-        return [ self.getBetaXi(m,s)
-                     for m in range(maxm+1)
-                     for s in range(1-m%2,m+2,2) ]
+        return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
+    def getAlphaBetas(self,maxm=2):
+        r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
+        return [ x for p in r for x in p ]
 
     def close(self):
         """
