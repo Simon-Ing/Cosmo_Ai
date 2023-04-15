@@ -118,7 +118,7 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
 
     (cx,cy) = 0,0
     if args.centred:
-        (im,(cx,xy)) = centreImage(im)
+        (im,(cx,cy)) = centreImage(im)
     if args.reflines:
         drawAxes(im)
 
