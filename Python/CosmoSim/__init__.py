@@ -95,8 +95,13 @@ class CosmoSim(cs.CosmoSim):
         return [ self.getAlphaXi(m,s) for (m,s) in getMS(maxm) ]
     def getBetas(self,maxm=2):
         return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
-    def getAlphaBetas(self,maxm=2):
-        r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
+    def getAlphaBetas(self,maxm=2,pt=None):
+        if pt == None:
+           r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
+        else:
+            (x,y) = pt
+            r = [ (self.getAlpha(x,y,m,s),self.getBeta(x,y,m,s)) 
+                    for (m,s) in getMS(maxm) ]
         return [ x for p in r for x in p ]
 
     def close(self):

@@ -45,7 +45,7 @@ def setParameters(sim,row):
 def makeSingle(sim,args,name=None,row=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
-    makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
+    centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
     if args.join:
         # sim.setMaskMode(False)
         sim.runSim()
@@ -98,7 +98,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         plt.close()
     if outstream:
         maxm = int(args.nterms)
-        ab = sim.getAlphaBetas(maxm)
+        ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
         print(r)
         print(ab)
@@ -114,8 +114,9 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
                     showmask=args.showmask
                 ) 
 
+    (cx,cy) = 0,0
     if args.centred:
-        im = centreImage(im)
+        (im,(cx,xy)) = centreImage(im)
     if args.reflines:
         drawAxes(im)
 
@@ -130,7 +131,7 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
        fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-
+    return (cx,cy)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
           prog = 'CosmoSim makeimage',

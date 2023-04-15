@@ -40,7 +40,7 @@ def centreImage(im):
       centred = c1
   print( f"Centre: ({xm},{ym}) ;  " 
        + f"Range ({centred.min()},{centred.max()})" )
-  return centred
+  return (centred,(xm,ym))
 
 def drawAxes(im):
   m,n = im.shape[:2]

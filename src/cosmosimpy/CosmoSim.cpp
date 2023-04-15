@@ -34,22 +34,28 @@ double CosmoSim::getBetaXi( int m, int s ) {
 double CosmoSim::getAlpha(
       double x, double y, int m, int s 
  ) {
-      cv::Point2d xi = cv::Point2d( x, y ) ;
+      double r ;
+      cv::Point2d xi = cv::Point2d( x, y )*chi ;
       if ( NULL != psilens )
-          return psilens->getAlpha( xi, m, s ) ;
+          r = psilens->getAlpha( xi, m, s ) ;
       else if ( NULL != lens )
-          return lens->getAlpha( xi, m, s ) ;
+          r = lens->getAlpha( xi, m, s ) ;
       else throw NotSupported();
+      std::cout << "getAlpha(" << xi << ") " << r << "\n" ;
+      return r ;
 }
 double CosmoSim::getBeta( 
       double x, double y, int m, int s 
 ) {
-      cv::Point2d xi = cv::Point2d( x, y ) ;
+      double r ;
+      cv::Point2d xi = cv::Point2d( x, y )*chi ;
       if ( NULL != psilens )
-          return psilens->getBeta( xi, m, s ) ;
+          r = psilens->getBeta( xi, m, s ) ;
       else if ( NULL != lens )
-          return lens->getBeta( xi, m, s ) ;
+          r = lens->getBeta( xi, m, s ) ;
       else throw NotSupported();
+      std::cout << "getBeta(" << xi << ") " << r << "\n" ;
+      return r ;
 }
 
 void CosmoSim::diagnostics() {
