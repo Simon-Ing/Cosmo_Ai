@@ -75,3 +75,10 @@ void RouletteAbstractLens::calculateAlphaBeta() {
     lens->calculateAlphaBeta( xi ) ;
     std::cout << "RouletteAbstractLens calculateAlphaBeta done\n" ;
 }
+
+void SampledRouletteLens::updateApparentAbs( ) {
+   cv::Point2d chieta = CHI*getEta() ;
+   lens->updatePsi() ;
+   cv::Point2d xi1 = lens->getXi( chieta ) ;
+   setNu( xi1/CHI ) ;
+}

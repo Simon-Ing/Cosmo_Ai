@@ -27,9 +27,3 @@ void RouletteLens::setLens( Lens *l ) {
     lens = l ;
     lens->initAlphasBetas() ;
 } 
-
-
-void RouletteLens::updateApparentAbs( ) {
-    double r = lens->getXiAbs( getEtaAbs()*CHI )/CHI ;
-    setNu( cv::Point2d( r*cos(phi), r*sin(phi) ) ) ;
-}
