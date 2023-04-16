@@ -18,12 +18,6 @@ SampledRouletteLens::SampledRouletteLens(bool centred) :
     rotatedMode = false ;
 }
 
-void SampledRouletteLens::setLens( Lens *l ) {
-   std::cout << "[SampledRouletteLens.setLens()]\n" ;
-   lens = l ;
-   lens->initAlphasBetas() ;
-} 
-
 void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
    cv::Mat psi, psiX, psiY ;

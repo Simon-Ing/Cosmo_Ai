@@ -21,9 +21,3 @@ RouletteLens::RouletteLens(bool centred) :
     std::cout << "Instantiating RouletteLens ... \n" ;
     rotatedMode = false ;
 }
-
-void RouletteLens::setLens( Lens *l ) {
-    std::cout << "[RouletteLens.setLens()]\n" ;
-    lens = l ;
-    lens->initAlphasBetas() ;
-} 

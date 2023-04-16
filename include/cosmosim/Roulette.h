@@ -15,6 +15,7 @@ using namespace SymEngine;
 class RouletteAbstractLens : public LensModel { 
 public:
     using LensModel::LensModel ;
+    virtual void setLens( Lens* ) ;
 protected:
     std::array<std::array<double, 202>, 201> alphas_val;
     std::array<std::array<double, 202>, 201> betas_val;
@@ -59,7 +60,6 @@ class SampledRouletteLens : public RouletteAbstractLens {
 public:
     SampledRouletteLens();
     SampledRouletteLens(bool);
-    virtual void setLens( Lens* ) ;
 protected:
     virtual void setXi( cv::Point2d ) ;
 };
@@ -68,7 +68,6 @@ class RouletteLens : public RouletteAbstractLens {
   public:
     RouletteLens();
     RouletteLens(bool);
-    virtual void setLens( Lens* ) ;
 
   protected:
   private:

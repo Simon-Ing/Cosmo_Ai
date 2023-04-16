@@ -6,6 +6,13 @@
 #define alpha_(m,s)  ( NULL == this->lens ? alphas_val[m][s] : this->lens->getAlphaXi( m, s ) )
 #define beta_(m,s)  ( NULL == this->lens ? betas_val[m][s] : this->lens->getBetaXi( m, s ) )
 
+
+void SampledRouletteLens::setLens( Lens *l ) {
+   std::cout << "[RouletteAbstractLens.setLens()]\n" ;
+   lens = l ;
+   lens->initAlphasBetas() ;
+} 
+
 void RouletteAbstractLens::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteAbstractLens::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
