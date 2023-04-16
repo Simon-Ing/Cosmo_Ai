@@ -97,7 +97,6 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
-   PsiFunctionModel *psisim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( modelmode == oldmodelmode ) return ;
@@ -139,9 +138,8 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
          std::cout << "Running Pure Sampled SIS Lens (mode=" << modelmode << ")\n" ;
-         psisim = new PsiFunctionModel(centred) ;
-         psisim->setPsiFunctionLens( psilens ) ;
-         sim = psisim ;
+         sim = new PureSampledModel(centred) ;
+         sim->setLens(lens) ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;

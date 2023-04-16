@@ -24,16 +24,9 @@ void PureSampledModel::updateApparentAbs( ) {
     lens->updatePsi(im.size()) ;
 }
 cv::Point2d PureSampledModel::calculateEta( cv::Point2d xi ) {
-   cv::Point2d chieta, xy, ij ; 
-   cv::Mat psi = lens->getPsi() ;
-   cv::Mat psiX = lens->getPsiX() ;
-   cv::Mat psiY = lens->getPsiY() ;
-
-   ij = imageCoordinate( xi, psi ) ;
-   xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
-   chieta = xi - xy ;
-
-   return chieta/CHI ;
+   cv::Point2d xy = cv::Point2d( lens->psiXvalue( xi.x, xi.y ),
+         lens->psiYvalue( xi.x, xi.y ) ) ;
+   return (xi - xy)/CHI ;
 }
 void PureSampledModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 

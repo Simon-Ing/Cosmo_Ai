@@ -27,3 +27,13 @@ void PsiFunctionLens::updatePsi( cv::Size size ) {
 
    return ; 
 }
+
+double PsiFunctionLens::psiValue( double x, double y ) { 
+   return psifunction( x, y ) ;
+}
+double PsiFunctionLens::psiXvalue( double x, double y ) { 
+   return psiXfunction( x, y ) ;
+}
+double PsiFunctionLens::psiYvalue( double x, double y ) { 
+   return psiYfunction( x, y ) ;
+}

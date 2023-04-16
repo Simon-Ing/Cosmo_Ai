@@ -132,3 +132,16 @@ cv::Point2d Lens::getXi( cv::Point2d e ) {
 void Lens::setNterms( int n ) {
    nterms = n ;
 }
+
+double Lens::psiValue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return psi.at<double>( ij ) ;
+}
+double Lens::psiXvalue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return -psiX.at<double>( ij ) ;
+}
+double Lens::psiYvalue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return -psiY.at<double>( ij ) ;
+}
