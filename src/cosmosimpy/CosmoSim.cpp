@@ -296,7 +296,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     py::class_<CosmoSim>(m, "CosmoSim")
         .def(py::init<>())
         .def("setLensMode", &CosmoSim::setLensMode)
-        .def("setLensFunction", &CosmoSim::setLensFunction)
+        .def("setModelMode", &CosmoSim::setModelMode)
         .def("setSourceMode", &CosmoSim::setSourceMode)
         .def("setEinsteinR", &CosmoSim::setEinsteinR)
         .def("setNterms", &CosmoSim::setNterms)
@@ -327,7 +327,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
 
     pybind11::enum_<PsiSpec>(m, "SourceSpec") 
        .value( "SIS", CSIM_PSI_SIS )
-       .value( "PM", CSIM_PSI_PM ) ;
+       .value( "PM", CSIM_NOPSI_PM ) ;
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
        .value( "Sphere", CSIM_SOURCE_SPHERE )
        .value( "Ellipse", CSIM_SOURCE_ELLIPSE )
