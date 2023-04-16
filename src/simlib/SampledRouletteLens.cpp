@@ -23,13 +23,6 @@ void SampledRouletteLens::setLens( Lens *l ) {
    lens = l ;
    lens->initAlphasBetas() ;
 } 
-void SampledRouletteLens::calculateAlphaBeta() {
-    std::cout << "SampledRouletteLens calculateAlphaBeta\n" ;
-    cv::Point2d xi = getXi() ;
-
-    lens->calculateAlphaBeta( xi ) ;
-}
-
 
 void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;

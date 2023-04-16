@@ -95,6 +95,7 @@ public:
     virtual double psiYfunction( double, double ) ;
 
     virtual double getXiAbs( double ) ;
+    virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 
 

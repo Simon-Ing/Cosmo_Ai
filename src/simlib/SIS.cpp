@@ -18,3 +18,7 @@ double SIS::psiYfunction( double x, double y ) {
 double SIS::getXiAbs( double e ) {
    return (e + einsteinR) ;
 }
+cv::Point2d SIS::getXi( cv::Point2d chieta ) {
+   double phi = atan2(chieta.y, chieta.x); 
+   return chieta + einsteinR*cv::Point2d( cos(phi), sin(phi) ) ;
+}

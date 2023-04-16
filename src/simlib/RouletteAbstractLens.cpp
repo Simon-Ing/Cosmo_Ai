@@ -65,3 +65,9 @@ double RouletteAbstractLens::getMaskRadius() const {
    return getXiAbs()/CHI ; 
 }
 
+void RouletteAbstractLens::calculateAlphaBeta() {
+    std::cout << "RouletteAbstractLens calculateAlphaBeta\n" ;
+    cv::Point2d xi = getXi() ;
+
+    lens->calculateAlphaBeta( xi ) ;
+}
