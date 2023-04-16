@@ -22,6 +22,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_SAMPLED_SIS,
                   CSIM_NOLENS } ;
 enum PsiSpec    { CSIM_PSI_SIS,
+                  CSIM_NOPSI_PM,
                   CSIM_NOPSI } ;
 
 class CosmoSim {

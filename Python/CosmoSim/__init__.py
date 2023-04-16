@@ -9,6 +9,10 @@ LensSpec = cs.LensSpec
 SourceSpec = cs.SourceSpec
 
 lensDict = {
+        "SIS" : PsiSpec.SIS,
+        "PM" : PsiSpec.PM
+        }
+modelDict = {
         "Point Mass (exact)" : LensSpec.PointMass,
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
         "SIS (rotated)" : LensSpec.SIS,
@@ -27,7 +31,7 @@ lensDict = {
         "fs" : LensSpec.PsiFunctionSIS,
         "rs" : LensSpec.RouletteSIS,
         }
-lensValues = {
+modelValues = {
         "Point Mass (exact)" : LensSpec.PointMass,
         "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
         "SIS (rotated)" : LensSpec.SIS,
@@ -124,7 +128,7 @@ class CosmoSim(cs.CosmoSim):
     def maskImage(self,scale=1):
         return super().maskImage( float(scale) )
     def setLensMode(self,s):
-        return super().setLensMode( int( lensDict[s] ) ) 
+        return super().setLensMode( int( modelDict[s] ) ) 
     def setBGColour(self,s):
         self.bgcolour = s
     def simThread(self):
