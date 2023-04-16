@@ -8,8 +8,7 @@ set(SimLibFiles
         simlib/SIS.cpp
         simlib/PureSampledModel.cpp
         simlib/SampledRouletteLens.cpp
-        simlib/RouletteLens.cpp
-        simlib/RouletteAbstractLens.cpp
+	simlib/RouletteModel.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp

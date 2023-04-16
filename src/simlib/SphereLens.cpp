@@ -10,14 +10,14 @@
 #include <fstream>
 
 SphereLens::SphereLens() :
-   RouletteAbstractLens::RouletteAbstractLens()
+   RouletteModel::RouletteModel()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     rotatedMode = true ;
     initAlphasBetas();
 }
 SphereLens::SphereLens(bool centred) :
-   RouletteAbstractLens::RouletteAbstractLens(centred)
+   RouletteModel::RouletteModel(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     rotatedMode = true ;
@@ -25,7 +25,7 @@ SphereLens::SphereLens(bool centred) :
 }
 SphereLens::SphereLens(std::string fn, bool centred) :
    filename(fn),
-   RouletteAbstractLens::RouletteAbstractLens(centred)
+   RouletteModel::RouletteModel(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     rotatedMode = true ;

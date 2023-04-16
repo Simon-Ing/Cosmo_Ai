@@ -6,27 +6,27 @@
 #define alpha_(m,s)  ( NULL == this->lens ? alphas_val[m][s] : this->lens->getAlphaXi( m, s ) )
 #define beta_(m,s)  ( NULL == this->lens ? betas_val[m][s] : this->lens->getBetaXi( m, s ) )
 
-RouletteAbstractLens::RouletteAbstractLens() :
+RouletteModel::RouletteModel() :
    LensModel::LensModel()
 { 
-    std::cout << "Instantiating RouletteAbstractLens ... \n" ;
+    std::cout << "Instantiating RouletteModel ... \n" ;
     rotatedMode = false ;
 }
-RouletteAbstractLens::RouletteAbstractLens(bool centred) :
+RouletteModel::RouletteModel(bool centred) :
    LensModel::LensModel(centred)
 { 
-    std::cout << "Instantiating RouletteAbstractLens ... \n" ;
+    std::cout << "Instantiating RouletteModel ... \n" ;
     rotatedMode = false ;
 }
 
-void RouletteAbstractLens::setLens( Lens *l ) {
-   std::cout << "[RouletteAbstractLens.setLens()]\n" ;
+void RouletteModel::setLens( Lens *l ) {
+   std::cout << "[RouletteModel.setLens()]\n" ;
    lens = l ;
    lens->initAlphasBetas() ;
 } 
 
-void RouletteAbstractLens::maskImage( cv::InputOutputArray imgD, double scale ) {
-      std::cout << "RouletteAbstractLens::maskImage\n" ;
+void RouletteModel::maskImage( cv::InputOutputArray imgD, double scale ) {
+      std::cout << "RouletteModel::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
       cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
       origo = cv::Point2d( origo.y, origo.x ) ;
@@ -35,8 +35,8 @@ void RouletteAbstractLens::maskImage( cv::InputOutputArray imgD, double scale ) 
       cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
       black.copyTo( imgD, mask ) ;
 }
-void RouletteAbstractLens::markMask( cv::InputOutputArray imgD ) {
-      std::cout << "RouletteAbstractLens::maskImage\n" ;
+void RouletteModel::markMask( cv::InputOutputArray imgD ) {
+      std::cout << "RouletteModel::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
       cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
       origo = cv::Point2d( origo.y, origo.x ) ;
@@ -46,7 +46,7 @@ void RouletteAbstractLens::markMask( cv::InputOutputArray imgD ) {
 }
 
 // Calculate the main formula for the SIS model
-cv::Point2d RouletteAbstractLens::getDistortedPos(double r, double theta) const {
+cv::Point2d RouletteModel::getDistortedPos(double r, double theta) const {
     double nu1 = r*cos(theta) ;
     double nu2 = r*sin(theta) ;
 
@@ -78,21 +78,21 @@ cv::Point2d RouletteAbstractLens::getDistortedPos(double r, double theta) const 
     */
     return rpt ;
 }
-double RouletteAbstractLens::getMaskRadius() const { 
+double RouletteModel::getMaskRadius() const { 
    // Should this depend on the source position or the local origin?
    // return getNuAbs() ; 
    return getXiAbs()/CHI ; 
 }
 
-void RouletteAbstractLens::calculateAlphaBeta() {
+void RouletteModel::calculateAlphaBeta() {
     cv::Point2d xi = getXi() ;
 
-    std::cout << "RouletteAbstractLens calculateAlphaBeta ["
+    std::cout << "RouletteModel calculateAlphaBeta ["
        << xi << "] ... \n" ;
     if ( lens == NULL ) throw NotSupported() ;
 
     lens->calculateAlphaBeta( xi ) ;
-    std::cout << "RouletteAbstractLens calculateAlphaBeta done\n" ;
+    std::cout << "RouletteModel calculateAlphaBeta done\n" ;
 }
 
 void SampledRouletteLens::updateApparentAbs( ) {
