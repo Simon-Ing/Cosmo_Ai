@@ -66,6 +66,7 @@ void LensModel::updateSecondary( ) {
    if ( apparentAbs2 == 0 ) {
       throw NotSupported() ;
    }
+   std::cout << "[LensModel.updateSecondary()] image type "
    throw NotImplemented() ;
    return updateInner() ;
 }
@@ -279,9 +280,11 @@ void LensModel::markMask( ) {
     markMask( imgDistorted ) ;
 }
 void LensModel::maskImage( cv::InputOutputArray r, double scale ) {
+   std::cout << "[LensModel.maskImage()] image type "
    throw NotImplemented() ;
 }
 void LensModel::markMask( cv::InputOutputArray r ) {
+   std::cout << "[LensModel.markMask()] image type "
    throw NotImplemented() ;
 }
 
@@ -330,6 +333,7 @@ void LensModel::setXi( cv::Point2d x ) {
       std::cout << "Alternative viewpoints cannot be supported in rotated mode.\n" ;
       throw NotSupported() ;
    } else {
+      std::cout << "[LensModel.setXi()] image type "
       throw NotImplemented() ;
    }
 }

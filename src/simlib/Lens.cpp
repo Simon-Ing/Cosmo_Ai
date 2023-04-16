@@ -56,6 +56,7 @@ cv::Mat Lens::getMassImage() const {
    return im ;
 }
 cv::Mat Lens::getEinsteinMap() const {
+   std::cout << "[Lens.getEinsteinMap() not implemented\n" ;
    throw NotImplemented() ;
    // return einsteinMap ;
 }
@@ -121,9 +122,11 @@ double Lens::getBetaXi( int m, int s ) {
    return betas_val[m][s] ;
 }
 double Lens::getXiAbs( double e ) {
+   std::cout << "[Lens.getXiAbs() not implemented\n" ;
    throw NotImplemented() ;
 }
 cv::Point2d Lens::getXi( cv::Point2d e ) {
+   std::cout << "[Lens.getXi() not implemented\n" ;
    throw NotImplemented() ;
 }
 void Lens::setNterms( int n ) {
