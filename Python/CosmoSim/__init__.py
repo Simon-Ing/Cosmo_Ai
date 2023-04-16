@@ -7,6 +7,7 @@ import os
 
 LensSpec = cs.LensSpec
 SourceSpec = cs.SourceSpec
+PsiSpec = cs.PsiSpec
 
 lensDict = {
         "SIS" : PsiSpec.SIS,
@@ -125,8 +126,10 @@ class CosmoSim(cs.CosmoSim):
     def maskImage(self,scale=1):
         return super().maskImage( float(scale) )
     def setLensMode(self,s):
-        return super().setLensMode( int( modelDict[s] ) ) 
+        print( f"setLensMode({s})")
+        return super().setLensMode( int( lensDict[s] ) ) 
     def setModelMode(self,s):
+        print( f"setModelMode({s})")
         return super().setModelMode( int( modelDict[s] ) ) 
     def setBGColour(self,s):
         self.bgcolour = s

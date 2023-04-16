@@ -108,6 +108,9 @@ void CosmoSim::initLens() {
           lens->setFile(filename) ;
           lens->initAlphasBetas() ;
           break ;
+       case CSIM_NOPSI_PM:
+          lens = NULL ;
+          break ;
        case CSIM_NOPSI:
           lens = NULL ;
           break ;

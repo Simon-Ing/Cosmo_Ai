@@ -155,7 +155,7 @@ if __name__ == "__main__":
     parser.add_argument('-Z', '--imagesize', default=400, help="image size")
 
     parser.add_argument('-l', '--lensmode',
-            default="PM", help="lens mode")
+            default="SIS", help="lens mode")
     parser.add_argument('-L', '--modelmode',
             default="Point Mass (exact)", help="lens mode")
     parser.add_argument('-S', '--sourcemode',
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     if args.lensmode:
         sim.setLensMode( args.lensmode )
     if args.modelmode:
-        sim.setModelMode( args.lensmode )
+        sim.setModelMode( args.modelmode )
     if args.chi:
         sim.setCHI( float(args.chi) )
     if args.einsteinradius:
