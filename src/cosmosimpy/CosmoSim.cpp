@@ -132,13 +132,15 @@ void CosmoSim::initLens() {
          sim = new PointMassLens(centred) ;
          break ;
        case CSIM_LENS_PURESAMPLED_SIS:
-         std::cout << "Running Pure Sampled SIS Lens (mode=" << modelmode << ")\n" ;
-         sim = new PureSampledModel(centred) ;
+         std::cout << "Running Raytrace SIS Lens (mode=" << modelmode << ")\n" ;
+         sim = new RaytraceModel(centred) ;
+         lens = new SampledPsiFunctionLens( psilens ) ;
+         lens->setFile(filename) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
-         std::cout << "Running Pure Sampled SIS Lens (mode=" << modelmode << ")\n" ;
-         sim = new PureSampledModel(centred) ;
+         std::cout << "Running Raytrace SIS Lens (mode=" << modelmode << ")\n" ;
+         sim = new RaytraceModel(centred) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
