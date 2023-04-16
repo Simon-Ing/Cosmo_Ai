@@ -26,7 +26,8 @@ void SampledRouletteLens::setLens( Lens *l ) {
 
 void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
-   cv::Point2d xi1 = lens->getXi( chieta) ;
+   lens->updatePsi() ;
+   cv::Point2d xi1 = lens->getXi( chieta ) ;
    setNu( xi1/CHI ) ;
 }
 void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
