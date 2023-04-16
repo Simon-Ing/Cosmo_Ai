@@ -4,7 +4,6 @@ set(SimLibFiles
         simlib/SampledPsiFunctionLens.cpp
         simlib/Lens.cpp
         simlib/PsiFunctionLens.cpp
-        simlib/PsiFunctionModel.cpp
         simlib/SIS.cpp
         simlib/PureSampledModel.cpp
 	simlib/RouletteModel.cpp
