@@ -95,13 +95,13 @@ void RouletteModel::calculateAlphaBeta() {
     std::cout << "RouletteModel calculateAlphaBeta done\n" ;
 }
 
-void RouletteAbstractLens::updateApparentAbs( ) {
+void RouletteModel::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
    lens->updatePsi() ;
    cv::Point2d xi1 = lens->getXi( chieta ) ;
    setNu( xi1/CHI ) ;
 }
-void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
+void RouletteModel::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
    cv::Mat psi, psiX, psiY ;
 

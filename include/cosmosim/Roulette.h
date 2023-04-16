@@ -61,3 +61,4 @@ class SphereLens : public RouletteModel {
 };
 
 
+#endif /* ROULETTE_H */
