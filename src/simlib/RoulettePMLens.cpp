@@ -2,6 +2,19 @@
 
 #include "cosmosim/Roulette.h"
 
+RoulettePMLens::RoulettePMLens() :
+   RouletteModel::RouletteModel()
+{ 
+    std::cout << "Instantiating RoulettePMLens ... \n" ;
+    rotatedMode = true ;
+}
+RoulettePMLens::RoulettePMLens(bool centred) :
+   RouletteModel::RouletteModel(centred)
+{ 
+    std::cout << "Instantiating RoulettePMLens ... \n" ;
+    rotatedMode = true ;
+}
+
 /* The following is a default implementation for the point mass lens. 
  * It would be better to make the class abstract and move this definition to the 
  * subclass. */

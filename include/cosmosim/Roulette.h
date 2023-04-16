@@ -36,7 +36,8 @@ protected:
 
 class RoulettePMLens : public RouletteModel { 
 public:
-    using RouletteModel::RouletteModel ;
+    RoulettePMLens();
+    RoulettePMLens(bool);
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
