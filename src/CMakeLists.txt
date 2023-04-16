@@ -7,7 +7,6 @@ set(SimLibFiles
         simlib/PsiFunctionModel.cpp
         simlib/SIS.cpp
         simlib/PureSampledModel.cpp
-        simlib/SampledRouletteLens.cpp
 	simlib/RouletteModel.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp

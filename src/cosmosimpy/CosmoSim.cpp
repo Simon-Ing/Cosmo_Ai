@@ -145,7 +145,7 @@ void CosmoSim::initLens() {
          break ;
        case CSIM_LENS_SAMPLED_SIS:
          std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;
-         sim = new SampledRouletteLens(centred) ;
+         sim = new RouletteModel(centred) ;
          lens = new SampledPsiFunctionLens( psilens ) ;
          lens->setFile(filename) ;
          sim->setLens(lens) ;

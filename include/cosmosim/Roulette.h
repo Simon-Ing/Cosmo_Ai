@@ -28,6 +28,8 @@ protected:
     virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
 
+    virtual void setXi( cv::Point2d ) ;
+
     virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta();
 };
@@ -58,11 +60,4 @@ class SphereLens : public RouletteModel {
     void initAlphasBetas();
 };
 
-
-class SampledRouletteLens : public RouletteModel { 
-public:
-    using RouletteModel::RouletteModel ;
-protected:
-    virtual void setXi( cv::Point2d ) ;
-};
 

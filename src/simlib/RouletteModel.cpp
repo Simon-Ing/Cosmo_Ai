@@ -101,3 +101,19 @@ void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d xi1 = lens->getXi( chieta ) ;
    setNu( xi1/CHI ) ;
 }
+void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
+   cv::Point2d chieta, xy, ij ; 
+   cv::Mat psi, psiX, psiY ;
+
+   lens->updatePsi() ;
+   psi = lens->getPsi() ;
+   psiX = lens->getPsiX() ;
+   psiY = lens->getPsiY() ;
+   // gradient( -psi, psiX, psiY ) ;
+   ij = imageCoordinate( xi1, psi ) ;
+   xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
+   chieta = xi1 - xy ;
+
+   xi = xi1 ;
+   etaOffset = chieta/CHI - getEta() ;
+}
