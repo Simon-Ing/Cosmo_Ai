@@ -6,9 +6,6 @@
 #include "simaux.h"
 
 
-void PsiFunctionModel::updateApparentAbs( ) {
-    std::cout << "[PsiFunctionModel] updateApparentAbs() updates psi.\n" ;
-}
 void PsiFunctionModel::setPsiFunctionLens( PsiFunctionLens *l ) {
    lens = psilens = l ;
 }
