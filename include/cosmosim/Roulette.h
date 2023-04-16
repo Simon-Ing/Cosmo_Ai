@@ -14,6 +14,9 @@ using namespace SymEngine;
 
 class RouletteAbstractLens : public LensModel { 
 public:
+    RouletteAbstractLens();
+    RouletteAbstractLens(bool);
+
     using LensModel::LensModel ;
     virtual void setLens( Lens* ) ;
 protected:
@@ -58,19 +61,14 @@ class SphereLens : public RouletteAbstractLens {
 
 class SampledRouletteLens : public RouletteAbstractLens { 
 public:
-    SampledRouletteLens();
-    SampledRouletteLens(bool);
+    using RouletteAbstractLens::RouletteAbstractLens ;
 protected:
     virtual void setXi( cv::Point2d ) ;
 };
 
 class RouletteLens : public RouletteAbstractLens { 
   public:
-    RouletteLens();
-    RouletteLens(bool);
-
-  protected:
-  private:
+    using RouletteAbstractLens::RouletteAbstractLens ;
 
 };
 

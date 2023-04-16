@@ -13,12 +13,14 @@ SphereLens::SphereLens() :
    RouletteAbstractLens::RouletteAbstractLens()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
+    rotatedMode = true ;
     initAlphasBetas();
 }
 SphereLens::SphereLens(bool centred) :
    RouletteAbstractLens::RouletteAbstractLens(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
+    rotatedMode = true ;
     initAlphasBetas();
 }
 SphereLens::SphereLens(std::string fn, bool centred) :
@@ -26,6 +28,7 @@ SphereLens::SphereLens(std::string fn, bool centred) :
    RouletteAbstractLens::RouletteAbstractLens(centred)
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
+    rotatedMode = true ;
     initAlphasBetas();
 }
 void SphereLens::setFile( std::string fn ) {

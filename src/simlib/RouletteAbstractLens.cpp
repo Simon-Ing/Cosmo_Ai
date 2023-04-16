@@ -6,8 +6,20 @@
 #define alpha_(m,s)  ( NULL == this->lens ? alphas_val[m][s] : this->lens->getAlphaXi( m, s ) )
 #define beta_(m,s)  ( NULL == this->lens ? betas_val[m][s] : this->lens->getBetaXi( m, s ) )
 
+RouletteAbstractLens::RouletteAbstractLens() :
+   LensModel::LensModel()
+{ 
+    std::cout << "Instantiating RouletteAbstractLens ... \n" ;
+    rotatedMode = false ;
+}
+RouletteAbstractLens::RouletteAbstractLens(bool centred) :
+   LensModel::LensModel(centred)
+{ 
+    std::cout << "Instantiating RouletteAbstractLens ... \n" ;
+    rotatedMode = false ;
+}
 
-void SampledRouletteLens::setLens( Lens *l ) {
+void RouletteAbstractLens::setLens( Lens *l ) {
    std::cout << "[RouletteAbstractLens.setLens()]\n" ;
    lens = l ;
    lens->initAlphasBetas() ;

@@ -5,19 +5,6 @@
 #include <thread>
 #include "simaux.h"
 
-SampledRouletteLens::SampledRouletteLens() :
-   RouletteAbstractLens::RouletteAbstractLens()
-{ 
-    std::cout << "Instantiating SampledRouletteLens ... \n" ;
-    rotatedMode = false ;
-}
-SampledRouletteLens::SampledRouletteLens(bool centred) :
-   RouletteAbstractLens::RouletteAbstractLens(centred)
-{ 
-    std::cout << "Instantiating SampledRouletteLens ... \n" ;
-    rotatedMode = false ;
-}
-
 void SampledRouletteLens::setXi( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, ij ; 
    cv::Mat psi, psiX, psiY ;
