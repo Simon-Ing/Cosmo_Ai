@@ -33,6 +33,7 @@ public:
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
+    virtual void calculateAlphaBeta(); 
 };
 
 class SphereLens : public RouletteAbstractLens { 
