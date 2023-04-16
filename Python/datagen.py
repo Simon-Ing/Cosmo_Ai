@@ -32,7 +32,7 @@ def setParameters(sim,row):
         sim.setSourceParameters( row["sigma"],
             row.get("sigma2",-1), row.get("theta",-1) )
     if row.get("lens",None) != None:
-        sim.setLensMode( row["lens"] )
+        sim.setModelMode( row["lens"] )
     if row.get("chi",None) != None:
         sim.setCHI( row["chi"] )
     if row.get("einsteinR",None) != None:
@@ -154,7 +154,9 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nterms', default=10, help="Number of Roulettes terms")
     parser.add_argument('-Z', '--imagesize', default=400, help="image size")
 
-    parser.add_argument('-L', '--lensmode',
+    parser.add_argument('-l', '--lensmode',
+            default="PM", help="lens mode")
+    parser.add_argument('-L', '--modelmode',
             default="Point Mass (exact)", help="lens mode")
     parser.add_argument('-S', '--sourcemode',
             default="Spherical", help="source mode")
@@ -213,6 +215,8 @@ if __name__ == "__main__":
             float(args.sigma2), float(args.theta) )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
+    if args.modelmode:
+        sim.setModelMode( args.lensmode )
     if args.chi:
         sim.setCHI( float(args.chi) )
     if args.einsteinradius:

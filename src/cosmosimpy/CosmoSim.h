@@ -28,8 +28,8 @@ class CosmoSim {
 private:
     int size=512, basesize=512 ;
     double chi=0.5 ;
-    int lensmode=CSIM_LENS_PM, oldlensmode=CSIM_NOLENS, einsteinR=20 ;
-    int psimode=CSIM_PSI_SIS ;
+    int modelmode=CSIM_LENS_PM, oldmodelmode=CSIM_NOLENS, einsteinR=20 ;
+    int lensmode=CSIM_NOPSI_PM, oldlensmode=CSIM_NOPSI ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
@@ -60,7 +60,7 @@ public:
     void setBGColour(int);
 
     void setSourceMode(int);
-    void setLensFunction(int);
+    void setModelMode(int);
     void setLensMode(int);
     void setEinsteinR(double);
     void setSourceParameters(double,double,double);

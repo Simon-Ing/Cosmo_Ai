@@ -91,8 +91,8 @@ void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
+void CosmoSim::setModelMode(int m) { modelmode = m ; }
 void CosmoSim::setLensMode(int m) { lensmode = m ; }
-void CosmoSim::setLensFunction(int m) { psimode = m ; }
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
@@ -100,9 +100,9 @@ void CosmoSim::initLens() {
    PsiFunctionModel *psisim = NULL ;
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
-   if ( lensmode == oldlensmode ) return ;
+   if ( modelmode == oldmodelmode ) return ;
    if ( sim ) delete sim ;
-   switch ( psimode ) {
+   switch ( lensmode ) {
        case CSIM_PSI_SIS:
           lens = psilens = new SIS() ;
           lens->setFile(filename) ;
@@ -115,40 +115,40 @@ void CosmoSim::initLens() {
          std::cout << "No such lens model!\n" ;
          throw NotImplemented();
    }
-   switch ( lensmode ) {
+   switch ( modelmode ) {
        case CSIM_LENS_SPHERE:
-         std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running SphereLens (mode=" << modelmode << ")\n" ;
          sim = new SphereLens(filename,centred) ;
          break ;
        case CSIM_LENS_PM_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
-                   << lensmode << ")\n" ;
+                   << modelmode << ")\n" ;
          sim = new RoulettePMLens(centred) ;
          break ;
        case CSIM_LENS_PM:
-         std::cout << "Running Point Mass Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Point Mass Lens (mode=" << modelmode << ")\n" ;
          sim = new PointMassLens(centred) ;
          break ;
        case CSIM_LENS_PURESAMPLED_SIS:
-         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << modelmode << ")\n" ;
          sim = new PureSampledModel(centred) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_PSIFUNCTION_SIS:
-         std::cout << "Running Pure Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Pure Sampled SIS Lens (mode=" << modelmode << ")\n" ;
          psisim = new PsiFunctionModel(centred) ;
          psisim->setPsiFunctionLens( psilens ) ;
          sim = psisim ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
-         std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;
          sim = new SampledRouletteLens(centred) ;
          lens = new SampledPsiFunctionLens( psilens ) ;
          lens->setFile(filename) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_ROULETTE_SIS:
-         std::cout << "Running Sampled SIS Lens (mode=" << lensmode << ")\n" ;
+         std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;
          sim = new RouletteLens(centred) ;
          sim->setLens(lens) ;
          break ;
@@ -156,7 +156,7 @@ void CosmoSim::initLens() {
          std::cout << "No such lens mode!\n" ;
          throw NotImplemented();
     }
-    oldlensmode = lensmode ;
+    oldmodelmode = modelmode ;
     return ;
 }
 void CosmoSim::setEinsteinR(double r) { einsteinR = r ; }

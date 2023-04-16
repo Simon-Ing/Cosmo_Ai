@@ -126,6 +126,8 @@ class CosmoSim(cs.CosmoSim):
         return super().maskImage( float(scale) )
     def setLensMode(self,s):
         return super().setLensMode( int( modelDict[s] ) ) 
+    def setModelMode(self,s):
+        return super().setModelMode( int( modelDict[s] ) ) 
     def setBGColour(self,s):
         self.bgcolour = s
     def simThread(self):
