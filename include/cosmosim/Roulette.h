@@ -24,6 +24,7 @@ protected:
     virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
 
+    virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta();
 };
 
