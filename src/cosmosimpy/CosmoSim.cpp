@@ -325,7 +325,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBetaXi", &CosmoSim::getBetaXi)
         ;
 
-    pybind11::enum_<PsiSpec>(m, "SourceSpec") 
+    pybind11::enum_<PsiSpec>(m, "PsiSpec") 
        .value( "SIS", CSIM_PSI_SIS )
        .value( "PM", CSIM_NOPSI_PM ) ;
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
