@@ -33,53 +33,7 @@ void SampledRouletteLens::calculateAlphaBeta() {
 
 void SampledRouletteLens::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
-   cv::Point2d xi0, xi1 = chieta ;
-   cv::Mat psi, psiX, psiY ;
-   int cont = 1, count = 0, maxcount = 200 ;
-   double dist, dist0=pow(10,12), threshold = 0.02 ;
-
-   /* Get the lens potential */
-   lens->updatePsi() ;
-   psi = lens->getPsi() ;
-   int ncols=psi.cols, nrows=psi.rows ;
-
-   std::cout << "[SampledRouletteLens] updateApparentAbs()"
-             << " chi*eta = " << chieta 
-             << "; size: " << psi.size() << "\n" ;
-
-   /** Differentiate the lens potential */
-   gradient( -psi, psiX, psiY ) ;
-   std::cout << "Types: " << psiX.type() << "/" << psiY.type() 
-             << "/" << psi.type() << "\n" ;
-
-   /* Diagnostic output */
-   double minVal, maxVal;
-   cv::Point minLoc, maxLoc;
-   minMaxLoc( psiX, &minVal, &maxVal, &minLoc, &maxLoc ) ;
-   std::cout << "[SampledRouletteLens] psiX min=" << minVal << "; max=" << maxVal << "\n" ;
-   minMaxLoc( psiY, &minVal, &maxVal, &minLoc, &maxLoc ) ;
-   std::cout << "[SampledRouletteLens] psiY min=" << minVal << "; max=" << maxVal << "\n" ;
-   
-   /** This block makes a fix-point iteration to find \xi. */
-   while ( cont ) {
-      xi0 = xi1 ;
-      cv::Point2d ij = imageCoordinate( xi0, psi ) ;
-      double x = -psiY.at<double>( ij ), y = -psiX.at<double>( ij ) ;
-      std::cout << "[SampledRouletteLens] Fix pt it'n " << count
-           << "; xi0=" << xi0 << "; Delta eta = " << x << ", " << y << "\n" ;
-      xi1 = chieta + cv::Point2d( x, y ) ;
-      dist = cv::norm( cv::Mat(xi1-xi0), cv::NORM_L2 ) ;
-      if ( dist < threshold ) cont = 0 ;
-      if ( ++count > maxcount ) cont = 0 ;
-   }
-   if ( dist > threshold ) {
-      std::cout << "Bad approximation of xi: xi0=" << xi0 
-            << "; xi1=" << xi1 << "; dist=" << dist 
-            << "; nu=" << getNu() << "\n" ;
-   } else {
-      std::cout << "[SampledRouletteLens] Good approximation: xi0=" << xi0 
-            << "; xi1=" << xi1 << "; nu=" <<  getNu() << "\n" ;
-   }
+   cv::Point2d xi1 = lens->getXi( chieta) ;
    setNu( xi1/CHI ) ;
 }
 void SampledRouletteLens::setXi( cv::Point2d xi1 ) {

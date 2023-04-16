@@ -123,6 +123,9 @@ double Lens::getBetaXi( int m, int s ) {
 double Lens::getXiAbs( double e ) {
    throw NotImplemented() ;
 }
+cv::Point2d Lens::getXi( cv::Point2d e ) {
+   throw NotImplemented() ;
+}
 void Lens::setNterms( int n ) {
    nterms = n ;
 }

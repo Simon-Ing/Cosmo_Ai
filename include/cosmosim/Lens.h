@@ -54,12 +54,13 @@ public:
     double getBetaXi( int m, int s ) ;
 
     virtual double getXiAbs( double ) ;
+    virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 
 class SampledLens : public Lens {
 public:
     virtual void calculateAlphaBeta( cv::Point2d xi );
-    virtual double getXiAbs( double ) ;
+    virtual cv::Point2d getXi( cv::Point2d ) ;
 } ;
 
 class PsiFunctionLens : public Lens {

@@ -64,13 +64,11 @@ class SampledRouletteLens : public RouletteAbstractLens {
 public:
     SampledRouletteLens();
     SampledRouletteLens(bool);
+    virtual void setLens( Lens* ) ;
 protected:
     virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
     virtual void setXi( cv::Point2d ) ;
-
-  public:
-    virtual void setLens( Lens* ) ;
 };
 
 class RouletteLens : public RouletteAbstractLens { 
@@ -78,7 +76,6 @@ class RouletteLens : public RouletteAbstractLens {
     RouletteLens();
     RouletteLens(bool);
     virtual void setLens( Lens* ) ;
-    using RouletteAbstractLens::RouletteAbstractLens ;
 
   protected:
     virtual void calculateAlphaBeta();
