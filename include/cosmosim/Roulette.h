@@ -23,6 +23,8 @@ protected:
     virtual void markMask( cv::InputOutputArray ) ;
     virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
+
+    virtual void calculateAlphaBeta();
 };
 
 class RoulettePMLens : public RouletteAbstractLens { 
@@ -31,6 +33,7 @@ public:
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
+    virtual void calculateAlphaBeta(); 
 };
 
 class SphereLens : public RouletteAbstractLens { 
@@ -49,28 +52,16 @@ class SphereLens : public RouletteAbstractLens {
     std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
-class RouletteSISLens : public SphereLens { 
-  protected:
-    virtual void updateApparentAbs() ;
-    virtual void setXi( cv::Point2d ) ;
-  public:
-    RouletteSISLens();
-    RouletteSISLens(bool);
-    RouletteSISLens(std::string,bool);
-};
 
 
 class SampledRouletteLens : public RouletteAbstractLens { 
 public:
     SampledRouletteLens();
     SampledRouletteLens(bool);
+    virtual void setLens( Lens* ) ;
 protected:
-    virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
     virtual void setXi( cv::Point2d ) ;
-
-  public:
-    virtual void setLens( Lens* ) ;
 };
 
 class RouletteLens : public RouletteAbstractLens { 
@@ -78,10 +69,8 @@ class RouletteLens : public RouletteAbstractLens {
     RouletteLens();
     RouletteLens(bool);
     virtual void setLens( Lens* ) ;
-    using RouletteAbstractLens::RouletteAbstractLens ;
 
   protected:
-    virtual void calculateAlphaBeta();
     virtual void updateApparentAbs() ;
   private:
 

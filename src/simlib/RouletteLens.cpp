@@ -28,13 +28,6 @@ void RouletteLens::setLens( Lens *l ) {
     lens->initAlphasBetas() ;
 } 
 
-void RouletteLens::calculateAlphaBeta() {
-    std::cout << "RouletteLens calculateAlphaBeta\n" ;
-    cv::Point2d xi = getXi() ;
-
-    lens->calculateAlphaBeta( xi ) ;
-}
-
 
 void RouletteLens::updateApparentAbs( ) {
     double r = lens->getXiAbs( getEtaAbs()*CHI )/CHI ;

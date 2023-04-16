@@ -17,11 +17,13 @@ def centreImage(im):
   m,n = grey.shape
   ps = [ (x,y) for x in range(m) for y in range(n) ]
   s = grey.sum()
-  xs = [ np.sum(x*grey[x,y]) for (x,y) in ps ]
-  ys = [ np.sum(y*grey[x,y]) for (x,y) in ps ]
-  xm = int(round(sum(xs)/s - m/2))
-  ym = int(round(sum(ys)/s - n/2))
-  
+  if s == 0:
+      (xm,ym) = (0,0)
+  else:
+      xs = [ np.sum(x*grey[x,y]) for (x,y) in ps ]
+      ys = [ np.sum(y*grey[x,y]) for (x,y) in ps ]
+      xm = int(round(sum(xs)/s - m/2))
+      ym = int(round(sum(ys)/s - n/2))
 
   centred = np.zeros( im.shape )
   c1 = np.zeros( im.shape )

@@ -34,3 +34,7 @@ void RoulettePMLens::updateApparentAbs( ) {
     setNu( tentativeCentre =  cv::Point2d( getEtaAbs()/2 + root, 0 ) ) ;
     apparentAbs2 = getEtaAbs()/2 - root ;
 }
+
+void RoulettePMLens::calculateAlphaBeta() {
+    std::cout << "RoulettePMLens calculateAlphaBeta does nothing \n" ;
+}
