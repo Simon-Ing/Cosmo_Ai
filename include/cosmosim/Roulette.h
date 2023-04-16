@@ -52,15 +52,6 @@ class SphereLens : public RouletteAbstractLens {
     std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
-class RouletteSISLens : public SphereLens { 
-  protected:
-    virtual void updateApparentAbs() ;
-    virtual void setXi( cv::Point2d ) ;
-  public:
-    RouletteSISLens();
-    RouletteSISLens(bool);
-    RouletteSISLens(std::string,bool);
-};
 
 
 class SampledRouletteLens : public RouletteAbstractLens { 

@@ -120,10 +120,6 @@ void CosmoSim::initLens() {
          std::cout << "Running SphereLens (mode=" << lensmode << ")\n" ;
          sim = new SphereLens(filename,centred) ;
          break ;
-       case CSIM_LENS_SIS_ROULETTE:
-         std::cout << "Running Roulette SIS Lens (mode=" << lensmode << ")\n" ;
-         sim = new RouletteSISLens(filename,centred) ;
-         break ;
        case CSIM_LENS_PM_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << lensmode << ")\n" ;
@@ -337,7 +333,6 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SIS", CSIM_LENS_SPHERE )
        .value( "Ellipse", CSIM_LENS_ELLIPSE )
        .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
-       .value( "SISRoulettes", CSIM_LENS_SIS_ROULETTE ) 
        .value( "PointMass", CSIM_LENS_PM )
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
