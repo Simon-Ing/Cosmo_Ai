@@ -190,7 +190,9 @@ amplitudes are generated; 5 should give about 24 scalar values.
 
 The amplitudes are labeled `alpha[`$s$,$m$`]` and `beta[`$s$,$m$`]` 
 in the outout CSV file.  One should focus on predicting the amplitudes
-for low values of $m$ first.
+for low values of $m$ first.  The file also reproduces the source
+parameters, and the centre of mass $(x,y)$ in the original co-ordinate
+system using image coordinates with the origin in the upper left corner.
 
 The most interesting lens model for this exercise is PsiFunctionSIS (fs),
 which gives the most accurate computations.  The roulette amplitudes have
@@ -199,7 +201,7 @@ does not work for «SIS (rotated)» which is a legacy implementation of
 the roulette model with SIS and functionally equivalent to «Roulette SIS«
 (rs).
 
-**Warning** This is still for testing.
+**Warning** This has yet to be tested properly.
 
 # Versions
 
