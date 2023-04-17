@@ -159,6 +159,48 @@ to use with the `--csvfile` option above.
   for easier display.
     + This has not been tested with the latest updates.
 
+# Use cases
+
+## Training sets for roulette amplitudes
+
+The datasets generated from `datasetgen.py` give the parameters for the 
+lens and the source, as well as the image file.
+This allows us to train a machine learning model to identify the lens
+parameters, *assuming* a relatively simple lens model.
+It is still a long way to go to map cluster lenses.
+
+An alternative approach is to try to estimate the effect (lens potential)
+in a neighbourhood around a point in the image.  For instance, we may want
+to estimate the roulette amplitudes in the centre of the image.
+The `datagen.py` script can generate a CSV file containing these data along
+with the image, as follows:
+
+```sh
+mkdir images
+python3 Python/datagen.py -C -Z 400 --csvfile Datasets/debug.csv \
+        --directory images --outfile images.csv --nterms 5
+```
+
+The images should be centred (`-C`); the amplitudes may not be
+meaningful otherwise.  The `--directory` flag puts images in
+the given directory which must exist.  The image size is given by
+`-Z` and is square.  The input and output files go without saying.
+The number of terms (`--nterms`) is the maximum $m$ for which the
+amplitudes are generated; 5 should give about 24 scalar values.
+
+The amplitudes are labeled `alpha[`$s$,$m$`]` and `beta[`$s$,$m$`]` 
+in the outout CSV file.  One should focus on predicting the amplitudes
+for low values of $m$ first.
+
+The most interesting lens model for this exercise is PsiFunctionSIS (fs),
+which gives the most accurate computations.  The roulette amplitudes have
+not been implemented for any of the point mass lenses yet, and it also
+does not work for «SIS (rotated)» which is a legacy implementation of
+the roulette model with SIS and functionally equivalent to «Roulette SIS«
+(rs).
+
+**Warning** This is still for testing.
+
 # Versions
 
 The main branches are
