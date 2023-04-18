@@ -10,7 +10,7 @@ from tkinter import *
 from tkinter import ttk
 import math
 
-from CosmoSim import lensValues, sourceValues
+from CosmoSim import modelValues, sourceValues
 
 # Classes
 class IntSlider:
@@ -175,19 +175,19 @@ class LensPane(ttk.Frame):
         """
         super().__init__(root, *a, **kw)
         self.sim = sim 
-        self.lensValues = list(lensValues.keys())
+        self.modelValues = list(modelValues.keys())
 
         modeVar = StringVar()
         self.lensVar = modeVar
-        modeVar.set( self.lensValues[0] )
+        modeVar.set( self.modelValues[0] )
         self.lensLabel = ttk.Label( self, text="Lens Model",
                 style="Std.TLabel" )
         self.lensSelector = ttk.Combobox( self, 
                 textvariable=modeVar,
-                values=self.lensValues )
+                values=self.modelValues )
         self.lensLabel.grid(column=0, row=1, sticky=E )
         self.lensSelector.grid(column=1, row=1)
-        self.lensSelector.set( self.lensValues[0] )
+        self.lensSelector.set( self.modelValues[0] )
 
         self.einsteinSlider = IntSlider( self,
             text="Einstein Radius", row=2,
