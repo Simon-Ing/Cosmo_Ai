@@ -14,8 +14,9 @@ def centreImage(im):
      grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
   else:
       grey = im
+  grey = grey.astype(np.float64)
   m,n = grey.shape
-  s = grey.astype(np.float64).sum()
+  s = grey.sum()
 
   if s == 0: 
       centred = im
