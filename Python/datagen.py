@@ -224,6 +224,7 @@ if __name__ == "__main__":
         sim.setEinsteinR( float(args.einsteinradius) )
     if args.imagesize:
         sim.setImageSize( int(args.imagesize) )
+        sim.setResolution( row["imagesize"] )
     if args.nterms:
         sim.setNterms( int(args.nterms) )
     if args.outfile:
