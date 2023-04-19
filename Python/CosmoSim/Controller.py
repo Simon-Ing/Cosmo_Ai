@@ -216,7 +216,7 @@ class LensPane(ttk.Frame):
         return self.maskModeVar
     def push(self,*a,runsim=True):
         print( "[CosmoGUI] Push lens parameters" )
-        self.sim.setLensMode(self.lensVar.get())
+        self.sim.setModelMode(self.lensVar.get())
         self.sim.setNterms( self.ntermsSlider.get() )
         self.sim.setCHI( self.chiSlider.get() )
         self.sim.setEinsteinR( self.einsteinSlider.get())
