@@ -39,6 +39,7 @@ def setParameters(sim,row):
         sim.setEinsteinR( row["einsteinR"] )
     if row.get("imagesize",None) != None:
         sim.setImageSize( row["imagesize"] )
+        sim.setResolution( row["imagesize"] )
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
 
