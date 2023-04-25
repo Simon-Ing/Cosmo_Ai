@@ -31,22 +31,21 @@ matter of the Universe.  This is work in progress.
 
 ## Building from Source
 
-Provided a full C++ installation is available with cmake and conan,
-the system is built with
+The build stack uses conan for dependencies.  It needs to be installed and configured
+to use the C++11 ABI.
+(See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
+for further information.)
+```
+pip3 install conan
+conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
+conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
+```
 
+To build the C++ library and the Python library (wrapper), we use cmake as follows.
 ```sh
 conan install . -if build
 cmake . -B build
 cmake --build build
-```
-
-This builds the C++ library and the Python library (wrapper).
-The [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
-recommends the following settings (before building):
-
-```
-conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
-conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
 ```
 
 There are recurring problems with broken dependencies on conan.  This seems
