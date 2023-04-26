@@ -31,12 +31,12 @@ matter of the Universe.  This is work in progress.
 
 ## Building from Source
 
-The build stack uses conan for dependencies.  It needs to be installed and configured
-to use the C++11 ABI.
+The build stack uses conan for dependencies.  It needs to be installed,
+in version 1.59, and configured to use the C++11 ABI.
 (See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
 for further information.)
 ```
-pip3 install conan
+pip3 install conan==1.59
 conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
 conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
 ```
