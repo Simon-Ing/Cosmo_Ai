@@ -51,6 +51,10 @@ cmake --build build
 There are recurring problems with broken dependencies on conan.  This seems
 to be out of our control.  The building scripts suddenly break even with no
 change on our side.  
+For instance, it may be necessary explicitly to build OpenCV:
+```sh
+conan install . -if build --build=opencv
+```
 
 ### Dependencies
 
