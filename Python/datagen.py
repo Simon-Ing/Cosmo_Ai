@@ -123,7 +123,7 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
     if args.reflines:
         drawAxes(im)
 
-    fn = os.path.join(args.directory,"image-" + str(name) + ".png" ) 
+    fn = os.path.join(args.directory, str(name) + ".png" ) 
     cv.imwrite(fn,im)
 
     if actual:
@@ -244,7 +244,9 @@ if __name__ == "__main__":
         print( "columns:", cols )
         for index,row in frame.iterrows():
             setParameters( sim, row )
-            makeSingle(sim,args,name=row["index"],row=row,outstream=outstream)
+            print( "index", row["index"] )
+            namestem=row["filename"].split(".")[0]
+            makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
     else:
         makeSingle(sim,args)
     sim.close()
