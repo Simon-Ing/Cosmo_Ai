@@ -16,7 +16,7 @@ from CosmoSim import CosmoSim,getMSheaders
 
 import pandas as pd
 
-outcols = [ "index", "filename", "source", "chi", "sigma", "sigma2", "theta" ]
+outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
 
 def setParameters(sim,row):
     print( row ) 
@@ -46,7 +46,7 @@ def setParameters(sim,row):
 def makeSingle(sim,args,name=None,row=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
-    centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent)
+    centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent,original=args.original,reflines=args.reflines)
     if args.join:
         # sim.setMaskMode(False)
         sim.runSim()
@@ -111,7 +111,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         outstream.write( line )
 
 
-def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
+def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False,original=False,reflines=False):
     im = sim.getDistortedImage( 
                     reflines=False,
                     showmask=args.showmask
@@ -119,7 +119,12 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False):
 
     (cx,cy) = 0,0
     if args.centred:
-        (im,(cx,cy)) = centreImage(im)
+        (centreIm,(cx,cy)) = centreImage(im)
+        if original:
+           fn = os.path.join(args.directory,"original-" + str(name) + ".png" ) 
+           if reflines: drawAxes(im)
+           cv.imwrite(fn,im)
+        im = centreIm
     if args.reflines:
         drawAxes(im)
 
@@ -191,6 +196,7 @@ if __name__ == "__main__":
     parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
     parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
     parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
+    parser.add_argument('-U', '--original',action='store_true',help="write original image before centring")
     parser.add_argument('-o', '--outfile',
             help="Output CSV file")
     parser.add_argument('-i', '--csvfile',
@@ -229,7 +235,7 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( outcols + [ "x", "y" ] + getMSheaders(int(args.nterms)) )
+        headers = ",".join( outcols + [ "centreX", "centreY" ] + getMSheaders(int(args.nterms)) )
         headers += "\n"
         outstream.write(headers)
     else:
