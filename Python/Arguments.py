@@ -59,3 +59,28 @@ class CosmoParser(argparse.ArgumentParser):
             help="Output CSV file")
     self.add_argument('-i', '--csvfile',
             help="Dataset to generate (CSV file)")
+
+def setParameters(sim,row):
+    print( row ) 
+    if row.get("y",None) != None:
+        print( "XY", row["x"], row["y"] )
+        sim.setXY( row["x"], row["y"] )
+    elif row.get("phi",None) != None:
+        print( "Polar", row["x"], row["phi"] )
+        sim.setPolar( row["x"], row["phi"] )
+    if row.get("source",None) != None:
+        sim.setSourceMode( row["source"] )
+    if row.get("sigma",None) != None:
+        sim.setSourceParameters( row["sigma"],
+            row.get("sigma2",-1), row.get("theta",-1) )
+    if row.get("lens",None) != None:
+        sim.setModelMode( row["lens"] )
+    if row.get("chi",None) != None:
+        sim.setCHI( row["chi"] )
+    if row.get("einsteinR",None) != None:
+        sim.setEinsteinR( row["einsteinR"] )
+    if row.get("imagesize",None) != None:
+        sim.setImageSize( row["imagesize"] )
+        sim.setResolution( row["imagesize"] )
+    if row.get("nterms",None) != None:
+        sim.setNterms( row["nterms"] )
