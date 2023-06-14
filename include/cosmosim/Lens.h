@@ -41,7 +41,7 @@ public:
     cv::Mat getMassImage() const ;  // Discouraged
 
 
-    void initAlphasBetas();
+    virtual void initAlphasBetas();
     virtual void calculateAlphaBeta( cv::Point2d xi );
     void setFile(std::string) ;
     void setNterms(int) ;
