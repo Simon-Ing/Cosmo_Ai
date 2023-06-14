@@ -69,24 +69,14 @@ if __name__ == "__main__":
         raise Exception( "No CSV file given; the --csvfile option is mandatory." )
 
     print( "Instantiate Simulator ... " )
-    if args.amplitudes:
-       sim = CosmoSim(fn=args.amplitudes)
-    elif args.nterms:
-       sim = CosmoSim(maxm=int(args.nterms))
-    else:
-       sim = CosmoSim()
+    sim = CosmoSim()
     print( "Done" )
 
-    if args.nterms:
-        sim.setNterms( int(args.nterms) )
-
-    sim.setLensMode( args.lensmode )
-    sim.setModelMode( args.modelmode )
+    # sim.setLensMode( args.lensmode )
+    # sim.setModelMode( args.modelmode )
 
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
-    sim.setSourceParameters( float(args.sigma),
-            float(args.sigma2), float(args.theta) )
 
     if args.imagesize:
         sim.setImageSize( int(args.imagesize) )
@@ -99,10 +89,15 @@ if __name__ == "__main__":
     cols = frame.columns
     print( "columns:", cols )
 
+    # Step 1.  Analyse header.
+
+    # sim.setNterms( int(args.nterms) )
+
     for index,row in frame.iterrows():
             setParameters( sim, row )
             print( "index", row["index"] )
             namestem=row["filename"].split(".")[0]
+            # sim.setSourceParameters( float(args.sigma), float(args.sigma2), float(args.theta) )
             makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
 
     sim.close()
