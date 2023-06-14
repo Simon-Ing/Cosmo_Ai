@@ -19,6 +19,23 @@ import pandas as pd
 outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
 
 
+def parseAB(s):
+   a = t.split("[")
+   if len(a) == 0:
+       return None
+   elif not a in [ "alpha", "beta" ]:
+       return None
+   a, tt = a
+   idxstring, = tt.split("]")
+   l = [ int(i) for i in idx.split(",") ]
+   return (a,tuple(l))
+
+def parseCols(l):
+    r = [ parseAB(s) for s in l ]
+    r = filter( lambda x : return x != None, r )
+    return r
+
+
 def makeSingle(sim,args,name=None,row=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
