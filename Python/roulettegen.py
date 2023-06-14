@@ -82,6 +82,14 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
     return (cx,cy)
 
 def setAmplitudes( sim, row, coefs ): pass
+    maxm = coefs.getNterms()
+    for m in range(maxm+1):
+        for s in range((m+1)%2, m+2, 2):
+            alpha = row[f"alpha[{m},{s}]"]
+            beta = row[f"beta[{m},{s}]"]
+            print( f"alpha[{s},{m}] = {alpha}\t\tbeta[{s},{m}] = {beta}." )
+            sim.setAlpha( m, s, alpha )
+            sim.setBeta( m, s, beta )
 
 
 if __name__ == "__main__":
