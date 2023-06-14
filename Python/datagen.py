@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from CosmoSim.Image import centreImage, drawAxes
 from CosmoSim import CosmoSim,getMSheaders
 
-from Arguments import CosmoParser
+from Arguments import CosmoParser, setParameters
 import pandas as pd
 
 outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
