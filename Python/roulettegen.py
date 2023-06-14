@@ -16,21 +16,33 @@ from CosmoSim import CosmoSim,getMSheaders
 from Arguments import CosmoParser, setParameters
 import pandas as pd
 
-outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
+outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR",
+            "sigma", "sigma2", "theta", "x", "y" ]
 
+class RouletteAmplitudes:
+    """Parse the CSV headers to find which amplitudes are defined in the file.
+    Making it a class may be excessive, but done in case we need other information
+    extracted from the process.
+    """
+    def __init__(self,s):
+        self.coeflist = parseCols(s)
+        self.maxm = max( [ m for (_,_,(m,_)) in self.coeflist ] )
+    def getNterms(self): return self.maxm
 
 def parseAB(s):
-   a = t.split("[")
-   if len(a) == 0:
-       return None
-   elif not a in [ "alpha", "beta" ]:
-       return None
-   a, tt = a
-   idxstring, = tt.split("]")
-   l = [ int(i) for i in idx.split(",") ]
-   return (a,tuple(l))
+    """Auxiliary function for RouletteAmplitudes."""
+    a = t.split("[")
+    if len(a) == 0:
+        return None
+    elif not a in [ "alpha", "beta" ]:
+        return None
+    a, tt = a
+    idxstring, = tt.split("]")
+    l = [ int(i) for i in idx.split(",") ]
+    return (a,s,tuple(l))
 
 def parseCols(l):
+    """Auxiliary function for RouletteAmplitudes."""
     r = [ parseAB(s) for s in l ]
     r = filter( lambda x : return x != None, r )
     return r
@@ -39,10 +51,7 @@ def parseCols(l):
 def makeSingle(sim,args,name=None,row=None,outstream=None):
     if name == None: name = args.name
     sim.runSim()
-    centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent,original=args.original,reflines=args.reflines)
 
-
-def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False,original=False,reflines=False):
     im = sim.getDistortedImage( 
                     reflines=False,
                     showmask=args.showmask
@@ -51,7 +60,7 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False,orig
     (cx,cy) = 0,0
     if args.centred:
         (centreIm,(cx,cy)) = centreImage(im)
-        if original:
+        if args.original:
            fn = os.path.join(args.directory,"original-" + str(name) + ".png" ) 
            if reflines: drawAxes(im)
            cv.imwrite(fn,im)
@@ -62,11 +71,11 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False,orig
     fn = os.path.join(args.directory, str(name) + ".png" ) 
     cv.imwrite(fn,im)
 
-    if actual:
+    if args.actual:
        fn = os.path.join(args.directory,"actual-" + str(name) + ".png" ) 
        im = sim.getActualImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-    if apparent:
+    if args.apparent:
        fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
@@ -105,10 +114,10 @@ if __name__ == "__main__":
     frame = pd.read_csv(args.csvfile)
     cols = frame.columns
     print( "columns:", cols )
+    
+    coefs = RouletteAmplitudes(cols)
 
-    # Step 1.  Analyse header.
-
-    # sim.setNterms( int(args.nterms) )
+    sim.setNterms( coefs.getNterms() )
 
     for index,row in frame.iterrows():
             setParameters( sim, row )
