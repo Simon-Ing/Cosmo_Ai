@@ -105,7 +105,8 @@ double Lens::getBeta( cv::Point2d xi, int m, int s ) {
 }
 
 void Lens::calculateAlphaBeta( cv::Point2d xi ) {
-    std::cout << "[Lens.calculateAlphaBeta()] " << nterms << "; " << einsteinR << " - " << xi << "\n"  ;
+    std::cout << "[Lens.calculateAlphaBeta()] " << nterms << "; " 
+              << einsteinR << " - " << xi << "\n"  ;
 
     // calculate all amplitudes for given xi, einsteinR
     for (int m = 1; m <= nterms; m++){

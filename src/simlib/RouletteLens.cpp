@@ -22,19 +22,6 @@ void RouletteLens::calculateAlphaBeta( cv::Point2d xi ) {
 
 void RouletteLens::initAlphasBetas() { }
 
-double RouletteLens::getAlphaXi( int m, int s ) {
-   return alphas_val[m][s] ;
-}
-double RouletteLens::getBetaXi( int m, int s ) {
-   return betas_val[m][s] ;
-}
-void RouletteLens::setNterms( int n ) {
-   nterms = n ;
-}
-
-void setAlphaXi( int, int, double ) ;
-void setBetaXi( int, int, double ) ;
-
 void RouletteLens::setAlphaXi( int m, int s, double val ) {
    alphas_val[m][s] = 0 ;
 }
