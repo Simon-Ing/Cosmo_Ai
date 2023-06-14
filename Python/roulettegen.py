@@ -81,6 +81,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
        cv.imwrite(fn,im)
     return (cx,cy)
 
+def setAmplitudes( sim, row, coefs ): pass
 
 
 if __name__ == "__main__":
@@ -116,14 +117,15 @@ if __name__ == "__main__":
     print( "columns:", cols )
     
     coefs = RouletteAmplitudes(cols)
-
     sim.setNterms( coefs.getNterms() )
+    print( "Number of roulette terms: ", coefs.getNterms() )
 
     for index,row in frame.iterrows():
-            setParameters( sim, row )
+            setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )
+            sim.setSourceParameters( float(row["sigma"], float(row["sigma2"], 
+                                     float(row["theta"] ) 
             namestem=row["filename"].split(".")[0]
-            # sim.setSourceParameters( float(args.sigma), float(args.sigma2), float(args.theta) )
             makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
 
     sim.close()
