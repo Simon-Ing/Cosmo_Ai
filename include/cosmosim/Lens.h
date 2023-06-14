@@ -105,5 +105,4 @@ public:
     virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 
-
 #endif // LENS_H
