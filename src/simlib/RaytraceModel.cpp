@@ -1,6 +1,6 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
-#include "cosmosim/SampledLens.h"
+#include "cosmosim/Simulator.h"
 
 #include <thread>
 #include "simaux.h"
