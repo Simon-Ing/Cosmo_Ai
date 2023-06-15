@@ -342,7 +342,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "PointMass", CSIM_LENS_PM )
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
-       .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
+       .value( "Raytrace", CSIM_LENS_PSIFUNCTION_SIS )
        .value( "RouletteSIS", CSIM_LENS_ROULETTE_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 
