@@ -20,14 +20,14 @@ modelDict = {
         "Sampled SIS" : LensSpec.SampledSIS,
         "PureSampled SIS" : LensSpec.PureSampledSIS,
         "Roulette SIS" : LensSpec.RouletteSIS,
-        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        "Raytrace" : LensSpec.Raytrace,
         "p" : LensSpec.PointMass,
         "p" : LensSpec.PointMass,
         "r" : LensSpec.PointMassRoulettes,
         "s" : LensSpec.SIS,
         "ss" : LensSpec.SampledSIS,
         "pss" : LensSpec.PureSampledSIS,
-        "fs" : LensSpec.PsiFunctionSIS,
+        "fs" : LensSpec.Raytrace,
         "rs" : LensSpec.RouletteSIS,
         }
 modelValues = {
@@ -36,7 +36,7 @@ modelValues = {
         "SIS (rotated)" : LensSpec.SIS,
         "Sampled SIS" : LensSpec.SampledSIS,
         "PureSampled SIS" : LensSpec.PureSampledSIS,
-        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
+        "Raytrace" : LensSpec.Raytrace,
         "Roulette SIS (new)" : LensSpec.RouletteSIS,
         }
 sourceDict = {
