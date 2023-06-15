@@ -10,10 +10,10 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-import argparse
 from CosmoSim.Image import centreImage, drawAxes
 from CosmoSim import CosmoSim,getMSheaders
 
+from Arguments import CosmoParser, setParameters
 import pandas as pd
 
 outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
@@ -140,67 +140,14 @@ def makeOutput(sim,args,name=None,rot=0,scale=1,actual=False,apparent=False,orig
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
     return (cx,cy)
+
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
+    parser = CosmoParser(
           prog = 'CosmoSim makeimage',
           description = 'Generaet an image for given lens and source parameters',
           epilog = '')
-
-    parser.add_argument('-x', '--x', default=0, help="x coordinate")
-    parser.add_argument('-y', '--y', default=0, help="y coordinate")
-    parser.add_argument('-T', '--phi', help="polar coordinate angle (phi)")
-
-    parser.add_argument('-s', '--sigma', default=20, help="source size (sigma)")
-    parser.add_argument('-2', '--sigma2', default=10, help="secondary source size (sigma2)")
-    parser.add_argument('-t', '--theta', default=45, help="source rotation angle (theta)")
-
-    parser.add_argument('-X', '--chi', default=50, help="lens distance ration (chi)")
-    parser.add_argument('-E', '--einsteinradius', default=20, help="Einstein radius")
-
-    parser.add_argument('-n', '--nterms', default=10, help="Number of Roulettes terms")
-    parser.add_argument('-Z', '--imagesize', default=400, help="image size")
-
-    parser.add_argument('-l', '--lensmode',
-            default="SIS", help="lens mode")
-    parser.add_argument('-L', '--modelmode',
-            default="Point Mass (exact)", help="lens mode")
-    parser.add_argument('-S', '--sourcemode',
-            default="Spherical", help="source mode")
-
-    parser.add_argument('-R', '--reflines',action='store_true',
-            help="Add reference (axes) lines")
-    parser.add_argument('-C', '--centred',action='store_true', help="centre image")
-    parser.add_argument('-M', '--mask',action='store_true',
-            help="Mask out the convergence circle")
-    parser.add_argument('-m', '--showmask',action='store_true',
-            help="Mark the convergence circle")
-
-    parser.add_argument('-N', '--name', default="test",
-            help="simulation name")
-    parser.add_argument('-D', '--directory',default="./",
-            help="directory path (for output files)")
-    parser.add_argument('-O', '--maskscale',default="0.9",
-            help="Scaling factor for the mask radius")
-    parser.add_argument('-c', '--components',default="6",
-            help="Number of components for joined image")
-
-    parser.add_argument('-P', '--psiplot',action='store_true',default=False,
-            help="Plot lens potential as 3D surface")
-    parser.add_argument('-K', '--kappaplot',action='store_true',default=False,
-            help="Plot mass distribution as 3D surface")
-
-    parser.add_argument('-f', '--family',action='store_true',
-            help="Several images moving the viewpoint")
-    parser.add_argument('-J', '--join',action='store_true',
-            help="Join several images from different viewpoints")
-    parser.add_argument('-F', '--amplitudes',help="Amplitudes file")
-    parser.add_argument('-A', '--apparent',action='store_true',help="write apparent image")
-    parser.add_argument('-a', '--actual',action='store_true',help="write actual image")
-    parser.add_argument('-U', '--original',action='store_true',help="write original image before centring")
-    parser.add_argument('-o', '--outfile',
-            help="Output CSV file")
-    parser.add_argument('-i', '--csvfile',
-            help="Dataset to generate (CSV file)")
 
     args = parser.parse_args()
 
