@@ -91,15 +91,30 @@ void CosmoSim::setCHI(double c) { chi = c/100.0 ; }
 void CosmoSim::setNterms(int c) { nterms = c ; }
 void CosmoSim::setXY( double x, double y) { xPos = x ; yPos = y ; rPos = -1 ; }
 void CosmoSim::setPolar(int r, int theta) { rPos = r ; thetaPos = theta ; }
-void CosmoSim::setModelMode(int m) { modelmode = m ; }
-void CosmoSim::setLensMode(int m) { lensmode = m ; }
+void CosmoSim::setModelMode(int m) { 
+   if ( modelmode != m ) {
+      modelmode = m ; 
+      modelchanged = 1 ;
+   }
+}
+void CosmoSim::setLensMode(int m) { 
+   if ( lensmode != m ) {
+      lensmode = m ; 
+      modelchanged = 1 ;
+   }
+}
+void CosmoSim::setSampled(int m) { 
+   if ( sampledlens != m ) {
+      sampledlens = m ; 
+      modelchanged = 1 ;
+   }
+}
 void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
-   if ( modelmode == oldmodelmode ) return ;
    if ( sim ) delete sim ;
    switch ( lensmode ) {
        case CSIM_PSI_SIS:
@@ -118,6 +133,21 @@ void CosmoSim::initLens() {
          throw NotImplemented();
    }
    switch ( modelmode ) {
+       case CSIM_LENS_PURESAMPLED_SIS:
+       case CSIM_LENS_SAMPLED_SIS:
+          std::cout << "Lens is sampled.\n" ;
+          sampledlens = 1 ;
+          break;
+       default:
+          std::cout << "Lens is not sampled.\n" ;
+          sampledlens = 0 ;
+          break;
+   }
+   if ( sampledlens ) {
+     lens = new SampledPsiFunctionLens( psilens ) ;
+     lens->setFile(filename) ;
+   }
+   switch ( modelmode ) {
        case CSIM_LENS_SPHERE:
          std::cout << "Running SphereLens (mode=" << modelmode << ")\n" ;
          sim = new SphereLens(filename,centred) ;
@@ -132,26 +162,14 @@ void CosmoSim::initLens() {
          sim = new PointMassLens(centred) ;
          break ;
        case CSIM_LENS_PURESAMPLED_SIS:
-         std::cout << "Running Raytrace SIS Lens (mode=" << modelmode << ")\n" ;
-         sim = new RaytraceModel(centred) ;
-         lens = new SampledPsiFunctionLens( psilens ) ;
-         lens->setFile(filename) ;
-         sim->setLens(lens) ;
-         break ;
-       case CSIM_LENS_PSIFUNCTION_SIS:
-         std::cout << "Running Raytrace SIS Lens (mode=" << modelmode << ")\n" ;
+       case CSIM_LENS_RAYTRACE:
+         std::cout << "Running Raytrace Lens (mode=" << modelmode << ")\n" ;
          sim = new RaytraceModel(centred) ;
          sim->setLens(lens) ;
          break ;
        case CSIM_LENS_SAMPLED_SIS:
-         std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;
-         sim = new RouletteModel(centred) ;
-         lens = new SampledPsiFunctionLens( psilens ) ;
-         lens->setFile(filename) ;
-         sim->setLens(lens) ;
-         break ;
        case CSIM_LENS_ROULETTE_SIS:
-         std::cout << "Running Sampled SIS Lens (mode=" << modelmode << ")\n" ;
+         std::cout << "Running Roulette Lens (mode=" << modelmode << ")\n" ;
          sim = new RouletteModel(centred) ;
          sim->setLens(lens) ;
          break ;
@@ -159,7 +177,7 @@ void CosmoSim::initLens() {
          std::cout << "No such lens mode!\n" ;
          throw NotImplemented();
     }
-    oldmodelmode = modelmode ;
+    modelchanged = 0 ;
     return ;
 }
 void CosmoSim::setEinsteinR(double r) { einsteinR = r ; }
@@ -337,12 +355,11 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "Triangle", CSIM_SOURCE_TRIANGLE ) ;
     pybind11::enum_<LensSpec>(m, "LensSpec") 
        .value( "SIS", CSIM_LENS_SPHERE )
-       .value( "Ellipse", CSIM_LENS_ELLIPSE )
        .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
        .value( "PointMass", CSIM_LENS_PM )
        .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
        .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
-       .value( "PsiFunctionSIS", CSIM_LENS_PSIFUNCTION_SIS )
+       .value( "Raytrace", CSIM_LENS_RAYTRACE )
        .value( "RouletteSIS", CSIM_LENS_ROULETTE_SIS )
        .value( "NoLens", CSIM_NOLENS  )  ;
 

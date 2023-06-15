@@ -11,17 +11,19 @@
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,
                   CSIM_SOURCE_TRIANGLE } ;
-enum ModelSpec { CSIM_ROULETTE,
-                  CSIM_RAYTRACE,
-                  CSIM_NOLENS } ;
+enum ModelSpec { CSIM_MODEL_RAYTRACE,
+                  CSIM_MODEL_ROULETTE,
+                  CSIM_MODEL_POINTMASS_EXACT,
+                  CSIM_MODEL_POINTMASS_ROULETTE,
+                  CSIM_MODEL_SIS_ROULETTE,
+                  CSIM_NOMODEL } ;
 enum LensSpec { CSIM_LENS_SPHERE,
-                  CSIM_LENS_ELLIPSE,
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_ROULETTE_SIS, 
                   CSIM_LENS_PM,
                   CSIM_LENS_PURESAMPLED_SIS,
-                  CSIM_LENS_PSIFUNCTION_SIS,
                   CSIM_LENS_SAMPLED_SIS,
+                  CSIM_LENS_RAYTRACE,
                   CSIM_NOLENS } ;
 enum PsiSpec    { CSIM_PSI_SIS,
                   CSIM_NOPSI_PM,
@@ -31,8 +33,9 @@ class CosmoSim {
 private:
     int size=512, basesize=512 ;
     double chi=0.5 ;
-    int modelmode=CSIM_LENS_PM, oldmodelmode=CSIM_NOLENS, einsteinR=20 ;
-    int lensmode=CSIM_NOPSI_PM, oldlensmode=CSIM_NOPSI ;
+    int modelmode=CSIM_LENS_PM, einsteinR=20 ;
+    int sampledlens = 0, modelchanged = 0 ;
+    int lensmode=CSIM_NOPSI_PM ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
@@ -65,6 +68,7 @@ public:
     void setSourceMode(int);
     void setModelMode(int);
     void setLensMode(int);
+    void setSampled(int);
     void setEinsteinR(double);
     void setSourceParameters(double,double,double);
 
