@@ -1,6 +1,7 @@
 
 set(SimLibFiles
         simlib/SampledLens.cpp
+        simlib/SampledPsiFunctionLens.cpp
         simlib/Lens.cpp
         simlib/PsiFunctionLens.cpp
         simlib/SIS.cpp
