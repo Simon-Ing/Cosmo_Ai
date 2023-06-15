@@ -123,8 +123,7 @@ void CosmoSim::initLens() {
           lens->initAlphasBetas() ;
           break ;
        case CSIM_NOPSI_PM:
-          lens = NULL ;
-          break ;
+       case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
           lens = NULL ;
           break ;
@@ -339,6 +338,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 
        .value( "SIS", CSIM_PSI_SIS )
        .value( "PM", CSIM_NOPSI_PM ) ;
+       .value( "NoPsiSIS", CSIM_NOPSI_SIS ) ;
+       .value( "NoPsi", CSIM_NOPSI ) ;
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
        .value( "Sphere", CSIM_SOURCE_SPHERE )
        .value( "Ellipse", CSIM_SOURCE_ELLIPSE )
