@@ -5,7 +5,7 @@ import numpy as np
 import threading as th
 import os
 
-LensSpec = cs.LensSpec
+ModelSpec = cs.ModelSpec
 SourceSpec = cs.SourceSpec
 PsiSpec = cs.PsiSpec
 
@@ -14,30 +14,31 @@ lensDict = {
         "PM" : PsiSpec.PM
         }
 modelDict = {
-        "Point Mass (exact)" : LensSpec.PointMass,
-        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (rotated)" : LensSpec.SIS,
-        "Sampled SIS" : LensSpec.SampledSIS,
-        "PureSampled SIS" : LensSpec.PureSampledSIS,
-        "Roulette SIS" : LensSpec.RouletteSIS,
-        "Raytrace" : LensSpec.Raytrace,
-        "p" : LensSpec.PointMass,
-        "p" : LensSpec.PointMass,
-        "r" : LensSpec.PointMassRoulettes,
-        "s" : LensSpec.SIS,
-        "ss" : LensSpec.SampledSIS,
-        "pss" : LensSpec.PureSampledSIS,
-        "fs" : LensSpec.Raytrace,
-        "rs" : LensSpec.RouletteSIS,
+        "Point Mass (exact)" : ModelSpec.PointMass,
+        "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
+
+        "SIS (rotated)" : ModelSpec.SIS,
+        "Sampled SIS" : ModelSpec.SampledSIS,
+        "PureSampled SIS" : ModelSpec.PureSampledSIS,
+        "Roulette SIS" : ModelSpec.RouletteSIS,
+        "Raytrace" : ModelSpec.Raytrace,
+        "p" : ModelSpec.PointMass,
+        "p" : ModelSpec.PointMass,
+        "r" : ModelSpec.PointMassRoulettes,
+        "s" : ModelSpec.SIS,
+        "ss" : ModelSpec.SampledSIS,
+        "pss" : ModelSpec.PureSampledSIS,
+        "fs" : ModelSpec.Raytrace,
+        "rs" : ModelSpec.RouletteSIS,
         }
 modelValues = {
-        "Point Mass (exact)" : LensSpec.PointMass,
-        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (rotated)" : LensSpec.SIS,
-        "Sampled SIS" : LensSpec.SampledSIS,
-        "PureSampled SIS" : LensSpec.PureSampledSIS,
-        "Raytrace" : LensSpec.Raytrace,
-        "Roulette SIS (new)" : LensSpec.RouletteSIS,
+        "Point Mass (exact)" : ModelSpec.PointMass,
+        "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
+        "SIS (rotated)" : ModelSpec.SIS,
+        "Sampled SIS" : ModelSpec.SampledSIS,
+        "PureSampled SIS" : ModelSpec.PureSampledSIS,
+        "Raytrace" : ModelSpec.Raytrace,
+        "Roulette SIS (new)" : ModelSpec.RouletteSIS,
         }
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,

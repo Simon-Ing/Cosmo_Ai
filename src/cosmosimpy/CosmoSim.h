@@ -17,6 +17,7 @@ enum ModelSpec { CSIM_MODEL_RAYTRACE,
                   CSIM_MODEL_POINTMASS_ROULETTE,
                   CSIM_MODEL_SIS_ROULETTE,
                   CSIM_NOMODEL } ;
+/*
 enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_PM_ROULETTE, 
                   CSIM_LENS_ROULETTE_SIS, 
@@ -25,6 +26,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_LENS_SAMPLED_SIS,
                   CSIM_LENS_RAYTRACE,
                   CSIM_NOLENS } ;
+                  */
 enum PsiSpec    { CSIM_PSI_SIS,
                   CSIM_NOPSI_PM,
                   CSIM_NOPSI } ;
@@ -33,7 +35,7 @@ class CosmoSim {
 private:
     int size=512, basesize=512 ;
     double chi=0.5 ;
-    int modelmode=CSIM_LENS_PM, einsteinR=20 ;
+    int modelmode=CSIM_MODEL_POINTMASS_EXACT, einsteinR=20 ;
     int sampledlens = 0, modelchanged = 0 ;
     int lensmode=CSIM_NOPSI_PM ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,

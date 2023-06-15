@@ -132,47 +132,37 @@ void CosmoSim::initLens() {
          std::cout << "No such lens model!\n" ;
          throw NotImplemented();
    }
-   switch ( modelmode ) {
-       case CSIM_LENS_PURESAMPLED_SIS:
-       case CSIM_LENS_SAMPLED_SIS:
-          std::cout << "Lens is sampled.\n" ;
-          sampledlens = 1 ;
-          break;
-       default:
-          std::cout << "Lens is not sampled.\n" ;
-          sampledlens = 0 ;
-          break;
-   }
    if ( sampledlens ) {
      lens = new SampledPsiFunctionLens( psilens ) ;
      lens->setFile(filename) ;
    }
    switch ( modelmode ) {
-       case CSIM_LENS_SPHERE:
+       case CSIM_MODEL_SIS_ROULETTE:
          std::cout << "Running SphereLens (mode=" << modelmode << ")\n" ;
          sim = new SphereLens(filename,centred) ;
          break ;
-       case CSIM_LENS_PM_ROULETTE:
+       case CSIM_MODEL_POINTMASS_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << modelmode << ")\n" ;
          sim = new RoulettePMLens(centred) ;
          break ;
-       case CSIM_LENS_PM:
+       case CSIM_MODEL_POINTMASS_EXACT:
          std::cout << "Running Point Mass Lens (mode=" << modelmode << ")\n" ;
          sim = new PointMassLens(centred) ;
          break ;
-       case CSIM_LENS_PURESAMPLED_SIS:
-       case CSIM_LENS_RAYTRACE:
+       case CSIM_MODEL_RAYTRACE:
          std::cout << "Running Raytrace Lens (mode=" << modelmode << ")\n" ;
          sim = new RaytraceModel(centred) ;
          sim->setLens(lens) ;
          break ;
-       case CSIM_LENS_SAMPLED_SIS:
-       case CSIM_LENS_ROULETTE_SIS:
+       case CSIM_MODEL_ROULETTE:
          std::cout << "Running Roulette Lens (mode=" << modelmode << ")\n" ;
          sim = new RouletteModel(centred) ;
          sim->setLens(lens) ;
          break ;
+       case CSIM_NOMODEL:
+         std::cout << "Specified No Model.\n" ;
+         throw NotImplemented();
        default:
          std::cout << "No such lens mode!\n" ;
          throw NotImplemented();
@@ -353,15 +343,13 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "Sphere", CSIM_SOURCE_SPHERE )
        .value( "Ellipse", CSIM_SOURCE_ELLIPSE )
        .value( "Triangle", CSIM_SOURCE_TRIANGLE ) ;
-    pybind11::enum_<LensSpec>(m, "LensSpec") 
-       .value( "SIS", CSIM_LENS_SPHERE )
-       .value( "PointMassRoulettes", CSIM_LENS_PM_ROULETTE ) 
-       .value( "PointMass", CSIM_LENS_PM )
-       .value( "SampledSIS", CSIM_LENS_SAMPLED_SIS )
-       .value( "PureSampledSIS", CSIM_LENS_PURESAMPLED_SIS )
-       .value( "Raytrace", CSIM_LENS_RAYTRACE )
-       .value( "RouletteSIS", CSIM_LENS_ROULETTE_SIS )
-       .value( "NoLens", CSIM_NOLENS  )  ;
+    pybind11::enum_<ModelSpec>(m, "ModelSpec") 
+       .value( "Raytrace", CSIM_MODEL_RAYTRACE )
+       .value( "Roulette", CSIM_MODEL_ROULETTE  )
+       .value( "PointMass", CSIM_MODEL_POINTMASS_EXACT )
+       .value( "PointMassRoulettes", CSIM_MODEL_POINTMASS_ROULETTE ) 
+       .value( "SIS", CSIM_MODEL_SIS_ROULETTE  )
+       .value( "NoModel", CSIM_NOMODEL  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/
     pybind11::class_<cv::Mat>(m, "Image", pybind11::buffer_protocol())
