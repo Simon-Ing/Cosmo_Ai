@@ -167,6 +167,10 @@ if __name__ == "__main__":
         sim.setSourceMode( args.sourcemode )
     sim.setSourceParameters( float(args.sigma),
             float(args.sigma2), float(args.theta) )
+    if args.sampled:
+        sim.setSampled( 1 )
+    else:
+        sim.setSampled( 0 )
     if args.lensmode:
         sim.setLensMode( args.lensmode )
     if args.modelmode:
