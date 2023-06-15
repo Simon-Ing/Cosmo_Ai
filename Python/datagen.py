@@ -32,7 +32,13 @@ def setParameters(sim,row):
         sim.setSourceParameters( row["sigma"],
             row.get("sigma2",-1), row.get("theta",-1) )
     if row.get("lens",None) != None:
-        sim.setModelMode( row["lens"] )
+        sim.setLensMode( row["lens"] )
+    if row.get("model",None) != None:
+        sim.setModelMode( row["model"] )
+    if row.get("config",None) != None:
+        sim.setConfigMode( row["config"] )
+    if row.get("sampled",None) != None:
+        sim.setSample( row["sampled"] )
     if row.get("chi",None) != None:
         sim.setCHI( row["chi"] )
     if row.get("einsteinR",None) != None:
