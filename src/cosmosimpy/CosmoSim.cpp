@@ -346,7 +346,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     pybind11::enum_<ModelSpec>(m, "ModelSpec") 
        .value( "Raytrace", CSIM_MODEL_RAYTRACE )
        .value( "Roulette", CSIM_MODEL_ROULETTE  )
-       .value( "PointMass", CSIM_MODEL_POINTMASS_EXACT )
+       .value( "PointMassExact", CSIM_MODEL_POINTMASS_EXACT )
        .value( "PointMassRoulettes", CSIM_MODEL_POINTMASS_ROULETTE ) 
        .value( "SIS", CSIM_MODEL_SIS_ROULETTE  )
        .value( "NoModel", CSIM_NOMODEL  )  ;

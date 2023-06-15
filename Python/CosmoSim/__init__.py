@@ -13,8 +13,21 @@ lensDict = {
         "SIS" : PsiSpec.SIS,
         "PM" : PsiSpec.PM
         }
+newDict = {
+        "Raytrace" : ModelSpec.Raytrace,
+        "Roulette" : ModelSpec.Roulette,
+        "Point Mass (exact)" : ModelSpec.PointMassExact,
+        "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
+        "SIS (rotated)" : ModelSpec.SIS,
+
+        "ray" : ModelSpec.Raytrace,
+        "rou" : ModelSpec.Roulette,
+        "pmx" : ModelSpec.PointMassExact,
+        "pmr" : ModelSpec.PointMassRoulettes,
+        "sis" : ModelSpec.SIS,
+        }
 modelDict = {
-        "Point Mass (exact)" : ModelSpec.PointMass,
+        "Point Mass (exact)" : ModelSpec.PointMassExact,
         "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
 
         "SIS (rotated)" : ModelSpec.SIS,
