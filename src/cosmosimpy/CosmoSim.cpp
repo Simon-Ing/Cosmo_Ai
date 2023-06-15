@@ -115,6 +115,7 @@ void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
    bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
+   if ( ! modelchanged ) return ;
    if ( sim ) delete sim ;
    switch ( lensmode ) {
        case CSIM_PSI_SIS:
@@ -206,8 +207,10 @@ void CosmoSim::initSource( ) {
     std::cout << "[CosmoSim.cpp] initSource() completes\n" ;
 }
 bool CosmoSim::runSim() { 
-   std::cout << "[CosmoSim.cpp] runSim()\n" ;
-   if ( running ) return false ;
+   if ( running ) {
+      std::cout << "[CosmoSim.cpp] runSim() - simulator already running.\n" ;
+      return false ;
+   }
    std::cout << "[CosmoSim.cpp] runSim() - running similator\n" ;
    initLens() ;
    initSource() ;
