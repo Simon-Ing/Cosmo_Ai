@@ -139,9 +139,9 @@ double Lens::psiValue( double x, double y ) {
 }
 double Lens::psiXvalue( double x, double y ) { 
    cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
-   return -psiX.at<double>( ij ) ;
+   return -psiY.at<double>( ij ) ;
 }
 double Lens::psiYvalue( double x, double y ) { 
    cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
-   return -psiY.at<double>( ij ) ;
+   return -psiX.at<double>( ij ) ;
 }
