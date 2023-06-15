@@ -17,15 +17,10 @@ void SampledPsiFunctionLens::updatePsi( cv::Size size ) {
 
    std::cout << "[SampledPsiFunctionLens] updatePsi " << size << "\n" ;
 
-   psi = cv::Mat::zeros(size, CV_64F );
+   lens->updatePsi(size) ;
 
-   for ( int i=0 ; i<nrows ; ++i ) {
-      for ( int j=0 ; j<ncols ; ++j ) {
-         cv::Point2d ij( i, j ) ;
-         cv::Point2d xy = pointCoordinate( ij, psi ) ;
-	 psi.at<double>( ij ) = lens->psifunction( xy.x, xy.y ) ;
-      }
-   }
+   psi = lens->getPsi() ;
+
    gradient( -psi, psiX, psiY ) ;
 
    return ; 

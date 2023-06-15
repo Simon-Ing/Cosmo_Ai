@@ -1,9 +1,6 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> */
 
-/* This is not currently used.
- * The class is made to handle arbitrary sampled lens models, 
- * but it has never been tested.
- */
+/* This is only used as a base class for SampledPsiFunctionLens.  */
 
 #include "cosmosim/Lens.h"
 #include "simaux.h"
