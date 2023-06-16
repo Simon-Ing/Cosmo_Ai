@@ -5,7 +5,7 @@ import numpy as np
 import threading as th
 import os
 
-LensSpec = cs.LensSpec
+ModelSpec = cs.ModelSpec
 SourceSpec = cs.SourceSpec
 PsiSpec = cs.PsiSpec
 
@@ -14,31 +14,36 @@ lensDict = {
         "PM" : PsiSpec.PM
         }
 modelDict = {
-        "Point Mass (exact)" : LensSpec.PointMass,
-        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (rotated)" : LensSpec.SIS,
-        "Sampled SIS" : LensSpec.SampledSIS,
-        "PureSampled SIS" : LensSpec.PureSampledSIS,
-        "Roulette SIS" : LensSpec.RouletteSIS,
-        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
-        "p" : LensSpec.PointMass,
-        "p" : LensSpec.PointMass,
-        "r" : LensSpec.PointMassRoulettes,
-        "s" : LensSpec.SIS,
-        "ss" : LensSpec.SampledSIS,
-        "pss" : LensSpec.PureSampledSIS,
-        "fs" : LensSpec.PsiFunctionSIS,
-        "rs" : LensSpec.RouletteSIS,
+        "Raytrace" : ModelSpec.Raytrace,
+        "Roulette" : ModelSpec.Roulette,
+        "Point Mass (exact)" : ModelSpec.PointMassExact,
+        "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
+        "SIS (rotated)" : ModelSpec.SIS,
+
+        "ray" : ModelSpec.Raytrace,
+        "rou" : ModelSpec.Roulette,
+        "pmx" : ModelSpec.PointMassExact,
+        "pmr" : ModelSpec.PointMassRoulettes,
+        "sis" : ModelSpec.SIS,
         }
 modelValues = {
-        "Point Mass (exact)" : LensSpec.PointMass,
-        "Point Mass (roulettes)" : LensSpec.PointMassRoulettes,
-        "SIS (rotated)" : LensSpec.SIS,
-        "Sampled SIS" : LensSpec.SampledSIS,
-        "PureSampled SIS" : LensSpec.PureSampledSIS,
-        "PsiFunctionSIS" : LensSpec.PsiFunctionSIS,
-        "Roulette SIS (new)" : LensSpec.RouletteSIS,
+        "Point Mass (exact)" : (ModelSpec.PointMassExact,PsiSpec.NoPsi,False),
+        "Point Mass (roulettes)" : (ModelSpec.PointMassRoulettes,PsiSpec.NoPsi,False),
+        "SIS (rotated)" : (ModelSpec.SIS,PsiSpec.NoPsi,False),
+        "Sampled Roulette SIS" : (ModelSpec.Roulette,PsiSpec.SIS,True),
+        "Sampled Raytrace SIS" : (ModelSpec.Raytrace,PsiSpec.SIS,True),
+        "Roulette SIS" : (ModelSpec.Roulette,PsiSpec.SIS,False),
+        "Raytrace SIS" : (ModelSpec.Raytrace,PsiSpec.SIS,False),
         }
+configDict = modelValues.copy()
+configDict["p"] = configDict["Point Mass (exact)"]
+configDict["r"] = configDict["Point Mass (roulettes)"]
+configDict["s"] = configDict["SIS (rotated)"]
+configDict["ss"] = configDict["Sampled Roulette SIS"]
+configDict["pss"] = configDict["Sampled Raytrace SIS"]
+configDict["fs"] = configDict["Roulette SIS"]
+configDict["rs"] = configDict["Raytrace SIS"]
+
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,
         "Ellipsoid" : SourceSpec.Ellipse,
@@ -131,6 +136,12 @@ class CosmoSim(cs.CosmoSim):
     def setModelMode(self,s):
         print( f"setModelMode({s})")
         return super().setModelMode( int( modelDict[s] ) ) 
+    def setConfigMode(self,s):
+        print( f"setConfigMode({s})")
+        (model,lens,sampleMode) = configDict[s]
+        super().setSampled( int( sampleMode ) ) 
+        super().setLensMode( int( lens ) ) 
+        return super().setModelMode( int( model ) ) 
     def setBGColour(self,s):
         self.bgcolour = s
     def simThread(self):

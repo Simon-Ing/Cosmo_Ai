@@ -51,6 +51,10 @@ def centreImage(im):
 
 def drawAxes(im):
   m,n = im.shape[:2]
+  if m == 0:
+      raise Exception( "Image has zero height." )
+  if n == 0:
+      raise Exception( "Image has zero width." )
   im[int(round(m/2)),:] = 127
   im[:,(round(n/2))] = 127
   return im

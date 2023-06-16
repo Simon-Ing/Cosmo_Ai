@@ -19,11 +19,10 @@ void PsiFunctionLens::updatePsi( cv::Size size ) {
          cv::Point2d ij( i, j ) ;
          cv::Point2d xy = pointCoordinate( ij, psi ) ;
 	 psi.at<double>( ij ) = psifunction( xy.x, xy.y ) ;
-	 // psiX.at<double>( ij ) = psiXfunction( xy.x, xy.y ) ;
-	 // psiY.at<double>( ij ) = psiYfunction( xy.x, xy.y ) ;
+	 psiX.at<double>( ij ) = psiXfunction( xy.x, xy.y ) ;
+	 psiY.at<double>( ij ) = psiYfunction( xy.x, xy.y ) ;
       }
    }
-   gradient( -psi, psiX, psiY ) ;
 
    return ; 
 }

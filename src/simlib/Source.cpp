@@ -12,6 +12,7 @@
 
 
 Source::~Source() {
+   std::cout << "Destruct source model\n" ;
    // imgApparent.deallocate() ;
 }
 Source::Source(int sz) :

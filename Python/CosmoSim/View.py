@@ -12,6 +12,8 @@ import numpy as np
 import threading as th
 from CosmoSim.Image import drawAxes
 
+import sys
+
 
 class ImageCanvas(Canvas):
     def __init__(self,parent,image=None,**kwargs):
@@ -111,6 +113,7 @@ class ImagePane(ttk.Frame):
     def setActualImage(self):
         "Helper for `update()`."
         print( "setActualImage" )
+        sys.stdout.flush()
         im = self.sim.getActualImage(reflines=False,) 
         if self.reflinesVar.get(): drawAxes(im)
         im0 = Image.fromarray(im)
@@ -123,6 +126,9 @@ class ImagePane(ttk.Frame):
                     mask=self.maskVar.get(),
                     showmask=self.showmaskVar.get(),
                  )
+        m,n = im.shape
+        if m*n == 0:
+            raise Exception( "Simulator returns distorted image without any pixels." )
         if self.reflinesVar.get(): drawAxes(im)
         im0 = Image.fromarray( im )
         self.distorted.setImage(im0)
