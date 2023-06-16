@@ -17,6 +17,16 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
+void CosmoSim::setAlphaXi( int m, int s, double val ) {
+      if ( NULL != roulettelens )
+          return roulettelens->setAlphaXi( m, s, val ) ;
+      else throw NotSupported();
+}
+void CosmoSim::setBetaXi( int m, int s, double val ) {
+      if ( NULL != roulettelens )
+          return roulettelens->setBetaXi( m, s, val ) ;
+      else throw NotSupported();
+}
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
           return psilens->getAlphaXi( m, s ) ;
@@ -117,11 +127,16 @@ void CosmoSim::initLens() {
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( ! modelchanged ) return ;
    if ( sim ) delete sim ;
+   roulettelens == NULL ;
+   psilens = NULL ;
    switch ( lensmode ) {
        case CSIM_PSI_SIS:
           lens = psilens = new SIS() ;
           lens->setFile(filename) ;
           lens->initAlphasBetas() ;
+          break ;
+       case CSIM_NOPSI_ROULETTE:
+          lens = roulettelens = new RouletteLens() ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
