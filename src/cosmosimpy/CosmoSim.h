@@ -17,16 +17,6 @@ enum ModelSpec { CSIM_MODEL_RAYTRACE,
                   CSIM_MODEL_POINTMASS_ROULETTE,
                   CSIM_MODEL_SIS_ROULETTE,
                   CSIM_NOMODEL } ;
-/*
-enum LensSpec { CSIM_LENS_SPHERE,
-                  CSIM_LENS_PM_ROULETTE, 
-                  CSIM_LENS_ROULETTE_SIS, 
-                  CSIM_LENS_PM,
-                  CSIM_LENS_PURESAMPLED_SIS,
-                  CSIM_LENS_SAMPLED_SIS,
-                  CSIM_LENS_RAYTRACE,
-                  CSIM_NOLENS } ;
-                  */
 enum PsiSpec    { CSIM_PSI_SIS,
                   CSIM_NOPSI_ROULETTE,
                   CSIM_NOPSI_PM,
