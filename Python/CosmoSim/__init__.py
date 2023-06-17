@@ -11,7 +11,8 @@ PsiSpec = cs.PsiSpec
 
 lensDict = {
         "SIS" : PsiSpec.SIS,
-        "PM" : PsiSpec.PM
+        "PM" : PsiSpec.PM,
+        "Roulette" : PsiSpec.Roulette
         }
 modelDict = {
         "Raytrace" : ModelSpec.Raytrace,

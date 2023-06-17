@@ -11,13 +11,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from CosmoSim.Image import centreImage, drawAxes
-from CosmoSim import CosmoSim,getMSheaders
+from CosmoSim import CosmoSim,getMSheaders,PsiSpec,ModelSpec
 
-from Arguments import CosmoParser, setParameters
+from Arguments import CosmoParser
 import pandas as pd
 
 outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR",
             "sigma", "sigma2", "theta", "x", "y" ]
+
+
+def setParameters(sim,row):
+    print( row ) 
+    if row.get("y",None) != None:
+        print( "XY", row["x"], row["y"] )
+        sim.setXY( row["x"], row["y"] )
+    elif row.get("phi",None) != None:
+        print( "Polar", row["x"], row["phi"] )
+        sim.setPolar( row["x"], row["phi"] )
+    if row.get("source",None) != None:
+        sim.setSourceMode( row["source"] )
+    if row.get("sigma",None) != None:
+        sim.setSourceParameters( row["sigma"],
+            row.get("sigma2",-1), row.get("theta",-1) )
+    if row.get("chi",None) != None:
+        sim.setCHI( row["chi"] )
+    if row.get("einsteinR",None) != None:
+        sim.setEinsteinR( row["einsteinR"] )
+    if row.get("imagesize",None) != None:
+        sim.setImageSize( row["imagesize"] )
+        sim.setResolution( row["imagesize"] )
 
 class RouletteAmplitudes:
     """Parse the CSV headers to find which amplitudes are defined in the file.
@@ -32,12 +54,9 @@ class RouletteAmplitudes:
 def parseAB(s):
     """Auxiliary function for RouletteAmplitudes."""
     a = s.split("[")
-    print(a)
     if len(a) < 2:
-        print( "No bracket" )
         return None
     elif not a[0] in [ "alpha", "beta" ]:
-        print( "Neither alpha nor beta, but ", a )
         return None
     elif len(a) == 2:
        a, bracket = a
@@ -47,7 +66,6 @@ def parseAB(s):
        l = [ int(x.split("]")[0]) for x in a[1:] ]
        a = a[0]
     else:
-        print( "Fallthrough case" )
         return None
     return (a,s,tuple(l))
 
@@ -119,8 +137,8 @@ if __name__ == "__main__":
     sim = CosmoSim()
     print( "Done" )
 
-    # sim.setLensMode( args.lensmode )
-    # sim.setModelMode( args.modelmode )
+    sim.setLensMode( "Roulette" )
+    sim.setModelMode( "Roulette" )
 
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
@@ -141,6 +159,7 @@ if __name__ == "__main__":
     print( "Number of roulette terms: ", coefs.getNterms() )
 
     for index,row in frame.iterrows():
+            # setParameters( sim, row )
             setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )
             sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
