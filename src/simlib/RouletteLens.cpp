@@ -13,7 +13,8 @@ void RouletteLens::updatePsi( cv::Size size ) {
    throw NotSupported() ;
 }
 void RouletteLens::setEinsteinR( double r ) { 
-   throw NotSupported() ;
+   std::cout << "[RouletteLens::setEinsteinR] ignoring.\n" ;
+   // throw NotSupported() ;
 }
 
 void RouletteLens::calculateAlphaBeta( cv::Point2d xi ) {
