@@ -44,7 +44,7 @@ def parseAB(s):
 def parseCols(l):
     """Auxiliary function for RouletteAmplitudes."""
     r = [ parseAB(s) for s in l ]
-    r = filter( lambda x : return x != None, r )
+    r = filter( lambda x : x != None, r )
     return r
 
 
@@ -81,7 +81,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
        cv.imwrite(fn,im)
     return (cx,cy)
 
-def setAmplitudes( sim, row, coefs ): pass
+def setAmplitudes( sim, row, coefs ):
     maxm = coefs.getNterms()
     for m in range(maxm+1):
         for s in range((m+1)%2, m+2, 2):
@@ -131,9 +131,9 @@ if __name__ == "__main__":
     for index,row in frame.iterrows():
             setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )
-            sim.setSourceParameters( float(row["sigma"], float(row["sigma2"], 
-                                     float(row["theta"] ) 
-            namestem=row["filename"].split(".")[0]
+            sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
+                                     float(row["theta"]) ) 
+            namestem = row["filename"].split(".")[0]
             makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
 
     sim.close()
