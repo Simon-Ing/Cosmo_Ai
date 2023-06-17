@@ -31,13 +31,13 @@ class RouletteAmplitudes:
 
 def parseAB(s):
     """Auxiliary function for RouletteAmplitudes."""
-    a = t.split("[")
+    a = s.split("[")
     if len(a) == 0:
         return None
     elif not a in [ "alpha", "beta" ]:
         return None
-    a, tt = a
-    idxstring, = tt.split("]")
+    a, bracket = a
+    idxstring, = bracket.split("]")
     l = [ int(i) for i in idx.split(",") ]
     return (a,s,tuple(l))
 

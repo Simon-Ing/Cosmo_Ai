@@ -16,7 +16,7 @@ from CosmoSim import CosmoSim,getMSheaders
 from Arguments import CosmoParser, setParameters
 import pandas as pd
 
-outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
+defaultoutcols = [ "index", "filename", "source", "lens", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
 
 def setParameters(sim,row):
     print( row ) 
@@ -49,7 +49,7 @@ def setParameters(sim,row):
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
 
-def makeSingle(sim,args,name=None,row=None,outstream=None):
+def makeSingle(sim,args,name=None,row=None,outstream=None,outcols=defaultoutcols):
     if name == None: name = args.name
     sim.runSim()
     centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent,original=args.original,reflines=args.reflines)
@@ -192,9 +192,6 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( outcols + [ "centreX", "centreY" ] + getMSheaders(int(args.nterms)) )
-        headers += "\n"
-        outstream.write(headers)
     else:
         outstream = None
 
@@ -205,11 +202,16 @@ if __name__ == "__main__":
         frame = pd.read_csv(args.csvfile)
         cols = frame.columns
         print( "columns:", cols )
+        outcols = list(frame.columns)
+        if outstream != None:
+           headers = ",".join( outcols + [ "centreX", "centreY" ] + getMSheaders(int(args.nterms)) )
+           headers += "\n"
+           outstream.write(headers)
         for index,row in frame.iterrows():
             setParameters( sim, row )
             print( "index", row["index"] )
             namestem=row["filename"].split(".")[0]
-            makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
+            makeSingle(sim,args,name=namestem,row=row,outstream=outstream,outcols=outcols)
     else:
         makeSingle(sim,args)
     sim.close()
