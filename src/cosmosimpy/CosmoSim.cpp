@@ -131,16 +131,19 @@ void CosmoSim::initLens() {
    psilens = NULL ;
    switch ( lensmode ) {
        case CSIM_PSI_SIS:
+          std::cout << "[initLens] SIS\n" ;
           lens = psilens = new SIS() ;
           lens->setFile(filename) ;
           lens->initAlphasBetas() ;
           break ;
        case CSIM_NOPSI_ROULETTE:
+          std::cout << "[initLens] Roulette with No Lens\n" ;
           lens = roulettelens = new RouletteLens() ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
+          std::cout << "[initLens] Point Mass or No Lens\n" ;
           lens = NULL ;
           break ;
        default:
