@@ -28,6 +28,7 @@ enum LensSpec { CSIM_LENS_SPHERE,
                   CSIM_NOLENS } ;
                   */
 enum PsiSpec    { CSIM_PSI_SIS,
+                  CSIM_NOPSI_ROULETTE,
                   CSIM_NOPSI_PM,
                   CSIM_NOPSI_SIS,
                   CSIM_NOPSI } ;
@@ -55,6 +56,7 @@ private:
 
     Lens *lens = NULL ;
     PsiFunctionLens *psilens = NULL ;
+    RouletteLens *roulettelens = NULL ;
 
 public:
     CosmoSim();
@@ -95,6 +97,8 @@ public:
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
 
+    void setAlphaXi( int m, int s, double val ) ;
+    void setBetaXi( int m, int s, double val ) ;
 };
 
 #endif // COSMOSIM_FACADE_H
