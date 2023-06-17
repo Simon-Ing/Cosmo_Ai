@@ -18,14 +18,14 @@ void helloworld() {
 }
 
 void CosmoSim::setAlphaXi( int m, int s, double val ) {
-      if ( NULL != roulettelens )
-          return roulettelens->setAlphaXi( m, s, val ) ;
-      else throw NotSupported();
+      if ( NULL == roulettelens )
+	 roulettelens = new RouletteLens() ;
+      return roulettelens->setAlphaXi( m, s, val ) ;
 }
 void CosmoSim::setBetaXi( int m, int s, double val ) {
-      if ( NULL != roulettelens )
-          return roulettelens->setBetaXi( m, s, val ) ;
-      else throw NotSupported();
+      if ( NULL == roulettelens )
+	 roulettelens = new RouletteLens() ;
+      return roulettelens->setBetaXi( m, s, val ) ;
 }
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
@@ -131,7 +131,6 @@ void CosmoSim::initLens() {
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( ! modelchanged ) return ;
    if ( sim ) delete sim ;
-   roulettelens == NULL ;
    psilens = NULL ;
    switch ( lensmode ) {
        case CSIM_PSI_SIS:
@@ -143,7 +142,11 @@ void CosmoSim::initLens() {
        case CSIM_NOPSI_ROULETTE:
           std::cout << "[initLens] Roulette with No Lens "
                 << lensmode << ")\n" ;
-          lens = roulettelens = new RouletteLens() ;
+	  if ( roulettelens == NULL ) {
+	     throw std::logic_error( "Roulette Lens not instantiated." ) ;
+	  }
+          lens = roulettelens ;
+          roulettelens == NULL ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
