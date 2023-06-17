@@ -361,6 +361,8 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBeta", &CosmoSim::getBeta)
         .def("getAlphaXi", &CosmoSim::getAlphaXi)
         .def("getBetaXi", &CosmoSim::getBetaXi)
+        .def("setAlphaXi", &CosmoSim::setAlphaXi)
+        .def("setBetaXi", &CosmoSim::setBetaXi)
         ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 

@@ -32,18 +32,29 @@ class RouletteAmplitudes:
 def parseAB(s):
     """Auxiliary function for RouletteAmplitudes."""
     a = s.split("[")
-    if len(a) == 0:
+    print(a)
+    if len(a) < 2:
+        print( "No bracket" )
         return None
-    elif not a in [ "alpha", "beta" ]:
+    elif not a[0] in [ "alpha", "beta" ]:
+        print( "Neither alpha nor beta, but ", a )
         return None
-    a, bracket = a
-    idxstring, = bracket.split("]")
-    l = [ int(i) for i in idx.split(",") ]
+    elif len(a) == 2:
+       a, bracket = a
+       idxstring, = bracket.split("]")
+       l = [ int(i) for i in idxstring.split(",") ]
+    elif len(a) == 3:
+       l = [ int(x.split("]")[0]) for x in a[1:] ]
+       a = a[0]
+    else:
+        print( "Fallthrough case" )
+        return None
     return (a,s,tuple(l))
 
 def parseCols(l):
     """Auxiliary function for RouletteAmplitudes."""
     r = [ parseAB(s) for s in l ]
+    print( r )
     r = filter( lambda x : x != None, r )
     return r
 
@@ -85,11 +96,11 @@ def setAmplitudes( sim, row, coefs ):
     maxm = coefs.getNterms()
     for m in range(maxm+1):
         for s in range((m+1)%2, m+2, 2):
-            alpha = row[f"alpha[{m},{s}]"]
-            beta = row[f"beta[{m},{s}]"]
-            print( f"alpha[{s},{m}] = {alpha}\t\tbeta[{s},{m}] = {beta}." )
-            sim.setAlpha( m, s, alpha )
-            sim.setBeta( m, s, beta )
+            alpha = row[f"alpha[{m}][{s}]"]
+            beta = row[f"beta[{m}][{s}]"]
+            print( f"alpha[{s}][{m}] = {alpha}\t\tbeta[{s}][{m}] = {beta}." )
+            sim.setAlphaXi( m, s, alpha )
+            sim.setBetaXi( m, s, beta )
 
 
 if __name__ == "__main__":
