@@ -109,8 +109,12 @@ void CosmoSim::setModelMode(int m) {
 }
 void CosmoSim::setLensMode(int m) { 
    if ( lensmode != m ) {
+      std::cout << "[CosmoSim.cpp] setLensMode(" << lensmode 
+         << " -> " << m << ")\n" ;
       lensmode = m ; 
       modelchanged = 1 ;
+   } else {
+      std::cout << "[CosmoSim.cpp] setLensMode(" << lensmode << ") unchanged\n" ;
    }
 }
 void CosmoSim::setSampled(int m) { 
@@ -137,13 +141,15 @@ void CosmoSim::initLens() {
           lens->initAlphasBetas() ;
           break ;
        case CSIM_NOPSI_ROULETTE:
-          std::cout << "[initLens] Roulette with No Lens\n" ;
+          std::cout << "[initLens] Roulette with No Lens "
+                << lensmode << ")\n" ;
           lens = roulettelens = new RouletteLens() ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
-          std::cout << "[initLens] Point Mass or No Lens\n" ;
+          std::cout << "[initLens] Point Mass or No Lens (" 
+                << lensmode << ")\n" ;
           lens = NULL ;
           break ;
        default:
