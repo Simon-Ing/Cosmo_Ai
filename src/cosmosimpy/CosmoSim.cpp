@@ -255,6 +255,9 @@ bool CosmoSim::runSim() {
    }
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
+   std::cout << "[runSim] thread section\n" ;
+   if ( sim == NULL )
+      throw std::logic_error("Simulator not initialised") ;
    sim->update() ;
    Py_END_ALLOW_THREADS
    std::cout << "[CosmoSim.cpp] runSim() - complete\n" ;
@@ -268,6 +271,8 @@ bool CosmoSim::moveSim( double rot, double scale ) {
          );
    xi1 *= scale ;
    Py_BEGIN_ALLOW_THREADS
+   if ( sim == NULL )
+      throw std::logic_error("Simulator not initialised") ;
    sim->update( xi1 ) ;
    Py_END_ALLOW_THREADS
    return true ;
