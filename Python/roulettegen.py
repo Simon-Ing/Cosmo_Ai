@@ -77,7 +77,7 @@ def parseCols(l):
     return r
 
 
-def makeSingle(sim,args,name=None,row=None,outstream=None):
+def makeSingle(sim,args,name=None,row=None):
     if name == None: name = args.name
     sim.runSim()
 
@@ -165,7 +165,7 @@ if __name__ == "__main__":
             sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
                                      float(row["theta"]) ) 
             namestem = row["filename"].split(".")[0]
-            makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
+            makeSingle(sim,args,name=namestem,row=row)
 
     sim.close()
     print( "[roulettegen.py] Done" )
