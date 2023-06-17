@@ -93,6 +93,7 @@ def setAmplitudes( sim, row, coefs ):
 
 
 if __name__ == "__main__":
+    print( "[roulettegen.py] Starting ..." )
     parser = CosmoParser(
           prog = 'CosmoSim makeimage',
           description = 'Generaet an image for given lens and source parameters',
@@ -137,3 +138,4 @@ if __name__ == "__main__":
             makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
 
     sim.close()
+    print( "[roulettegen.py] Done" )
