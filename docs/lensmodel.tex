@@ -1,0 +1,63 @@
+\begin{tikzpicture}
+       \tikzstyle{every node}=[font=\footnotesize]
+
+   \begin{abstractclass}[text width = 52mm]{LensModel}{1 , 0}
+      \operation[0]{getDistortedPos() : Point2d}
+      \operation[0]{calculateAlphaBeta() : void}
+      \operation[0]{updateApparentAbs()  : void}
+   \end{abstractclass}
+
+   % LensMap OK
+   \begin{abstractclass}[text width = 52mm]{LensMap}{9 , 0}
+      \operation{setPsi( Mat )}
+      \operation{loadPsi( std::string ) : void}
+      \operation{getPsi() : Mat}
+      \operation{getMassMap() : Mat}
+   \end{abstractclass}
+
+   % Roulette OK
+   \begin{abstractclass}[text width = 58mm]{RouletteLens}{5 , -3.7}
+      \inherit{LensModel}
+      \operation[0]{getDistortedPos(r, theta) : Point2d}
+      % \operation[0]{markMask( InputOutputArray )}
+      % \operation[0]{maskImage( InputOutputArray )}
+      % \operation[0]{getMaskRadius() : double}
+   \end{abstractclass}
+
+   % RoulettePM omitted
+
+   % PointMas OK
+   \begin{class}[text width = 58mm]{PointMassLens}{0 , -6}
+      \inherit{LensModel}
+      \operation[0]{getDistortedPos(r, theta) : Point2d}
+      \operation[0]{updateApparentAbs()  : void}
+   \end{class}
+
+   % SIS OK
+   \begin{class}[text width = 52mm]{SphereLens}{3 , -8.5}
+      \inherit{RouletteLens}
+      % \operation{initAlphaBeta() : void}
+      \operation[0]{calculateAlphaBeta() : void}
+      \operation[0]{updateApparentAbs()  : void}
+   \end{class}
+
+   \begin{class}[text width = 52mm]{RouletteSISLens}{3 , -11}
+      \inherit{SphereLens}
+      \operation[0]{updateApparentAbs()  : void}
+   \end{class}
+
+   % Sampled OK
+   \begin{class}[text width = 52mm]{SampledRouletteLens}{9 , -6}
+      \inherit{LensMap}
+      \inherit{RouletteLens}
+      \operation[0]{calculateAlphaBeta() : void}
+      \operation[0]{updateApparentAbs()  : void}
+      \operation[0]{updatePsi()  : void}
+   \end{class}
+
+   \begin{class}[text width = 52mm]{SampledSISLens}{9 , -10.5}
+      \inherit{SampledRouletteLens}
+      \operation{psifunction() : void}
+      \operation[0]{updatePsi()  : void}
+   \end{class}
+\end{tikzpicture}
