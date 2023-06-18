@@ -19,6 +19,7 @@ void RouletteLens::setEinsteinR( double r ) {
 
 void RouletteLens::calculateAlphaBeta( cv::Point2d xi ) {
    std::cout << "RouletteLens::calculateAlphaBeta() does nothing.\n" ;
+   // We should have checked that xi=0 to avoid accidental misuse.
 }
 
 void RouletteLens::initAlphasBetas() { }
