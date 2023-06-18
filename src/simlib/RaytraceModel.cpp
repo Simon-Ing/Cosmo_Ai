@@ -62,8 +62,8 @@ void RaytraceModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst
     }
 }
 
-/* getDistortedPos() is not used for the sampled lens model, but
- * it has to be defined, since it is declared for the superclass.  */
+/* getDistortedPos() is not used for raytracing, but
+ * it has to be defined, since it is declared in the superclass.  */
 cv::Point2d RaytraceModel::getDistortedPos(double r, double theta) const {
    throw NotImplemented() ;
 };
