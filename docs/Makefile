@@ -1,4 +1,4 @@
-all: lensmodel.svg
+all: lensmodel.svg points.svg
 
 %.pdf: %.tex
 	pdflatex $<
