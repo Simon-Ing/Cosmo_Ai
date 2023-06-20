@@ -49,8 +49,17 @@ def setParameters(sim,row):
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
 
+
 def makeSingle(sim,args,name=None,row=None,outstream=None):
-    if name == None: name = args.name
+    """Process a single parameter set, given either as a pandas row or
+    just as args parsed from the command line.
+    """
+    if row != None:
+       setParameters( sim, row )
+       print( "index", row["index"] )
+       name=row["filename"].split(".")[0]
+    elif name == None:
+        name = args.name
     sim.runSim()
     centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent,original=args.original,reflines=args.reflines)
     if args.join:
@@ -206,10 +215,7 @@ if __name__ == "__main__":
         cols = frame.columns
         print( "columns:", cols )
         for index,row in frame.iterrows():
-            setParameters( sim, row )
-            print( "index", row["index"] )
-            namestem=row["filename"].split(".")[0]
-            makeSingle(sim,args,name=namestem,row=row,outstream=outstream)
+            makeSingle(sim,args,row=row,outstream=outstream)
     else:
         makeSingle(sim,args)
     sim.close()

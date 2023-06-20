@@ -17,6 +17,7 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
+double CosmoSim::getChi( ) { return chi ; } ;
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
           return psilens->getAlphaXi( m, s ) ;
@@ -337,6 +338,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBeta", &CosmoSim::getBeta)
         .def("getAlphaXi", &CosmoSim::getAlphaXi)
         .def("getBetaXi", &CosmoSim::getBetaXi)
+        .def("getChi", &CosmoSim::getChi)
         ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 
