@@ -49,7 +49,7 @@ protected:
     // to centre the distorted image in the image.
     cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
 
-    virtual void updateApparentAbs() = 0 ;
+    virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
 
@@ -112,7 +112,6 @@ public:
     RaytraceModel();
     RaytraceModel(bool);
 protected:
-    virtual void updateApparentAbs() ;
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
     virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const ;

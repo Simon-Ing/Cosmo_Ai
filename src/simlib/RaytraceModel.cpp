@@ -18,11 +18,6 @@ RaytraceModel::RaytraceModel(bool centred) :
     rotatedMode = false ;
 }
 
-void RaytraceModel::updateApparentAbs( ) {
-    std::cout << "[RaytraceModel] updateApparentAbs() updates psi.\n" ;
-    cv::Mat im = getActual() ;
-    lens->updatePsi(im.size()) ;
-}
 cv::Point2d RaytraceModel::calculateEta( cv::Point2d xi ) {
    cv::Point2d xy = cv::Point2d(
          lens->psiXvalue( xi.x, xi.y ),

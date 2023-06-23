@@ -97,18 +97,6 @@ void RouletteModel::calculateAlphaBeta() {
     std::cout << "RouletteModel calculateAlphaBeta done\n" ;
 }
 
-void RouletteModel::updateApparentAbs( ) {
-   std::cout << "[RouletteModel] updateApparentAbs()\n" ;
-   cv::Point2d chieta = CHI*getEta() ;
-   if ( lens == NULL ) 
-      throw std::logic_error( "No lens model" ) ;
-   std::cout << "[RouletteModel] updateApparentAbs() chieta = " << chieta << "\n" ;
-   lens->updatePsi() ;
-   std::cout << "[RouletteModel] updateApparentAbs() called updatePsi()\n" ;
-   cv::Point2d xi1 = lens->getXi( chieta ) ;
-   setNu( xi1/CHI ) ;
-   std::cout << "[RouletteModel] updateApparentAbs() done\n" ;
-}
 void RouletteModel::setXi( cv::Point2d xi1 ) {
    // xi1 is an alternative reference point \xi'
    xi = xi1 ;   // reset \xi

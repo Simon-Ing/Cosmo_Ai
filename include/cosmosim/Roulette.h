@@ -31,7 +31,6 @@ protected:
 
     virtual void setXi( cv::Point2d ) ;
 
-    virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta();
 };
 
