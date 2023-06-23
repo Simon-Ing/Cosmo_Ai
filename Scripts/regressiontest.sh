@@ -7,7 +7,7 @@ test $dir || dir=Test/`date "+%Y%m%d"`
 mkdir -p $dir
 
 baseline=$2
-test $baseline || baseline=Test/baseline20230327
+test $baseline || baseline=Test/baseline20230623
 # baseline=Test/v2.0.3
 
 F=mask
