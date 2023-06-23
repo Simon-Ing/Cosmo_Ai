@@ -120,6 +120,8 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )
+        r.append( eta[0] )
+        r.append( eta[1] )
         print(ab)
         r += ab
         line = ",".join( [ str(x) for x in r ] )
@@ -214,7 +216,7 @@ if __name__ == "__main__":
         print( "columns:", cols )
         outcols = list(frame.columns)
         if outstream != None:
-           headers = ",".join( outcols + [ "centreX", "centreY" ] + getMSheaders(int(args.nterms)) )
+           headers = ",".join( outcols + [ "centreX", "centreY", "etaX", "etaY" ] + getMSheaders(int(args.nterms)) )
            headers += "\n"
            outstream.write(headers)
         for index,row in frame.iterrows():

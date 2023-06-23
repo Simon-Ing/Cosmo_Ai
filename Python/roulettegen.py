@@ -87,13 +87,6 @@ def makeSingle(sim,args,name=None,row=None):
                 ) 
 
     (cx,cy) = 0,0
-    if args.centred:
-        (centreIm,(cx,cy)) = centreImage(im)
-        if args.original:
-           fn = os.path.join(args.directory,"original-" + str(name) + ".png" ) 
-           if reflines: drawAxes(im)
-           cv.imwrite(fn,im)
-        im = centreIm
     if args.reflines:
         drawAxes(im)
 
@@ -162,6 +155,8 @@ if __name__ == "__main__":
             # setParameters( sim, row )
             setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )
+            sim.setCentre( row["etaX"], row["etaY"] )
+                    
             sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
                                      float(row["theta"]) ) 
             namestem = row["filename"].split(".")[0]

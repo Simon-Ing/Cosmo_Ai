@@ -33,6 +33,7 @@ private:
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
+    cv::Point2d centrepoint ;
     int nterms=16 ;
     int bgcolour=0 ;
     LensModel *sim = NULL ;
@@ -89,6 +90,7 @@ public:
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
 
+    void setCentre( double x, double y ) ;
     void setAlphaXi( int m, int s, double val ) ;
     void setBetaXi( int m, int s, double val ) ;
 };

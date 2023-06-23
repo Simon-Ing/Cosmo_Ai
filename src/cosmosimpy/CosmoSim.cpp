@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
+/* (C) 2022-23: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "CosmoSim.h"
 
@@ -17,6 +17,9 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
+void CosmoSim::setCentre( double x, double y ) {
+   centrepoint = cv::Point2d( x, y ) ;
+}
 void CosmoSim::setAlphaXi( int m, int s, double val ) {
       if ( NULL == roulettelens )
 	 roulettelens = new RouletteLens() ;
@@ -261,6 +264,7 @@ bool CosmoSim::runSim() {
    if ( lens != NULL ) {
       lens->setEinsteinR( einsteinR ) ;
    }
+   sim->setCentre( centrepoint ) ;
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
    std::cout << "[runSim] thread section\n" ;
@@ -378,6 +382,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getAlphaXi", &CosmoSim::getAlphaXi)
         .def("getBetaXi", &CosmoSim::getBetaXi)
         .def("setAlphaXi", &CosmoSim::setAlphaXi)
+        .def("setCentre", &CosmoSim::setCentre)
         .def("setBetaXi", &CosmoSim::setBetaXi)
         .def("getChi", &CosmoSim::getChi)
         .def("getOffset", &CosmoSim::getOffset)
