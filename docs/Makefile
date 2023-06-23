@@ -1,3 +1,4 @@
+
 SVG=lensmodel.svg points.svg
 all: $(SVG)
 
@@ -9,4 +10,3 @@ install: $(SVG)
 
 %.svg: %.pdf
 	inkscape -z $< --export-plain-svg=$@
-

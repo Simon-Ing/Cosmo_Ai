@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net>
 
 """
 Generate an image for given parameters.
@@ -62,6 +63,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         name = args.name
     sim.runSim()
     centrepoint = makeOutput(sim,args,name,actual=args.actual,apparent=args.apparent,original=args.original,reflines=args.reflines)
+    print( "[datagen.py] Centre Point", centrepoint )
     if args.join:
         # sim.setMaskMode(False)
         sim.runSim()
