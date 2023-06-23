@@ -17,17 +17,8 @@ enum ModelSpec { CSIM_MODEL_RAYTRACE,
                   CSIM_MODEL_POINTMASS_ROULETTE,
                   CSIM_MODEL_SIS_ROULETTE,
                   CSIM_NOMODEL } ;
-/*
-enum LensSpec { CSIM_LENS_SPHERE,
-                  CSIM_LENS_PM_ROULETTE, 
-                  CSIM_LENS_ROULETTE_SIS, 
-                  CSIM_LENS_PM,
-                  CSIM_LENS_PURESAMPLED_SIS,
-                  CSIM_LENS_SAMPLED_SIS,
-                  CSIM_LENS_RAYTRACE,
-                  CSIM_NOLENS } ;
-                  */
 enum PsiSpec    { CSIM_PSI_SIS,
+                  CSIM_NOPSI_ROULETTE,
                   CSIM_NOPSI_PM,
                   CSIM_NOPSI_SIS,
                   CSIM_NOPSI } ;
@@ -42,6 +33,7 @@ private:
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;
     double xPos=10, yPos=0, rPos=10, thetaPos=0; ;
+    cv::Point2d centrepoint ;
     int nterms=16 ;
     int bgcolour=0 ;
     LensModel *sim = NULL ;
@@ -55,6 +47,7 @@ private:
 
     Lens *lens = NULL ;
     PsiFunctionLens *psilens = NULL ;
+    RouletteLens *roulettelens = NULL ;
 
 public:
     CosmoSim();
@@ -90,12 +83,16 @@ public:
     cv::Mat getPsiMap() ;
     cv::Mat getMassMap() ;
 
+    cv::Point2d getOffset( double x, double y ) ;
     double getChi( ) ;
     double getAlpha( double x, double y, int m, int s ) ;
     double getBeta( double x, double y, int m, int s ) ;
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
 
+    void setCentre( double x, double y ) ;
+    void setAlphaXi( int m, int s, double val ) ;
+    void setBetaXi( int m, int s, double val ) ;
 };
 
 #endif // COSMOSIM_FACADE_H

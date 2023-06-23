@@ -1,13 +1,5 @@
 #! /usr/bin/env python3
 
-"""
-Take an image and return an image with only the 
-largest connected component.
-
-This is depecrated as the the new makeimage.py script includes
-the post-processing.
-"""
-
 import cv2 as cv
 import sys
 import os

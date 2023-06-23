@@ -40,7 +40,7 @@ public:
     cv::Mat getPsiImage( ) const ;  // Discouraged
     cv::Mat getMassImage() const ;  // Discouraged
 
-    void initAlphasBetas();
+    virtual void initAlphasBetas();
     virtual void calculateAlphaBeta( cv::Point2d xi );
     void setFile(std::string) ;
     void setNterms(int) ;
@@ -102,6 +102,18 @@ public:
 
     virtual double getXiAbs( double ) ;
     virtual cv::Point2d getXi( cv::Point2d ) ;
+};
+
+class RouletteLens : public Lens {
+   public:
+      virtual void updatePsi( cv::Size ) ;
+      virtual void updatePsi( ) ;
+      virtual void setEinsteinR( double ) ;
+      virtual void initAlphasBetas();
+      virtual void calculateAlphaBeta( cv::Point2d xi );
+      virtual cv::Point2d getXi( cv::Point2d ) ;
+      void setAlphaXi( int, int, double ) ;
+      void setBetaXi( int, int, double ) ;
 };
 
 #endif // LENS_H

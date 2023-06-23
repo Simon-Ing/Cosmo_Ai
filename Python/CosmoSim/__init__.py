@@ -1,4 +1,4 @@
-# (C) 2022: Hans Georg Schaathun <georg@schaathun.net> 
+# (C) 2022-23: Hans Georg Schaathun <georg@schaathun.net> 
 
 import CosmoSim.CosmoSimPy as cs
 import numpy as np
@@ -11,7 +11,8 @@ PsiSpec = cs.PsiSpec
 
 lensDict = {
         "SIS" : PsiSpec.SIS,
-        "PM" : PsiSpec.PM
+        "PM" : PsiSpec.PM,
+        "Roulette" : PsiSpec.Roulette
         }
 modelDict = {
         "Raytrace" : ModelSpec.Raytrace,

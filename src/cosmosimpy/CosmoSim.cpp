@@ -1,4 +1,4 @@
-/* (C) 2022: Hans Georg Schaathun <georg@schaathun.net> */
+/* (C) 2022-23: Hans Georg Schaathun <georg@schaathun.net> */
 
 #include "CosmoSim.h"
 
@@ -17,7 +17,27 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
+void CosmoSim::setCentre( double x, double y ) {
+   centrepoint = cv::Point2d( x, y ) ;
+}
+void CosmoSim::setAlphaXi( int m, int s, double val ) {
+      if ( NULL == roulettelens )
+        roulettelens = new RouletteLens() ;
+      return roulettelens->setAlphaXi( m, s, val ) ;
+}
+void CosmoSim::setBetaXi( int m, int s, double val ) {
+      if ( NULL == roulettelens )
+        roulettelens = new RouletteLens() ;
+      return roulettelens->setBetaXi( m, s, val ) ;
+}
+
 double CosmoSim::getChi( ) { return chi ; } ;
+cv::Point2d CosmoSim::getOffset( double x, double y ) {
+   cv::Point2d pt = sim->getOffset( cv::Point2d( x,y ) ) ; 
+   std::cout << "[CosmoSim::getOffset] " << pt << "\n" ;
+   return pt ;
+} ;
+
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
           return psilens->getAlphaXi( m, s ) ;
@@ -123,6 +143,15 @@ void CosmoSim::initLens() {
           lens = psilens = new SIS() ;
           lens->setFile(filename) ;
           lens->initAlphasBetas() ;
+          break ;
+       case CSIM_NOPSI_ROULETTE:
+          std::cout << "[initLens] Roulette with No Lens "
+                << lensmode << ")\n" ;
+         if ( roulettelens == NULL ) {
+            throw std::logic_error( "Roulette Lens not instantiated." ) ;
+         }
+          lens = roulettelens ;
+          roulettelens == NULL ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
@@ -338,12 +367,17 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBeta", &CosmoSim::getBeta)
         .def("getAlphaXi", &CosmoSim::getAlphaXi)
         .def("getBetaXi", &CosmoSim::getBetaXi)
+        .def("setAlphaXi", &CosmoSim::setAlphaXi)
+        .def("setCentre", &CosmoSim::setCentre)
+        .def("setBetaXi", &CosmoSim::setBetaXi)
         .def("getChi", &CosmoSim::getChi)
+        .def("getOffset", &CosmoSim::getOffset)
         ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 
        .value( "SIS", CSIM_PSI_SIS )
        .value( "PM", CSIM_NOPSI_PM ) 
+       .value( "Roulette", CSIM_NOPSI_ROULETTE ) 
        .value( "NoPsiSIS", CSIM_NOPSI_SIS ) 
        .value( "NoPsi", CSIM_NOPSI ) ;
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
@@ -405,5 +439,25 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         });
     // Note.  The cv::Mat object returned needs to by wrapped in python:
     // `np.array(im, copy=False)` where `im` is the `Mat` object.
+
+    pybind11::class_<cv::Point2d>(m, "Point", pybind11::buffer_protocol())
+        .def_buffer([](cv::Point2d& pt) -> pybind11::buffer_info {
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    & pt,
+                    // Size of one scalar
+                    sizeof(double),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<double>::format(),
+                    // Number of dimensions
+                    1,
+                        // Buffer dimensions
+                    { 2 },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(double)
+                    }
+                 );
+        });
 
 }
