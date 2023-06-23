@@ -340,3 +340,28 @@ void LensModel::setXi( cv::Point2d x ) {
 void LensModel::setLens( Lens *l ) {
    lens = l ;
 }
+
+cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
+   cv::Point2d chieta, xy, ij ; 
+   cv::Mat psi, psiX, psiY ;
+
+   lens->updatePsi() ;
+   psi = lens->getPsi() ;
+   psiX = lens->getPsiX() ;
+   psiY = lens->getPsiY() ;
+   ij = imageCoordinate( xi1, psi ) ;
+   xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
+   // Now xy is $\xi'-\chi\eta'$
+   chieta = xi1 - xy ;
+   // chieta is really \chi\eta'
+
+   // return is the difference between source point corresponding to the
+   // reference point in the lens plane and the actual source centre
+   return chieta/CHI - getEta() ;
+}
+
+void LensModel::setCentre( cv::Point2d pt ) {
+   setNu( cv::Point2d( 0,0 ) ) ;
+   eta = -pt ;
+   etaOffset = pt ;
+}

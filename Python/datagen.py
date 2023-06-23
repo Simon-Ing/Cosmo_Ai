@@ -116,6 +116,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         maxm = int(args.nterms)
         ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
+        eta = sim.getOffset(pt=centrepoint)
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )
