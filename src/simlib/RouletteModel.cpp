@@ -102,6 +102,7 @@ void RouletteModel::updateApparentAbs( ) {
    cv::Point2d chieta = CHI*getEta() ;
    if ( lens == NULL ) 
       throw std::logic_error( "No lens model" ) ;
+   std::cout << "[RouletteModel] updateApparentAbs() chieta = " << chieta << "\n" ;
    lens->updatePsi() ;
    std::cout << "[RouletteModel] updateApparentAbs() called updatePsi()\n" ;
    cv::Point2d xi1 = lens->getXi( chieta ) ;

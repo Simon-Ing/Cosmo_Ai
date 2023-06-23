@@ -7,9 +7,11 @@
 #include <fstream>
 
 void RouletteLens::updatePsi( ) { 
+   std::cout << "RouletteLens::updatePsi()\n" ;
    throw NotSupported() ;
 }
 void RouletteLens::updatePsi( cv::Size size ) { 
+   std::cout << "RouletteLens::updatePsi()\n" ;
    throw NotSupported() ;
 }
 void RouletteLens::setEinsteinR( double r ) { 
