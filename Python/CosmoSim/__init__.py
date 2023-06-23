@@ -104,10 +104,13 @@ class CosmoSim(cs.CosmoSim):
     def getBetas(self,maxm=2):
         return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
     def getAlphaBetas(self,maxm=2,pt=None):
+        """
+        Get the roulette amplitudes for a given point in the source plane.
+        """
         if pt == None:
            r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
         else:
-            (x,y) = pt
+            (x,y) = pt*getChi()
             r = [ (self.getAlpha(x,y,m,s),self.getBeta(x,y,m,s)) 
                     for (m,s) in getMS(maxm) ]
         return [ x for p in r for x in p ]

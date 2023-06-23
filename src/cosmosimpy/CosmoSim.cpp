@@ -27,6 +27,9 @@ void CosmoSim::setBetaXi( int m, int s, double val ) {
 	 roulettelens = new RouletteLens() ;
       return roulettelens->setBetaXi( m, s, val ) ;
 }
+
+double CosmoSim::getChi( ) { return chi ; } ;
+
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
           return psilens->getAlphaXi( m, s ) ;
@@ -371,6 +374,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBetaXi", &CosmoSim::getBetaXi)
         .def("setAlphaXi", &CosmoSim::setAlphaXi)
         .def("setBetaXi", &CosmoSim::setBetaXi)
+        .def("getChi", &CosmoSim::getChi)
         ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 

@@ -47,6 +47,8 @@ void RouletteModel::markMask( cv::InputOutputArray imgD ) {
 
 // Calculate the main formula for the SIS model
 cv::Point2d RouletteModel::getDistortedPos(double r, double theta) const {
+   // nu refers to a position in the source image relative to its centre.
+   // It is scaled to the lens plane and rescaled when rpt is calculated below.
     double nu1 = r*cos(theta) ;
     double nu2 = r*sin(theta) ;
 
@@ -107,18 +109,32 @@ void RouletteModel::updateApparentAbs( ) {
    std::cout << "[RouletteModel] updateApparentAbs() done\n" ;
 }
 void RouletteModel::setXi( cv::Point2d xi1 ) {
-   cv::Point2d chieta, xy, ij ; 
+   // xi1 is an alternative reference point \xi'
+   xi = xi1 ;   // reset \xi
+
+   // etaOffset is the difference between source point corresponding to the
+   // reference point in the lens plane and the actual source centre
+   etaOffset = getOffset( xi1 ) ;
+}
+/*
+void RouletteModel::setCentre( cv::Point2d nu1 ) {
+   // nu1 (\nu') is the centre point in the distorted image 
+   // \xi'=\chi\nu' will be used as reference point in the lens plane.
+   cv::Point2d chieta, eta1, ij ; 
    cv::Mat psi, psiX, psiY ;
+   
+   cv::Point2d xi1 = CHI*nu1 ; // \xi' = \chi\nu'
 
    lens->updatePsi() ;
    psi = lens->getPsi() ;
    psiX = lens->getPsiX() ;
    psiY = lens->getPsiY() ;
-   // gradient( -psi, psiX, psiY ) ;
    ij = imageCoordinate( xi1, psi ) ;
-   xy = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
-   chieta = xi1 - xy ;
+   chieta = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
 
-   xi = xi1 ;
-   etaOffset = chieta/CHI - getEta() ;
+   setNu( cv::Point2d( 0,0 ) ) ;
+
+   eta = chieta1/ETA ;
+   etaOffset = -eta ;
 }
+*/

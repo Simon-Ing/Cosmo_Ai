@@ -57,6 +57,8 @@ public:
     LensModel();
     LensModel(bool);
     ~LensModel();
+    void setCentre( cv::Point2d ) ;
+    cv::Point2d getOffset( cv::Point2d ) ;
     void update();
     void updateSecondary();
     void update( cv::Point2d );

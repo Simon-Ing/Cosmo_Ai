@@ -26,9 +26,10 @@
    	\coordinate [label=left:$\xi$] (xi) at (2.25,3);
    	\coordinate [label=right:$\xi'$] (xip) at (2.625,3.1875);
    	\coordinate (obs) at (0,0);
-	\draw [decorate, decoration = {brace},thick] (eta) --  (etap) ;
-	\draw [decorate, decoration = {brace}, thick] (xip) --  (xi) ;
-	\draw [decorate, decoration = {brace}, thick] (nu) --  (nup) ;
+
+	\draw [decorate, decoration = {brace},thick] (eta) --  (etap) node [midway,above=0.5ex] {$\Delta\eta$};
+	\draw [decorate, decoration = {brace}, thick] (xip) --  (xi) node [near start,above=-4ex] {$\Delta\xi$};
+	\draw [decorate, decoration = {brace}, thick] (nu) --  (nup) node [midway,above=0.5ex] {$\Delta\nu$};
 
 	\path [draw,blue] (obs) -- (xi) ;
 	\path [draw,blue] (xi) -- (eta) ;

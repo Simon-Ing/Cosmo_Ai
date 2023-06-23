@@ -19,6 +19,7 @@ public:
 
     using LensModel::LensModel ;
     virtual void setLens( Lens* ) ;
+    // void setCentre( cv::Point2d ) ;
 protected:
     std::array<std::array<double, 202>, 201> alphas_val;
     std::array<std::array<double, 202>, 201> betas_val;

@@ -82,6 +82,7 @@ public:
     cv::Mat getPsiMap() ;
     cv::Mat getMassMap() ;
 
+    double getChi( ) ;
     double getAlpha( double x, double y, int m, int s ) ;
     double getBeta( double x, double y, int m, int s ) ;
     double getAlphaXi( int m, int s ) ;
