@@ -17,7 +17,7 @@ from CosmoSim import CosmoSim,getMSheaders
 from Arguments import CosmoParser, setParameters
 import pandas as pd
 
-outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
+defaultoutcols = [ "index", "filename", "source", "lens", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
 
 def setParameters(sim,row):
     print( row ) 
@@ -49,7 +49,6 @@ def setParameters(sim,row):
         sim.setResolution( row["imagesize"] )
     if row.get("nterms",None) != None:
         sim.setNterms( row["nterms"] )
-
 
 def makeSingle(sim,args,name=None,row=None,outstream=None):
     """Process a single parameter set, given either as a pandas row or
@@ -123,6 +122,8 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )
+        r.append( eta[0] )
+        r.append( eta[1] )
         print(ab)
         r += ab
         line = ",".join( [ str(x) for x in r ] )
@@ -205,9 +206,6 @@ if __name__ == "__main__":
         sim.setNterms( int(args.nterms) )
     if args.outfile:
         outstream = open(args.outfile,"wt")
-        headers = ",".join( outcols + [ "centreX", "centreY" ] + getMSheaders(int(args.nterms)) )
-        headers += "\n"
-        outstream.write(headers)
     else:
         outstream = None
 
@@ -218,6 +216,11 @@ if __name__ == "__main__":
         frame = pd.read_csv(args.csvfile)
         cols = frame.columns
         print( "columns:", cols )
+        outcols = list(frame.columns)
+        if outstream != None:
+           headers = ",".join( outcols + [ "centreX", "centreY", "etaX", "etaY" ] + getMSheaders(int(args.nterms)) )
+           headers += "\n"
+           outstream.write(headers)
         for index,row in frame.iterrows():
             makeSingle(sim,args,row=row,outstream=outstream)
     else:
