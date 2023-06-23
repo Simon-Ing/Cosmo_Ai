@@ -1,4 +1,5 @@
 #! /usr/bin/env python2
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net>
 # Generate a set of lens/source parameters
 
 import multiprocessing as mp
