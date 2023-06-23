@@ -29,6 +29,11 @@ void CosmoSim::setBetaXi( int m, int s, double val ) {
 }
 
 double CosmoSim::getChi( ) { return chi ; } ;
+cv::Point2d CosmoSim::getOffset( double x, double y ) {
+   cv::Point2d pt = sim->getOffset( cv::Point2d( x,y ) ) ; 
+   std::cout << "[CosmoSim::getOffset] " << pt << "\n" ;
+   return pt ;
+} ;
 
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
@@ -54,7 +59,7 @@ double CosmoSim::getAlpha(
       else if ( NULL != lens )
           r = lens->getAlpha( xi, m, s ) ;
       else throw NotSupported();
-      std::cout << "getAlpha(" << xi << ") " << r << "\n" ;
+      // std::cout << "getAlpha(" << xi << ") " << r << "\n" ;
       return r ;
 }
 double CosmoSim::getBeta( 
@@ -67,7 +72,7 @@ double CosmoSim::getBeta(
       else if ( NULL != lens )
           r = lens->getBeta( xi, m, s ) ;
       else throw NotSupported();
-      std::cout << "getBeta(" << xi << ") " << r << "\n" ;
+      // std::cout << "getBeta(" << xi << ") " << r << "\n" ;
       return r ;
 }
 
@@ -375,6 +380,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setAlphaXi", &CosmoSim::setAlphaXi)
         .def("setBetaXi", &CosmoSim::setBetaXi)
         .def("getChi", &CosmoSim::getChi)
+        .def("getOffset", &CosmoSim::getOffset)
         ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 
@@ -442,5 +448,25 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         });
     // Note.  The cv::Mat object returned needs to by wrapped in python:
     // `np.array(im, copy=False)` where `im` is the `Mat` object.
+
+    pybind11::class_<cv::Point2d>(m, "Point", pybind11::buffer_protocol())
+        .def_buffer([](cv::Point2d& pt) -> pybind11::buffer_info {
+                return pybind11::buffer_info(
+                    // Pointer to buffer
+                    & pt,
+                    // Size of one scalar
+                    sizeof(double),
+                    // Python struct-style format descriptor
+                    pybind11::format_descriptor<double>::format(),
+                    // Number of dimensions
+                    1,
+                        // Buffer dimensions
+                    { 2 },
+                    // Strides (in bytes) for each index
+                    {
+                        sizeof(double)
+                    }
+                 );
+        });
 
 }
