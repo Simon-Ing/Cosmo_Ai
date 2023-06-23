@@ -97,12 +97,6 @@ void RouletteModel::calculateAlphaBeta() {
     std::cout << "RouletteModel calculateAlphaBeta done\n" ;
 }
 
-void RouletteModel::updateApparentAbs( ) {
-   cv::Point2d chieta = CHI*getEta() ;
-   lens->updatePsi() ;
-   cv::Point2d xi1 = lens->getXi( chieta ) ;
-   setNu( xi1/CHI ) ;
-}
 void RouletteModel::setXi( cv::Point2d xi1 ) {
    // xi1 is an alternative reference point \xi'
    xi = xi1 ;   // reset \xi
