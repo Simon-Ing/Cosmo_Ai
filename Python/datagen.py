@@ -115,6 +115,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         plt.close()
     if outstream:
         maxm = int(args.nterms)
+        print( "[datagen.py] Finding Alpha/beta; centrepoint=", centrepoint )
         ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
         eta = sim.getOffset(pt=centrepoint)
