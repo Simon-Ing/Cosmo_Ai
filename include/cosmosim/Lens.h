@@ -111,6 +111,7 @@ class RouletteLens : public Lens {
       virtual void setEinsteinR( double ) ;
       virtual void initAlphasBetas();
       virtual void calculateAlphaBeta( cv::Point2d xi );
+      virtual cv::Point2d getXi( cv::Point2d ) ;
       void setAlphaXi( int, int, double ) ;
       void setBetaXi( int, int, double ) ;
 };

@@ -8,11 +8,10 @@
 
 void RouletteLens::updatePsi( ) { 
    std::cout << "RouletteLens::updatePsi()\n" ;
-   throw NotSupported() ;
+   // throw NotSupported() ;
 }
 void RouletteLens::updatePsi( cv::Size size ) { 
-   std::cout << "RouletteLens::updatePsi()\n" ;
-   throw NotSupported() ;
+   updatePsi() ;
 }
 void RouletteLens::setEinsteinR( double r ) { 
    std::cout << "[RouletteLens::setEinsteinR] ignoring.\n" ;
@@ -31,4 +30,7 @@ void RouletteLens::setAlphaXi( int m, int s, double val ) {
 }
 void RouletteLens::setBetaXi( int m, int s, double val ) {
    betas_val[m][s] = 0 ;
+}
+cv::Point2d RouletteLens::getXi( cv::Point2d eta ) {
+   return cv::Point2d( 0, 0 ) ;
 }
