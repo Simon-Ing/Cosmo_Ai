@@ -53,7 +53,7 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
     """Process a single parameter set, given either as a pandas row or
     just as args parsed from the command line.
     """
-    if row != None:
+    if not row is None:
        setParameters( sim, row )
        print( "index", row["index"] )
        name=row["filename"].split(".")[0]
