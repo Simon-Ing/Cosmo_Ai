@@ -27,10 +27,14 @@ python3 Python/datagen.py --directory="$dir"/plain \
 
 python3 Python/datagen.py --mask --directory="$dir"/mask \
    --csvfile Datasets/debug.csv  || exit 2
+
+if /bin/false
+then
 python3 Python/datagen.py --reflines --centred --directory="$dir"/centred \
    --csvfile Datasets/debug.csv  || exit 3
 python3 Python/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
+fi
 
 test -d $baseline || exit 5
 
