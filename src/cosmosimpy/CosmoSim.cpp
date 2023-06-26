@@ -264,7 +264,8 @@ bool CosmoSim::runSim() {
    if ( lens != NULL ) {
       lens->setEinsteinR( einsteinR ) ;
    }
-   sim->setCentre( centrepoint ) ;
+   // The setCentre() call is essential for RouletteLens but probably causes problem for other models.  Dehugging.
+   // sim->setCentre( centrepoint ) ;
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
    std::cout << "[runSim] thread section\n" ;
