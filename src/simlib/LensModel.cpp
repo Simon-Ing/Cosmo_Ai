@@ -357,7 +357,7 @@ cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
 
 void LensModel::setCentre( cv::Point2d pt ) {
    setNu( cv::Point2d( 0,0 ) ) ;
-   setXY( -pt.x, -pt.y, chi, einsteinR ) ;
+   setXY( -pt.x, -pt.y, CHI, einsteinR ) ;
    etaOffset = pt ;
    std::cout << "[LensModel::setCentre] etaOffset = " << etaOffset << "\n" ;
 }
