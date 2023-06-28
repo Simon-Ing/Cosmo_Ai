@@ -10,15 +10,11 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from CosmoSim.Image import centreImage, drawAxes
+from CosmoSim.Image import drawAxes
 from CosmoSim import CosmoSim,getMSheaders,PsiSpec,ModelSpec
 
 from Arguments import CosmoParser
 import pandas as pd
-
-outcols = [ "index", "filename", "source", "chi", "R", "phi", "einsteinR",
-            "sigma", "sigma2", "theta", "x", "y" ]
-
 
 def setParameters(sim,row):
     print( row ) 
