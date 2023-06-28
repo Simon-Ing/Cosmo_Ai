@@ -26,10 +26,10 @@ void RouletteLens::calculateAlphaBeta( cv::Point2d xi ) {
 void RouletteLens::initAlphasBetas() { }
 
 void RouletteLens::setAlphaXi( int m, int s, double val ) {
-   alphas_val[m][s] = 0 ;
+   alphas_val[m][s] = val ;
 }
 void RouletteLens::setBetaXi( int m, int s, double val ) {
-   betas_val[m][s] = 0 ;
+   betas_val[m][s] = val ;
 }
 cv::Point2d RouletteLens::getXi( cv::Point2d eta ) {
    return cv::Point2d( 0, 0 ) ;

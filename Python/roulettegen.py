@@ -109,7 +109,7 @@ def setAmplitudes( sim, row, coefs ):
         for s in range((m+1)%2, m+2, 2):
             alpha = row[f"alpha[{m}][{s}]"]
             beta = row[f"beta[{m}][{s}]"]
-            print( f"alpha[{s}][{m}] = {alpha}\t\tbeta[{s}][{m}] = {beta}." )
+            print( f"alpha[{m}][{s}] = {alpha}\t\tbeta[{m}][{s}] = {beta}." )
             sim.setAlphaXi( m, s, alpha )
             sim.setBetaXi( m, s, beta )
 

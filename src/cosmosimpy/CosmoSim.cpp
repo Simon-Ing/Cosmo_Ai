@@ -157,7 +157,7 @@ void CosmoSim::initLens() {
 	     throw std::logic_error( "Roulette Lens not instantiated." ) ;
 	  }
           lens = roulettelens ;
-          roulettelens == NULL ;
+          roulettelens = NULL ;
           break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
