@@ -242,12 +242,7 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     // Calculate Polar Co-ordinates
     phi = atan2(eta.y, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] eta.y=" << eta.y 
-              << "; actualY=" << Y 
-              << "; eta=" << eta 
-              << "\n" ;
-
-    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << eta.y
+    std::cout << "[setXY] eta=" << eta 
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 }
 
@@ -362,8 +357,9 @@ cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
 
 void LensModel::setCentre( cv::Point2d pt ) {
    setNu( cv::Point2d( 0,0 ) ) ;
-   eta = -pt ;
+   setXY( -pt.x, -pt.y, chi, einsteinR ) ;
    etaOffset = pt ;
+   std::cout << "[LensModel::setCentre] etaOffset = " << etaOffset << "\n" ;
 }
 
 void LensModel::updateApparentAbs( ) {
