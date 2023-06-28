@@ -266,6 +266,7 @@ bool CosmoSim::runSim() {
    }
    if ( CSIM_NOPSI_ROULETTE == lensmode ) {
    // The setCentre() call is essential for RouletteLens causes problem for other models.  
+      std::cout << "[CosmoSim.cpp] setCentre( " << centrepoint << ")\n" ;
       sim->setCentre( centrepoint ) ;
    }
    std::cout << "[runSim] set parameters, ready to run\n" ;

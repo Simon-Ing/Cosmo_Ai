@@ -105,10 +105,10 @@ class CosmoSim(cs.CosmoSim):
         return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
     def getOffset(self,pt):
         print ( "[getOffset] pt=", pt )
-        r = super().getOffset(pt[1],pt[0])
+        r = super().getOffset(pt[0],pt[1])
         a = np.array(r)
         print ( "[getOffset] r=", a )
-        return (a[1],a[0])
+        return (a[0],a[1])
     def getAlphaBetas(self,maxm=2,pt=None):
         """
         Get the roulette amplitudes for a given point in the source plane.
@@ -116,7 +116,7 @@ class CosmoSim(cs.CosmoSim):
         if pt == None:
            r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
         else:
-            (x,y) = pt
+            (y,x) = pt
             x *= self.getChi()
             y *= self.getChi()
             r = [ (self.getAlpha(x,y,m,s),self.getBeta(x,y,m,s)) 

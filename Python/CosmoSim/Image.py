@@ -9,6 +9,16 @@ import numpy as np
 import cv2
 
 def centreImage(im):
+  """
+  Shift an image so that the centre of luminence is the centre of the image.
+
+  Input is the image `im` as a numpy array.
+
+  The return value `(centred,(x,y))` consists of the new, shifted
+  image `centred` and the co-ordinates `(x,y)` of the ce3ntre of 
+  luminence in the original image, written as normal planar co-ordinatres
+  where the x-axis points right and the y-axis points up.
+  """
 
   if len(im.shape) > 2:
      grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
@@ -47,7 +57,7 @@ def centreImage(im):
 
   print( f"Centre: ({xm},{ym}) ;  " 
        + f"Range ({centred.min()},{centred.max()})" )
-  return (centred,(xm,ym))
+  return (centred,(ym,-xm))
 
 def drawAxes(im):
   m,n = im.shape[:2]
