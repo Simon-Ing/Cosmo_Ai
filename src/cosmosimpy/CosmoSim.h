@@ -112,7 +112,7 @@ private:
 
 public:
     RouletteSim();
-    void initSim() ;
+    void initSim( double, double, double, double ) ;
 
     void setNterms(int);
     void setImageSize(int);
@@ -133,7 +133,6 @@ public:
     cv::Mat getActual(bool) ;
     cv::Mat getDistorted(bool) ;
 
-    void setCentre( double x, double y ) ;
     void setAlphaXi( int m, int s, double val ) ;
     void setBetaXi( int m, int s, double val ) ;
 };

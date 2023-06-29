@@ -380,7 +380,6 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setResolution", &RouletteSim::setResolution)
         .def("setBGColour", &RouletteSim::setBGColour)
         .def("setAlphaXi", &RouletteSim::setAlphaXi)
-        .def("setCentre", &RouletteSim::setCentre)
         .def("setBetaXi", &RouletteSim::setBetaXi) ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 

@@ -10,9 +10,6 @@ RouletteSim::RouletteSim() {
 }
 
 
-void RouletteSim::setCentre( double x, double y ) {
-   centrepoint = cv::Point2d( x, y ) ;
-}
 void RouletteSim::setAlphaXi( int m, int s, double val ) {
       if ( NULL == sim )
 	 throw std::logic_error( "Simulator not initialised" ) ;
@@ -44,7 +41,7 @@ void RouletteSim::setNterms(int c) { nterms = c ; }
 void RouletteSim::setSourceMode(int m) { srcmode = m ; }
 void RouletteSim::setMaskMode(bool b) { maskmode = b ; }
 void RouletteSim::setBGColour(int b) { bgcolour = b ; }
-void RouletteSim::initSim() {
+void RouletteSim::initSim( double offsetX, double offsetY, double etaX, double etaY ) {
    std::cout << "[RouletteSim.cpp] initSim\n" ;
 
    if ( sim ) delete sim ;
@@ -52,7 +49,7 @@ void RouletteSim::initSim() {
    std::cout << "Running Roulette Regenerator; "
                 << "centrepoint=" << centrepoint << "\n" ;
    sim = new RouletteRegenerator() ;
-   sim->setCentre( centrepoint ) ;
+   sim->setCentre( cv::Point( offsetX, offsetY ), cv::Point( etaX, etaY ) ) ;
 
    return ;
 }

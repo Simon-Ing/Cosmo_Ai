@@ -138,10 +138,10 @@ if __name__ == "__main__":
     for index,row in frame.iterrows():
             print( "Processing", index )
             sys.stdout.flush()
-            sim.setCentre( row["etaX"], row["etaY"] )
             print( "Eta", row["etaX"], row["etaY"] )
             print( "Centre Point", row["centreX"], row["centreY"] )
-            sim.initSim() 
+            sim.initSim( row["etaX"], row["etaY"],
+                         row["etaX"], row["etaY"] )
             print( "Initialised simulator" )
             sys.stdout.flush()
 
