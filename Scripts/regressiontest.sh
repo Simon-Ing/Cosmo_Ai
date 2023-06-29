@@ -20,6 +20,7 @@ for flag in $F plain
 do
    mkdir -p $dir/$flag
    mkdir -p Test/diff/$flag
+   mkdir -p Test/montage/$flag
 done
 
 python3 Python/datagen.py --directory="$dir"/plain \
@@ -36,12 +37,22 @@ python3 Python/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
 fi
 
-test -d $baseline || echo $baseline does not exist ; exit 5 
+if test -d $baseline
+then 
 
-for flag in $F plain 
-do
-   echo $flag
-   python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag
-done
+  for flag in $F plain 
+  do
+     echo $flag
+     python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag
+     for f in Test/diff/$flag/*
+     do
+        ff=`basename $f`
+        convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff
+     done
+  done
 
-echo $F
+  echo $F
+else
+   echo $baseline does not exist 
+   exit 5 
+fi
