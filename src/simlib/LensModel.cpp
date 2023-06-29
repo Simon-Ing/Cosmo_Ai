@@ -83,7 +83,7 @@ void LensModel::updateInner( ) {
     std::cout << "[LensModel::updateInner()] xi=" << getXi()   
               << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
     std::cout << "[LensModel::updateInner()] nu=" << getNu()   
-              << "; centre=" << getCentre() << "\n" ;
+              << "; centre=" << getCentre() << "\n" << std::flush ;
 
     auto startTime = std::chrono::system_clock::now();
 
@@ -112,7 +112,7 @@ void LensModel::updateInner( ) {
     auto endTime = std::chrono::system_clock::now();
     std::cout << "Time to update(): " 
               << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() 
-              << " milliseconds" << std::endl;
+              << " milliseconds" << std::endl << std::flush ;
 
 }
 

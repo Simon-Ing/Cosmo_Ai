@@ -20,3 +20,7 @@ void RouletteRegenerator::setAlphaXi( int m, int s, double val ) {
 void RouletteRegenerator::setBetaXi( int m, int s, double val ) {
    betas_val[m][s] = val ;
 }
+void RouletteRegenerator::calculateAlphaBeta() { 
+   std::cout << "[RouletteRegenerator] calculateAlphaBeta() does nothuing."
+      << std::endl << std::flush ;
+} 

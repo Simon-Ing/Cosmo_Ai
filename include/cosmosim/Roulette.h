@@ -67,6 +67,7 @@ class RouletteRegenerator : public RouletteModel {
     void setBetaXi( int, int, double ) ;
   protected:
     virtual void updateApparentAbs() ;
+    virtual void calculateAlphaBeta();
   private:
 };
 

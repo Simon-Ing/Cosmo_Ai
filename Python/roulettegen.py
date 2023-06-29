@@ -64,8 +64,12 @@ def parseCols(l):
 
 
 def makeSingle(sim,args,name=None,row=None):
+    print( "makeSingle" )
+    sys.stdout.flush()
     if name == None: name = args.name
     sim.runSim()
+    print( "runSim() returned" )
+    sys.stdout.flush()
 
     im = sim.getDistortedImage( 
                     reflines=False,
@@ -113,7 +117,6 @@ if __name__ == "__main__":
         raise Exception( "No CSV file given; the --csvfile option is mandatory." )
 
     print( "Instantiate RouletteSim object ... " )
-    sys.stdout.flush()
     sim = CosmoSim()
     print( "Done" )
 
@@ -131,21 +134,23 @@ if __name__ == "__main__":
     coefs = RouletteAmplitudes(cols)
     sim.setNterms( coefs.getNterms() )
     print( "Number of roulette terms: ", coefs.getNterms() )
-    sys.stdout.flush()
 
     for index,row in frame.iterrows():
             print( "Processing", index )
+            sys.stdout.flush()
+            sim.setCentre( row["etaX"], row["etaY"] )
             sim.initSim() 
-            # setParameters( sim, row )
+            print( "Initialised simulator" )
+            sys.stdout.flush()
+
             setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )
-            sim.setCentre( row["etaX"], row["etaY"] )
+            sys.stdout.flush()
                     
             sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
                                      float(row["theta"]) ) 
             namestem = row["filename"].split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
-            sys.stdout.flush()
 
     sim.close()
     print( "[roulettegen.py] Done" )

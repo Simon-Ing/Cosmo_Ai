@@ -15,12 +15,12 @@ void RouletteSim::setCentre( double x, double y ) {
 }
 void RouletteSim::setAlphaXi( int m, int s, double val ) {
       if ( NULL == sim )
-	 throw std::logic_error( "Lens Model not initialised" ) ;
+	 throw std::logic_error( "Simulator not initialised" ) ;
       return sim->setAlphaXi( m, s, val ) ;
 }
 void RouletteSim::setBetaXi( int m, int s, double val ) {
       if ( NULL == sim )
-	 throw std::logic_error( "Lens Model not initialised" ) ;
+	 throw std::logic_error( "Simulator not initialised" ) ;
       return sim->setBetaXi( m, s, val ) ;
 }
 
@@ -96,7 +96,7 @@ bool RouletteSim::runSim() {
       std::cout << "[RouletteSim.cpp] runSim() - simulator already running.\n" ;
       return false ;
    }
-   std::cout << "[RouletteSim.cpp] runSim() - running similator\n" ;
+   std::cout << "[RouletteSim.cpp] runSim() - running similator\n" << std::flush ;
    if ( NULL == sim )
 	 throw std::logic_error( "Simulator not initialised" ) ;
    initSource() ;
@@ -104,14 +104,14 @@ bool RouletteSim::runSim() {
    sim->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
    
-   std::cout << "[runSim] set parameters, ready to run\n" ;
+   std::cout << "[runSim] set parameters, ready to run\n" << std::flush ;
    Py_BEGIN_ALLOW_THREADS
-   std::cout << "[runSim] thread section\n" ;
+   std::cout << "[runSim] thread section\n" << std::flush ;
    if ( sim == NULL )
       throw std::logic_error("Simulator not initialised") ;
    sim->update() ;
    Py_END_ALLOW_THREADS
-   std::cout << "[RouletteSim.cpp] runSim() - complete\n" ;
+   std::cout << "[RouletteSim.cpp] runSim() - complete\n" << std::flush ;
    return true ;
 }
 cv::Mat RouletteSim::getSource(bool refLinesMode) {
