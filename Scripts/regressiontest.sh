@@ -36,7 +36,7 @@ python3 Python/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
 fi
 
-test -d $baseline || exit 5
+test -d $baseline || echo $baseline does not exist ; exit 5 
 
 for flag in $F plain 
 do
