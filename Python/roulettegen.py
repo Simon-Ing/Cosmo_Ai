@@ -116,9 +116,6 @@ if __name__ == "__main__":
     sim = CosmoSim()
     print( "Done" )
 
-    sim.setLensMode( "Roulette" )
-    sim.setModelMode( "RouletteRegenerator" )
-
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )
 
@@ -138,6 +135,7 @@ if __name__ == "__main__":
     print( "Number of roulette terms: ", coefs.getNterms() )
 
     for index,row in frame.iterrows():
+            sim.initSim() 
             # setParameters( sim, row )
             setAmplitudes( sim, row, coefs )
             print( "index", row["index"] )

@@ -230,12 +230,9 @@ class RouletteSim(cs.RouletteSim):
     it wraps functions returning images, to convert the data to 
     numpy arrays.
     """
-    def __init__(self,*a,maxm=50,fn=None,**kw):
+    def __init__(self,*a,maxm=50,**kw):
         super().__init__(*a,**kw)
-        if fn == None:
-            super().setFile( getFileName( maxm ) )
-        else:
-            super().setFile( fn )
+
         self._continue = True
         self.updateEvent = th.Event()
         self.simEvent = th.Event()
