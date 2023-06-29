@@ -458,3 +458,4 @@ kappa*.svg
 
 dist
 *.spec
+t.sh

@@ -63,6 +63,8 @@ class RouletteRegenerator : public RouletteModel {
   public:
     using RouletteModel::RouletteModel ;
     void setCentre( cv::Point2d ) ;
+    void setAlphaXi( int, int, double ) ;
+    void setBetaXi( int, int, double ) ;
   protected:
     virtual void updateApparentAbs() ;
   private:

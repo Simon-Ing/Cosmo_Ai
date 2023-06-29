@@ -14,3 +14,9 @@ void RouletteRegenerator::setCentre( cv::Point2d pt ) {
    std::cout << "[LensModel::setCentre] etaOffset = " << etaOffset 
         << "; nu=" << getNu() << "; eta=" << getEta() << "; xi=" << xi << "\n" ;
 }
+void RouletteRegenerator::setAlphaXi( int m, int s, double val ) {
+   alphas_val[m][s] = val ;
+}
+void RouletteRegenerator::setBetaXi( int m, int s, double val ) {
+   betas_val[m][s] = val ;
+}

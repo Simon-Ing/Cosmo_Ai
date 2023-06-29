@@ -51,7 +51,6 @@ private:
 
     Lens *lens = NULL ;
     PsiFunctionLens *psilens = NULL ;
-    RouletteLens *roulettelens = NULL ;
 
 public:
     CosmoSim();
@@ -93,10 +92,6 @@ public:
     double getBeta( double x, double y, int m, int s ) ;
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
-
-    void setCentre( double x, double y ) ;
-    void setAlphaXi( int m, int s, double val ) ;
-    void setBetaXi( int m, int s, double val ) ;
 };
 
 class RouletteSim {
@@ -114,7 +109,6 @@ private:
     void initSource() ;
 
     RouletteRegenerator *sim = NULL ;
-    RouletteLens *lens = NULL ;
 
 public:
     RouletteSim();

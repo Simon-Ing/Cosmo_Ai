@@ -17,20 +17,6 @@ void helloworld() {
    std::cout << "This is the CosmoSim Python Library!\n" ;
 }
 
-void CosmoSim::setCentre( double x, double y ) {
-   centrepoint = cv::Point2d( x, y ) ;
-}
-void CosmoSim::setAlphaXi( int m, int s, double val ) {
-      if ( NULL == roulettelens )
-	 roulettelens = new RouletteLens() ;
-      return roulettelens->setAlphaXi( m, s, val ) ;
-}
-void CosmoSim::setBetaXi( int m, int s, double val ) {
-      if ( NULL == roulettelens )
-	 roulettelens = new RouletteLens() ;
-      return roulettelens->setBetaXi( m, s, val ) ;
-}
-
 double CosmoSim::getChi( ) { return chi ; } ;
 cv::Point2d CosmoSim::getOffset( double x, double y ) {
    cv::Point2d pt = sim->getOffset( cv::Point2d( x,y ) ) ; 
@@ -149,15 +135,6 @@ void CosmoSim::initLens() {
           lens->setFile(filename) ;
           lens->initAlphasBetas() ;
           break ;
-       case CSIM_NOPSI_ROULETTE:
-          std::cout << "[initLens] Roulette with No Lens "
-                << lensmode << ")\n" ;
-	  if ( roulettelens == NULL ) {
-	     throw std::logic_error( "Roulette Lens not instantiated." ) ;
-	  }
-          lens = roulettelens ;
-          roulettelens = NULL ;
-          break ;
        case CSIM_NOPSI_PM:
        case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
@@ -196,15 +173,6 @@ void CosmoSim::initLens() {
          std::cout << "Running Roulette Lens (mode=" << modelmode << ")\n" ;
          sim = new RouletteModel() ;
          sim->setLens(lens) ;
-         break ;
-       case CSIM_MODEL_ROULETTE_REGEN:
-         std::cout << "Running Roulette Regenerator (mode=" << modelmode << ") " 
-                << "centrepoint=" << centrepoint << "\n" ;
-	 { RouletteRegenerator *lsim ;
-           sim = lsim = new RouletteRegenerator() ;
-           sim->setLens(lens) ;
-	   lsim->setCentre( centrepoint ) ;
-	 }
          break ;
        case CSIM_NOMODEL:
          std::cout << "Specified No Model.\n" ;
@@ -390,9 +358,6 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBeta", &CosmoSim::getBeta)
         .def("getAlphaXi", &CosmoSim::getAlphaXi)
         .def("getBetaXi", &CosmoSim::getBetaXi)
-        .def("setAlphaXi", &CosmoSim::setAlphaXi)
-        .def("setCentre", &CosmoSim::setCentre)
-        .def("setBetaXi", &CosmoSim::setBetaXi)
         .def("getChi", &CosmoSim::getChi)
         .def("getOffset", &CosmoSim::getOffset)
         ;

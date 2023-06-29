@@ -14,14 +14,14 @@ void RouletteSim::setCentre( double x, double y ) {
    centrepoint = cv::Point2d( x, y ) ;
 }
 void RouletteSim::setAlphaXi( int m, int s, double val ) {
-      if ( NULL == lens )
+      if ( NULL == sim )
 	 throw std::logic_error( "Lens Model not initialised" ) ;
-      return lens->setAlphaXi( m, s, val ) ;
+      return sim->setAlphaXi( m, s, val ) ;
 }
 void RouletteSim::setBetaXi( int m, int s, double val ) {
-      if ( NULL == lens )
+      if ( NULL == sim )
 	 throw std::logic_error( "Lens Model not initialised" ) ;
-      return lens->setBetaXi( m, s, val ) ;
+      return sim->setBetaXi( m, s, val ) ;
 }
 
 
@@ -48,14 +48,10 @@ void RouletteSim::initSim() {
    std::cout << "[RouletteSim.cpp] initSim\n" ;
 
    if ( sim ) delete sim ;
-   if ( lens ) delete lens ;
-
-   lens = new RouletteLens() ;
 
    std::cout << "Running Roulette Regenerator; "
                 << "centrepoint=" << centrepoint << "\n" ;
    sim = new RouletteRegenerator() ;
-   sim->setLens(lens) ;
    sim->setCentre( centrepoint ) ;
 
    return ;
@@ -103,12 +99,9 @@ bool RouletteSim::runSim() {
    std::cout << "[RouletteSim.cpp] runSim() - running similator\n" ;
    if ( NULL == sim )
 	 throw std::logic_error( "Simulator not initialised" ) ;
-   if ( NULL == lens )
-	 throw std::logic_error( "Lens Model not initialised" ) ;
    initSource() ;
    sim->setBGColour( bgcolour ) ;
    sim->setNterms( nterms ) ;
-   lens->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
    
    std::cout << "[runSim] set parameters, ready to run\n" ;
