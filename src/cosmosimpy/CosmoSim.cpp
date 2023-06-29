@@ -198,9 +198,13 @@ void CosmoSim::initLens() {
          sim->setLens(lens) ;
          break ;
        case CSIM_MODEL_ROULETTE_REGEN:
-         std::cout << "Running Roulette Regenerator (mode=" << modelmode << ")\n" ;
-         sim = new RouletteRegenerator() ;
-         sim->setLens(lens) ;
+         std::cout << "Running Roulette Regenerator (mode=" << modelmode << ") " 
+                << "centrepoint=" << centrepoint << "\n" ;
+	 { RouletteRegenerator *lsim ;
+           sim = lsim = new RouletteRegenerator() ;
+           sim->setLens(lens) ;
+	   lsim->setCentre( centrepoint ) ;
+	 }
          break ;
        case CSIM_NOMODEL:
          std::cout << "Specified No Model.\n" ;
@@ -260,18 +264,15 @@ bool CosmoSim::runSim() {
    sim->setNterms( nterms ) ;
    if ( lens != NULL ) lens->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
-   if ( rPos < 0 ) {
-      sim->setXY( xPos, yPos, chi, einsteinR ) ;
-   } else {
-      sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
-   }
-   if ( lens != NULL ) {
-      lens->setEinsteinR( einsteinR ) ;
-   }
-   if ( CSIM_NOPSI_ROULETTE == lensmode ) {
-   // The setCentre() call is essential for RouletteLens causes problem for other models.  
-      std::cout << "[CosmoSim.cpp] setCentre( " << centrepoint << ")\n" ;
-      sim->setCentre( centrepoint ) ;
+   if ( CSIM_NOPSI_ROULETTE != lensmode ) {
+      if ( rPos < 0 ) {
+         sim->setXY( xPos, yPos, chi, einsteinR ) ;
+      } else {
+         sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
+      }
+      if ( lens != NULL ) {
+         lens->setEinsteinR( einsteinR ) ;
+      }
    }
    std::cout << "[runSim] set parameters, ready to run\n" ;
    Py_BEGIN_ALLOW_THREADS
@@ -395,6 +396,27 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getChi", &CosmoSim::getChi)
         .def("getOffset", &CosmoSim::getOffset)
         ;
+
+    py::class_<RouletteSim>(m, "RouletteSim")
+        .def(py::init<>())
+        .def("setSourceMode", &RouletteSim::setSourceMode)
+        .def("setNterms", &RouletteSim::setNterms)
+        .def("setSourceParameters", &RouletteSim::setSourceParameters)
+        .def("getActual", &RouletteSim::getActual)
+        .def("getApparent", &RouletteSim::getSource)
+        .def("getDistorted", &RouletteSim::getDistorted)
+        .def("runSim", &RouletteSim::runSim)
+        .def("initSim", &RouletteSim::initSim)
+        .def("diagnostics", &RouletteSim::diagnostics)
+        .def("maskImage", &RouletteSim::maskImage)
+        .def("showMask", &RouletteSim::showMask)
+        .def("setMaskMode", &RouletteSim::setMaskMode)
+        .def("setImageSize", &RouletteSim::setImageSize)
+        .def("setResolution", &RouletteSim::setResolution)
+        .def("setBGColour", &RouletteSim::setBGColour)
+        .def("setAlphaXi", &RouletteSim::setAlphaXi)
+        .def("setCentre", &RouletteSim::setCentre)
+        .def("setBetaXi", &RouletteSim::setBetaXi) ;
 
     pybind11::enum_<PsiSpec>(m, "PsiSpec") 
        .value( "SIS", CSIM_PSI_SIS )

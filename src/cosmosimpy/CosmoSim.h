@@ -8,6 +8,9 @@
 #include "cosmosim/Source.h"
 #include "cosmosim/Lens.h"
 
+#include <pybind11/pybind11.h>
+#include <opencv2/opencv.hpp>
+
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,
                   CSIM_SOURCE_TRIANGLE } ;
@@ -90,6 +93,51 @@ public:
     double getBeta( double x, double y, int m, int s ) ;
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
+
+    void setCentre( double x, double y ) ;
+    void setAlphaXi( int m, int s, double val ) ;
+    void setBetaXi( int m, int s, double val ) ;
+};
+
+class RouletteSim {
+private:
+    int size=512, basesize=512 ;
+    int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
+        sourceTheta=0 ;
+    cv::Point2d centrepoint ;
+    int nterms=16 ;
+    int bgcolour=0 ;
+    Source *src = NULL ;
+    bool running = false ;
+    bool maskmode ;
+
+    void initSource() ;
+
+    RouletteRegenerator *sim = NULL ;
+    RouletteLens *lens = NULL ;
+
+public:
+    RouletteSim();
+    void initSim() ;
+
+    void setNterms(int);
+    void setImageSize(int);
+    void setResolution(int);
+    void setBGColour(int);
+
+    void setSourceMode(int);
+    void setSourceParameters(double,double,double);
+
+    bool runSim();
+    void diagnostics();
+
+    void maskImage(double) ;
+    void showMask() ;
+    void setMaskMode(bool) ;
+
+    cv::Mat getSource(bool) ;
+    cv::Mat getActual(bool) ;
+    cv::Mat getDistorted(bool) ;
 
     void setCentre( double x, double y ) ;
     void setAlphaXi( int m, int s, double val ) ;

@@ -270,13 +270,26 @@ void LensModel::maskImage( double scale ) {
 void LensModel::markMask( ) {
     markMask( imgDistorted ) ;
 }
-void LensModel::maskImage( cv::InputOutputArray r, double scale ) {
+void LensModel::maskImage( cv::InputOutputArray imgD, double scale ) {
    std::cout << "[LensModel.maskImage()] image type\n" ;
-   throw NotImplemented() ;
+   // throw NotImplemented() ;
+      // std::cout << "RouletteModel::maskImage\n" ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
+      cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
+      cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
+      cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
+      black.copyTo( imgD, mask ) ;
 }
-void LensModel::markMask( cv::InputOutputArray r ) {
+void LensModel::markMask( cv::InputOutputArray imgD ) {
    std::cout << "[LensModel.markMask()] image type\n" ;
-   throw NotImplemented() ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
+      cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
+      cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
+      cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
 
 /* Getters */
@@ -348,12 +361,6 @@ cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
    return chieta/CHI - getEta() ;
 }
 
-void LensModel::setCentre( cv::Point2d pt ) {
-   setNu( cv::Point2d( 0,0 ) ) ;
-   setXY( -pt.x, -pt.y, CHI, einsteinR ) ;
-   etaOffset = pt ;
-   std::cout << "[LensModel::setCentre] etaOffset = " << etaOffset << "\n" ;
-}
 
 void LensModel::updateApparentAbs( ) {
     std::cout << "[LensModel] updateApparentAbs() updates psi.\n" ;

@@ -24,8 +24,8 @@ protected:
     std::array<std::array<double, 202>, 201> betas_val;
 
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void maskImage( cv::InputOutputArray, double ) ;
+    // virtual void markMask( cv::InputOutputArray ) ;
+    // virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
 
     virtual void setXi( cv::Point2d ) ;
@@ -62,6 +62,7 @@ class SphereLens : public RouletteModel {
 class RouletteRegenerator : public RouletteModel { 
   public:
     using RouletteModel::RouletteModel ;
+    void setCentre( cv::Point2d ) ;
   protected:
     virtual void updateApparentAbs() ;
   private:

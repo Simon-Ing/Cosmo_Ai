@@ -19,6 +19,7 @@ void RouletteModel::setLens( Lens *l ) {
    lens->initAlphasBetas() ;
 } 
 
+/*
 void RouletteModel::maskImage( cv::InputOutputArray imgD, double scale ) {
       std::cout << "RouletteModel::maskImage\n" ;
       cv::Mat imgDistorted = getDistorted() ;
@@ -38,6 +39,7 @@ void RouletteModel::markMask( cv::InputOutputArray imgD ) {
       cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
       cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
+*/
 
 // Calculate the main formula for the SIS model
 cv::Point2d RouletteModel::getDistortedPos(double r, double theta) const {

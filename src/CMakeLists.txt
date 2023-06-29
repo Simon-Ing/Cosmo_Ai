@@ -34,7 +34,7 @@ endif ()
 
 
 # Python Bindings
-pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp)
+pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp cosmosimpy/RouletteSim.cpp)
 target_link_libraries(CosmoSimPy PRIVATE SimLib)
 
 
