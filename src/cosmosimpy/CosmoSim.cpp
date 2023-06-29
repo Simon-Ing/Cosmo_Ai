@@ -198,6 +198,11 @@ void CosmoSim::initLens() {
          sim = new RouletteModel(centred) ;
          sim->setLens(lens) ;
          break ;
+       case CSIM_MODEL_ROULETTE_REGEN:
+         std::cout << "Running Roulette Regenerator (mode=" << modelmode << ")\n" ;
+         sim = new RouletteRegenerator(centred) ;
+         sim->setLens(lens) ;
+         break ;
        case CSIM_NOMODEL:
          std::cout << "Specified No Model.\n" ;
          throw NotImplemented();
@@ -405,6 +410,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     pybind11::enum_<ModelSpec>(m, "ModelSpec") 
        .value( "Raytrace", CSIM_MODEL_RAYTRACE )
        .value( "Roulette", CSIM_MODEL_ROULETTE  )
+       .value( "RouletteRegenerator", CSIM_MODEL_ROULETTE_REGEN  )
        .value( "PointMassExact", CSIM_MODEL_POINTMASS_EXACT )
        .value( "PointMassRoulettes", CSIM_MODEL_POINTMASS_ROULETTE ) 
        .value( "SIS", CSIM_MODEL_SIS_ROULETTE  )
