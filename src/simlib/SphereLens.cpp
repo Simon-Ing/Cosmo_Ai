@@ -16,16 +16,9 @@ SphereLens::SphereLens() :
     rotatedMode = true ;
     initAlphasBetas();
 }
-SphereLens::SphereLens(bool centred) :
-   RouletteModel::RouletteModel(centred)
-{ 
-    std::cout << "Instantiating SphereLens ... \n" ;
-    rotatedMode = true ;
-    initAlphasBetas();
-}
-SphereLens::SphereLens(std::string fn, bool centred) :
+SphereLens::SphereLens(std::string fn) :
    filename(fn),
-   RouletteModel::RouletteModel(centred)
+   RouletteModel::RouletteModel()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
     rotatedMode = true ;

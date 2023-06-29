@@ -17,7 +17,6 @@ private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d nu ;   // Apparent position in the source plane
 
-    bool centredMode = false ; // centredMode is never used
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
     void updateInner();
@@ -45,17 +44,12 @@ protected:
     void setNu( cv::Point2d ) ;
     virtual void setXi( cv::Point2d ) ;
 
-    // tentativeCentre is used as the shift when attempting 
-    // to centre the distorted image in the image.
-    cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
-
     virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
 
 public:
     LensModel();
-    LensModel(bool);
     ~LensModel();
     void setCentre( cv::Point2d ) ;
     cv::Point2d getOffset( cv::Point2d ) ;
@@ -110,7 +104,6 @@ class RaytraceModel : public LensModel {
 public:
     using LensModel::LensModel ;
     RaytraceModel();
-    RaytraceModel(bool);
 protected:
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
     virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;

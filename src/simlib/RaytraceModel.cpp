@@ -11,12 +11,6 @@ RaytraceModel::RaytraceModel() :
     std::cout << "Instantiating RaytraceModel ... \n" ;
     rotatedMode = false ;
 }
-RaytraceModel::RaytraceModel(bool centred) :
-   LensModel::LensModel(centred)
-{ 
-    std::cout << "Instantiating RaytraceModel ... \n" ;
-    rotatedMode = false ;
-}
 
 cv::Point2d RaytraceModel::calculateEta( cv::Point2d xi ) {
    cv::Point2d xy = cv::Point2d(

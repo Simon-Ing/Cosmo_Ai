@@ -12,12 +12,6 @@ RouletteModel::RouletteModel() :
     std::cout << "Instantiating RouletteModel ... \n" ;
     rotatedMode = false ;
 }
-RouletteModel::RouletteModel(bool centred) :
-   LensModel::LensModel(centred)
-{ 
-    std::cout << "Instantiating RouletteModel ... \n" ;
-    rotatedMode = false ;
-}
 
 void RouletteModel::setLens( Lens *l ) {
    std::cout << "[RouletteModel.setLens()]\n" ;

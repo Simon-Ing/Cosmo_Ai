@@ -13,15 +13,12 @@
 double factorial_(unsigned int n);
 
 LensModel::LensModel() :
-        LensModel(false)
-{ }
-LensModel::LensModel(bool centred) :
         CHI(0.5),
         einsteinR(20),
         nterms(10),
-        centredMode(centred),
         source(NULL)
 { }
+
 LensModel::~LensModel() {
    std::cout << "Destruct lens model\n" ;
    delete source ;
@@ -209,7 +206,6 @@ void LensModel::setMaskMode(bool b) {
    maskMode = b ; 
 }
 void LensModel::setBGColour(int b) { bgcolour = b ; }
-void LensModel::setCentred(bool b) { centredMode = b ; }
 
 /* B. Source model setter */
 void LensModel::setSource(Source *src) {
@@ -286,11 +282,7 @@ void LensModel::markMask( cv::InputOutputArray r ) {
 /* Getters */
 cv::Point2d LensModel::getCentre( ) const {
    cv::Point2d xichi =  getXi()/CHI ;
-   if ( centredMode ) {
-      return tentativeCentre + xichi - getNu() ;
-   } else {
-      return xichi ;
-   }
+   return xichi ;
 }
 cv::Point2d LensModel::getXi() const { 
    return xi ;

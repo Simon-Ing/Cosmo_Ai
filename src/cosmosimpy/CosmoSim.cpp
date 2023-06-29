@@ -138,7 +138,6 @@ void CosmoSim::setSourceMode(int m) { srcmode = m ; }
 void CosmoSim::setMaskMode(bool b) { maskmode = b ; }
 void CosmoSim::setBGColour(int b) { bgcolour = b ; }
 void CosmoSim::initLens() {
-   bool centred = false ;
    std::cout << "[CosmoSim.cpp] initLens\n" ;
    if ( ! modelchanged ) return ;
    if ( sim ) delete sim ;
@@ -177,30 +176,30 @@ void CosmoSim::initLens() {
    switch ( modelmode ) {
        case CSIM_MODEL_SIS_ROULETTE:
          std::cout << "Running SphereLens (mode=" << modelmode << ")\n" ;
-         sim = new SphereLens(filename,centred) ;
+         sim = new SphereLens(filename) ;
          break ;
        case CSIM_MODEL_POINTMASS_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << modelmode << ")\n" ;
-         sim = new RoulettePMLens(centred) ;
+         sim = new RoulettePMLens() ;
          break ;
        case CSIM_MODEL_POINTMASS_EXACT:
          std::cout << "Running Point Mass Lens (mode=" << modelmode << ")\n" ;
-         sim = new PointMassLens(centred) ;
+         sim = new PointMassLens() ;
          break ;
        case CSIM_MODEL_RAYTRACE:
          std::cout << "Running Raytrace Lens (mode=" << modelmode << ")\n" ;
-         sim = new RaytraceModel(centred) ;
+         sim = new RaytraceModel() ;
          sim->setLens(lens) ;
          break ;
        case CSIM_MODEL_ROULETTE:
          std::cout << "Running Roulette Lens (mode=" << modelmode << ")\n" ;
-         sim = new RouletteModel(centred) ;
+         sim = new RouletteModel() ;
          sim->setLens(lens) ;
          break ;
        case CSIM_MODEL_ROULETTE_REGEN:
          std::cout << "Running Roulette Regenerator (mode=" << modelmode << ")\n" ;
-         sim = new RouletteRegenerator(centred) ;
+         sim = new RouletteRegenerator() ;
          sim->setLens(lens) ;
          break ;
        case CSIM_NOMODEL:

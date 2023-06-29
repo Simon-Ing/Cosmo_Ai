@@ -14,6 +14,7 @@
 
 - Refactored to decouple the simulation model (roulette and ray trace)
   from the Lens model (currently just SIS and a sampled version).
+- Removed the unused centreMode code in the C++ library.
 
 ### Fixed
 

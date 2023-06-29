@@ -15,7 +15,6 @@ using namespace SymEngine;
 class RouletteModel : public LensModel { 
 public:
     RouletteModel();
-    RouletteModel(bool);
 
     using LensModel::LensModel ;
     virtual void setLens( Lens* ) ;
@@ -37,7 +36,6 @@ protected:
 class RoulettePMLens : public RouletteModel { 
 public:
     RoulettePMLens();
-    RoulettePMLens(bool);
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
@@ -47,8 +45,7 @@ protected:
 class SphereLens : public RouletteModel { 
   public:
     SphereLens();
-    SphereLens(bool);
-    SphereLens(std::string,bool);
+    SphereLens(std::string);
     void setFile(std::string) ;
   protected:
     virtual void calculateAlphaBeta();
