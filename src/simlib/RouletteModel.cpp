@@ -19,28 +19,6 @@ void RouletteModel::setLens( Lens *l ) {
    lens->initAlphasBetas() ;
 } 
 
-/*
-void RouletteModel::maskImage( cv::InputOutputArray imgD, double scale ) {
-      std::cout << "RouletteModel::maskImage\n" ;
-      cv::Mat imgDistorted = getDistorted() ;
-      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
-      origo = cv::Point2d( origo.y, origo.x ) ;
-      cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
-      cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
-      cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
-      black.copyTo( imgD, mask ) ;
-}
-void RouletteModel::markMask( cv::InputOutputArray imgD ) {
-      std::cout << "RouletteModel::maskImage\n" ;
-      cv::Mat imgDistorted = getDistorted() ;
-      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
-      origo = cv::Point2d( origo.y, origo.x ) ;
-      cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
-      cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
-      cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
-}
-*/
-
 // Calculate the main formula for the SIS model
 cv::Point2d RouletteModel::getDistortedPos(double r, double theta) const {
    // nu refers to a position in the source image relative to its centre.

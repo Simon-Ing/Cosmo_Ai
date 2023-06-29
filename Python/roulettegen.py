@@ -112,12 +112,10 @@ if __name__ == "__main__":
     if not args.csvfile:
         raise Exception( "No CSV file given; the --csvfile option is mandatory." )
 
-    print( "Instantiate Simulator ... " )
+    print( "Instantiate RouletteSim object ... " )
+    sys.stdout.flush()
     sim = CosmoSim()
     print( "Done" )
-
-    if args.sourcemode:
-        sim.setSourceMode( args.sourcemode )
 
     if args.imagesize:
         sim.setImageSize( int(args.imagesize) )
@@ -133,8 +131,10 @@ if __name__ == "__main__":
     coefs = RouletteAmplitudes(cols)
     sim.setNterms( coefs.getNterms() )
     print( "Number of roulette terms: ", coefs.getNterms() )
+    sys.stdout.flush()
 
     for index,row in frame.iterrows():
+            print( "Processing", index )
             sim.initSim() 
             # setParameters( sim, row )
             setAmplitudes( sim, row, coefs )
@@ -145,6 +145,7 @@ if __name__ == "__main__":
                                      float(row["theta"]) ) 
             namestem = row["filename"].split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
+            sys.stdout.flush()
 
     sim.close()
     print( "[roulettegen.py] Done" )
