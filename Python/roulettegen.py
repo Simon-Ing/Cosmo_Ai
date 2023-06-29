@@ -139,6 +139,7 @@ if __name__ == "__main__":
             print( "Processing", index )
             sys.stdout.flush()
             sim.setCentre( row["etaX"], row["etaY"] )
+            print( "Centre Point", row["centreX"], row["centreY"] )
             sim.initSim() 
             print( "Initialised simulator" )
             sys.stdout.flush()
