@@ -127,7 +127,7 @@ if __name__ == "__main__":
     print( "Done" )
 
     sim.setLensMode( "Roulette" )
-    sim.setModelMode( "Roulette" )
+    sim.setModelMode( "RouletteRegenerator" )
 
     if args.sourcemode:
         sim.setSourceMode( args.sourcemode )

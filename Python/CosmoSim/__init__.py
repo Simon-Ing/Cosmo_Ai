@@ -17,6 +17,7 @@ lensDict = {
 modelDict = {
         "Raytrace" : ModelSpec.Raytrace,
         "Roulette" : ModelSpec.Roulette,
+        "RouletteRegenerator" : ModelSpec.RouletteRegenerator,
         "Point Mass (exact)" : ModelSpec.PointMassExact,
         "Point Mass (roulettes)" : ModelSpec.PointMassRoulettes,
         "SIS (rotated)" : ModelSpec.SIS,
