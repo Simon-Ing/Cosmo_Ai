@@ -105,25 +105,3 @@ void RouletteModel::setXi( cv::Point2d xi1 ) {
    // reference point in the lens plane and the actual source centre
    etaOffset = getOffset( xi1 ) ;
 }
-/*
-void RouletteModel::setCentre( cv::Point2d nu1 ) {
-   // nu1 (\nu') is the centre point in the distorted image 
-   // \xi'=\chi\nu' will be used as reference point in the lens plane.
-   cv::Point2d chieta, eta1, ij ; 
-   cv::Mat psi, psiX, psiY ;
-   
-   cv::Point2d xi1 = CHI*nu1 ; // \xi' = \chi\nu'
-
-   lens->updatePsi() ;
-   psi = lens->getPsi() ;
-   psiX = lens->getPsiX() ;
-   psiY = lens->getPsiY() ;
-   ij = imageCoordinate( xi1, psi ) ;
-   chieta = cv::Point2d( -psiY.at<double>( ij ), -psiX.at<double>( ij ) );
-
-   setNu( cv::Point2d( 0,0 ) ) ;
-
-   eta = chieta1/ETA ;
-   etaOffset = -eta ;
-}
-*/

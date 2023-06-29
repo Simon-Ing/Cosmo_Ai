@@ -11,6 +11,7 @@ set(SimLibFiles
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp
         simlib/RoulettePMLens.cpp
+	simlib/RouletteRegenerator.cpp
         simlib/simaux.cpp
         simlib/Source.cpp
         simlib/RouletteLens.cpp

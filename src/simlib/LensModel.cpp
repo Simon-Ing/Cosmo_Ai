@@ -81,11 +81,11 @@ void LensModel::update( cv::Point2d xi ) {
 void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
-    std::cout << "[LensModel::update()] R=" << getEtaAbs() << "; theta=" << phi
+    std::cout << "[LensModel::updateInner()] R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
-    std::cout << "[LensModel::update()] xi=" << getXi()   
+    std::cout << "[LensModel::updateInner()] xi=" << getXi()   
               << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
-    std::cout << "[LensModel::update()] nu=" << getNu()   
+    std::cout << "[LensModel::updateInner()] nu=" << getNu()   
               << "; centre=" << getCentre() << "\n" ;
 
     auto startTime = std::chrono::system_clock::now();
@@ -322,6 +322,7 @@ void LensModel::setNu( cv::Point2d n ) {
    nu = n ;
    xi = nu*CHI ;
    etaOffset = cv::Point2d( 0, 0 ) ;
+   std::cout << "[setNu] etaOffset set to zero.\n" ;
 }
 void LensModel::setXi( cv::Point2d x ) {
    if ( rotatedMode ) {

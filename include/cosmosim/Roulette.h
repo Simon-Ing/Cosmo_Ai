@@ -62,4 +62,13 @@ class SphereLens : public RouletteModel {
 };
 
 
+class RouletteRegenerator : public RouletteModel { 
+  public:
+    using RouletteModel::RouletteModel ;
+  protected:
+    virtual void updateApparentAbs() ;
+  private:
+};
+
+
 #endif /* ROULETTE_H */
