@@ -118,8 +118,9 @@ class CosmoSim(cs.CosmoSim):
            r = [ (self.getAlphaXi(m,s),self.getBetaXi(m,s)) for (m,s) in getMS(maxm) ]
         else:
             (x,y) = pt
-            x *= self.getChi()
-            y *= self.getChi()
+            # Scaling is done in getAlpha/getBeta
+            # x *= self.getChi()
+            # y *= self.getChi()
             r = [ (self.getAlpha(x,y,m,s),self.getBeta(x,y,m,s)) 
                     for (m,s) in getMS(maxm) ]
         return [ x for p in r for x in p ]
