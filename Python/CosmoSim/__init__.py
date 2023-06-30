@@ -100,19 +100,15 @@ class CosmoSim(cs.CosmoSim):
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
         self.bgcolour = 0
-    def getAlphas(self,maxm=2):
-        return [ self.getAlphaXi(m,s) for (m,s) in getMS(maxm) ]
-    def getBetas(self,maxm=2):
-        return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
-    def getRelativeEta(self,pt):
-        print ( "[getRelativeEta] pt=", pt, "in Planar Co-ordinates"  )
-        r = super().getRelativeEta(pt[0],pt[1])
+    def getRelativeEta(self,centrepoint):
+        print ( "[getRelativeEta] centrepoint=", centrepoint, "in Planar Co-ordinates"  )
+        r = super().getRelativeEta(centrepoint[0],centrepoint[1])
         a = np.array(r)
         print ( "[getRelativeEta] r=", a )
         return (a[0],a[1])
-    def getOffset(self,pt):
-        print ( "[getOffset] pt=", pt, "in Planar Co-ordinates"  )
-        r = super().getOffset(pt[0],pt[1])
+    def getOffset(self,centrepoint):
+        print ( "[getOffset] centrepoint=", centrepoint, "in Planar Co-ordinates"  )
+        r = super().getOffset(centrepoint[0],centrepoint[1])
         a = np.array(r)
         print ( "[getOffset] r=", a )
         return (a[0],a[1])
@@ -126,8 +122,6 @@ class CosmoSim(cs.CosmoSim):
         else:
             (x,y) = pt
             # Scaling is done in getAlpha/getBeta
-            # x *= self.getChi()
-            # y *= self.getChi()
             r = [ (self.getAlpha(x,y,m,s),self.getBeta(x,y,m,s)) 
                     for (m,s) in getMS(maxm) ]
         return [ x for p in r for x in p ]

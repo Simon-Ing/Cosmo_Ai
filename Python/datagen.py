@@ -116,10 +116,10 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
     if outstream:
         maxm = int(args.nterms)
         print( "[datagen.py] Finding Alpha/beta; centrepoint=", centrepoint )
-        ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
-        releta = sim.getRelativeEta(pt=centrepoint)
-        offset = sim.getOffset(pt=centrepoint)
+        releta = sim.getRelativeEta(centrepoint=centrepoint)
+        offset = sim.getOffset(centrepoint=centrepoint)
+        ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )

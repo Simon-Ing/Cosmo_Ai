@@ -19,12 +19,14 @@ void helloworld() {
 
 double CosmoSim::getChi( ) { return chi ; } ;
 cv::Point2d CosmoSim::getRelativeEta( double x, double y ) {
-   cv::Point2d pt = sim->getRelativeEta( cv::Point2d( x,y ) ) ; 
+   // Input (x,y) is the centre point $\nu$
+   cv::Point2d pt = sim->getRelativeEta( cv::Point2d( x,y )*chi ) ; 
    std::cout << "[CosmoSim::getRelativeEta] " << pt << "\n" ;
    return pt ;
 } ;
 cv::Point2d CosmoSim::getOffset( double x, double y ) {
-   cv::Point2d pt = sim->getOffset( cv::Point2d( x,y ) ) ; 
+   // Input (x,y) is the centre point $\nu$ 
+   cv::Point2d pt = sim->getOffset( cv::Point2d( x,y )*chi ) ; 
    std::cout << "[CosmoSim::getOffset] " << pt << "\n" ;
    return pt ;
 } ;
