@@ -1,5 +1,5 @@
 
-SVG=lensmodel.svg points.svg
+SVG=lensmodel.svg points.svg relativeeta.svg
 all: $(SVG)
 
 install: $(SVG)
