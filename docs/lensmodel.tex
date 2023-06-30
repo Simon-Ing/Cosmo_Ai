@@ -28,17 +28,17 @@
    \unidirectionalAssociation{LensModel}{}{1}{Lens}
 
 % Roulette.h:class RouletteModel : public LensModel { 
-   \begin{abstractclass}[text width = 58mm]{RouletteModel}{5 , -3.7}
+   \begin{class}[text width = 58mm]{RouletteModel}{5 , -3.7}
       \inherit{LensModel}
       \operation[0]{getDistortedPos(r, theta) : Point2d}
       % \operation[0]{markMask( InputOutputArray )}
       % \operation[0]{maskImage( InputOutputArray )}
       % \operation[0]{getMaskRadius() : double}
-   \end{abstractclass}
+   \end{class}
 
 
 % Simulator.h:class RaytraceModel : public LensModel { 
-   \begin{class}[text width = 58mm]{RaytraceModel}{0 , -3}
+   \begin{class}[text width = 40mm]{RaytraceModel}{-2 , -3}
       \inherit{LensModel}
    \end{class}
 
@@ -50,7 +50,7 @@
    \end{class}
 
 % Roulette.h:class SphereLens : public RouletteModel { 
-   \begin{class}[text width = 52mm]{SphereLens}{0 , -8.5}
+   \begin{class}[text width = 52mm]{SphereLens}{0 , -9}
       \inherit{RouletteModel}
       % \operation{initAlphaBeta() : void}
       \operation[0]{calculateAlphaBeta() : void}
@@ -58,13 +58,13 @@
    \end{class}
 
 % Roulette.h:class RoulettePMLens : public RouletteModel { 
-   \begin{class}[text width = 52mm]{RoulettePMLens}{5 , -7.5}
+   \begin{class}[text width = 36mm]{RoulettePMLens}{5 , -7}
       \inherit{RouletteModel}
       % \operation{initAlphaBeta() : void}
    \end{class}
 
 % Lens.h:class SampledLens : public Lens {
-   \begin{class}[text width = 52mm]{SampledLens}{9 , -6}
+   \begin{class}[text width = 42mm]{SampledLens}{11 , -5}
       \inherit{Lens}
       \operation[0]{calculateAlphaBeta() : void}
       \operation[0]{updateApparentAbs()  : void}
@@ -72,27 +72,28 @@
    \end{class}
 
 % Lens.h:class PsiFunctionLens : public Lens {
-   \begin{class}[text width = 52mm]{PsiFunctionLens}{13 , -4}
+   \begin{class}[text width = 52mm]{PsiFunctionLens}{15 , -3}
       \inherit{Lens}
       \operation{psifunction() : void}
       \operation[0]{updatePsi()  : void}
    \end{class}
 
 % Lens.h:class SampledPsiFunctionLens : public SampledLens {
-   \begin{class}[text width = 52mm]{SampledPsiFunctionLens}{9 , -10}
+   \begin{class}[text width = 52mm]{SampledPsiFunctionLens}{13 , -7.5}
       \inherit{SampledLens}
    \end{class}
-   \unidirectionalAssociation{SampledPsiFunctionLens}{}{1}{SampledPsiFunctionLens}
+   \unidirectionalAssociation{SampledPsiFunctionLens}{}{1}{PsiFunctionLens}
 
 % Lens.h:class RouletteLens : public Lens {
-   \begin{class}[text width = 52mm]{RouletteLens}{17 , -2}
-      \inherit{Lens}
+   \begin{class}[text width = 52mm]{RouletteRegenerator}{10 , -9}
+      \inherit{RouletteModel}
    \end{class}
 
 % Lens.h:class SIS : public PsiFunctionLens { 
-   \begin{class}[text width = 52mm]{SIS}{13 , -8}
+   \begin{class}[text width = 30mm]{SIS}{16 , -5.5}
       \inherit{PsiFunctionLens}
    \end{class}
+
 \end{tikzpicture}
 
 \end{document}
