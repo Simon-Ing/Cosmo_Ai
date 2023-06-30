@@ -357,7 +357,7 @@ cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
                        lens->psiYvalue( xi1.x, xi1.y ) )
           - xi1 ;
    eta = getEta() ;
-   r = releta - eta ;
+   r = releta/CHI - eta ;
 
    std::cout << "[getOffset] eta=" << eta << "; xi1=" << xi1
              << "; releta=" << releta 
