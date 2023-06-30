@@ -19,3 +19,6 @@ python3 Python/datagen.py -x=-50 -y=-10 --model Raytrace --lens SIS --name raytr
 python3 Python/datagen.py -x=-50 -y=-10 --model Roulette --lens SIS --name roulette4 -R --actual
 python3 Python/datagen.py -x=-50 -y=-10 --model Raytrace --lens SIS --sampled --name raytrace-sampled4 -R --actual
 python3 Python/datagen.py -x=-50 -y=-10 --model Roulette --lens SIS --sampled --name roulette-sampled4 -R --actual
+
+python3 Python/datagen.py -x 10 -y=-50 --model Raytrace --lens SIS --name raytrace5 -R --actual
+python3 Python/datagen.py -x 10 -y=-50 --model Raytrace --lens SIS --sampled --name raytrace-sampled5 -R --actual
