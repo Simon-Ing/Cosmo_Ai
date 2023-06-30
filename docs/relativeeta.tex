@@ -6,28 +6,19 @@
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
 
 
-
-% Calligraphic brace
-% \draw [decorate, decoration = {calligraphic brace}] (0.2,1) --  (1.2,1);
-
-
-
 \begin{document}
-
-% Lens.h:class PixMapLens : public SampledLens {
-
 
 \begin{tikzpicture}
    	\tikzset{point/.style={fill=black,draw=black,thick}}
-   	\coordinate [label=above:$\eta$] (eta) at (1,1);
-   	\coordinate [label=right:$\eta'$] (etap) at (3.3);
-   	\coordinate [label=left:$\xi$] (xi) at (6,6);
-   	\coordinate [label=right:$\xi'$] (xip) at (7.75,7.75);
+   	\coordinate [label=right:$\eta$] (eta) at (-1,1);
+   	\coordinate [label=above:$\eta'$] (etap) at (-3,3);
+   	\coordinate [label=above:$\xi$] (xi) at (-6,6);
+   	\coordinate [label=above:$\xi'$] (xip) at (-7.75,7.75);
 
-	\draw [decorate, decoration = {brace},thick] (etap) --  (eta) node [midway,above=0.5ex] {$\Delta\eta$};
-	\draw [decorate, decoration = {brace}, thick] (xip) --  (etap) node [near start,above=-4ex] {$\eta''$};
+        \draw [decorate, decoration = {brace,amplitude=1.5ex,mirror}, thick] (eta) --  (etap) node [midway,above=0ex,xshift=1em] {$\Delta\eta$};
+	\draw [decorate, decoration = {brace, amplitude=1.5ex}, thick] (etap) --  (xip) node [midway,below=0.5ex,xshift=-0.5em] {$\eta''$};
 
-	\path [draw,black] (0,0) -- (9,9) ;
+	\path [draw,black] (0,0) -- (-9,9) ;
 	\foreach \p in {eta,xi,etap,xip}
 		\fill[point] (\p) circle (1pt);
 \end{tikzpicture}
