@@ -52,6 +52,7 @@ public:
     LensModel();
     ~LensModel();
     cv::Point2d getOffset( cv::Point2d ) ;
+    cv::Point2d getRelativeEta( cv::Point2d ) ;
     void update();
     void updateSecondary();
     void update( cv::Point2d );

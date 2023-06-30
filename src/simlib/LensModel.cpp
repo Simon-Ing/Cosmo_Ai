@@ -342,12 +342,17 @@ void LensModel::setLens( Lens *l ) {
    lens = l ;
 }
 
+cv::Point2d LensModel::getRelativeEta( cv::Point2d xi1 ) {
+   return - cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
+                       lens->psiYvalue( xi1.x, xi1.y ) );
+}
+
 cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
    cv::Point2d chieta, xy, eta, r ; 
 
-   xy = cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ), lens->psiYvalue( xi1.x, xi1.y ) );
+   xy = getRelativeEta( xi1 ) ;
    // Now xy is $\xi'-\chi\eta'$
-   chieta = xi1 - xy ;
+   chieta = xi1 + xy ;
    // chieta is really \chi\eta'
 
    eta = getEta() ;
