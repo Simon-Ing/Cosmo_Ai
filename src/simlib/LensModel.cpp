@@ -343,24 +343,25 @@ void LensModel::setLens( Lens *l ) {
 }
 
 cv::Point2d LensModel::getRelativeEta( cv::Point2d xi1 ) {
-   return - cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
-                       lens->psiYvalue( xi1.x, xi1.y ) );
+   // returns $\vec\eta''$
+   cv::Point2d chieta ;
+   chieta = cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
+                       lens->psiYvalue( xi1.x, xi1.y ) )
+          - xi1 ;
+   std::cout << "[getRelativeEta] chieta=" << chieta << std::endl ;
+   return chieta/CHI ;
 }
 
 cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
-   cv::Point2d chieta, xy, eta, r ; 
+   cv::Point2d releta, eta, r ; 
 
-   xy = getRelativeEta( xi1 ) ;
-   // Now xy is $\xi'-\chi\eta'$
-   chieta = xi1 + xy ;
-   // chieta is really \chi\eta'
-
+   releta = getRelativeEta( xi1 ) ;
    eta = getEta() ;
-   r = chieta/CHI - eta ;
+   r = releta - eta ;
 
    std::cout << "[getOffset] eta=" << eta << "; xi1=" << xi1
-             << "; xy=" << xy << "std::endl"
-             << "chieta=" << chieta << "; return " << r << std::endl ;
+             << "; releta=" << releta 
+             << "; return " << r << std::endl ;
 
    // return is the difference between source point corresponding to the
    // reference point in the lens plane and the actual source centre

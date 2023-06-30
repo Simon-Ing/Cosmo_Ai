@@ -18,6 +18,11 @@ void helloworld() {
 }
 
 double CosmoSim::getChi( ) { return chi ; } ;
+cv::Point2d CosmoSim::getRelativeEta( double x, double y ) {
+   cv::Point2d pt = sim->getRelativeEta( cv::Point2d( x,y ) ) ; 
+   std::cout << "[CosmoSim::getRelativeEta] " << pt << "\n" ;
+   return pt ;
+} ;
 cv::Point2d CosmoSim::getOffset( double x, double y ) {
    cv::Point2d pt = sim->getOffset( cv::Point2d( x,y ) ) ; 
    std::cout << "[CosmoSim::getOffset] " << pt << "\n" ;
@@ -360,6 +365,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBetaXi", &CosmoSim::getBetaXi)
         .def("getChi", &CosmoSim::getChi)
         .def("getOffset", &CosmoSim::getOffset)
+        .def("getRelativeEta", &CosmoSim::getRelativeEta)
         ;
 
     py::class_<RouletteSim>(m, "RouletteSim")

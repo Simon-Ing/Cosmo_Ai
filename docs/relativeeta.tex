@@ -10,15 +10,15 @@
 
 \begin{tikzpicture}
    	\tikzset{point/.style={fill=black,draw=black,thick}}
-   	\coordinate [label=right:$\eta$] (eta) at (-1,1);
-   	\coordinate [label=above:$\eta'$] (etap) at (-3,3);
-   	\coordinate [label=above:$\xi$] (xi) at (-6,6);
-   	\coordinate [label=above:$\xi'$] (xip) at (-7.75,7.75);
+   	\coordinate [label=right:$\xi$] (xi) at (2,2);
+   	\coordinate [label=above:$\xi'$] (xip) at (3,3);
+   	\coordinate [label=left:$\eta$] (eta) at (5,5);
+   	\coordinate [label=above:$\eta'$] (etap) at (6.5,6.5);
 
-        \draw [decorate, decoration = {brace,amplitude=1.5ex,mirror}, thick] (eta) --  (etap) node [midway,above=0ex,xshift=1em] {$\Delta\eta$};
-	\draw [decorate, decoration = {brace, amplitude=1.5ex}, thick] (etap) --  (xip) node [midway,below=0.5ex,xshift=-0.5em] {$\eta''$};
+        \draw [decorate, decoration = {brace,amplitude=1.5ex}, thick] (eta) --  (etap) node [midway,above left=0ex,xshift=0em] {$\Delta\eta$};
+	\draw [decorate, decoration = {brace, amplitude=1.5ex}, thick] (etap) --  (xip) node [midway,below right=0ex,xshift=0em] {$\eta''$};
 
-	\path [draw,black] (0,0) -- (-9,9) ;
+	\path [draw,black] (1,1) -- (7,7) ;
 	\foreach \p in {eta,xi,etap,xip}
 		\fill[point] (\p) circle (1pt);
 \end{tikzpicture}

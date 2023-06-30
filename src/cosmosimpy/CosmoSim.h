@@ -87,6 +87,7 @@ public:
     cv::Mat getMassMap() ;
 
     cv::Point2d getOffset( double x, double y ) ;
+    cv::Point2d getRelativeEta( double x, double y ) ;
     double getChi( ) ;
     double getAlpha( double x, double y, int m, int s ) ;
     double getBeta( double x, double y, int m, int s ) ;

@@ -18,7 +18,7 @@ from Arguments import CosmoParser, setParameters
 import pandas as pd
 
 defaultoutcols = [ "index", "filename", "source", "lens", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
-
+relcols = [ "centreX", "centreY", "reletaX", "reletaY", "offsetX", "offsetY" ]
 def setParameters(sim,row):
     print( row ) 
     if row.get("y",None) != None:
@@ -118,12 +118,15 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         print( "[datagen.py] Finding Alpha/beta; centrepoint=", centrepoint )
         ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         r = [ row[x] for x in outcols ]
-        eta = sim.getOffset(pt=centrepoint)
+        releta = sim.getRelativeEta(pt=centrepoint)
+        offset = sim.getOffset(pt=centrepoint)
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )
-        r.append( eta[0] )
-        r.append( eta[1] )
+        r.append( releta[0] )
+        r.append( releta[1] )
+        r.append( offset[0] )
+        r.append( offset[1] )
         print(ab)
         r += ab
         line = ",".join( [ str(x) for x in r ] )
@@ -218,7 +221,7 @@ if __name__ == "__main__":
         print( "columns:", cols )
         outcols = list(frame.columns)
         if outstream != None:
-           headers = ",".join( outcols + [ "centreX", "centreY", "etaX", "etaY" ] + getMSheaders(int(args.nterms)) )
+           headers = ",".join( outcols + relcols + getMSheaders(int(args.nterms)) )
            headers += "\n"
            outstream.write(headers)
         for index,row in frame.iterrows():

@@ -104,6 +104,12 @@ class CosmoSim(cs.CosmoSim):
         return [ self.getAlphaXi(m,s) for (m,s) in getMS(maxm) ]
     def getBetas(self,maxm=2):
         return [ self.getBetaXi(m,s) for (m,s) in getMS(maxm) ]
+    def getRelativeEta(self,pt):
+        print ( "[getRelativeEta] pt=", pt, "in Planar Co-ordinates"  )
+        r = super().getRelativeEta(pt[0],pt[1])
+        a = np.array(r)
+        print ( "[getRelativeEta] r=", a )
+        return (a[0],a[1])
     def getOffset(self,pt):
         print ( "[getOffset] pt=", pt, "in Planar Co-ordinates"  )
         r = super().getOffset(pt[0],pt[1])
