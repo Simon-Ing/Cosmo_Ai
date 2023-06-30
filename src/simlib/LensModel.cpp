@@ -353,9 +353,8 @@ cv::Point2d LensModel::getRelativeEta( cv::Point2d xi1 ) {
 cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
    cv::Point2d releta, eta, r ; 
 
-   releta = cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
-                       lens->psiYvalue( xi1.x, xi1.y ) )
-          - xi1 ;
+   releta = xi1 - cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
+                       lens->psiYvalue( xi1.x, xi1.y ) ) ;
    eta = getEta() ;
    r = releta/CHI - eta ;
 
