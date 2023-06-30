@@ -40,11 +40,14 @@ void RaytraceModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst
             eta = calculateEta( xi ) + getEta() ;
             ij = imageCoordinate( eta, src ) ;
   
-            if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
+            if (ij.x <= src.rows-1 && ij.y <= src.cols-1 && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
                     dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
                  } else {
-                    dst.at<uchar>(row, col) = src.at<uchar>( ij );
+                    uchar t = dst.at<uchar>(row, col) = src.at<uchar>( ij );
+		    /* if ( col < 100 && t > 100 ) {
+		       std::cout << "DEBUG: " << t << " at (" << row << "," << col << ") from " << ij << std::endl ;
+		    } */
                  }
             }
         }
