@@ -14,4 +14,4 @@ install: $(SVG)
 	pdflatex $<
 
 %.svg: %.pdf
-	inkscape -z $< --export-plain-svg=$@
+	inkscape --export-type=svg --pdf-poppler -l $<

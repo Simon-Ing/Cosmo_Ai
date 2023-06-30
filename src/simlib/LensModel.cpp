@@ -344,18 +344,18 @@ void LensModel::setLens( Lens *l ) {
 
 cv::Point2d LensModel::getRelativeEta( cv::Point2d xi1 ) {
    // returns $\vec\eta''$
-   cv::Point2d chieta ;
-   chieta = cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
-                       lens->psiYvalue( xi1.x, xi1.y ) )
-          - xi1 ;
-   std::cout << "[getRelativeEta] chieta=" << chieta << std::endl ;
-   return chieta/CHI ;
+   cv::Point2d releta ;
+   releta = eta - xi1/CHI ;
+   std::cout << "[getRelativeEta] releta=" << releta << std::endl ;
+   return releta ;
 }
 
 cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
    cv::Point2d releta, eta, r ; 
 
-   releta = getRelativeEta( xi1 ) ;
+   releta = cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
+                       lens->psiYvalue( xi1.x, xi1.y ) )
+          - xi1 ;
    eta = getEta() ;
    r = releta - eta ;
 
