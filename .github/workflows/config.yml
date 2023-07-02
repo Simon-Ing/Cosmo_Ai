@@ -61,6 +61,10 @@ jobs:
           libxcb-util-dev \
           libxcb-util0-dev
           sudo pip3 install conan==1.59
+      - name: Config Conan
+        run: |
+          cat /home/runner/.conan/profiles/default
+          conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: Run conan
         run: |
           conan install . -s build_type=Release -if build -b missing
