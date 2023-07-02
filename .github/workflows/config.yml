@@ -81,7 +81,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: CosmoSimPy
-          path: dist/CosmoSimPy
+          path: dist
+      - name: Test
+        run: python3 dist/CosmoSimPy/datagen.py
 
 
 
