@@ -87,7 +87,9 @@ jobs:
           name: CosmoSimPy
           path: dist
       - name: Test
-        run: python3 dist/CosmoSimPy/datagen.py
+        run: |
+          cp build/lib/CosmoSimPy.*.so Python/CosmoSim
+          python3 Python/datagen.py
 
 
 
