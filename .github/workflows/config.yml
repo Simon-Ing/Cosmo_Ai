@@ -68,27 +68,11 @@ jobs:
         run: |
           cmake . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
-
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
           name: python-link-library.zip
           path: build/lib/CosmoSimPy.*.so
-      - name: Download a single artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: python-link-library.zip
-      - name: Make Python Distribution
-        run: |
-           ls
-           mv CosmoSimPy,*.{so,pyd} Python/CosmoSim
-           mkdir CosmoSimPy
-           rsync -av Python/ CosmoSimPy/
-      - name: Archive Python Application
-        uses: actions/upload-artifact@v3
-        with:
-          name: CosmoSimPy.zip
-          path: CosmoSimPy/
 
 
   conan-on-windows:
@@ -126,6 +110,29 @@ jobs:
           name: python-link-library
           path: build/lib/CosmoSimPy.*.pyd
 
+  python-dist:
+
+    runs-on: ${{ ubuntu-latest }}
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: python-link-library.zip
+      - name: Make Python Distribution
+        run: |
+           ls
+           mv CosmoSimPy,*.{so,pyd} Python/CosmoSim
+           mkdir CosmoSimPy
+           rsync -av Python/ CosmoSimPy/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy.zip
+          path: CosmoSimPy/
 
 #  conan-on-darwin:
 #
