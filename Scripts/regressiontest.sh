@@ -43,7 +43,7 @@ then
   for flag in $F plain 
   do
      echo $flag
-     python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag
+     python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag --masked
      for f in Test/diff/$flag/*
      do
         ff=`basename $f`
