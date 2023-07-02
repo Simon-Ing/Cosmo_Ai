@@ -76,12 +76,13 @@ jobs:
       - name: Make Python Distribution
         run: |
            mkdir -p CosmoSimPy/CosmoSim
-           mv build/lib/CosmoSimPy.*.{so,pyd} CosmoSimPy/CosmoSim/
+           mv build/lib/CosmoSimPy.*.so CosmoSimPy/CosmoSim/
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
           name: CosmoSimPy.zip
           path: CosmoSimPy/
+
 
 
   conan-on-windows:
@@ -118,6 +119,15 @@ jobs:
         with:
           name: python-link-library
           path: build/lib/CosmoSimPy.*.pyd
+      - name: Make Python Distribution
+        run: |
+           mkdir -p CosmoSimPy/CosmoSim
+           mv build/lib/CosmoSimPy.*.pyd CosmoSimPy/CosmoSim/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy.zip
+          path: CosmoSimPy/
 
   python-dist:
 
