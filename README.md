@@ -14,6 +14,10 @@ The intention is to be able to use the synthetic datasets to train
 machine learning models which can in turn be used to map the dark
 matter of the Universe.  This is work in progress.
 
+Documentation is being written at 
+[https://cosmoai-aes.github.io/](https://cosmoai-aes.github.io/),
+but it still incomplete and fragmented.
+
 # Making it Run
 
 ## Running from Precompiled Distribution
