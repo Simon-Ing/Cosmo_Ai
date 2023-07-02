@@ -72,8 +72,23 @@ jobs:
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
-          name: python-link-library
+          name: python-link-library.zip
           path: build/lib/CosmoSimPy.*.so
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: python-link-library.zip
+      - name: Make Python Distribution
+        run: |
+           unzip python-link-library.zip
+           mv CosmoSimPy,*.{so,pyd} Python/CosmoSim
+           mkdir CosmoSimPy
+           rsync -av Python/ CosmoSimPy/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy.zip
+          path: CosmoSimPy/
 
 
   conan-on-windows:
