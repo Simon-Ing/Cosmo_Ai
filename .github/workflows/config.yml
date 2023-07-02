@@ -116,7 +116,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.latest]
+        os: [ubuntu-latest]
         compiler_version: [9]
         python-version: ['3.11']
 
