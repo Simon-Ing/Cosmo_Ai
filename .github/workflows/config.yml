@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu-20.04]
         compiler_version: [9]
         python-version: ['3.9','3.10','3.11']
 
@@ -71,7 +71,7 @@ jobs:
       - name: Archive Python link library
         uses: actions/upload-artifact@v3
         with:
-          name: python-link-library.zip
+          name: python-link-library
           path: build/lib/CosmoSimPy.*.so
       - name: Make Python Distribution
         run: |
@@ -80,8 +80,8 @@ jobs:
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
-          name: CosmoSimPy.zip
-          path: CosmoSimPy/
+          name: CosmoSimPy
+          path: CosmoSimPy
 
 
 
@@ -126,8 +126,8 @@ jobs:
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
-          name: CosmoSimPy.zip
-          path: CosmoSimPy/
+          name: CosmoSimPy
+          path: CosmoSimPy
 
   python-dist:
 
@@ -144,8 +144,8 @@ jobs:
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
-          name: CosmoSimPy.zip
-          path: CosmoSimPy/
+          name: CosmoSimPy
+          path: CosmoSimPy
 
 #  conan-on-darwin:
 #
