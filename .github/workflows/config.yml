@@ -115,6 +115,10 @@ jobs:
     runs-on: ${{ ubuntu-latest }}
     strategy:
       fail-fast: false
+      matrix:
+        os: [ubuntu-22.latest]
+        compiler_version: [9]
+        python-version: ['3.11']
 
     steps:
       - uses: actions/checkout@v3
