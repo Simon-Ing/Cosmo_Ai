@@ -78,12 +78,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: python-link-library.zip
-      - name: unzip
-        run: |
-           ls
-           unzip python-link-library.zip
       - name: Make Python Distribution
         run: |
+           ls
            mv CosmoSimPy,*.{so,pyd} Python/CosmoSim
            mkdir CosmoSimPy
            rsync -av Python/ CosmoSimPy/
