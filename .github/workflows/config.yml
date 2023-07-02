@@ -63,7 +63,6 @@ jobs:
           sudo pip3 install conan==1.59
       - name: Config Conan
         run: |
-          cat /home/runner/.conan/profiles/default
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: Run conan
         run: |
