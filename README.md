@@ -218,14 +218,21 @@ The main branches are
 - develop is the current state of the art
 - master should be the last stable version
 
-Tags
+## Releases
+
+- v-test-* are test releases, used to debug workflows.  Please ignore.
+- v2.0.0 (19 Dec 2022) provides the new GUI and CLI tools written
+  in Python, with several new features and corrected models.
+    - v2.0.1..3 patches to v2.0.0
+
+## Older Tags
+
+Prior to v2.0.0 some releases have been tagged, but not registered
+as releases in github.
 
 - v0.1.0, v0.2.0, v1.0.0 are versions made by the u/g students
   Spring 2022.
 - v1.0.1 is cleaned up to be able to build v1.0.0
-- v2.0.0 (19 Dec 2022) provides the new GUI and CLI tools written
-  in Python, with several new features and corrected models.
-- v2.0.1..3 patches to v2.0.0
 
 # Caveats
 
