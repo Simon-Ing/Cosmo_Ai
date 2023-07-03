@@ -3,7 +3,7 @@ name: Trial Build
 
 on: 
    push:
-     branches: [main, develop]
+     branches: [main, master, develop]
    workflow_dispatch:
    workflow_call:
 
