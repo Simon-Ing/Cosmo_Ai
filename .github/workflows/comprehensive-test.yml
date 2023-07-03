@@ -1,0 +1,70 @@
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
+
+name: "Full Build"
+
+on: 
+   workflow_dispatch:
+   workflow_call:
+
+jobs:
+  build-on-linux:
+
+    name: Build on Linux
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler-version }}
+      CXX: g++-${{ matrix.compiler-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        compiler-version: [10]
+        python-version: ['3.9','3.11']
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        uses: ./.github/actions/build-linux
+        with:
+           compiler-version: ${{ matrix. compiler-version }}
+           python-version: ${{ matrix.python-version }}
+      - name: Regression Test
+        shell: bash
+        run: sh Scripts/regressiontest.sh
+
+  build-on-windows:
+    name: Build on Windows
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019]
+        python-version: ['3.10','3.11']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        uses: ./.github/actions/build-windows
+        with:
+           compiler-version: ${{ matrix. compiler-version }}
+           python-version: ${{ matrix.python-version }}
+      - name: Regression Test
+        shell: bash
+        run: sh Scripts/regressiontest.sh
+
+  python-dist:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Make Python Distribution
+        run: |
+           mkdir -p dist/CosmoSimPy
+           rsync -av CosmoSimPy/ dist/CosmoSimPy/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy
+          path: dist
