@@ -9,6 +9,7 @@
 - Added options to generate data set with roulette amplitudes from datagen.py
 - New lens model and python script allowing the specification of the lens only
   in terms of roulette amplitudes.
+- New github workflows, including a release workflow.
 
 ### Changed
 
