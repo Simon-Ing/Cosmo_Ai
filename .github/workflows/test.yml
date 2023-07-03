@@ -1,9 +1,10 @@
+
+name: Test Composite Action
+
 on:
    push:
      branches: [develop]
    workflow_dispatch:
-
-name: Test Composite Action
 
 jobs:
   build:
