@@ -1,13 +1,15 @@
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
+# This does not work, since github does not offer VMs for ARM. 
 
 name: MacOS-arm64
 
-on: [release, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
 
-  conan-on-darwin:
+  conan-on-darwin-arm64:
 
-    runs-on: [ macOS, ARM64 ]
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -31,8 +33,8 @@ jobs:
           conan install . -s build_type=Release -if build -b missing
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release -DCROSS_COMPILE="-target arm64-apple-macos11" --log-level=DEBUG --verbose
+          cmake --build build --log-level=DEBUG --verbose
       - name: Make application bundle
         run: |
           pyinstaller --windowed --osx-bundle-identifier no.ntnu.iir.CosmoGUI Python/CosmoGUI.py
