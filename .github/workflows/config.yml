@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        compiler_version: [9]
+        compiler_version: [10]
         python-version: ['3.9','3.10','3.11']
 
     steps:
@@ -64,6 +64,7 @@ jobs:
       - name: Config Conan
         run: |
           conan profile new default
+          conan profile update settings.compiler=gcc default
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: Run conan
         run: |
