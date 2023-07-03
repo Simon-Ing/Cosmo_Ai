@@ -16,7 +16,7 @@ index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s03",image-s03.png,e,s,50,40,20,30,15,30,40,32
 EOF
 
-python3 Python/datagen.py --directory="$dir" --csvfile $fn --actual --apparent --reflines
+python3 CosmoSimPy/datagen.py --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
 
 # "ss15",image-ss15.png,t,ss,50,10,0,7,20,0,0,16

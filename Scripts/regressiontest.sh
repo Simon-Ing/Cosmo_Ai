@@ -23,17 +23,17 @@ do
    mkdir -p Test/montage/$flag
 done
 
-python3 Python/datagen.py --directory="$dir"/plain \
+python3 CosmoSimPy/datagen.py --directory="$dir"/plain \
    --csvfile Datasets/debug.csv  || exit 1
 
-python3 Python/datagen.py --mask --directory="$dir"/mask \
+python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
    --csvfile Datasets/debug.csv  || exit 2
 
 if /bin/false
 then
-python3 Python/datagen.py --reflines --centred --directory="$dir"/centred \
+python3 CosmoSimPy/datagen.py --reflines --centred --directory="$dir"/centred \
    --csvfile Datasets/debug.csv  || exit 3
-python3 Python/datagen.py --reflines --directory="$dir"/reflines \
+python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
 fi
 
@@ -43,7 +43,7 @@ then
   for flag in $F plain 
   do
      echo $flag
-     python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag --masked
+     python3 CosmoSimPy/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag --masked
      for f in Test/diff/$flag/*
      do
         ff=`basename $f`

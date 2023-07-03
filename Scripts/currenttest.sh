@@ -23,9 +23,9 @@ index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s15",image-s15.png,e,50,40,40,60,60,6,135,40
 EOF
 
-# python3 Python/datagen.py --imagesize 600 -L pss --directory="$dir" --csvfile $fn --actual --apparent --reflines --psiplot --kappaplot
-python3 Python/datagen.py --imagesize 600 --lens SIS --model Roulette --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --maskscale 0.85 --components 8 --showmask
-# python3 Python/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
+# python3 CosmoSimPy/datagen.py --imagesize 600 -L pss --directory="$dir" --csvfile $fn --actual --apparent --reflines --psiplot --kappaplot
+python3 CosmoSimPy/datagen.py --imagesize 600 --lens SIS --model Roulette --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --maskscale 0.85 --components 8 --showmask
+# python3 CosmoSimPy/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
 
 # "ss15",image-ss15.png,t,ss,50,10,0,7,20,0,0,16
