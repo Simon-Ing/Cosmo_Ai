@@ -13,9 +13,6 @@ inputs:
 
 runs:
     using: "composite"
-    defaults:
-      run:
-        shell: bash
 
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +24,7 @@ runs:
           architecture: 'x64'
 
       - name: Install prerequisites
+        shell: bash
         run: |
           sudo apt install -y \
           libgtk2.0-dev \
@@ -59,17 +57,21 @@ runs:
           libxcb-util0-dev
           sudo pip3 install conan==1.59
       - name: Config Conan
+        shell: bash
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - name: Run conan
+        shell: bash
         run: |
           conan install . -s build_type=Release -if build -b missing
       - name: Configure and build
+        shell: bash
         run: |
           cmake . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
       - name: Make Python Distribution
+        shell: bash
         run: |
            mkdir -p dist/CosmoSimPy/CosmoSim
            cp build/lib/CosmoSimPy.*.so dist/CosmoSimPy/CosmoSim/
@@ -84,6 +86,7 @@ runs:
           name: CosmoSimPy
           path: dist
       - name: Test
+        shell: bash
         run: |
           pip3 install -r requirements.txt
           cp build/lib/CosmoSimPy.*.so CosmoSimPy/CosmoSim
