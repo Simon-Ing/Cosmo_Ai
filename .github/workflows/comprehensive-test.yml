@@ -26,7 +26,7 @@ jobs:
       - name: Build Project
         uses: ./.github/actions/build-linux
         with:
-           compiler-version: ${{ matrix. compiler-version }}
+           compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}
       - name: Regression Test
         shell: bash
@@ -39,13 +39,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-2019]
+        compiler-version: [10]
         python-version: ['3.10','3.11']
     steps:
       - uses: actions/checkout@v3
       - name: Build Project
         uses: ./.github/actions/build-windows
         with:
-           compiler-version: ${{ matrix. compiler-version }}
+           compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}
       - name: Regression Test
         shell: bash
