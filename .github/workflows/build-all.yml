@@ -1,9 +1,7 @@
 
-name: Build
+name: Full Build 
 
 on: 
-   push:
-     branches: [main, develop]
    workflow_dispatch:
    workflow_call:
 
