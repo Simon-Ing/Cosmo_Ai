@@ -20,15 +20,16 @@ but it still incomplete and fragmented.
 
 # Making it Run
 
-## Running from Precompiled Distribution
+## Running from Precompiled Version in Python
 
-1.  Make sure you have Python 3.10 installed.
+The libraries are built using Github Workflows and packed
+as complete Python modules with lirbraries or scripts.
+Currently, we build for Python 3.9, 3,10, and 3.11 on Linux,
+and for Python 3.10 and 11 on Windows.
+
+1.  Make sure you have one of the supported Python versions
 2.  Download and unpack `CosmoSimPy.zip` from 
-    [v2.0.2.](https://github.com/CosmoAI-AES/CosmoSim/releases/tag/v2.0.2)
-    or
     [the latest release](https://github.com/CosmoAI-AES/CosmoSim/releases/).
-    Temporary problems with the build on github, may mean that there is no
-    precompiled version with the latest release.
 3.  Run `CosmoSimPy/CosmoGUI.py` in python.  This is the GUI tool.
 4.  The `CosmoSimPy/datagen.py` is the CLI tool and should be run
     on the command line; see below.
@@ -239,128 +240,6 @@ be approximation errors.
     to have the source on the x-axis and one working directly with
     arbitrary position.  Difference are not perceptible by visual
     comparison, but the difference image shows noticeable difference.
-
-# Technical Design
-
-## Components
-
-### C++ components
-
-+ Lens Models
-    + `LensModel.cpp` is the abstract base class.
-    + `PointMassLens.cpp` simulates the point mass model
-      using the exact formulation
-    + `RoulettePMLens.cpp` simulates the point mass model using
-      the Roulette formalism
-    + `SphereLens.cpp` simulates the SIS model
-+ Source Models
-    + `Source.cpp` is the abstract base class.
-    + `SphericalSource.cpp` is standard Guassian model
-    + `EllipsoidSource.cpp` is an ellipsoid Guassian model
-    + `TriangleSource.cpp` is a three colour triangle source,
-       intended for debugging
-+ `simaux.cpp` is auxiliary functions
-+ `CosmoSim.cpp` defines the `CosmoSimPy` class with python bindigs.
-  This class operates as a facade to the library, and does not 
-  expose the individual classes.
-
-### Python Components
-
-+ `CosmoSim` is a wrapper around `CosmoSimPy` from `CosmoSim.cpp`,
-  defining the `CosmoSim` class.
-+ `CosmoGUI` is a tkinter desktop application, providing a GUI to the
-  simulator
-+ `CosmoSim.View` is a tkinter widget displaying the source and 
-  distorted image for `CosmoGUI`.
-+ `CosmoSim.Controller` is a tkinter widget to interactively set
-  the simulator parameters for `CosmoGUI`.
-+ `CosmoSim.Image` provides post-processing functions for the images.
-+ `datagen.py` is a batch script to generate distorted images.
-
-
-## Lens Model Class
-
-### Virtual Functions
-
-The following virtual functions have to be overridden by most subclasses.
-They are called from the main update function and overriding them, the entire
-lens model changes.
-
-+ `calculateAlphaBeta()`
-  pre-calculates $\alpha$ and $\beta$ in the distortion equation.
-+ `getDistortedPos()`
-  calculates the distortion equation for a give pixel.
-
-The constructor typically has to be overridden as well, to load the formulæ for
-$\alpha$ and $\beta$.
-
-### Setters 
-
-Setters are provided for all of the control parameters.
-
-+ `updateXY` to update the $(x,y)$ co-ordinates of the actual image, the
-  relative distance $\chi$ to the lens compared to the source, and the
-  Einstein radius $R_E$.
-  This has to update the apparent position which depends on all of these
-  variables.
-+ `updateSize` to update the size or standard deviation of the source.
-+ `updateNterms` to update the number of terms in the sum after truncation
-+ `updateAll` to update all of the above
-
-### Getters
-
-Getters are provided for the three images.
-
-+ `getActual()`
-+ `getApparent()`
-+ `getDistorted()`
-
-### Update
-
-The main routine of the `Simulator` is `update()` which recalculates the 
-three images: actual, apparent, and distorted.  This is called by the setters.
-
-In addition to the virtual functions mentioned above, it depends on
-
-+ `parallelDistort()` and `distort()` which runs the main steps in parallel.
-+ `drawParallel()` and `drawSource()` which draws the source image.
-
-## Auxiliaries 
-
-The `simaux.cpp` file provides the following:
-
-+ `factorial_()`
-+ `refLines()` to draw the axis cross
-
-### Subclasses
-
-The `Simulator` class implements the point mass model as a default, but the 
-subclass `PointMassSimulator` should be used for instantiation.  It overrides
-nothing, but the `Simulator` superclass may be made abstract in the future.
-
-The `SphereSimulator` overrides the constructor and the two virtual functions.
-The constructor loads the formulæ for `\alpha` and `\beta` which are calculated
-by `calculateAlphaBeta()` when parameters change.
-
-# Development and Advanced Testing
-
-## Roulette Test (experimental)
-
-The `roulettetest` program is similar to the old `makeimage`, but can generate extra
-images to test the behaviour of the Roulettes model.  In particular,
-
-+ `-A` takes a comma separated list of floating point values, which are taken
-  to the the apparent position (distance from origin).  A distorted image is
-  created for each value.
-+ `-Y` generates a secondary distorted image using the second root for the
-  apparent position.  This only makes sense for the point mass lens.
-
-## Regression Testing
-
-The `Scripts/test.sh` script can be used for regression testing.
-It generates test images and compare them to images generated by v2.0.2.
-If discrepancies are found, it indicates that the simulator has functionaly
-changed.
 
 
 # Contributors
