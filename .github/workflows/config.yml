@@ -93,10 +93,9 @@ jobs:
           path: dist
       - name: Test
         run: |
-          pip3 install opencv-python
-          pip3 install numpy
-          cp build/lib/CosmoSimPy.*.so Python/CosmoSim
-          python3 Python/datagen.py
+          pip3 install -r requirements.txt
+          cp build/lib/CosmoSimPy.*.so CosmoSimPy/CosmoSim
+          python3 CosmoSimPy/datagen.py
 
 
 
@@ -137,12 +136,17 @@ jobs:
       - name: Make Python Distribution
         run: |
            mkdir -p dist/CosmoSimPy/CosmoSim
-           mv build/lib/CosmoSimPy.*.pyd dist/CosmoSimPy/CosmoSim/
+           cp build/lib/CosmoSimPy.*.pyd dist/CosmoSimPy/CosmoSim/
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
           name: CosmoSimPy
           path: dist
+      - name: Test
+        run: |
+          pip3 install -r requirements.txt
+          cp build/lib/CosmoSimPy.*.so CosmoSimPy/CosmoSim
+          python3 CosmoSimPy/datagen.py
 
   python-dist:
 
@@ -155,7 +159,7 @@ jobs:
       - name: Make Python Distribution
         run: |
            mkdir -p dist/CosmoSimPy
-           rsync -av Python/ dist/CosmoSimPy/
+           rsync -av CosmoSimPy/ dist/CosmoSimPy/
       - name: Archive Python Application
         uses: actions/upload-artifact@v3
         with:
