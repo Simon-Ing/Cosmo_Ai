@@ -39,5 +39,5 @@ target_link_libraries(CosmoSimPy PRIVATE SimLib)
 
 # copy CosmoSimPy.*.pyd into Python directory
 add_custom_command(TARGET CosmoSimPy POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:CosmoSimPy> "${CMAKE_SOURCE_DIR}/Python/CosmoSim"
+   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:CosmoSimPy> "${CMAKE_SOURCE_DIR}/CosmoSimPy/CosmoSim"
         )
