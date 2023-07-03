@@ -93,6 +93,8 @@ jobs:
           path: dist
       - name: Test
         run: |
+          pip3 install opencv-python
+          pip3 install numpy
           cp build/lib/CosmoSimPy.*.so Python/CosmoSim
           python3 Python/datagen.py
 
