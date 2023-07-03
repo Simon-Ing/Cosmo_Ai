@@ -1,0 +1,15 @@
+on:
+   push:
+     branches: [develop]
+   workflow_dispatch:
+
+name: Test Composite Action
+
+jobs:
+  build:
+    name: Test composite action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        uses: ./.github/workflows/build-all.yml
