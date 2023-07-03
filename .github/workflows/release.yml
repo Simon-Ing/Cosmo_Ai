@@ -75,9 +75,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Build Test Artifact
-        run: |
-          zip --junk-paths test-artifact README.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -88,23 +85,11 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      - name: Upload Test Release Asset
-        id: upload-test-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./test-artifact.zip
-          asset_name: test-artifact.zip
-          asset_content_type: application/zip
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
           name: CosmoSimPy
           path: dist
-      - name: Debug listing
-        run: ls -Rl
       - name: Debug listing
         run: |
           cd dist

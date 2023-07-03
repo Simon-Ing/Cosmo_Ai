@@ -20,6 +20,8 @@
 ### Fixed
 
 - Speeded up image centring.
+- Fixed an image artifact caused by drawing light from a fractional pixel
+  just outside the boundary of the source image.
 
 
 ## [2.1.0] - 2023-03-28
