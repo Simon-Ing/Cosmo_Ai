@@ -1,3 +1,4 @@
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
 
 name: Full Build 
 
@@ -20,7 +21,8 @@ jobs:
         python-version: ['3.9','3.10','3.11']
 
     steps:
-      - uses: ./.github/actions/build-linux
+      - name: Build Project
+        uses: ./.github/actions/build-linux
         with:
            compiler-version: ${{ matrix. compiler-version }}
            python-version: ${{ matrix.python-version }}
@@ -34,7 +36,8 @@ jobs:
         os: [windows-2019]
         python-version: ['3.10','3.11']
     steps:
-      - uses: ./.github/actions/build-windows
+      - name: Build Project
+        uses: ./.github/actions/build-windows
         with:
            compiler-version: ${{ matrix. compiler-version }}
            python-version: ${{ matrix.python-version }}
