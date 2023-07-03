@@ -1,6 +1,6 @@
 # (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
 
-name: "Full Build"
+name: "Regression Test"
 
 on: 
    workflow_dispatch:
