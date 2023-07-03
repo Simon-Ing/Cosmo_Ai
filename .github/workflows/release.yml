@@ -98,6 +98,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: CosmoSimPy
+          path: dist
+      - name: Debug listing
+        run: ls -Rl
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
@@ -105,5 +108,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./CosmoSimPy
+          asset_path: ./dist/CosmoSimPy
           asset_name: CosmoSimPy
