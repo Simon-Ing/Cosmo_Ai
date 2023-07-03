@@ -128,6 +128,7 @@ class ImagePane(ttk.Frame):
                  )
         m,n = im.shape[:2]
         if m*n == 0:
+            print( "Image Shape", im.shape )
             raise Exception( "Simulator returns distorted image without any pixels." )
         if self.reflinesVar.get(): drawAxes(im)
         im0 = Image.fromarray( im )
