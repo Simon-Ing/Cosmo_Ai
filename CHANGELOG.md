@@ -2,7 +2,7 @@
 # CosmoSim Change Log
 
 
-## [2.2.0] - ?? Unreleased
+## [2.2.0] - 2023-07-03
 
 ### Added
 
