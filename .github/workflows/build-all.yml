@@ -1,6 +1,6 @@
 # (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
 
-name: Full Build 
+name: "Full Build"
 
 on: 
    workflow_dispatch:
@@ -12,8 +12,8 @@ jobs:
     name: Build on Linux
     runs-on: ${{ matrix.os }}
     env:
-      CC: gcc-${{ matrix.compiler_version }}
-      CXX: g++-${{ matrix.compiler_version }}
+      CC: gcc-${{ matrix.compiler-version }}
+      CXX: g++-${{ matrix.compiler-version }}
     strategy:
       fail-fast: false
       matrix:
