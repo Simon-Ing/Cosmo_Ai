@@ -1,0 +1,5 @@
+numpy 
+matplotlib
+opencv-python
+pandas 
+pybind11 
