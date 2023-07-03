@@ -63,13 +63,13 @@ jobs:
           sudo pip3 install conan==1.59
       - name: Config Conan
         run: |
-          conan profile new default
-          conan profile update settings.os=Linux default
-          conan profile update settings.arch=x86_64 default
-          conan profile update settings.compiler=gcc default
-          conan profile update settings.compiler.version=10 default
+          conan profile new default --detect
+          # conan profile update settings.os=Linux default
+          # conan profile update settings.arch=x86_64 default
+          # conan profile update settings.compiler=gcc default
+          # conan profile update settings.compiler.version=10 default
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan profile update settings.build_type=Release default
+          # conan profile update settings.build_type=Release default
       - name: Run conan
         run: |
           conan install . -s build_type=Release -if build -b missing
