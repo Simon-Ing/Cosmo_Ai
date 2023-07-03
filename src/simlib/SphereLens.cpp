@@ -10,22 +10,18 @@
 #include <fstream>
 
 SphereLens::SphereLens() :
-   RouletteLens::RouletteLens()
+   RouletteModel::RouletteModel()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
+    rotatedMode = true ;
     initAlphasBetas();
 }
-SphereLens::SphereLens(bool centred) :
-   RouletteLens::RouletteLens(centred)
-{ 
-    std::cout << "Instantiating SphereLens ... \n" ;
-    initAlphasBetas();
-}
-SphereLens::SphereLens(std::string fn, bool centred) :
+SphereLens::SphereLens(std::string fn) :
    filename(fn),
-   RouletteLens::RouletteLens(centred)
+   RouletteModel::RouletteModel()
 { 
     std::cout << "Instantiating SphereLens ... \n" ;
+    rotatedMode = true ;
     initAlphasBetas();
 }
 void SphereLens::setFile( std::string fn ) {
@@ -65,7 +61,7 @@ void SphereLens::initAlphasBetas() {
 }
 
 void SphereLens::calculateAlphaBeta() {
-    std::cout << "SphereLens calculateAlphaBeta\n" ;
+    std::cout << "[SphereLens.calculateAlphaBeta()] " << einsteinR << " - " << xi << "\n"  ;
     cv::Point2d xi = getXi() ;
 
     // calculate all amplitudes for given X, Y, einsteinR

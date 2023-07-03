@@ -3,6 +3,9 @@
 #include "cosmosim/Lens.h"
 #include "simaux.h"
 
+#include <symengine/parser.h>
+#include <fstream>
+
 void Lens::updatePsi( ) { 
    return updatePsi( cv::Size(400,400) ) ;
 }
@@ -53,6 +56,93 @@ cv::Mat Lens::getMassImage() const {
    return im ;
 }
 cv::Mat Lens::getEinsteinMap() const {
+   std::cout << "[Lens.getEinsteinMap() not implemented\n" ;
    throw NotImplemented() ;
    // return einsteinMap ;
+}
+
+void Lens::setFile( std::string fn ) {
+   std::cout << "[Lens.setFile()] " << fn << "\n" ;
+   filename = fn ;
+} 
+void Lens::initAlphasBetas() {
+
+    auto x = SymEngine::symbol("x");
+    auto y = SymEngine::symbol("y");
+    auto g = SymEngine::symbol("g");
+    auto c = SymEngine::symbol("c");
+
+    std::ifstream input;
+    input.open(filename);
+
+    if (!input.is_open()) {
+        throw std::runtime_error("Could not open file: " + filename);
+    }
+    std::cout << "[Lens.initAlphasBetas()] " << filename << "\n" ;
+
+    while (input) {
+        std::string m, s;
+        std::string alpha;
+        std::string beta;
+        std::getline(input, m, ':');
+        std::getline(input, s, ':');
+        std::getline(input, alpha, ':');
+        std::getline(input, beta);
+        if (input) {
+            auto alpha_sym = SymEngine::parse(alpha);
+            auto beta_sym = SymEngine::parse(beta);
+            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *alpha_sym);
+            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *beta_sym);
+        }
+    }
+}
+
+double Lens::getAlpha( cv::Point2d xi, int m, int s ) {
+   return alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+}
+double Lens::getBeta( cv::Point2d xi, int m, int s ) {
+   return betas_l[m][s].call({xi.x, xi.y, einsteinR});
+}
+
+void Lens::calculateAlphaBeta( cv::Point2d xi ) {
+    std::cout << "[Lens.calculateAlphaBeta()] " << nterms << "; " 
+              << einsteinR << " - " << xi << "\n"  ;
+
+    // calculate all amplitudes for given xi, einsteinR
+    for (int m = 1; m <= nterms; m++){
+        for (int s = (m+1)%2; s <= (m+1); s+=2){
+            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
+        }
+    }
+}
+double Lens::getAlphaXi( int m, int s ) {
+   return alphas_val[m][s] ;
+}
+double Lens::getBetaXi( int m, int s ) {
+   return betas_val[m][s] ;
+}
+double Lens::getXiAbs( double e ) {
+   std::cout << "[Lens.getXiAbs() not implemented\n" ;
+   throw NotImplemented() ;
+}
+cv::Point2d Lens::getXi( cv::Point2d e ) {
+   std::cout << "[Lens.getXi() not implemented\n" ;
+   throw NotImplemented() ;
+}
+void Lens::setNterms( int n ) {
+   nterms = n ;
+}
+
+double Lens::psiValue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return psi.at<double>( ij ) ;
+}
+double Lens::psiXvalue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return -psiY.at<double>( ij ) ;
+}
+double Lens::psiYvalue( double x, double y ) { 
+   cv::Point2d ij = imageCoordinate( cv::Point2d( x, y ), psi ) ;
+   return -psiX.at<double>( ij ) ;
 }

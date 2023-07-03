@@ -1,0 +1,23 @@
+index,filename,source,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"t011",image-t011.png,t,p,50, 24,-68,48,21,0,0,16
+"t012",image-t012.png,t,p,50, 35,-29, 3,43,0,30,16
+"t013",image-t013.png,t,p,50, 57,-47,50,47,0,75,16
+"t014",image-t014.png,t,p,50,-60,-50,25, 5,0,60,16
+"t015",image-t015.png,t,p,50,-20, -3,48,27,0,115,16
+"ts11",image-ts11.png,t,pss,50, 24,-68,48,21,0,0,16
+"ts12",image-ts12.png,t,pss,50, 35,-29, 3,43,0,30,16
+"ts13",image-ts13.png,t,pss,50, 57,-47,50,47,0,75,16
+"ts14",image-ts14.png,t,pss,50,-60,-50,25, 5,0,60,16
+"ts15",image-ts15.png,t,pss,50,-20, -3,48,27,0,115,16
+"s021",image-s021.png,s,pss,50, 24,-68,48,21,0,0,16
+"s022",image-s022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"s023",image-s023.png,s,pss,50, 57,-47,50,47,0,0,16
+"s024",image-s024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"s025",image-s025.png,s,pss,50,-20, -3,48,27,0,0,16
+"s026",image-s026.png,s,pss,50,-30,-25,20,20,0,0,16
+"f021",image-f021.png,s,pss,50, 24,-68,48,21,0,0,16
+"f022",image-f022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"f023",image-f023.png,s,pss,50, 57,-47,50,47,0,0,16
+"f024",image-f024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"f025",image-f025.png,s,pss,50,-20, -3,48,27,0,0,16
+"f026",image-f026.png,s,pss,50,-30,-25,20,20,0,0,16

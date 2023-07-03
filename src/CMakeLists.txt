@@ -1,18 +1,17 @@
 
 set(SimLibFiles
+        simlib/SampledLens.cpp
+        simlib/SampledPsiFunctionLens.cpp
         simlib/Lens.cpp
         simlib/PsiFunctionLens.cpp
-        simlib/PsiFunctionModel.cpp
-        simlib/PixMapLens.cpp
         simlib/SIS.cpp
-        simlib/PureSampledModel.cpp
-        simlib/SampledRouletteLens.cpp
-        simlib/RouletteSISLens.cpp
-        simlib/RouletteLens.cpp
+        simlib/RaytraceModel.cpp
+	simlib/RouletteModel.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp
         simlib/RoulettePMLens.cpp
+	simlib/RouletteRegenerator.cpp
         simlib/simaux.cpp
         simlib/Source.cpp
         simlib/SphereLens.cpp
@@ -34,11 +33,11 @@ endif ()
 
 
 # Python Bindings
-pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp)
+pybind11_add_module(CosmoSimPy MODULE cosmosimpy/CosmoSim.cpp cosmosimpy/RouletteSim.cpp)
 target_link_libraries(CosmoSimPy PRIVATE SimLib)
 
 
 # copy CosmoSimPy.*.pyd into Python directory
 add_custom_command(TARGET CosmoSimPy POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:CosmoSimPy> "${CMAKE_SOURCE_DIR}/Python/CosmoSim"
+   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:CosmoSimPy> "${CMAKE_SOURCE_DIR}/CosmoSimPy/CosmoSim"
         )

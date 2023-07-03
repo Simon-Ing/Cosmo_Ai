@@ -1,0 +1,46 @@
+\documentclass[landscape]{standalone}
+
+\usepackage{tikz}
+\usepackage{pgf-umlcd}
+
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+
+
+
+% Calligraphic brace
+% \draw [decorate, decoration = {calligraphic brace}] (0.2,1) --  (1.2,1);
+
+
+
+\begin{document}
+
+% Lens.h:class PixMapLens : public SampledLens {
+
+
+\begin{tikzpicture}
+   	\tikzset{point/.style={fill=black,draw=black,thick}}
+   	\coordinate [label=above:$\eta$] (eta) at (1,8);
+   	\coordinate [label=right:$\eta'$] (etap) at (2,8.5);
+   	\coordinate [label=above:$\nu$] (nu) at (6,8);
+   	\coordinate [label=right:$\nu'$] (nup) at (7,8.5);
+   	\coordinate [label=left:$\xi$] (xi) at (2.25,3);
+   	\coordinate [label=right:$\xi'$] (xip) at (2.625,3.1875);
+   	\coordinate (obs) at (0,0);
+
+	\draw [decorate, decoration = {brace},thick] (eta) --  (etap) node [midway,above=0.5ex] {$\Delta\eta$};
+	\draw [decorate, decoration = {brace}, thick] (xip) --  (xi) node [near start,above=-4ex] {$\Delta\xi$};
+	\draw [decorate, decoration = {brace}, thick] (nu) --  (nup) node [midway,above=0.5ex] {$\Delta\nu$};
+
+	\path [draw,blue] (obs) -- (xi) ;
+	\path [draw,blue] (xi) -- (eta) ;
+	\path [draw,dashed,blue] (xi) -- (nu) ;
+	\path [draw,dashed,brown] (obs) -- (nup) ;
+	\path [draw,brown] (obs) -- (xip) ;
+	\path [draw,brown] (xip) -- (etap) ;
+	\fill[fill=white,thick,draw=green] (obs) circle (5pt);
+	\foreach \p in {eta,nu,xi,nup,etap,xip}
+		\fill[point] (\p) circle (1pt);
+
+\end{tikzpicture}
+
+\end{document}

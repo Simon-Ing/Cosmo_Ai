@@ -11,32 +11,41 @@ using namespace SymEngine;
 
 #define PI 3.14159265358979323846
 
-class RouletteLens : public LensModel { 
+
+class RouletteModel : public LensModel { 
 public:
+    RouletteModel();
+
     using LensModel::LensModel ;
+    virtual void setLens( Lens* ) ;
+    // void setCentre( cv::Point2d ) ;
 protected:
     std::array<std::array<double, 202>, 201> alphas_val;
     std::array<std::array<double, 202>, 201> betas_val;
 
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
-    virtual void markMask( cv::InputOutputArray ) ;
-    virtual void maskImage( cv::InputOutputArray, double ) ;
+    // virtual void markMask( cv::InputOutputArray ) ;
+    // virtual void maskImage( cv::InputOutputArray, double ) ;
     virtual double getMaskRadius() const ;
+
+    virtual void setXi( cv::Point2d ) ;
+
+    virtual void calculateAlphaBeta();
 };
 
-class RoulettePMLens : public RouletteLens { 
+class RoulettePMLens : public RouletteModel { 
 public:
-    using RouletteLens::RouletteLens ;
+    RoulettePMLens();
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
+    virtual void calculateAlphaBeta(); 
 };
 
-class SphereLens : public RouletteLens { 
+class SphereLens : public RouletteModel { 
   public:
     SphereLens();
-    SphereLens(bool);
-    SphereLens(std::string,bool);
+    SphereLens(std::string);
     void setFile(std::string) ;
   protected:
     virtual void calculateAlphaBeta();
@@ -48,28 +57,19 @@ class SphereLens : public RouletteLens {
     std::string filename = "50.txt" ;
     void initAlphasBetas();
 };
-class RouletteSISLens : public SphereLens { 
+
+
+class RouletteRegenerator : public RouletteModel { 
+  public:
+    using RouletteModel::RouletteModel ;
+    void setCentre( cv::Point2d, cv::Point2d ) ;
+    void setAlphaXi( int, int, double ) ;
+    void setBetaXi( int, int, double ) ;
   protected:
     virtual void updateApparentAbs() ;
-    virtual void setXi( cv::Point2d ) ;
-  public:
-    RouletteSISLens();
-    RouletteSISLens(bool);
-    RouletteSISLens(std::string,bool);
-};
-
-
-class SampledRouletteLens : public RouletteLens { 
-public:
-    SampledRouletteLens();
-    SampledRouletteLens(bool);
-    void setLens( Lens * ) ;
-protected:
     virtual void calculateAlphaBeta();
-    virtual void updateApparentAbs() ;
-    virtual void setXi( cv::Point2d ) ;
-private:
-    Lens *lens ;
+  private:
 };
 
-#endif // ROULETTE_H
+
+#endif /* ROULETTE_H */

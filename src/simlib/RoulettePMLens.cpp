@@ -2,6 +2,13 @@
 
 #include "cosmosim/Roulette.h"
 
+RoulettePMLens::RoulettePMLens() :
+   RouletteModel::RouletteModel()
+{ 
+    std::cout << "Instantiating RoulettePMLens ... \n" ;
+    rotatedMode = true ;
+}
+
 /* The following is a default implementation for the point mass lens. 
  * It would be better to make the class abstract and move this definition to the 
  * subclass. */
@@ -31,6 +38,10 @@ void RoulettePMLens::updateApparentAbs( ) {
 
     double root = sqrt(0.25*getEtaSquare() + einsteinR*einsteinR/(CHI*CHI));
 
-    setNu( tentativeCentre =  cv::Point2d( getEtaAbs()/2 + root, 0 ) ) ;
+    setNu( cv::Point2d( getEtaAbs()/2 + root, 0 ) ) ;
     apparentAbs2 = getEtaAbs()/2 - root ;
+}
+
+void RoulettePMLens::calculateAlphaBeta() {
+    std::cout << "RoulettePMLens calculateAlphaBeta does nothing \n" ;
 }

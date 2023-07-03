@@ -13,15 +13,12 @@
 double factorial_(unsigned int n);
 
 LensModel::LensModel() :
-        LensModel(false)
-{ }
-LensModel::LensModel(bool centred) :
         CHI(0.5),
         einsteinR(20),
         nterms(10),
-        centredMode(centred),
         source(NULL)
 { }
+
 LensModel::~LensModel() {
    std::cout << "Destruct lens model\n" ;
    delete source ;
@@ -66,6 +63,7 @@ void LensModel::updateSecondary( ) {
    if ( apparentAbs2 == 0 ) {
       throw NotSupported() ;
    }
+   std::cout << "[LensModel.updateSecondary()] image type\n" ;
    throw NotImplemented() ;
    return updateInner() ;
 }
@@ -80,12 +78,12 @@ void LensModel::update( cv::Point2d xi ) {
 void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
-    std::cout << "[LensModel::update()] R=" << getEtaAbs() << "; theta=" << phi
+    std::cout << "[LensModel::updateInner()] R=" << getEtaAbs() << "; theta=" << phi
               << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
-    std::cout << "[LensModel::update()] xi=" << getXi()   
+    std::cout << "[LensModel::updateInner()] xi=" << getXi()   
               << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
-    std::cout << "[LensModel::update()] nu=" << getNu()   
-              << "; centre=" << getCentre() << "\n" ;
+    std::cout << "[LensModel::updateInner()] nu=" << getNu()   
+              << "; centre=" << getCentre() << "\n" << std::flush ;
 
     auto startTime = std::chrono::system_clock::now();
 
@@ -114,7 +112,7 @@ void LensModel::updateInner( ) {
     auto endTime = std::chrono::system_clock::now();
     std::cout << "Time to update(): " 
               << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() 
-              << " milliseconds" << std::endl;
+              << " milliseconds" << std::endl << std::flush ;
 
 }
 
@@ -184,7 +182,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
               ij = imageCoordinate( pos, src ) ;
   
               // If the pixel is within range, copy value from src to dst
-              if (ij.x < src.rows && ij.y < src.cols && ij.x >= 0 && ij.y >= 0) {
+              if (ij.x < src.rows-1 && ij.y < src.cols-1 && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
                     dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
                  } else {
@@ -208,7 +206,6 @@ void LensModel::setMaskMode(bool b) {
    maskMode = b ; 
 }
 void LensModel::setBGColour(int b) { bgcolour = b ; }
-void LensModel::setCentred(bool b) { centredMode = b ; }
 
 /* B. Source model setter */
 void LensModel::setSource(Source *src) {
@@ -241,12 +238,7 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
     // Calculate Polar Co-ordinates
     phi = atan2(eta.y, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] eta.y=" << eta.y 
-              << "; actualY=" << Y 
-              << "; eta=" << eta 
-              << "\n" ;
-
-    std::cout << "[setXY] Set position x=" << eta.x << "; y=" << eta.y
+    std::cout << "[setXY] eta=" << eta 
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 }
 
@@ -278,21 +270,32 @@ void LensModel::maskImage( double scale ) {
 void LensModel::markMask( ) {
     markMask( imgDistorted ) ;
 }
-void LensModel::maskImage( cv::InputOutputArray r, double scale ) {
-   throw NotImplemented() ;
+void LensModel::maskImage( cv::InputOutputArray imgD, double scale ) {
+   std::cout << "[LensModel.maskImage()] image type\n" ;
+   // throw NotImplemented() ;
+      // std::cout << "RouletteModel::maskImage\n" ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
+      cv::Mat mask( imgD.size(), CV_8UC1, cv::Scalar(255) ) ;
+      cv::Mat black( imgD.size(), imgD.type(), cv::Scalar(0) ) ;
+      cv::circle( mask, origo, scale*getMaskRadius(), cv::Scalar(0), cv::FILLED ) ;
+      black.copyTo( imgD, mask ) ;
 }
-void LensModel::markMask( cv::InputOutputArray r ) {
-   throw NotImplemented() ;
+void LensModel::markMask( cv::InputOutputArray imgD ) {
+   std::cout << "[LensModel.markMask()] image type\n" ;
+      cv::Mat imgDistorted = getDistorted() ;
+      cv::Point2d origo = imageCoordinate( getCentre(), imgDistorted ) ;
+      origo = cv::Point2d( origo.y, origo.x ) ;
+      cv::circle( imgD, origo, getMaskRadius(), cv::Scalar(255), 1 ) ;
+      cv::circle( imgD, origo, 3, cv::Scalar(0), 1 ) ;
+      cv::circle( imgD, origo, 1, cv::Scalar(0), cv::FILLED ) ;
 }
 
 /* Getters */
 cv::Point2d LensModel::getCentre( ) const {
    cv::Point2d xichi =  getXi()/CHI ;
-   if ( centredMode ) {
-      return tentativeCentre + xichi - getNu() ;
-   } else {
-      return xichi ;
-   }
+   return xichi ;
 }
 cv::Point2d LensModel::getXi() const { 
    return xi ;
@@ -324,12 +327,52 @@ void LensModel::setNu( cv::Point2d n ) {
    nu = n ;
    xi = nu*CHI ;
    etaOffset = cv::Point2d( 0, 0 ) ;
+   std::cout << "[setNu] etaOffset set to zero.\n" ;
 }
 void LensModel::setXi( cv::Point2d x ) {
    if ( rotatedMode ) {
       std::cout << "Alternative viewpoints cannot be supported in rotated mode.\n" ;
       throw NotSupported() ;
    } else {
+      std::cout << "[LensModel.setXi()] image type\n" ;
       throw NotImplemented() ;
    }
+}
+void LensModel::setLens( Lens *l ) {
+   lens = l ;
+}
+
+cv::Point2d LensModel::getRelativeEta( cv::Point2d xi1 ) {
+   // returns $\vec\eta''$
+   cv::Point2d releta ;
+   releta = eta - xi1/CHI ;
+   std::cout << "[getRelativeEta] releta=" << releta << std::endl ;
+   return releta ;
+}
+
+cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
+   cv::Point2d releta, eta, r ; 
+
+   releta = xi1 - cv::Point2d( lens->psiXvalue( xi1.x, xi1.y ),
+                       lens->psiYvalue( xi1.x, xi1.y ) ) ;
+   eta = getEta() ;
+   r = releta/CHI - eta ;
+
+   std::cout << "[getOffset] eta=" << eta << "; xi1=" << xi1
+             << "; releta=" << releta 
+             << "; return " << r << std::endl ;
+
+   // return is the difference between source point corresponding to the
+   // reference point in the lens plane and the actual source centre
+   return r ;
+}
+
+
+void LensModel::updateApparentAbs( ) {
+    std::cout << "[LensModel] updateApparentAbs() updates psi.\n" ;
+    cv::Mat im = getActual() ;
+    lens->updatePsi(im.size()) ;
+    cv::Point2d chieta = CHI*getEta() ;
+    cv::Point2d xi1 = lens->getXi( chieta ) ;
+    setNu( xi1/CHI ) ;
 }

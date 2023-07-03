@@ -2,6 +2,7 @@
 #define COSMOSIM_H
 
 #include "Source.h"
+#include "Lens.h"
 
 #if __has_include("opencv4/opencv2/opencv.hpp")
 #include "opencv4/opencv2/opencv.hpp"
@@ -16,19 +17,20 @@ private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d nu ;   // Apparent position in the source plane
 
-    bool centredMode = false ; // centredMode is never used
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
     void updateInner();
 
+
 protected:
     virtual void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
-    cv::Point2d xi ;   // Local origin in the lens plane
+    cv::Point2d xi = cv::Point2d(0,0) ;   // Local origin in the lens plane
     cv::Point2d etaOffset = cv::Point2d(0,0) ;
         // Offset in the source plane resulting from moving xi
     double CHI;
     Source *source ;
+    Lens *lens = NULL ;
     double einsteinR;
     int nterms;
     bool rotatedMode = true ;
@@ -42,18 +44,15 @@ protected:
     void setNu( cv::Point2d ) ;
     virtual void setXi( cv::Point2d ) ;
 
-    // tentativeCentre is used as the shift when attempting 
-    // to centre the distorted image in the image.
-    cv::Point2d tentativeCentre = cv::Point2d(0,0) ;
-
-    virtual void updateApparentAbs() = 0 ;
+    virtual void updateApparentAbs() ;
     virtual void calculateAlphaBeta() ;
     virtual cv::Point2d getDistortedPos(double r, double theta) const = 0 ;
 
 public:
     LensModel();
-    LensModel(bool);
     ~LensModel();
+    cv::Point2d getOffset( cv::Point2d ) ;
+    cv::Point2d getRelativeEta( cv::Point2d ) ;
     void update();
     void updateSecondary();
     void update( cv::Point2d );
@@ -88,6 +87,8 @@ public:
     cv::Mat getApparent() const ;
     cv::Mat getSource() const ;
     cv::Mat getDistorted() const ;
+
+    virtual void setLens( Lens* ) ;
 };
 
 class PointMassLens : public LensModel { 
@@ -96,6 +97,18 @@ public:
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
+};
+
+
+class RaytraceModel : public LensModel { 
+public:
+    using LensModel::LensModel ;
+    RaytraceModel();
+protected:
+    virtual cv::Point2d calculateEta( cv::Point2d ) ;
+    virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
+    virtual cv::Point2d getDistortedPos(double r, double theta) const ;
+private:
 };
 
 /* simaux */

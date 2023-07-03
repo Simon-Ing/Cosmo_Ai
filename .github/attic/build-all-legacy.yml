@@ -1,0 +1,201 @@
+
+name: TestRun
+
+on: 
+   workflow_dispatch:
+   workflow_call:
+
+jobs:
+  conan-on-linux:
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler_version }}
+      CXX: g++-${{ matrix.compiler_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        compiler_version: [10]
+        python-version: ['3.9','3.10','3.11']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Install prerequisites
+        run: |
+          sudo apt install -y \
+          libgtk2.0-dev \
+          libva-dev \
+          libvdpau-dev \
+          libx11-xcb-dev \
+          libfontenc-dev \
+          libxaw7-dev \libxkbfile-dev \
+          libxmu-dev \
+          libxmuu-dev \
+          libxpm-dev \
+          libxres-dev \
+          libxss-dev \
+          libxtst-dev \
+          libxv-dev \
+          libxvmc-dev \
+          libxxf86vm-dev \
+          libxcb-render-util0-dev \
+          libxcb-xkb-dev \
+          libxcb-icccm4-dev \
+          libxcb-image0-dev \
+          libxcb-keysyms1-dev \
+          libxcb-randr0-dev \
+          libxcb-shape0-dev \
+          libxcb-sync-dev \
+          libxcb-xfixes0-dev \
+          libxcb-xinerama0-dev \
+          libxcb-dri3-dev \
+          libxcb-util-dev \
+          libxcb-util0-dev
+          sudo pip3 install conan==1.59
+      - name: Config Conan
+        run: |
+          conan profile new default --detect
+          # conan profile update settings.os=Linux default
+          # conan profile update settings.arch=x86_64 default
+          # conan profile update settings.compiler=gcc default
+          # conan profile update settings.compiler.version=10 default
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          # conan profile update settings.build_type=Release default
+      - name: Run conan
+        run: |
+          conan install . -s build_type=Release -if build -b missing
+      - name: Configure and build
+        run: |
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Make Python Distribution
+        run: |
+           mkdir -p dist/CosmoSimPy/CosmoSim
+           cp build/lib/CosmoSimPy.*.so dist/CosmoSimPy/CosmoSim/
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-link-library.zip
+          path: build/lib/CosmoSimPy.*.so
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy
+          path: dist
+      - name: Test
+        run: |
+          pip3 install -r requirements.txt
+          cp build/lib/CosmoSimPy.*.so CosmoSimPy/CosmoSim
+          python3 CosmoSimPy/datagen.py
+
+
+
+  conan-on-windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019]
+        python-version: ['3.10','3.11']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Install prerequisites
+        run: |
+          pip3 install conan==1.59
+      - name: Run conan
+        run: |
+          conan install . -s build_type=Release -if build -b missing
+      - name: Configure and build
+        run: |
+          cmake . -A x64 -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-link-library
+          path: build/lib/CosmoSimPy.*.pyd
+      - name: Make Python Distribution
+        run: |
+           mkdir -p dist/CosmoSimPy/CosmoSim
+           cp build/lib/CosmoSimPy.*.pyd dist/CosmoSimPy/CosmoSim/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy
+          path: dist
+      - name: Test
+        run: |
+          pip3 install -r requirements.txt
+          cp build/lib/CosmoSimPy.*.pyd CosmoSimPy/CosmoSim
+          python3 CosmoSimPy/datagen.py
+
+  python-dist:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Make Python Distribution
+        run: |
+           mkdir -p dist/CosmoSimPy
+           rsync -av CosmoSimPy/ dist/CosmoSimPy/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy
+          path: dist
+
+#  conan-on-darwin:
+#
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [macos-11]
+#        python-version: ['3.10']
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Setup Python 3.x
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#          architecture: 'x64'
+#
+#      - name: Install prerequisites
+#        run: |
+#          pip3 install conan
+#      - name: Run conan
+#        run: |
+#          conan install . -s build_type=Release -if build -b missing
+#      - name: Configure and build
+#        run: |
+#          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+#          cmake --build build
+#
+#      - name: Archive Python link library
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: python-link-library
+#          path: build/lib/CosmoSimPy.*

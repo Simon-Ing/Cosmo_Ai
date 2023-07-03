@@ -2,6 +2,29 @@
 # CosmoSim Change Log
 
 
+## [2.2.0] - ?? Unreleased
+
+### Added
+
+- Added options to generate data set with roulette amplitudes from datagen.py
+- New lens model and python script allowing the specification of the lens only
+  in terms of roulette amplitudes.
+- New github workflows, including a release workflow.
+
+### Changed
+
+- Refactored to decouple the simulation model (roulette and ray trace)
+  from the Lens model (currently just SIS and a sampled version).
+- Removed the unused centreMode code in the C++ library.
+
+### Fixed
+
+- Speeded up image centring.
+- Fixed an image artifact caused by drawing light from a fractional pixel
+  just outside the boundary of the source image.
+  This seems to remove non-deterministic effects as well.
+
+
 ## [2.1.0] - 2023-03-28
 
 ### Added

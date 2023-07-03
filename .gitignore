@@ -455,3 +455,7 @@ tt
 _deps
 psi*.svg
 kappa*.svg
+
+dist
+*.spec
+t.sh

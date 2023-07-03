@@ -7,7 +7,7 @@ test $dir || dir=Test/`date "+%Y%m%d"`
 mkdir -p $dir
 
 baseline=$2
-test $baseline || baseline=Test/baseline20230327
+test $baseline || baseline=Test/baseline20230703
 # baseline=Test/v2.0.3
 
 F=mask
@@ -20,24 +20,39 @@ for flag in $F plain
 do
    mkdir -p $dir/$flag
    mkdir -p Test/diff/$flag
+   mkdir -p Test/montage/$flag
 done
 
-python3 Python/datagen.py --directory="$dir"/plain \
+python3 CosmoSimPy/datagen.py --directory="$dir"/plain \
    --csvfile Datasets/debug.csv  || exit 1
 
-python3 Python/datagen.py --mask --directory="$dir"/mask \
+python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
    --csvfile Datasets/debug.csv  || exit 2
-python3 Python/datagen.py --reflines --centred --directory="$dir"/centred \
+
+if /bin/false
+then
+python3 CosmoSimPy/datagen.py --reflines --centred --directory="$dir"/centred \
    --csvfile Datasets/debug.csv  || exit 3
-python3 Python/datagen.py --reflines --directory="$dir"/reflines \
+python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
+fi
 
-test -d $baseline || exit 5
+if test -d $baseline
+then 
 
-for flag in $F plain 
-do
-   echo $flag
-   python3 Python/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag
-done
+  for flag in $F plain 
+  do
+     echo $flag
+     python3 CosmoSimPy/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag --masked
+     for f in Test/diff/$flag/*
+     do
+        ff=`basename $f`
+        convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff
+     done
+  done
 
-echo $F
+  echo $F
+else
+   echo $baseline does not exist 
+   exit 5 
+fi
