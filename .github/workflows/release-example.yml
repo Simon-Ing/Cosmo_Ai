@@ -11,8 +11,7 @@ jobs:
     name: Upload Release Asset
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build Project
         uses: ./.github/workflows/build-all.yml
       - name: Build Test Artifact
