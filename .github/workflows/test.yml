@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build Project
-        uses: ./.github/actions/hello-world
+        uses: ./.github/actions/build-linux

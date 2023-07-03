@@ -1,0 +1,45 @@
+name: 'Windows Build'
+
+description: Build the project on Windows
+
+runs:
+    using: "composite"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Install prerequisites
+        run: |
+          pip3 install conan==1.59
+      - name: Run conan
+        run: |
+          conan install . -s build_type=Release -if build -b missing
+      - name: Configure and build
+        run: |
+          cmake . -A x64 -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-link-library
+          path: build/lib/CosmoSimPy.*.pyd
+      - name: Make Python Distribution
+        run: |
+           mkdir -p dist/CosmoSimPy/CosmoSim
+           cp build/lib/CosmoSimPy.*.pyd dist/CosmoSimPy/CosmoSim/
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: CosmoSimPy
+          path: dist
+      - name: Test
+        run: |
+          pip3 install -r requirements.txt
+          cp build/lib/CosmoSimPy.*.pyd CosmoSimPy/CosmoSim
+          python3 CosmoSimPy/datagen.py
