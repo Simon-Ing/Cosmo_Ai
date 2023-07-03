@@ -71,6 +71,7 @@ jobs:
     needs:
       - build-on-linux
       - build-on-windows
+      - python-dist
 
     steps:
       - uses: actions/checkout@v3
