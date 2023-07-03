@@ -42,5 +42,5 @@ jobs:
       - name: Build Project
         uses: ./.github/actions/build-windows
         with:
-           compiler-version: ${{ matrix. compiler-version }}
+           compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}

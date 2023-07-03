@@ -26,6 +26,7 @@ The libraries are built using Github Workflows and packed
 as complete Python modules with lirbraries or scripts.
 Currently, we build for Python 3.9, 3,10, and 3.11 on Linux,
 and for Python 3.10 and 11 on Windows.
+It has only been tested on Linux.
 
 1.  Make sure you have one of the supported Python versions
 2.  Download and unpack `CosmoSimPy.zip` from 
