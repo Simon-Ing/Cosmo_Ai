@@ -2,6 +2,13 @@ name: 'Windows Build'
 
 description: Build the project on Windows
 
+inputs:
+  compiler-version:
+    default: 10
+  python-version:
+    required: false
+    default: '3.10'
+
 runs:
     using: "composite"
     steps:
@@ -10,7 +17,7 @@ runs:
       - name: Setup Python 3.x
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ inputs.python-version }}
           architecture: 'x64'
 
       - name: Install prerequisites
