@@ -14,8 +14,8 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      CC: gcc-${{ matrix.compiler_version }}
-      CXX: g++-${{ matrix.compiler_version }}
+      CC: gcc-${{ matrix.compiler-version }}
+      CXX: g++-${{ matrix.compiler-version }}
     strategy:
       fail-fast: false
       matrix:
