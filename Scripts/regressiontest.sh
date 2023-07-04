@@ -36,11 +36,26 @@ python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
 ### python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
 ###    --csvfile Datasets/debug.csv  || exit 4
 
+if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
+then
+   if test -x `which magick`
+   then 
+      CONVERT="magick convert"
+   fi
+elif test -x `which convert`
+then
+    CONVERT="magick convert"
+elif test -x `magick`
+then
+    CONVERT="magick convert"
+fi
+
+
 if test ! -d $baseline 
 then 
    echo $baseline does not exist 
    exit 5 
-elif test ! -x "`which convert`"
+elif test $CONVERT
 then
      echo ImageMagick is not installed 
      exit 6 
@@ -53,17 +68,8 @@ else
        for f in Test/diff/$flag/*
        do
           ff=`basename $f`
-          if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
-          then
-              echo "$ff" - "$f"
-              # echo '$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff'
-              magick convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  ^
+          $CONVERT $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
                   +append Test/montage/$flag/$ff
-          else
-              convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
-                  +append Test/montage/$flag/$ff
-          fi
-
        done
     done
 
