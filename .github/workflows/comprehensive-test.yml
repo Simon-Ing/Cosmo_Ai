@@ -4,7 +4,8 @@ name: "Regression Test"
 
 on: 
    push:
-     branches: [ bug/parallel-ranges ]
+     - branches: [ bug/parallel-ranges ]
+     - tags: 'v*' 
    workflow_dispatch:
    workflow_call:
 
