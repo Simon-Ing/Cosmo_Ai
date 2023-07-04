@@ -42,12 +42,9 @@ then
    exit 5 
 elif test ! -x "`which convert`"
 then
-     echo basename test: `basename /foo/bar/test/image.png` \
-          "(basename /foo/bar/test/image.png)"
      echo ImageMagick is not installed 
      exit 6 
 else
-    convert --version
     for flag in $F plain 
     do
        echo $flag
@@ -59,9 +56,9 @@ else
           if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
           then
               echo "$ff" - "$f"
-              b=`echo $baseline | tr / '\\\\'`
-              echo '$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff'
-              convert $b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
+              # echo '$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff'
+              magick convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  ^
+                  +append Test/montage/$flag/$ff
           else
               convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
                   +append Test/montage/$flag/$ff
