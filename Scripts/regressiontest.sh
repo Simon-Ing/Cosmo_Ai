@@ -1,6 +1,9 @@
 #! /bin/sh
 
-# cmake --build build || exit 10
+if test x$COSMOSIM_DEVELOPING = xyes
+then
+   cmake --build build || exit 10
+fi
 
 dir=$1
 test $dir || dir=Test/`date "+%Y%m%d"`
