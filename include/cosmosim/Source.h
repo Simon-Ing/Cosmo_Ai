@@ -16,7 +16,7 @@ protected:
 
 public:
     Source(int) ;
-    ~Source();
+    virtual ~Source();
     virtual cv::Mat getImage() ;
 
 protected:
