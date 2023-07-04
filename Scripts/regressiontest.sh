@@ -8,7 +8,6 @@ mkdir -p $dir
 
 baseline=$2
 test $baseline || baseline=Test/baseline20230703
-# baseline=Test/v2.0.3
 
 F=mask
 # F="mask centred reflines"
@@ -37,21 +36,32 @@ python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
 fi
 
-if test -d $baseline
+if test -d $baseline 
 then 
+  if test -x "`which convert`"
+  then
 
-  for flag in $F plain 
-  do
-     echo $flag
-     python3 CosmoSimPy/compare.py --diff Test/diff/$flag $baseline/$flag $dir/$flag --masked
-     for f in Test/diff/$flag/*
-     do
-        ff=`basename $f`
-        convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff
-     done
-  done
+    for flag in $F plain 
+    do
+       echo $flag
+       python3 CosmoSimPy/compare.py --diff Test/diff/$flag \
+          $baseline/$flag $dir/$flag --masked
+       for f in Test/diff/$flag/*
+       do
+          ff=`basename $f`
+          echo "$ff" - "$f"
+          convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
+              +append Test/montage/$flag/$ff
+       done
+    done
 
-  echo $F
+    echo $F
+  else
+     echo basename test: `basename /foo/bar/test/image.png` \
+          "(basename /foo/bar/test/image.png)"
+     echo ImageMagick is not installed 
+     exit 6 
+  fi
 else
    echo $baseline does not exist 
    exit 5 
