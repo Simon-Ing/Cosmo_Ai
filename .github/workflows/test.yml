@@ -1,7 +1,9 @@
 
-name: Test Composite Action
+name: Test Workflow
 
 on:
+   push:
+     branches: [ bug/windows/regressiontest ]
    workflow_dispatch:
 
 jobs:
