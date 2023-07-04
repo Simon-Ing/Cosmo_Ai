@@ -54,8 +54,14 @@ then
           ff=`basename $f`
           echo "$ff" - "$f"
           echo "$baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff"
-          convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
-              +append Test/montage/$flag/$ff
+          if test x$OSTYPE == $xcygwin || test x$OSTYPE == $xmsys
+          then
+              convert $baseline\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
+          else
+              convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
+                  +append Test/montage/$flag/$ff
+          fi
+
        done
     done
 

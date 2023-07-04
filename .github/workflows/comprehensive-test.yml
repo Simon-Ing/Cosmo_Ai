@@ -61,8 +61,15 @@ jobs:
         shell: bash
         run: sh Scripts/regressiontest.sh
       - name: Prepare artifact
+        shell: bash
         run: |
-          mkdir -p Test/montage
+          echo OSTYPE: $OSTYPE
+          ls -l Test
+          if test -x Test/Montage
+          then
+          else
+             mkdir -p Test/montage
+          fi
           mkdir -p dist
           mv Test/montage dist/montage-${{ matrix.os }}-python${{ matrix.python-version }}
       - name: Archive Images
