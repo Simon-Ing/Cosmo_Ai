@@ -7,11 +7,17 @@ on:
 jobs:
   build:
     name: Test composite action
-    runs-on: ubuntu-latest
-    env:
-      CC: gcc-10 # ${{ compiler-version }}
-      CXX: g++-10 # ${{ compiler-version }}
+    runs-on: windows-2021
     steps:
       - uses: actions/checkout@v3
-      - name: Build Project
-        uses: ./.github/actions/build-linux
+      - name: Test
+        run: |
+          convert --version
+          magick --version
+          mkdir dist
+          magick convert  Test/v2.0.2/image-0001.png dist/image-0001.jpeg
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: magick-test
+          path: dist
