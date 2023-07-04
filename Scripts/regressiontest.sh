@@ -31,13 +31,10 @@ python3 CosmoSimPy/datagen.py --directory="$dir"/plain \
 python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
    --csvfile Datasets/debug.csv  || exit 2
 
-if /bin/false
-then
-python3 CosmoSimPy/datagen.py --reflines --centred --directory="$dir"/centred \
-   --csvfile Datasets/debug.csv  || exit 3
-python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
-   --csvfile Datasets/debug.csv  || exit 4
-fi
+### python3 CosmoSimPy/datagen.py --reflines --centred --directory="$dir"/centred \
+###    --csvfile Datasets/debug.csv  || exit 3
+### python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
+###    --csvfile Datasets/debug.csv  || exit 4
 
 if test ! -d $baseline 
 then 

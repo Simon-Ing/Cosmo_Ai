@@ -50,7 +50,7 @@ protected:
 
 public:
     LensModel();
-    ~LensModel();
+    virtual ~LensModel();
     cv::Point2d getOffset( cv::Point2d ) ;
     cv::Point2d getRelativeEta( cv::Point2d ) ;
     void update();

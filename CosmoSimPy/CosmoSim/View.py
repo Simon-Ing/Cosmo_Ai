@@ -128,10 +128,12 @@ class ImagePane(ttk.Frame):
                  )
         m,n = im.shape[:2]
         if m*n == 0:
-            raise Exception( "Simulator returns distorted image without any pixels." )
-        if self.reflinesVar.get(): drawAxes(im)
-        im0 = Image.fromarray( im )
-        self.distorted.setImage(im0)
+            print( "Image Shape", im.shape, "Image cannot be set" )
+            # raise Exception( "Simulator returns distorted image without any pixels." )
+        else:
+           if self.reflinesVar.get(): drawAxes(im)
+           im0 = Image.fromarray( im )
+           self.distorted.setImage(im0)
     def update(self):
         """
         Update the images with new data from the CosmoSim object.
