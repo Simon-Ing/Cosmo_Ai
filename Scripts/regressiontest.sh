@@ -36,7 +36,7 @@ python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
 ### python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
 ###    --csvfile Datasets/debug.csv  || exit 4
 
-if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
+if test x$OSTYPE = xcygwin -o x$OSTYPE = xmsys
 then
    if test -x `which magick`
    then 
@@ -44,8 +44,8 @@ then
    fi
 elif test -x `which convert`
 then
-    CONVERT="magick convert"
-elif test -x `magick`
+    CONVERT="convert"
+elif test -x `which magick`
 then
     CONVERT="magick convert"
 fi
@@ -57,9 +57,6 @@ then
    exit 5 
 elif test $CONVERT
 then
-     echo ImageMagick is not installed 
-     exit 6 
-else
     for flag in $F plain 
     do
        echo $flag
@@ -74,4 +71,7 @@ else
     done
 
     echo $F
+else
+     echo ImageMagick is not installed 
+     exit 6 
 fi
