@@ -31,6 +31,15 @@ jobs:
       - name: Regression Test
         shell: bash
         run: sh Scripts/regressiontest.sh
+      - name: Regression Test
+        run: |
+          mkdir -p dist
+          mv Test/montage dist/montage-${{ matrix.os }}-python${{ matrix.python-version }}
+      - name: Archive Images
+        uses: actions/upload-artifact@v3
+        with:
+          name: montage
+          path: dist
 
   build-on-windows:
     name: Build on Windows
