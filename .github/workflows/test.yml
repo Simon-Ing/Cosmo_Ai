@@ -8,8 +8,10 @@ on:
 
 jobs:
   build:
-    name: Test composite action
-    runs-on: windows-2021
+    name: Test 
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - name: Test
