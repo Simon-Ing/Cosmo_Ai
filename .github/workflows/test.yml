@@ -14,8 +14,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Test
         run: |
-          convert --version
-          magick --version
+          convert   || echo convert failed
+          convert --version  || echo convert --version failed
+          magick --version || echo magick --version failed
           mkdir dist
           magick convert  Test/v2.0.2/image-0001.png dist/image-0001.jpeg
       - name: Archive Python Application
