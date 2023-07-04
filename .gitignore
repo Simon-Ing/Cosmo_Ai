@@ -460,3 +460,4 @@ dist
 *.spec
 t.sh
 tmp
+log
