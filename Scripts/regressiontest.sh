@@ -38,16 +38,18 @@ python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
 
 if test x$OSTYPE = xcygwin -o x$OSTYPE = xmsys
 then
-   if test -x `which magick`
+   if magick --version
    then 
       CONVERT="magick convert"
    fi
 elif test -x `which convert`
 then
     CONVERT="convert"
+    convert --version
 elif test -x `which magick`
 then
     CONVERT="magick convert"
+    magick --version
 fi
 
 
