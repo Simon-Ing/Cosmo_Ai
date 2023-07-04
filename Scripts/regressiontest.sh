@@ -57,8 +57,11 @@ if test ! -d $baseline
 then 
    echo $baseline does not exist 
    exit 5 
-elif test $CONVERT
+elif test -z "$CONVERT"
 then
+     echo ImageMagick is not installed 
+     exit 6 
+else
     for flag in $F plain 
     do
        echo $flag
@@ -73,7 +76,4 @@ then
     done
 
     echo $F
-else
-     echo ImageMagick is not installed 
-     exit 6 
 fi
