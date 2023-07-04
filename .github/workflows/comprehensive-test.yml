@@ -4,7 +4,7 @@ name: "Regression Test"
 
 on: 
    push:
-     branches: [ bug/windows/regressiontest ]
+     branches: [ bug/parallel-ranges ]
    workflow_dispatch:
    workflow_call:
 
