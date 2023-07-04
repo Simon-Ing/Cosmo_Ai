@@ -47,6 +47,7 @@ then
      echo ImageMagick is not installed 
      exit 6 
 else
+    convert --version
     for flag in $F plain 
     do
        echo $flag
