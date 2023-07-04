@@ -55,11 +55,12 @@ else
        for f in Test/diff/$flag/*
        do
           ff=`basename $f`
-          echo "$ff" - "$f"
-          echo "$baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff"
           if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
           then
-              convert $baseline\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
+              echo "$ff" - "$f"
+              b=`echo $baseline | tr / "\\\\"`
+              echo "$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff"
+              convert $b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
           else
               convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
                   +append Test/montage/$flag/$ff
