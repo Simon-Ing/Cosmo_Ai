@@ -65,9 +65,8 @@ jobs:
         run: |
           echo OSTYPE: $OSTYPE
           ls -l Test
-          if test -x Test/Montage
+          if test ! -d Test/Montage
           then
-          else
              mkdir -p Test/montage
           fi
           mkdir -p dist

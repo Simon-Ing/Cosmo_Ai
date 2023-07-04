@@ -39,11 +39,17 @@ python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
    --csvfile Datasets/debug.csv  || exit 4
 fi
 
-if test -d $baseline 
+if test ! -d $baseline 
 then 
-  if test -x "`which convert`"
-  then
-
+   echo $baseline does not exist 
+   exit 5 
+elif test ! -x "`which convert`"
+then
+     echo basename test: `basename /foo/bar/test/image.png` \
+          "(basename /foo/bar/test/image.png)"
+     echo ImageMagick is not installed 
+     exit 6 
+else
     for flag in $F plain 
     do
        echo $flag
@@ -54,7 +60,7 @@ then
           ff=`basename $f`
           echo "$ff" - "$f"
           echo "$baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff +append Test/montage/$flag/$ff"
-          if test x$OSTYPE == $xcygwin || test x$OSTYPE == $xmsys
+          if test x$OSTYPE == xcygwin -o ox$OSTYPE == xmsys
           then
               convert $baseline\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
           else
@@ -66,13 +72,4 @@ then
     done
 
     echo $F
-  else
-     echo basename test: `basename /foo/bar/test/image.png` \
-          "(basename /foo/bar/test/image.png)"
-     echo ImageMagick is not installed 
-     exit 6 
-  fi
-else
-   echo $baseline does not exist 
-   exit 5 
 fi
