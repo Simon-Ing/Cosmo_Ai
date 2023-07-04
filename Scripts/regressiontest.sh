@@ -58,8 +58,8 @@ else
           if test x$OSTYPE == xcygwin -o x$OSTYPE == xmsys
           then
               echo "$ff" - "$f"
-              b=`echo $baseline | tr / "\\\\"`
-              echo "$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff"
+              b=`echo $baseline | tr / '\\\\'`
+              echo '$b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff'
               convert $b\$flag\$ff Test\diff\$flag\$ff $dir\$flag\$ff +append Test\montage\$flag\$ff
           else
               convert $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
