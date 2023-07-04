@@ -145,6 +145,7 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
             << "; rng1=" << rng1 << std::endl ;
     for (int i = 0; i < n_threads; i++) {
         int begin = lower+rng1*i, end = begin+rng1 ;
+        if ( end > dst.rows ) end = dst.rows ;
         std::thread t([begin, end, src, &dst, this]() { distort(begin, end, src, dst); });
         threads_vec.push_back(std::move(t));
         std::cout << "[parallelDistort] (" << i << ") [" << begin << "," << end << "]\n" ;
