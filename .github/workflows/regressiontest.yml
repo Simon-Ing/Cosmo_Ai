@@ -84,15 +84,15 @@ jobs:
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          make images.status
+          ../bin/makeimages.sh
       - name: compare
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          make compare.status
+          ../bin/compareimages.sh
       - name: montage
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          make montage.status
+          ../bin/montageimages.sh
       - name: image-upload
         uses: actions/upload-artifact@v3
         with:
