@@ -83,5 +83,13 @@ jobs:
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
           make montage.status
+      - name: image-upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: montage-
+          path: |
+              RegressionTest/*/montage*
+              RegressionTest/*/*.log/
+
 
 
