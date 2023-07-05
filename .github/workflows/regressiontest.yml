@@ -79,7 +79,6 @@ jobs:
       - name: diagnostic
         run: |
             git status
-            ls -lR CosmoSimPy
             python3 --version
             /usr/bin/env python3 --version
       - name: makeimages
