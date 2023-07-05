@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net>
 
 """
 Generate the 50.txt file containing expressions for alpha and beta
