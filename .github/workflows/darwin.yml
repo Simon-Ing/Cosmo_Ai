@@ -13,32 +13,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-11]
-        python-version: ['3.9', '3.10', '3.11']
+        python-version: ['3.10', '3.11']
     steps:
       - uses: actions/checkout@v3
+      - name: Build Project
+        uses: ./.github/actions/build-darwin
+        with:
+           compiler-version: ${{ matrix.compiler-version }}
+           python-version: ${{ matrix.python-version }}
 
-      - name: Setup Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: 'x64'
-  
-      - name: Install prerequisites
-        run: |
-          pip3 install conan==1.59
-          pip3 install pyinstaller
-      - name: Run conan
-        run: |
-          conan install . -s build_type=Release -if build -b missing
-      - name: Configure and build
-        run: |
-          cmake . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-      - name: Archive Python link library
-        uses: actions/upload-artifact@v3
-        with:
-          name: CosmoSimPy-library-${{matrix.os}}
-          path: build/lib/CosmoSimPy.*
 
   macos-app:
 
