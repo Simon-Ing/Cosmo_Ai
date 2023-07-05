@@ -31,18 +31,6 @@ jobs:
         with:
            compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}
-      - name: Regression Test
-        shell: bash
-        run: sh Scripts/regressiontest.sh
-      - name: Prepare artifact
-        run: |
-          mkdir -p dist
-          mv Test/montage dist/montage-${{ matrix.os }}-python${{ matrix.python-version }}
-      - name: Archive Images
-        uses: actions/upload-artifact@v3
-        with:
-          name: montage
-          path: dist
 
   build-on-windows:
     name: Build on Windows
@@ -60,11 +48,6 @@ jobs:
         with:
            compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}
-      - name: Archive Images
-        uses: actions/upload-artifact@v3
-        with:
-          name: montage
-          path: dist
 
   regressiion-test:
 
