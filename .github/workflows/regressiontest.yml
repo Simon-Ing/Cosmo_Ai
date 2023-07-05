@@ -77,10 +77,11 @@ jobs:
           name: CosmoSimPy
           path: .
       - name: diagnostic
-        shell: bash
         run: |
-          git status
-          ls -lR CosmoSimPy
+            git status
+            ls -lR CosmoSimPy
+            python3 --version
+            /usr/bin/env python3 --version
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
