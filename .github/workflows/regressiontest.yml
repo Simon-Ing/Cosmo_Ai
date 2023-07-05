@@ -80,7 +80,6 @@ jobs:
         run: |
             git status
             python3 --version
-            /usr/bin/env python3 --version
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}

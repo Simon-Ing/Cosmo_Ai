@@ -26,15 +26,14 @@ elif test ! -d $dir
 then 
    echo Images have not been 
    exit 5 
-elif test ! -d diff-$dir 
+elif test ! -d diff
 then 
    echo Difference images have not been 
    exit 5 
 else
-    for f in diff-$dir/*
+    for f in diff/*
     do
           ff=`basename $f`
-          $CONVERT $baseline/$ff diff-$dir/$ff $dir/$ff  \
-                  +append montage/$ff
+          $CONVERT $baseline/$ff diff/$ff $dir/$ff  +append montage/$ff
     done
 fi
