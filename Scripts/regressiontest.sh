@@ -1,5 +1,7 @@
 #! /bin/sh
 
+echo Running: $0
+
 if test x$COSMOSIM_DEVELOPING = xyes
 then
    cmake --build build || exit 10
