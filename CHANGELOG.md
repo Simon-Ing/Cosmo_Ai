@@ -13,6 +13,9 @@
 
 ### Fixed
 
+- Fixed distort() functions which swapped x/y co-ordinates causing errors
+  for non-spherical sources.
+
 ## [2.2.1] - 2023-07-04
 
 ### Added
