@@ -10,8 +10,8 @@ Orthogonal categories
 2. Post-processing
     - plain
     - mask (for roulette only)
-    - centred?
-    - reflines?
+    - centred? (done in python)
+    - reflines? (done in python)
 
 # OLD
 
