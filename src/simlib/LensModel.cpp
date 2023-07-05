@@ -190,9 +190,9 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
               // If the pixel is within range, copy value from src to dst
               if (ij.x < src.rows-1 && ij.y < src.cols-1 && ij.x >= 0 && ij.y >= 0) {
                  if ( 3 == src.channels() ) {
-                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij );
+                    dst.at<cv::Vec3b>(row, col) = src.at<cv::Vec3b>( ij.x, ij.y );
                  } else {
-                    dst.at<uchar>(row, col) = src.at<uchar>( ij );
+                    dst.at<uchar>(row, col) = src.at<uchar>( ij.x, ij.y );
                  }
               }
             }
