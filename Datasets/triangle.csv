@@ -3,7 +3,7 @@ index,filename,source,model,lens,chi,x,y,einsteinR,sigma,theta,nterms
 "ts30",image-ts30.png,t,Raytrace,SIS,50,20,0,10,24,30,16
 "ts60",image-ts60.png,t,Raytrace,SIS,50,20,0,10,24,60,16
 "ts90",image-ts90.png,t,Raytrace,SIS,50,20,0,10,24,90,16
-"tp00",image-ts00.png,t,Raytrace,PM,50,20,0,10,24,0,16
-"tp30",image-ts30.png,t,Raytrace,PM,50,20,0,10,24,30,16
-"tp60",image-ts60.png,t,Raytrace,PM,50,20,0,10,24,60,16
-"tp90",image-ts90.png,t,Raytrace,PM,50,20,0,10,24,90,16
+"tp00",image-tp00.png,t,Raytrace,PM,50,20,0,10,24,0,16
+"tp30",image-tp30.png,t,Raytrace,PM,50,20,0,10,24,30,16
+"tp60",image-tp60.png,t,Raytrace,PM,50,20,0,10,24,60,16
+"tp90",image-tp90.png,t,Raytrace,PM,50,20,0,10,24,90,16

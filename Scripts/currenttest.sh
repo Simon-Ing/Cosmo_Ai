@@ -24,9 +24,17 @@ index,filename,source,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 EOF
 
 # python3 CosmoSimPy/datagen.py --imagesize 600 -L pss --directory="$dir" --csvfile $fn --actual --apparent --reflines --psiplot --kappaplot
-python3 CosmoSimPy/datagen.py --imagesize 600 --lens SIS --model Roulette --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --maskscale 0.85 --components 8 --showmask
+# python3 CosmoSimPy/datagen.py --imagesize 600 --lens SIS --model Roulette --directory="$dir" --csvfile $fn --actual --apparent --family --reflines --join --maskscale 0.85 --components 8 --showmask
 # python3 CosmoSimPy/datagen.py -L sr --directory="$dir" --csvfile $fn --actual --apparent --reflines
 
+python3 CosmoSimPy/datagen.py --csvfile Datasets/triangle2.csv --apparent --actual -R
+
+for i in 00 30 60 90
+do
+   convert \( actual-image-tp$i.png apparent-image-tp$i.png +append \) \
+           \( image-tp$i.png image-ts$i.png +append \) \
+           -append montage$i.png
+done
 
 # "ss15",image-ss15.png,t,ss,50,10,0,7,20,0,0,16
 # "ss16",image-ss16.png,t,ss,50,50,0,7,20,0,0,16
