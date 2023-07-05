@@ -61,8 +61,6 @@ jobs:
         os: [ubuntu-20.04,windows-2019]
         test-dir: [ 'exactpm', 'raytrace', 'rotatedsis', 'roulette', 'roulettepm' ]
         python-version: ['3.11']
-    env:
-      distdir: dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python 3.x
@@ -96,8 +94,8 @@ jobs:
           sh ../bin/montageimages.sh
       - name: artifact-preparation
         run: |
-          mkdir -p $distdir
-          mv RegressionTest/${{ matrix.test-dir }}/montage/ $distdir
+          mkdir -p dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
+          mv RegressionTest/${{ matrix.test-dir }}/montage/ dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
       - name: image-upload
         uses: actions/upload-artifact@v3
         with:
