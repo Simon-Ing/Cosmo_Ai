@@ -18,3 +18,9 @@ baselines:
 	cd rotatedsis ; $(MAKE) baseline`date "+%Y%m%d"`
 	cd roulette ; $(MAKE) baseline`date "+%Y%m%d"` 
 	cd roulettepm ; $(MAKE) baseline`date "+%Y%m%d"`
+false:
+	/bin/false | tee test.log ; echo $${PIPESTATUS[0]} $${PIPESTATUS[1]} 
+true:
+	/bin/true
+15:
+	exit 15

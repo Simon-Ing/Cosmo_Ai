@@ -7,7 +7,7 @@ all: alltests
 status: 
 	cat */*.status
 
-clean alltests: 
+alltests: 
 	$(MAKE) images.status
 	$(MAKE) compare.status
 	$(MAKE) montage.status
@@ -15,15 +15,15 @@ clean alltests:
 montage.status:
 	( montageimages.sh && \
 		echo Montage succeeded > $@ || \
-		echo Montage error: $$? > $@ ) | tee montage.log
+		echo Montage error: $$? > $@ ) 
 images.status:
 	( makeimages.sh && \
 		echo makeimages.sh succeeded > $@ || \
-		echo makeimages.sh error: $$? ) | tee images.log
+		echo makeimages.sh error: $$? ) 
 compare.status:
 	( compareimages.sh && \
 		echo compareimages.sh succeeded > $@ || \
-		echo compareimages.sh error: $$? > $@ ) | tee compare.log
+		echo compareimages.sh error: $$? > $@ ) 
 false.status:
 	( /bin/false && \
 		echo /bin/false succeeded > $@ || \
