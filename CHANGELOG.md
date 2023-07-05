@@ -11,6 +11,8 @@
 
 ### Changed
 
+- Reviewed the Dockerfile and merged both images into one, running the GUI.
+
 ### Fixed
 
 - Fixed distort() functions which swapped x/y co-ordinates causing errors
