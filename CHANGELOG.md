@@ -1,13 +1,14 @@
 
 # CosmoSim Change Log
 
-## [2.2.2] - not yet released
+## [2.2.2] - 2023-07-06
 
 ### Added
 
 - Non-zero exit codes from the compare script to suggest discrepancies.
   These are used in the regression test script so that it gives a non-zero
   exit code upon regression errors.
+- Automated and more flexible regression test workflow.
 
 ### Changed
 
