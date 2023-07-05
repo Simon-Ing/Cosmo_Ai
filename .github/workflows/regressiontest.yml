@@ -90,15 +90,15 @@ jobs:
           ls -lR CosmoSimPy
       - name: makeimages
         run: |
-          cd RegressionTest/${{ test-dir }}
+          cd RegressionTest/${{ matrix.test-dir }}
           make images.status
       - name: compare
         run: |
-          cd RegressionTest/${{ test-dir }}
+          cd RegressionTest/${{ matrix.test-dir }}
           make compare.status
       - name: montage
         run: |
-          cd RegressionTest/${{ test-dir }}
+          cd RegressionTest/${{ matrix.test-dir }}
           make montage.status
 
 
