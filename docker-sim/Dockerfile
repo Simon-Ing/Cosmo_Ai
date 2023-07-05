@@ -5,7 +5,7 @@ FROM  ubuntu:20.04
 ENV DEBIAN_FRONTEND=nonintercative
 
 RUN apt-get update
-RUN apt install -y \
+RUN apt-get install -y \
           libva-dev \
           libvdpau-dev \
           libx11-xcb-dev \
@@ -54,7 +54,7 @@ RUN sh build.sh
 
 RUN /usr/bin/python3 --version
 
-WORKDIR /CosmoSim/Python/
+WORKDIR /CosmoSim/CosmoSimPy/
 USER user
 CMD /usr/bin/python3 CosmoGUI.py
 
