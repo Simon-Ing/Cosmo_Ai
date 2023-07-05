@@ -2,9 +2,12 @@
 
 export PATH := ../bin:$(PATH)
 
-all:
+all: alltests
 
-clean all: 
+status: 
+	cat */*.status
+
+clean alltests: 
 	$(MAKE) images.status
 	$(MAKE) compare.status
 	$(MAKE) montage.status

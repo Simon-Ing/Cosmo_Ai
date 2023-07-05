@@ -1,12 +1,17 @@
 
 all: alltests
 
+status: 
+	cat */*.status
+
 clean alltests:
 	cd exactpm ; $(MAKE) $@
 	cd raytrace ; $(MAKE) $@
 	cd rotatedsis ; $(MAKE) $@
 	cd roulette ; $(MAKE) $@
 	cd roulettepm ; $(MAKE) $@
+	$(MAKE) status
+
 baselines:
 	cd exactpm ; $(MAKE) baseline`date "+%Y%m%d"`
 	cd raytrace ; $(MAKE) baseline`date "+%Y%m%d"` 
