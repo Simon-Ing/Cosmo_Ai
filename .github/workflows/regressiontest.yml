@@ -1,10 +1,10 @@
 # (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
 
-name: "Regression Test (legacy)"
+name: "Regression Test (Modular)"
 
 on: 
    push:
-       branches: [ bug/parallel-ranges ]
+       branches: [ refactor/test-suites ]
        tags: 'v*' 
    workflow_dispatch:
    workflow_call:
@@ -22,7 +22,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         compiler-version: [10]
-        python-version: ['3.9','3.11']
+        python-version: ['3.11']
 
     steps:
       - uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
       matrix:
         os: [windows-2019]
         compiler-version: [10]
-        python-version: ['3.10','3.11']
+        python-version: ['3.11']
     steps:
       - uses: actions/checkout@v3
       - name: Build Project
@@ -60,40 +60,45 @@ jobs:
         with:
            compiler-version: ${{ matrix.compiler-version }}
            python-version: ${{ matrix.python-version }}
-      - name: Regression Test
-        shell: bash
-        run: sh Scripts/regressiontest.sh
-      - name: Prepare artifact
-        shell: bash
-        run: |
-          echo OSTYPE: $OSTYPE
-          ls -l Test
-          if test ! -d Test/Montage
-          then
-             mkdir -p Test/montage
-          fi
-          mkdir -p dist
-          mv Test/montage dist/montage-${{ matrix.os }}-python${{ matrix.python-version }}
       - name: Archive Images
         uses: actions/upload-artifact@v3
         with:
           name: montage
           path: dist
 
-  python-dist:
+  regressiion-test:
 
-    runs-on: ubuntu-latest
+    runs-on:  ${{ matrix.os }}
+    needs: 
+      - build-on-windows
+      - build-on-linux
     strategy:
       fail-fast: false
-
+      matrix:
+        os: [ubuntu-20.04,windows-2019]
+        test-dir: [ 'exactpm', 'raytrace', 'rotatedsis', 'roulette', 'roulettepm' ]
     steps:
       - uses: actions/checkout@v3
-      - name: Make Python Distribution
-        run: |
-           mkdir -p dist/CosmoSimPy
-           rsync -av CosmoSimPy/ dist/CosmoSimPy/
-      - name: Archive Python Application
-        uses: actions/upload-artifact@v3
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
         with:
           name: CosmoSimPy
-          path: dist
+          path: .
+      - name: diagnostic
+        run: |
+          git status
+          ls -lR CosmoSimPy
+      - name: makeimages
+        run: |
+          cd RegressionTest/${{ test-dir }}
+          make images.status
+      - name: compare
+        run: |
+          cd RegressionTest/${{ test-dir }}
+          make compare.status
+      - name: montage
+        run: |
+          cd RegressionTest/${{ test-dir }}
+          make montage.status
+
+

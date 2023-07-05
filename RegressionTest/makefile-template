@@ -1,6 +1,10 @@
 # (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
 
-all: 
+export PATH := ../bin:$(PATH)
+
+all:
+
+clean all: 
 	$(MAKE) images.status
 	$(MAKE) compare.status
 	$(MAKE) montage.status
@@ -21,3 +25,8 @@ false.status:
 	( /bin/false && \
 		echo /bin/false succeeded > $@ || \
 		echo /bin/false error: $$? > $@ ) | tee false.log
+test:
+	echo $(CURDIR)
+	echo $(PATH)
+clean:
+	rm -f *.status
