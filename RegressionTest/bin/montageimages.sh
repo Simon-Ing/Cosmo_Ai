@@ -11,7 +11,7 @@ test $dir || dir=`date "+%Y%m%d"`
 mkdir -p montage-$dir
 
 baseline=$2
-test $baseline || baseline=baseline-test 
+test $baseline || baseline=baseline20230705
 #20230704
 
 if test -z "$CONVERT"
