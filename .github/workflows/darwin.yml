@@ -70,7 +70,7 @@ jobs:
           cmake --build build
       - name: Make application bundle
         run: |
-          pyinstaller --windowed --osx-bundle-identifier no.ntnu.iir.CosmoGUI Python/CosmoGUI.py
+          pyinstaller --windowed --osx-bundle-identifier no.ntnu.iir.CosmoGUI CosmoSimPy/CosmoGUI.py
       - name: Remove non-app data
         run: |
           rm -rf dist/CosmoGUI

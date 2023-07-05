@@ -26,15 +26,15 @@ do
 done
 
 python3 CosmoSimPy/datagen.py --directory="$dir"/plain \
-   --csvfile Datasets/debug.csv  || exit 1
-
-python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
    --csvfile Datasets/debug.csv  || exit 2
 
+python3 CosmoSimPy/datagen.py --mask --directory="$dir"/mask \
+   --csvfile Datasets/debug.csv  || exit 3
+
 ### python3 CosmoSimPy/datagen.py --reflines --centred --directory="$dir"/centred \
-###    --csvfile Datasets/debug.csv  || exit 3
-### python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
 ###    --csvfile Datasets/debug.csv  || exit 4
+### python3 CosmoSimPy/datagen.py --reflines --directory="$dir"/reflines \
+###    --csvfile Datasets/debug.csv  || exit 5
 
 if test x$OSTYPE = xcygwin -o x$OSTYPE = xmsys
 then
@@ -56,23 +56,29 @@ fi
 if test ! -d $baseline 
 then 
    echo $baseline does not exist 
-   exit 5 
+   exit 6 
 elif test -z "$CONVERT"
 then
      echo ImageMagick is not installed 
-     exit 6 
+     exit 7 
 else
-    for flag in $F plain 
+    for flag in plain $F
     do
        echo $flag
        python3 CosmoSimPy/compare.py --diff Test/diff/$flag \
           $baseline/$flag $dir/$flag --masked
+       COMPAREEXIT=$?
+       echo python script exited with error code $COMPAREEXIT
        for f in Test/diff/$flag/*
        do
           ff=`basename $f`
           $CONVERT $baseline/$flag/$ff Test/diff/$flag/$ff $dir/$flag/$ff  \
                   +append Test/montage/$flag/$ff
        done
+       if test $COMPAREEXIT -gt 0
+       then
+	  exit $COMPAREEXIT
+       fi
     done
 
     echo $F

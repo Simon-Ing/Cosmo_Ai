@@ -99,3 +99,7 @@ if __name__ == "__main__":
       for r in badresults:
           print( f'{r["filename"]}: {r["relnorm"]} ({r["norm"]}) range {(r["maximum"],r["minimum"])}' )
 
+      if len(badresults) > 0:
+          sys.exit(1)
+      else:
+          sys.exit(0)
