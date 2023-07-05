@@ -1,0 +1,23 @@
+# (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
+
+all: 
+	$(MAKE) images.status
+	$(MAKE) compare.status
+	$(MAKE) montage.status
+
+montage.status:
+	( montageimages.sh && \
+		echo Montage succeeded > $@ || \
+		echo Montage error: $$? > $@ ) | tee montage.log
+images.status:
+	( makeimages.sh && \
+		echo makeimages.sh succeeded > $@ || \
+		echo makeimages.sh error: $$? ) | tee images.log
+compare.status:
+	( compareimages.sh && \
+		echo compareimages.sh succeeded > $@ || \
+		echo compareimages.sh error: $$? > $@ ) | tee compare.log
+false.status:
+	( /bin/false && \
+		echo /bin/false succeeded > $@ || \
+		echo /bin/false error: $$? > $@ ) | tee false.log
