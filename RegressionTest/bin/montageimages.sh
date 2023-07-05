@@ -8,7 +8,7 @@ echo Running from $bindir
 
 dir=$1
 test $dir || dir=`date "+%Y%m%d"`
-mkdir -p montage-$dir
+mkdir -p montage
 
 baseline=$2
 test $baseline || baseline=baseline20230705
@@ -35,6 +35,6 @@ else
     do
           ff=`basename $f`
           $CONVERT $baseline/$ff diff-$dir/$ff $dir/$ff  \
-                  +append montage-$dir/$flag/$ff
+                  +append montage/$ff
     done
 fi

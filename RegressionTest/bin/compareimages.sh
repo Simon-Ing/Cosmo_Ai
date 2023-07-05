@@ -9,7 +9,7 @@ echo Running from $bindir
 dir=$1
 test $dir || dir=`date "+%Y%m%d"`
 mkdir -p $dir
-mkdir -p diff-$dir
+mkdir -p diff
 
 baseline=$2
 test $baseline || baseline=baseline20230705
@@ -20,5 +20,5 @@ then
    echo $baseline does not exist 
    exit 5 
 else
-   compare.py --diff diff-$dir $baseline $dir --masked
+   compare.py --diff diff $baseline $dir --masked
 fi

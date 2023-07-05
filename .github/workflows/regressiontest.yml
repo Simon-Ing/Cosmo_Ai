@@ -98,6 +98,6 @@ jobs:
         with:
           name: montage-
           path: |
-              RegressionTest/*/montage*
+              RegressionTest/*/montage/
 
 
