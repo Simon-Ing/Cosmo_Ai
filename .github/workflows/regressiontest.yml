@@ -96,7 +96,7 @@ jobs:
       - name: image-upload
         uses: actions/upload-artifact@v3
         with:
-          name: montage-
+          name: montage
           path: |
               RegressionTest/*/montage/
 
