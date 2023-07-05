@@ -7,11 +7,12 @@ echo Running from $bindir
 . $bindir/config.sh
 
 dir=$1
-test $dir || dir=Test/`date "+%Y%m%d"`
+test $dir || dir=`date "+%Y%m%d"`
 mkdir -p montage-$dir
 
 baseline=$2
-test $baseline || baseline=Test/baseline20230704
+test $baseline || baseline=baseline-test 
+#20230704
 
 if test -z "$CONVERT"
 then

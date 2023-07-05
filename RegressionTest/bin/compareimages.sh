@@ -12,7 +12,8 @@ mkdir -p $dir
 mkdir -p diff-$dir
 
 baseline=$2
-test $baseline || baseline=baseline20230704
+test $baseline || baseline=baseline-test
+# 20230704
 
 if test ! -d $baseline 
 then 

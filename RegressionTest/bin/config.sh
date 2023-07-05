@@ -3,7 +3,7 @@ echo $0
 echo $1
 
 rootdir=`( while test ! -d .git ; do cd .. ; done ; pwd )`
-export PATH=$rootdir/CosmoSimPy:$rootdir/Scripts:$PATH
+export PATH=$rootdir/CosmoSimPy:$PATH
 
 echo rootdir: $rootdir
 
