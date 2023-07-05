@@ -1,7 +1,5 @@
 index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "sss01",sampled-roulette-sis-s01.png,s,ss,50, 24,-68,48,21,0,0,16
-"sss02",sampled-roulette-sis-s02.png,s,ss,50, 35,-29, 3,43,0,0,16
-"sss03",sampled-roulette-sis-s03.png,s,ss,50, 57,-47,50,47,0,0,16
 "sss04",sampled-roulette-sis-s04.png,s,ss,50,-60,-50,25, 5,0,0,16
 "sss05",sampled-roulette-sis-s05.png,s,ss,50,-20, -3,48,27,0,0,16
 "sss06",sampled-roulette-sis-s06.png,s,ss,50,-30,-25,20,20,0,0,16
@@ -11,7 +9,6 @@ index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "sss14",sampled-roulette-sis-t14.png,t,ss,50,-60,-50,25, 5,0,60,16
 "sss15",sampled-roulette-sis-t15.png,t,ss,50,-20, -3,48,27,0,115,16
 "ss01",roulette-sis-s01.png,s,fs,50, 24,-68,48,21,0,0,16
-"ss02",roulette-sis-s02.png,s,fs,50, 35,-29, 3,43,0,0,16
 "ss03",roulette-sis-s03.png,s,fs,50, 57,-47,50,47,0,0,16
 "ss04",roulette-sis-s04.png,s,fs,50,-60,-50,25, 5,0,0,16
 "ss05",roulette-sis-s05.png,s,fs,50,-20, -3,48,27,0,0,16

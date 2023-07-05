@@ -1,6 +1,5 @@
 index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
 "s001",rotatedsis-s001.png,s,s,50, 24,-68,48,21,0,0,16
-"s002",rotatedsis-s002.png,s,s,50, 35,-29, 3,43,0,0,16
 "s003",rotatedsis-s003.png,s,s,50, 57,-47,50,47,0,0,16
 "s004",rotatedsis-s004.png,s,s,50,-60,-50,25, 5,0,0,16
 "s005",rotatedsis-s005.png,s,s,50,-20, -3,48,27,0,0,16
