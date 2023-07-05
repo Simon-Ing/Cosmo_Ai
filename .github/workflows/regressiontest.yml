@@ -61,6 +61,8 @@ jobs:
         os: [ubuntu-20.04,windows-2019]
         test-dir: [ 'exactpm', 'raytrace', 'rotatedsis', 'roulette', 'roulettepm' ]
         python-version: ['3.11']
+    env:
+      distdir: dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python 3.x
@@ -83,20 +85,23 @@ jobs:
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          ../bin/makeimages.sh
+          sh ../bin/makeimages.sh
       - name: compare
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          ../bin/compareimages.sh
+          sh ../bin/compareimages.sh
       - name: montage
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          ../bin/montageimages.sh
+          sh ../bin/montageimages.sh
+      - name: artifact-preparation
+        run: |
+          mkdir -p $distdir
+          mv RegressionTest/${{ matrix.test-dir }}/montage/ ${{ distdir }}
       - name: image-upload
         uses: actions/upload-artifact@v3
         with:
           name: montage
-          path: |
-              RegressionTest/*/montage/
+          path: dist
 
 
