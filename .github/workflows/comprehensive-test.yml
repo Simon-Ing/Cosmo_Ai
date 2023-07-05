@@ -1,4 +1,7 @@
 # (C) 2023: Hans Georg Schaathun <georg@schaathun.net> 
+# This test gives 0 exit code even when there are regression errors.
+# It should be deprecated once the new regressiontest.yml workflow
+# works.
 
 name: "Regression Test (legacy)"
 
