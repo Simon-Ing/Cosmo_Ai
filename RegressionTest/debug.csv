@@ -1,0 +1,46 @@
+"sss01",sampled-roulette-sis-s01.png,s,ss,50, 24,-68,48,21,0,0,16
+"sss02",sampled-roulette-sis-s02.png,s,ss,50, 35,-29, 3,43,0,0,16
+"sss03",sampled-roulette-sis-s03.png,s,ss,50, 57,-47,50,47,0,0,16
+"sss04",sampled-roulette-sis-s04.png,s,ss,50,-60,-50,25, 5,0,0,16
+"sss05",sampled-roulette-sis-s05.png,s,ss,50,-20, -3,48,27,0,0,16
+"sss06",sampled-roulette-sis-s06.png,s,ss,50,-30,-25,20,20,0,0,16
+"sss11",sampled-roulette-sis-t11.png,t,ss,50, 24,-68,48,21,0,0,16
+"sss12",sampled-roulette-sis-t12.png,t,ss,50, 35,-29, 3,43,0,30,16
+"sss13",sampled-roulette-sis-t13.png,t,ss,50, 57,-47,50,47,0,75,16
+"sss14",sampled-roulette-sis-t14.png,t,ss,50,-60,-50,25, 5,0,60,16
+"sss15",sampled-roulette-sis-t15.png,t,ss,50,-20, -3,48,27,0,115,16
+"ss021",sampled-raytrace-sis-s021.png,s,pss,50, 24,-68,48,21,0,0,16
+"ss022",sampled-raytrace-sis-s022.png,s,pss,50, 35,-29, 3,43,0,0,16
+"ss023",sampled-raytrace-sis-s023.png,s,pss,50, 57,-47,50,47,0,0,16
+"ss024",sampled-raytrace-sis-s024.png,s,pss,50,-60,-50,25, 5,0,0,16
+"ss025",sampled-raytrace-sis-s025.png,s,pss,50,-20, -3,48,27,0,0,16
+"ss026",sampled-raytrace-sis-s026.png,s,pss,50,-30,-25,20,20,0,0,16
+"sf021",sampled-raytrace-sis-t021.png,t,pss,50, 24,-68,48,21,0,0,16
+"sf022",sampled-raytrace-sis-t022.png,t,pss,50, 35,-29, 3,43,0,0,16
+"sf023",sampled-raytrace-sis-t023.png,t,pss,50, 57,-47,50,47,0,0,16
+"sf024",sampled-raytrace-sis-t024.png,t,pss,50,-60,-50,25, 5,0,0,16
+"sf025",sampled-raytrace-sis-t025.png,t,pss,50,-20, -3,48,27,0,0,16
+"sf026",sampled-raytrace-sis-t026.png,t,pss,50,-30,-25,20,20,0,0,16
+"ss01",roulette-sis-s01.png,s,fs,50, 24,-68,48,21,0,0,16
+"ss02",roulette-sis-s02.png,s,fs,50, 35,-29, 3,43,0,0,16
+"ss03",roulette-sis-s03.png,s,fs,50, 57,-47,50,47,0,0,16
+"ss04",roulette-sis-s04.png,s,fs,50,-60,-50,25, 5,0,0,16
+"ss05",roulette-sis-s05.png,s,fs,50,-20, -3,48,27,0,0,16
+"ss06",roulette-sis-s06.png,s,fs,50,-30,-25,20,20,0,0,16
+"ss11",roulette-sis-t11.png,t,fs,50, 24,-68,48,21,0,0,16
+"ss12",roulette-sis-t12.png,t,fs,50, 35,-29, 3,43,0,30,16
+"ss13",roulette-sis-t13.png,t,fs,50, 57,-47,50,47,0,75,16
+"ss14",roulette-sis-t14.png,t,fs,50,-60,-50,25, 5,0,60,16
+"ss15",roulette-sis-t15.png,t,fs,50,-20, -3,48,27,0,115,16
+"s021",raytrace-sis-s021.png,s,rs,50, 24,-68,48,21,0,0,16
+"s022",raytrace-sis-s022.png,s,rs,50, 35,-29, 3,43,0,0,16
+"s023",raytrace-sis-s023.png,s,rs,50, 57,-47,50,47,0,0,16
+"s024",raytrace-sis-s024.png,s,rs,50,-60,-50,25, 5,0,0,16
+"s025",raytrace-sis-s025.png,s,rs,50,-20, -3,48,27,0,0,16
+"s026",raytrace-sis-s026.png,s,rs,50,-30,-25,20,20,0,0,16
+"f021",raytrace-sis-t021.png,t,rs,50, 24,-68,48,21,0,0,16
+"f022",raytrace-sis-t022.png,t,rs,50, 35,-29, 3,43,0,0,16
+"f023",raytrace-sis-t023.png,t,rs,50, 57,-47,50,47,0,0,16
+"f024",raytrace-sis-t024.png,t,rs,50,-60,-50,25, 5,0,0,16
+"f025",raytrace-sis-t025.png,t,rs,50,-20, -3,48,27,0,0,16
+"f026",raytrace-sis-t026.png,t,rs,50,-30,-25,20,20,0,0,16

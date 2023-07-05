@@ -1,0 +1,17 @@
+index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"r001",roulettepm-s001.png,s,r,50, 24,-68,48,21,0,0,16
+"r002",roulettepm-s002.png,s,r,50, 35,-29, 3,43,0,0,16
+"r003",roulettepm-s003.png,s,r,50, 57,-47,50,47,0,0,16
+"r004",roulettepm-s004.png,s,r,50,-60,-50,25, 5,0,0,16
+"r005",roulettepm-s005.png,s,r,50,-20, -3,48,27,0,0,16
+"r006",roulettepm-s006.png,s,r,50,-30,-25,20,20,0,0,16
+"e06",roulettepm-e06.png,e,r,50, 24,-68,48,21,10,30,16
+"e07",roulettepm-e07.png,e,r,50, 35,-29, 3,43,10,30,16
+"e08",roulettepm-e08.png,e,r,50, 57,-47,50,47,10,30,16
+"e09",roulettepm-e09.png,e,r,50,-60,-50,25, 5,10,30,16
+"e10",roulettepm-e10.png,e,r,50,-20, -3,48,27,10,30,16
+"tr11",roulettepm-t11.png,t,r,50, 24,-68,48,21,0,0,16
+"tr12",roulettepm-t12.png,t,r,50, 35,-29, 3,43,0,30,16
+"tr13",roulettepm-t13.png,t,r,50, 57,-47,50,47,0,75,16
+"tr14",roulettepm-t14.png,t,r,50,-60,-50,25, 5,0,60,16
+"tr15",roulettepm-t15.png,t,r,50,-20, -3,48,27,0,115,16

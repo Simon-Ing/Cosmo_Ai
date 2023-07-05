@@ -1,0 +1,16 @@
+index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"pm01",exactpm-s01.png,s,p,50, 24,-68,48,21,0,0,16
+"pm02",exactpm-s02.png,s,p,50, 35,-29, 3,43,0,0,16
+"0003",exactpm-s03.png,s,p,50, 57,-47,50,47,0,0,16
+"0004",exactpm-s04.png,s,p,50,-60,-50,25, 5,0,0,16
+"0005",exactpm-s05.png,s,p,50,-20, -3,48,27,0,0,16
+"pm06",exactpm-e06.png,e,p,50, 24,-68,48,21,10,30,16
+"pm07",exactpm-e07.png,e,p,50, 35,-29, 3,43,10,30,16
+"0008",exactpm-e08.png,e,p,50, 57,-47,50,47,10,30,16
+"0009",exactpm-e09.png,e,p,50,-60,-50,25, 5,10,30,16
+"0010",exactpm-e10.png,e,p,50,-20, -3,48,27,10,30,16
+"t011",exactpm-t011.png,t,p,50, 24,-68,48,21,0,0,16
+"t012",exactpm-t012.png,t,p,50, 35,-29, 3,43,0,30,16
+"t013",exactpm-t013.png,t,p,50, 57,-47,50,47,0,75,16
+"t014",exactpm-t014.png,t,p,50,-60,-50,25, 5,0,60,16
+"t015",exactpm-t015.png,t,p,50,-20, -3,48,27,0,115,16

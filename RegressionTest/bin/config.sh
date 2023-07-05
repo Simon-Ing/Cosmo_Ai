@@ -23,3 +23,10 @@ fi
 
 echo ImageMagick command is: $CONVERT
 $CONVERT --version
+
+if test x$COSMOSIM_DEVELOPING = xyes
+then
+   ( cd $rootdir && cmake --build build ) || exit 10
+else
+   echo Warning!  Binaries are not recompiled and may be obsolete.
+fi
