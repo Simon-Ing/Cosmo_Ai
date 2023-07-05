@@ -97,7 +97,7 @@ jobs:
       - name: artifact-preparation
         run: |
           mkdir -p $distdir
-          mv RegressionTest/${{ matrix.test-dir }}/montage/ ${{ distdir }}
+          mv RegressionTest/${{ matrix.test-dir }}/montage/ $distdir
       - name: image-upload
         uses: actions/upload-artifact@v3
         with:
