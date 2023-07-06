@@ -33,8 +33,8 @@ The GUI has not been tested on Windows.
 1.  Make sure you have one of the supported Python versions
 2.  Download and unpack `CosmoSimPy.zip` from 
     [the latest release](https://github.com/CosmoAI-AES/CosmoSim/releases/latest).
-    A MacOS version exists for 
-    [v2.2.1](https://github.com/CosmoAI-AES/CosmoSim/releases/tag/v2.2.1).
+    If a MacOS version exists, it is named as such; there is one for 
+    [v2.2.2](https://github.com/CosmoAI-AES/CosmoSim/releases/tag/v2.2.2).
 3.  Run `CosmoSimPy/CosmoGUI.py` in python.  This is the GUI tool.
 4.  The `CosmoSimPy/datagen.py` is the CLI tool and should be run
     on the command line; see below.
@@ -44,6 +44,14 @@ that you trust the binary before it will run.
 
 ## Building from Source
 
+The build procedure is primarily developed on Debian Bullseye, but it now 
+also works reliable on github runners running Windows-2019, Ubuntu-20.04,
+or Ubuntu 22.04.  We also have it working on MacOS, but we also have problems
+with other macs, depending on their setup.  We do not have capacity to develop
+generic and robust build procedures, but we shall be happy to incorporate 
+contributions.
+
+**Step 1 (install conan).**
 The build stack uses conan for dependencies.  It needs to be installed,
 in version 1.59, and configured to use the C++11 ABI.
 (See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
@@ -54,6 +62,7 @@ conan profile new default --detect  # Generates default profile detecting GCC an
 conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
 ```
 
+**Step 2 (build).**
 To build the C++ library and the Python library (wrapper), we use cmake as follows.
 ```sh
 conan install . -if build
@@ -76,8 +85,6 @@ be installed system level.  The following commands is what I needed on a
 Debian system, and may be good start saving some time.  
 
 ```sh
-sudo pip3 install conan
-
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
 
