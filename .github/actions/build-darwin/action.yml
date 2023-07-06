@@ -27,7 +27,8 @@ runs:
         shell: bash
         run: |
           conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan profile update settings.compiler.libcxx=libstdc++ default
+          # Not that this setting is different from what we use on linux and windows
       - name: Run conan
         shell: bash
         run: |
