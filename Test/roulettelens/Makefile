@@ -18,11 +18,6 @@ clean:
 
 alltests:  montage.log montage-eta.log montage-eta-orig.log
 
-test.log: roulette.csv
-	mkdir -p Original test{1,2}images
-	datagen.py -Z 600 --csvfile debug.csv --outfile test1.csv --centred -D test1images
-	datagen.py -Z 600 --csvfile debug.csv --outfile test2.csv -D test2images
-	touch $@
 roulette.csv: debug.csv
 	mkdir -p Original
 	datagen.py -Z 600 --csvfile $< --outfile $@ --centred -D Original --actual --original | tee images.log 
@@ -35,18 +30,8 @@ roulette.csv: debug.csv
 %-compare.log: %-gen.log
 	mkdir -p diff
 	compare.py --diff diff --masked Original $*-images | tee $@ ; exit 0
-compare-eta.log: roulette-gen.log noeta-gen.log
-	mkdir -p eta-diff
-	compare.py --diff eta-diff/ --masked roulette-images noeta-images | tee $@ ; exit 0
-compare-eta-orig.log: roulette-gen.log noeta-gen.log
-	mkdir -p eta-orig-diff
-	compare.py --diff eta-orig-diff/ --masked Original noeta-images | tee $@ ; exit 0
-montage.log: roulette-compare.log
+montage.log: roulette-compare.log noeta-gen.log
 	./montageimages.sh  | tee montage.log
-montage-eta.log: compare-eta.log
-	./montageimages.sh  roulette-images noeta-images eta-diff  eta-montage | tee montage.log
-montage-eta-orig.log: noeta-gen.log compare-eta-orig.log 
-	./montageimages.sh  Original noeta-images eta-orig-diff  eta-orig-montage | tee montage.log
 
 # Testing
 false.log:
