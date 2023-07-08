@@ -10,6 +10,7 @@ clean alltests:
 	cd rotatedsis ; $(MAKE) $@
 	cd roulette ; $(MAKE) $@
 	cd roulettepm ; $(MAKE) $@
+	cd roulettelens ; $(MAKE) $@
 	$(MAKE) status
 
 baselines:
