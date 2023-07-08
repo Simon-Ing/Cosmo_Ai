@@ -83,7 +83,7 @@ jobs:
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if test -f makeimages.sh
+          if [ -f makeimages.sh ]
           then
              sh ./makeimages.sh
           else
@@ -92,7 +92,7 @@ jobs:
       - name: compare
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if test -f compareimages.sh
+          if [ -f compareimages.sh ]
           then
              sh ./compareimages.sh
           else
@@ -101,7 +101,7 @@ jobs:
       - name: montage
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if test -f montageimages.sh
+          if  -f montageimages.sh ]
           then
              sh ./montageimages.sh
           else
