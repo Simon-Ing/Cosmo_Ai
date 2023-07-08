@@ -59,7 +59,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04,windows-2019]
-        test-dir: [ 'exactpm', 'raytrace', 'rotatedsis', 'roulette', 'roulettepm' ]
+        test-dir: [ 'exactpm', 'raytrace', 'rotatedsis', 'roulette', 'roulettepm', 'roulettelens' ]
         python-version: ['3.11']
     steps:
       - uses: actions/checkout@v3
