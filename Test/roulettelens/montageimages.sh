@@ -6,12 +6,18 @@ echo Running from $bindir
 
 . $bindir/config.sh
 
-dir=$1
-test $dir || dir=`date "+%Y%m%d"`
-mkdir -p montage
+dir=$2
+test $dir || dir=Roulette
 
-baseline=Original
-dir=Roulette
+baseline=$1
+test $dir || baseline=Original
+
+diffdir=$3
+test $diffdir || diffdir=diff
+montagedir=$4
+test $montagedir || montagedir=diff
+
+mkdir -p $montagedir
 
 if test -z "$CONVERT"
 then
@@ -33,6 +39,7 @@ else
     for f in diff/*
     do
           ff=`basename $f`
-          $CONVERT $baseline/$ff diff/$ff $dir/$ff  +append montage/$ff
+          $CONVERT $baseline/$ff $diffdir/$ff $dir/$ff  +append $montagedir/$ff
+          echo $baseline/$ff $diffdir/$ff $dir/$ff  "->" $montagedir/$ff
     done
 fi
