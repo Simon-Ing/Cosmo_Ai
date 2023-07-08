@@ -41,7 +41,7 @@ void RouletteSim::setNterms(int c) { nterms = c ; }
 void RouletteSim::setSourceMode(int m) { srcmode = m ; }
 void RouletteSim::setMaskMode(bool b) { maskmode = b ; }
 void RouletteSim::setBGColour(int b) { bgcolour = b ; }
-void RouletteSim::initSim( double offsetX, double offsetY, double etaX, double etaY ) {
+void RouletteSim::initSim( double offsetX, double offsetY ) {
    std::cout << "[RouletteSim.cpp] initSim\n" ;
 
    if ( sim ) delete sim ;
@@ -49,7 +49,7 @@ void RouletteSim::initSim( double offsetX, double offsetY, double etaX, double e
    std::cout << "Running Roulette Regenerator; "
                 << "centrepoint=" << centrepoint << "\n" ;
    sim = new RouletteRegenerator() ;
-   sim->setCentre( cv::Point( offsetX, offsetY ), cv::Point( etaX, etaY ) ) ;
+   sim->setCentre( cv::Point2d( offsetX, offsetY ), cv::Point2d( 0, 0 ) ) ;
 
    return ;
 }

@@ -131,8 +131,7 @@ if __name__ == "__main__":
             print( "Relative eta", row["reletaX"], row["reletaY"] )
             print( "Offset", row["offsetX"], row["offsetY"] )
             print( "Centre Point", row["centreX"], row["centreY"] )
-            sim.initSim( row["offsetX"], row["offsetY"],
-                         row["reletaX"], row["reletaY"] )
+            sim.initSim( row["offsetX"], row["offsetY"] )
             print( "Initialised simulator" )
             sys.stdout.flush()
 

@@ -113,7 +113,7 @@ private:
 
 public:
     RouletteSim();
-    void initSim( double, double, double, double ) ;
+    void initSim( double, double ) ;
 
     void setNterms(int);
     void setImageSize(int);
