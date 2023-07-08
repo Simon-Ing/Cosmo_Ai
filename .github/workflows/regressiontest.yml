@@ -4,7 +4,7 @@ name: "Regression Test (Modular)"
 
 on: 
    push:
-       branches: [ refactor/test-suites ]
+       branches: [ feature/regressiontests ]
        tags: 'v*' 
    workflow_dispatch:
    workflow_call:
