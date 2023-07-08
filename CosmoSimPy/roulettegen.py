@@ -17,17 +17,6 @@ from CosmoSim import RouletteSim as CosmoSim,getMSheaders,PsiSpec,ModelSpec
 from Arguments import CosmoParser
 import pandas as pd
 
-def setParameters(sim,row):
-    print( row ) 
-    if row.get("source",None) != None:
-        sim.setSourceMode( row["source"] )
-    if row.get("sigma",None) != None:
-        sim.setSourceParameters( row["sigma"],
-            row.get("sigma2",-1), row.get("theta",-1) )
-    if row.get("imagesize",None) != None:
-        sim.setImageSize( row["imagesize"] )
-        sim.setResolution( row["imagesize"] )
-
 class RouletteAmplitudes:
     """Parse the CSV headers to find which amplitudes are defined in the file.
     Making it a class may be excessive, but done in case we need other information
@@ -151,6 +140,8 @@ if __name__ == "__main__":
             print( "index", row["index"] )
             sys.stdout.flush()
                     
+            if row.get("source",None) != None:
+                sim.setSourceMode( row["source"] )
             sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
                                      float(row["theta"]) ) 
             namestem = row["filename"].split(".")[0]

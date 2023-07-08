@@ -1,12 +1,24 @@
 index,filename,source,model,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
-"s000",image-s000.png,s,Raytrace,SIS,50, 68, 21,48,18,0,0,16
-"s001",image-s001.png,s,Raytrace,SIS,50, 21,-68,48,18,0,0,16
-"s000a",image-s000a.png,s,Raytrace,SIS,50, 68,-21,48,18,0,0,16
-"s001a",image-s001a.png,s,Raytrace,SIS,50,-21,-68,48,18,0,0,16
-"s000b",image-s000b.png,s,Raytrace,SIS,50,-68, 21,48,18,0,0,16
-"s001b",image-s001b.png,s,Raytrace,SIS,50, 21, 68,48,18,0,0,16
+"s011",image-s011.png,s,Raytrace,SIS,50, 68, 21,48,18,0,0,16
+"s012",image-s012.png,s,Raytrace,SIS,50, 21,-68,48,18,0,0,16
+"s013",image-s013.png,s,Raytrace,SIS,50, 68,-21,48,18,0,0,16
+"s014",image-s014.png,s,Raytrace,SIS,50,-21,-68,48,18,0,0,16
+"s015",image-s015.png,s,Raytrace,SIS,50,-68, 21,48,18,0,0,16
+"s016",image-s016.png,s,Raytrace,SIS,50, 21, 68,48,18,0,0,16
 "s002",image-s002.png,s,Raytrace,SIS,50, 35,-29, 3,43,0,0,16
 "s003",image-s003.png,s,Raytrace,SIS,50, 57,-47,50,47,0,0,16
 "s004",image-s004.png,s,Raytrace,SIS,50,-60,-50,25, 5,0,0,16
 "s005",image-s005.png,s,Raytrace,SIS,50,-20, -3,48,27,0,0,16
 "s006",image-s006.png,s,Raytrace,SIS,50,-30,-25,20,20,0,0,16
+"s021",image-s021.png,s,Raytrace,SIS,50, 68, 21,25,24,8,0,16
+"s022",image-s022.png,s,Raytrace,SIS,50, 21,-68,25,24,8,20,16
+"s023",image-s023.png,s,Raytrace,SIS,50, 68,-21,25,24,8,40,16
+"s024",image-s024.png,s,Raytrace,SIS,50,-21,-68,25,24,8,60,16
+"s025",image-s025.png,s,Raytrace,SIS,50,-68, 21,25,24,8,80,16
+"s026",image-s026.png,s,Raytrace,SIS,50, 21, 68,25,24,8,100,16
+"s021e",image-s021e.png,e,Raytrace,SIS,50, 68, 21,25,24,8,0,16
+"s022e",image-s022e.png,e,Raytrace,SIS,50, 21,-68,25,24,8,20,16
+"s023e",image-s023e.png,e,Raytrace,SIS,50, 68,-21,25,24,8,40,16
+"s024e",image-s024e.png,e,Raytrace,SIS,50,-21,-68,25,24,8,60,16
+"s025e",image-s025e.png,e,Raytrace,SIS,50,-68, 21,25,24,8,80,16
+"s026e",image-s026e.png,e,Raytrace,SIS,50, 21, 68,25,24,8,100,16
