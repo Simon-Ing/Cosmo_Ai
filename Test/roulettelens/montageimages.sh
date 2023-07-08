@@ -7,15 +7,16 @@ echo Running from $bindir
 . $bindir/config.sh
 
 dir=$2
-test $dir || dir=Roulette
+test $dir || dir=roulette-images
 
 baseline=$1
-test $dir || baseline=Original
+test $baseline || baseline=Original
 
 diffdir=$3
 test $diffdir || diffdir=diff
+
 montagedir=$4
-test $montagedir || montagedir=diff
+test $montagedir || montagedir=montage
 
 mkdir -p $montagedir
 
@@ -29,17 +30,17 @@ then
    exit 5 
 elif test ! -d $dir 
 then 
-   echo Images have not been 
+   echo Images have not been created: $dir
    exit 5 
-elif test ! -d diff
+elif test ! -d $diffdir
 then 
-   echo Difference images have not been 
+   echo Difference images have not been created: $diffdir
    exit 5 
 else
-    for f in diff/*
+    for f in $diffdir/*
     do
           ff=`basename $f`
+          echo $CONVERT $baseline/$ff $diffdir/$ff $dir/$ff  "->" $montagedir/$ff
           $CONVERT $baseline/$ff $diffdir/$ff $dir/$ff  +append $montagedir/$ff
-          echo $baseline/$ff $diffdir/$ff $dir/$ff  "->" $montagedir/$ff
     done
 fi

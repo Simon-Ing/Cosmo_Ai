@@ -13,27 +13,32 @@ status:
 	cat */*.status
 clean:
 	rm -f *.status *.log
-	rm -rf diff *-diff montage *-montage *-images
+	rm -f roulette.csv
+	rm -rf diff *-diff montage *-montage *-images Original
 
-alltests:  montage.log
+alltests:  montage.log montage-eta.log montage-eta-orig.log
 
 roulette.csv:
 	mkdir -p Original
-	datagen.py -Z 600 --csvfile debug.csv --outfile $@ --centred -D Original --actual --original -R | tee images.log 
+	datagen.py -Z 600 --csvfile debug.csv --outfile $@ --centred -D Original --actual --original | tee images.log 
 %-gen.log: %.csv
 	mkdir -p $*-images
 	roulettegen.py -n 10 -Z 600 --csvfile $< -D $*-images
 %-compare.log: %-gen.log
+	mkdir -p diff
 	compare.py --diff diff/ --masked Original $*-images | tee $@ ; exit 0
 compare-eta.log: roulette-gen.log noeta-gen.log
 	mkdir -p eta-diff
 	compare.py --diff eta-diff/ --masked roulette-images noeta-images | tee $@ ; exit 0
+compare-eta-orig.log: roulette-gen.log noeta-gen.log
+	mkdir -p eta-orig-diff
+	compare.py --diff eta-orig-diff/ --masked Original noeta-images | tee $@ ; exit 0
 montage.log: roulette-compare.log
 	./montageimages.sh  | tee montage.log
-montage-eta.log: roulette-compare.log
+montage-eta.log: compare-eta.log
 	./montageimages.sh  roulette-images noeta-images eta-diff  eta-montage | tee montage.log
-montage-eta-orig.log: roulette-compare.log
-	./montageimages.sh  Original noeta-images eta-diff  eta-orig-montage | tee montage.log
+montage-eta-orig.log: noeta-gen.log compare-eta-orig.log 
+	./montageimages.sh  Original noeta-images eta-orig-diff  eta-orig-montage | tee montage.log
 
 # Testing
 false.log:
