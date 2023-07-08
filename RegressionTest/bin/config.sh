@@ -30,3 +30,8 @@ then
 else
    echo Warning!  Binaries are not recompiled and may be obsolete.
 fi
+
+if test -f baseline.config
+then
+   baseline=`cat baseline.config`
+fi
