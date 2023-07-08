@@ -12,6 +12,8 @@
 
 double factorial_(unsigned int n);
 
+#define signf(y)  ( y < 0 ? -1 : +1 )
+
 LensModel::LensModel() :
         CHI(0.5),
         einsteinR(20),
@@ -180,7 +182,7 @@ void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
 
             if ( maskMode && r > maskRadius ) {
             } else {
-              double theta = x == 0 ? PI/2 : atan2(y, x);
+              double theta = x == 0 ? signf(y)*PI/2 : atan2(y, x);
               pos = this->getDistortedPos(r, theta);
               pos += etaOffset ;
 

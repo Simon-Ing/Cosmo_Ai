@@ -1,5 +1,10 @@
 index,filename,source,model,lens,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"s000",image-s000.png,s,Raytrace,SIS,50, 68, 21,48,18,0,0,16
 "s001",image-s001.png,s,Raytrace,SIS,50, 21,-68,48,18,0,0,16
+"s000a",image-s000a.png,s,Raytrace,SIS,50, 68,-21,48,18,0,0,16
+"s001a",image-s001a.png,s,Raytrace,SIS,50,-21,-68,48,18,0,0,16
+"s000b",image-s000b.png,s,Raytrace,SIS,50,-68, 21,48,18,0,0,16
+"s001b",image-s001b.png,s,Raytrace,SIS,50, 21, 68,48,18,0,0,16
 "s002",image-s002.png,s,Raytrace,SIS,50, 35,-29, 3,43,0,0,16
 "s003",image-s003.png,s,Raytrace,SIS,50, 57,-47,50,47,0,0,16
 "s004",image-s004.png,s,Raytrace,SIS,50,-60,-50,25, 5,0,0,16

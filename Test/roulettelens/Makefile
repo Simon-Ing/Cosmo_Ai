@@ -18,15 +18,23 @@ clean:
 
 alltests:  montage.log montage-eta.log montage-eta-orig.log
 
-roulette.csv:
+test.log: roulette.csv
+	mkdir -p Original test{1,2}images
+	datagen.py -Z 600 --csvfile debug.csv --outfile test1.csv --centred -D test1images
+	datagen.py -Z 600 --csvfile debug.csv --outfile test2.csv -D test2images
+	touch $@
+roulette.csv: debug.csv
 	mkdir -p Original
-	datagen.py -Z 600 --csvfile debug.csv --outfile $@ --centred -D Original --actual --original | tee images.log 
+	datagen.py -Z 600 --csvfile $< --outfile $@ --centred -D Original --actual --original | tee images.log 
 %-gen.log: %.csv
 	mkdir -p $*-images
 	roulettegen.py -n 10 -Z 600 --csvfile $< -D $*-images
+%-reflines.log: %.csv
+	mkdir -p $*-images
+	roulettegen.py -n 10 -Z 600 --csvfile $< -D $*-images -R
 %-compare.log: %-gen.log
 	mkdir -p diff
-	compare.py --diff diff/ --masked Original $*-images | tee $@ ; exit 0
+	compare.py --diff diff --masked Original $*-images | tee $@ ; exit 0
 compare-eta.log: roulette-gen.log noeta-gen.log
 	mkdir -p eta-diff
 	compare.py --diff eta-diff/ --masked roulette-images noeta-images | tee $@ ; exit 0

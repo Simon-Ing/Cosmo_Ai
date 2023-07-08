@@ -1,6 +1,18 @@
 
 # CosmoSim Change Log
 
+## [2.2.3] - not released
+
+### Added
+
+### Changed
+
+### Fixed
+
+- In LensModel::distort(), fixed the sign of the polar angle theta
+  when Cartesian x=0.  This removes an artifact in images from
+  RouletteGenerator.
+
 ## [2.2.2] - 2023-07-06
 
 ### Added
