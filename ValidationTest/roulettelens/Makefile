@@ -30,7 +30,7 @@ roulette.csv: debug.csv
 %-compare.log: %-gen.log
 	mkdir -p diff
 	compare.py --diff diff --masked Original $*-images | tee $@ ; exit 0
-montage.log: roulette-compare.log noeta-gen.log
+montage.log: roulette-compare.log 
 	./montageimages.sh  | tee montage.log
 
 # Testing
