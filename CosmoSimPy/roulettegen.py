@@ -128,9 +128,9 @@ if __name__ == "__main__":
     for index,row in frame.iterrows():
             print( "Processing", index )
             sys.stdout.flush()
-            print( "Relative eta", row["reletaX"], row["reletaY"] )
+            print( "Relative eta", row.get("reletaX", None), row.get("reletaY",None) )
             print( "Offset", row["offsetX"], row["offsetY"] )
-            print( "Centre Point", row["centreX"], row["centreY"] )
+            print( "Centre Point", row.get("centreX",None), row.get("centreY",None) )
             sim.initSim( row["offsetX"], row["offsetY"] )
             print( "Initialised simulator" )
             sys.stdout.flush()
