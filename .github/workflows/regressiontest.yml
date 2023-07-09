@@ -83,30 +83,15 @@ jobs:
       - name: makeimages
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if [ -f makeimages.sh ]
-          then
-             sh ./makeimages.sh
-          else
-             sh ../bin/makeimages.sh
-          fi
+          sh ../bin/makeimages.sh
       - name: compare
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if [ -f compareimages.sh ]
-          then
-             sh ./compareimages.sh
-          else
-             sh ../bin/compareimages.sh
-          fi
+          sh ../bin/compareimages.sh
       - name: montage
         run: |
           cd RegressionTest/${{ matrix.test-dir }}
-          if  -f montageimages.sh ]
-          then
-             sh ./montageimages.sh
-          else
-             sh ../bin/montageimages.sh
-          fi
+          sh ../bin/montageimages.sh
       - name: artifact-preparation
         run: |
           mkdir -p dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
