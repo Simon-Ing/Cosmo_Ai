@@ -5,6 +5,8 @@
 
 ### Added
 
+- Regression Tests for the RouletteRegnerator model.
+
 ### Changed
 
 ### Fixed
