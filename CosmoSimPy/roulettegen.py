@@ -145,7 +145,7 @@ if __name__ == "__main__":
                                      float(row.get("theta",0)) ) 
             fn = row.get("filename",None)
             if fn is None:
-                namestem = f"roulette-{row['index']:06}" 
+                namestem = f"image-{int(row['index']):05}" 
             else:
                 namestem = fn.split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
