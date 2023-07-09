@@ -143,7 +143,11 @@ if __name__ == "__main__":
                 sim.setSourceMode( row["source"] )
             sim.setSourceParameters( float(row["sigma"]), float(row.get("sigma2",0)),
                                      float(row.get("theta",0)) ) 
-            namestem = row["filename"].split(".")[0]
+            fn = row.get("filename",None)
+            if fn is None:
+                namestem = f"roulette-{row['index']:06}" 
+            else:
+                namestem = fn.split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
 
     sim.close()
