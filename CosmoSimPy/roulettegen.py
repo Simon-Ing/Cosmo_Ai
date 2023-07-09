@@ -141,8 +141,8 @@ if __name__ == "__main__":
                     
             if row.get("source",None) != None:
                 sim.setSourceMode( row["source"] )
-            sim.setSourceParameters( float(row["sigma"]), float(row["sigma2"]),
-                                     float(row["theta"]) ) 
+            sim.setSourceParameters( float(row["sigma"]), float(row.get("sigma2",0)),
+                                     float(row.get("theta",0)) ) 
             namestem = row["filename"].split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
 
