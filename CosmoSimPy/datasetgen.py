@@ -39,7 +39,7 @@ def getline(idx,chi=0,nterms=16):
 
     srcmode = srcmodes[randint(0,len(srcmodes)-1)]
     lensmode = lensmodes[randint(0,len(lensmodes)-1)]
-    return f'"{idx:04}",image-{idx:04}.png,{srcmode},{lensmode},{chi},' \
+    return f'"{idx:04}","image-{idx:04}.png",{srcmode},{lensmode},{chi},' \
          + f'{R},{phi},{einsteinR},{sigma},{sigma2},{theta},{nterms},{x},{y}'
 
 header = ( "index,filename,source,lens,chi,"
