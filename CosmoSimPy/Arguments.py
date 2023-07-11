@@ -71,6 +71,9 @@ class CosmoParser(argparse.ArgumentParser):
     self.add_argument('-i', '--csvfile',
             help="Dataset to generate (CSV file)")
 
+    self.add_argument('--maxcount',
+            help="Maximum number of images to process")
+
 def setParameters(sim,row):
     print( row ) 
     if row.get("y",None) != None:

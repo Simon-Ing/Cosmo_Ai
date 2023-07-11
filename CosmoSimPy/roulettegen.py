@@ -125,6 +125,12 @@ if __name__ == "__main__":
     sim.setNterms( coefs.getNterms() )
     print( "Number of roulette terms: ", coefs.getNterms() )
 
+    count = 1
+    if args.maxcount is None:
+        maxcount = 2**30
+    else:
+        maxcount = int(args.maxcount)
+        
     for index,row in frame.iterrows():
             print( "Processing", index )
             sys.stdout.flush()
@@ -149,6 +155,8 @@ if __name__ == "__main__":
             else:
                 namestem = fn.split(".")[0]
             makeSingle(sim,args,name=namestem,row=row)
+            count += 1
+            if count > maxcount: break
 
     sim.close()
     print( "[roulettegen.py] Done" )
