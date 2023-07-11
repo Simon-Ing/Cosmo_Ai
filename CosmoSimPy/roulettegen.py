@@ -122,7 +122,10 @@ if __name__ == "__main__":
     print( "columns:", cols )
     
     coefs = RouletteAmplitudes(cols)
-    sim.setNterms( coefs.getNterms() )
+    if args.nterms:
+        sim.setNterms( int(args.nterms) )
+    else:
+        sim.setNterms( coefs.getNterms() )
     print( "Number of roulette terms: ", coefs.getNterms() )
 
     count = 1

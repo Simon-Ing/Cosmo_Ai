@@ -29,7 +29,7 @@ class CosmoParser(argparse.ArgumentParser):
     self.add_argument('-E', '--einsteinradius', default=20, help="Einstein radius")
 
     # Other parameters
-    self.add_argument('-n', '--nterms', default=10, help="Number of Roulettes terms")
+    self.add_argument('-n', '--nterms', help="Number of Roulettes terms")
     self.add_argument('-Z', '--imagesize', default=400, help="image size")
 
     # Output configuration 
