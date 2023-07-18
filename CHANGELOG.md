@@ -6,6 +6,9 @@
 ### Added
 
 - Regression Tests for the RouletteRegnerator model.
+- To avoid some cropping artifacts, datagen.py can compute the larger images
+  which are cropped to the desired size after centring.
+- Command line option to generate only a subset of the images from roulettegen.py
 
 ### Changed
 
@@ -14,6 +17,7 @@
 - In LensModel::distort(), fixed the sign of the polar angle theta
   when Cartesian x=0.  This removes an artifact in images from
   RouletteGenerator.
+- Python scripts made more tolerant with missing input.
 
 ## [2.2.2] - 2023-07-06
 
