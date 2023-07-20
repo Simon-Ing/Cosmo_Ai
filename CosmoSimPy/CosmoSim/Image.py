@@ -8,7 +8,7 @@ Post-processing functions for images.
 import numpy as np
 import cv2
 
-def centreImage(im):
+def centreImage(im,newbehaviour=True):
   """
   Shift an image so that the centre of luminence is the centre of the image.
 
@@ -36,24 +36,32 @@ def centreImage(im):
       yrow = np.array(range(n))[np.newaxis,:]
       xs = xcol*grey
       ys = yrow*grey
-      xm = int(round(xs.sum()/s - m/2))
-      ym = int(round(ys.sum()/s - n/2))
+      xm = round(xs.sum()/s - m/2)
+      ym = round(ys.sum()/s - n/2)
+      print( "Translation", (xm,ym) )
 
-      centred = np.zeros( im.shape )
-      c1 = np.zeros( im.shape )
+      if newbehaviour:
+          R = np.array( [ [ 1, 0, xm ], [ 0, 1, ym ] ] )
+          centred = cv2.warpAffine(im,R,(n,m))
+      else:
+          xm = int(xm)
+          ym = int(ym)
+          print( "Integer Translation", (xm,ym) )
+          centred = np.zeros( im.shape )
+          c1 = np.zeros( im.shape )
    
-      if xm > 0:
-         c1[:-xm,:] = im[xm:,:]
-      elif xm < 0:
-         c1[-xm:,:] = im[:xm,:]
-      else:
-         c1 = im
-      if ym > 0:
-         centred[:,:-ym] = c1[:,ym:]
-      elif ym < 0:
-         centred[:,-ym:] = c1[:,:ym]
-      else:
-         centred = c1
+          if xm > 0:
+             c1[:-xm,:] = im[xm:,:]
+          elif xm < 0:
+             c1[-xm:,:] = im[:xm,:]
+          else:
+             c1 = im
+          if ym > 0:
+             centred[:,:-ym] = c1[:,ym:]
+          elif ym < 0:
+             centred[:,-ym:] = c1[:,:ym]
+          else:
+             centred = c1
 
   print( f"Centre: ({xm},{ym}) ;  " 
        + f"Range ({centred.min()},{centred.max()})" )
