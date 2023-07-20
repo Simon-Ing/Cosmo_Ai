@@ -18,6 +18,7 @@
   when Cartesian x=0.  This removes an artifact in images from
   RouletteGenerator.
 - Python scripts made more tolerant with missing input.
+- Centring no longer rounds to integer pixel positions.
 
 ## [2.2.2] - 2023-07-06
 
