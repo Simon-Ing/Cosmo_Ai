@@ -37,16 +37,16 @@ def centreImage(im,newbehaviour=True):
       yrow = np.array(range(n))[np.newaxis,:]
       xs = xcol*grey
       ys = yrow*grey
-      xm = round(xs.sum()/s - m/2)
-      ym = round(ys.sum()/s - n/2)
+      xm = xs.sum()/s - m/2
+      ym = ys.sum()/s - n/2
       print( "Translation", (xm,ym) )
 
       if newbehaviour:
-          R = np.array( [ [ 1, 0, xm ], [ 0, 1, ym ] ] )
+          R = np.float32( [ [ 1, 0, -ym ], [ 0, 1, -xm ] ] )
           centred = cv2.warpAffine(im,R,(n,m))
       else:
-          xm = int(xm)
-          ym = int(ym)
+          xm = int(round(xm))
+          ym = int(round(ym))
           print( "Integer Translation", (xm,ym) )
           centred = np.zeros( im.shape )
           c1 = np.zeros( im.shape )
@@ -80,11 +80,18 @@ def drawAxes(im):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser( prog = 'Test Image Centring')
-    self.add_argument('-i', '--infile', default="test.png", help="Input file")
-    self.add_argument('-o', '--oldversion', default="test-old.png", help="Output file using old version")
-    self.add_argument('-n', '--nemversion', default="test-nem.png", help="Output file using nem version")
+    parser.add_argument('-i', '--infile', default="test.png", help="Input file")
+    parser.add_argument('-o', '--oldversion', default="test-old.png", help="Output file using old version")
+    parser.add_argument('-n', '--newversion', default="test-new.png", help="Output file using new version")
+    parser.add_argument('-R', '--withaxes', default="test-orig.png", help="Output for original image with axes")
     args = parser.parse_args()
-    img = cv2.imread( args.infile )
-    img = cv2.imwrite( args.oldversion, centreImage(im,False) )
-    img = cv2.imwrite( args.newversion, centreImage(im,True) )
+    im = cv2.imread( args.infile )
+    im1 = centreImage(im,False)[0]
+    im2 = centreImage(im,True)[0]
+    drawAxes(im)
+    drawAxes(im1)
+    drawAxes(im2)
+    cv2.imwrite( args.oldversion, im1 )
+    cv2.imwrite( args.newversion, im2 )
+    cv2.imwrite( args.withaxes, im )
 
