@@ -7,6 +7,7 @@ Post-processing functions for images.
 
 import numpy as np
 import cv2
+import argparse
 
 def centreImage(im,newbehaviour=True):
   """
@@ -76,3 +77,14 @@ def drawAxes(im):
   im[int(round(m/2)),:] = 127
   im[:,(round(n/2))] = 127
   return im
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser( prog = 'Test Image Centring')
+    self.add_argument('-i', '--infile', default="test.png", help="Input file")
+    self.add_argument('-o', '--oldversion', default="test-old.png", help="Output file using old version")
+    self.add_argument('-n', '--nemversion', default="test-nem.png", help="Output file using nem version")
+    args = parser.parse_args()
+    img = cv2.imread( args.infile )
+    img = cv2.imwrite( args.oldversion, centreImage(im,False) )
+    img = cv2.imwrite( args.newversion, centreImage(im,True) )
+
