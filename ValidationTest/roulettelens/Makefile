@@ -16,11 +16,11 @@ clean:
 	rm -f roulette.csv
 	rm -rf diff *-diff montage *-montage *-images Original
 
-alltests:  montage.log montage-eta.log montage-eta-orig.log
+alltests:  montage.log 
 
 roulette.csv: debug.csv
 	mkdir -p Original
-	datagen.py -Z 600 --nterms 10 --csvfile $< --outfile $@ --centred -D Original --actual --original | tee images.log 
+	datagen.py -Z 600 --nterms 10 --csvfile $< --outfile $@ --centred -D Original | tee images.log 
 %-gen.log: %.csv
 	mkdir -p $*-images
 	roulettegen.py -n 10 -Z 600 --csvfile $< -D $*-images
