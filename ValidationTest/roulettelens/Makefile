@@ -20,7 +20,7 @@ alltests:  montage.log montage-eta.log montage-eta-orig.log
 
 roulette.csv: debug.csv
 	mkdir -p Original
-	datagen.py -Z 600 --csvfile $< --outfile $@ --centred -D Original --actual --original | tee images.log 
+	datagen.py -Z 600 --nterms 10 --csvfile $< --outfile $@ --centred -D Original --actual --original | tee images.log 
 %-gen.log: %.csv
 	mkdir -p $*-images
 	roulettegen.py -n 10 -Z 600 --csvfile $< -D $*-images
