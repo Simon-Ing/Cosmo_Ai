@@ -18,7 +18,7 @@ from Arguments import CosmoParser, setParameters
 import pandas as pd
 
 defaultoutcols = [ "index", "filename", "source", "lens", "chi", "R", "phi", "einsteinR", "sigma", "sigma2", "theta", "x", "y" ]
-relcols = [ "centreX", "centreY", "reletaX", "reletaY", "offsetX", "offsetY" ]
+relcols = [ "centreX", "centreY", "reletaX", "reletaY", "offsetX", "offsetY", "xiX", "xiY" ]
 def setParameters(sim,row):
     print( row ) 
     if row.get("y",None) != None:
@@ -119,7 +119,11 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         r = [ row[x] for x in outcols ]
         releta = sim.getRelativeEta(centrepoint=centrepoint)
         offset = sim.getOffset(centrepoint=centrepoint)
-        ab = sim.getAlphaBetas(maxm,pt=centrepoint)
+        xioffset = sim.getXiOffset(centrepoint)
+        if args.xireference:
+            ab = sim.getAlphaBetas(maxm)
+        else:
+            ab = sim.getAlphaBetas(maxm,pt=centrepoint)
         print(r)
         r.append( centrepoint[0] )
         r.append( centrepoint[1] )
@@ -127,6 +131,8 @@ def makeSingle(sim,args,name=None,row=None,outstream=None):
         r.append( releta[1] )
         r.append( offset[0] )
         r.append( offset[1] )
+        r.append( xioffset[0] )
+        r.append( xioffset[1] )
         print(ab)
         r += ab
         line = ",".join( [ str(x) for x in r ] )

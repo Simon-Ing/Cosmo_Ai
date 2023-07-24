@@ -30,6 +30,9 @@ cv::Point2d CosmoSim::getOffset( double x, double y ) {
    std::cout << "[CosmoSim::getOffset] " << pt << "\n" ;
    return pt ;
 } ;
+cv::Point2d CosmoSim::getNu( ) {
+   return sim->getNu() ;
+} ;
 
 double CosmoSim::getAlphaXi( int m, int s ) {
       if ( NULL != psilens )
@@ -369,6 +372,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("getBetaXi", &CosmoSim::getBetaXi)
         .def("getChi", &CosmoSim::getChi)
         .def("getOffset", &CosmoSim::getOffset)
+        .def("getNu", &CosmoSim::getNu)
         .def("getRelativeEta", &CosmoSim::getRelativeEta)
         ;
 
