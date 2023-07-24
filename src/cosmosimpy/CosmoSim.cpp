@@ -35,6 +35,13 @@ cv::Point2d CosmoSim::getNu( ) {
 } ;
 
 double CosmoSim::getAlphaXi( int m, int s ) {
+
+   // cv::Point2d xi = lens->getXi( sim->getEta() ) ;
+   cv::Point2d xi = sim->getXi() ;
+   std::cout << "[getAlphaXi] xi = " << xi << std::endl ;
+   xi /= chi ;
+   return getAlpha( xi.x, xi.y, m, s ) ;
+
       if ( NULL != psilens )
           return psilens->getAlphaXi( m, s ) ;
       else if ( NULL != lens )
@@ -42,6 +49,11 @@ double CosmoSim::getAlphaXi( int m, int s ) {
       else throw NotSupported();
 }
 double CosmoSim::getBetaXi( int m, int s ) {
+   // cv::Point2d xi = lens->getXi( sim->getEta() ) ;
+   cv::Point2d xi = sim->getXi( ) ;
+   std::cout << "[getBetaXi] xi = " << xi << std::endl ;
+   xi /= chi ;
+   return getBeta( xi.x, xi.y, m, s ) ;
       if ( NULL != psilens )
           return psilens->getBetaXi( m, s ) ;
       else if ( NULL != lens )

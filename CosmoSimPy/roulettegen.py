@@ -65,8 +65,10 @@ def makeSingle(sim,args,name=None,row=None):
                     reflines=False,
                     showmask=args.showmask
                 ) 
-
-    (cx,cy) = 0,0
+    if args.xireference:
+          R = np.float32( [ [ 1, 0, row["xiX"] ], [ 0, 1, -row["xiY"] ] ] )
+          m,n = im.shape
+          im = cv.warpAffine(im,R,(n,m))
     if args.reflines:
         drawAxes(im)
 
@@ -81,7 +83,7 @@ def makeSingle(sim,args,name=None,row=None):
        fn = os.path.join(args.directory,"apparent-" + str(name) + ".png" ) 
        im = sim.getApparentImage( reflines=args.reflines )
        cv.imwrite(fn,im)
-    return (cx,cy)
+    return None
 
 def setAmplitudes( sim, row, coefs ):
     maxm = coefs.getNterms()
@@ -140,7 +142,10 @@ if __name__ == "__main__":
             print( "Relative eta", row.get("reletaX", None), row.get("reletaY",None) )
             print( "Offset", row["offsetX"], row["offsetY"] )
             print( "Centre Point", row.get("centreX",None), row.get("centreY",None) )
-            sim.initSim( row["offsetX"], row["offsetY"] )
+            if args.xireference:
+                sim.initSim( 0, 0 )
+            else:
+                sim.initSim( row["offsetX"], row["offsetY"] )
             print( "Initialised simulator" )
             sys.stdout.flush()
 
