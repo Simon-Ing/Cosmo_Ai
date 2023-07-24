@@ -9,6 +9,7 @@
 - To avoid some cropping artifacts, datagen.py can compute the larger images
   which are cropped to the desired size after centring.
 - Command line option to generate only a subset of the images from roulettegen.py
+- New variant of RouletteRegenerator, using xi as reference point.
 
 ### Changed
 
