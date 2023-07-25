@@ -7,5 +7,5 @@
 %.txt:
 	python3 ../../CosmoSimPy/amplitudes.py --lens SIS $* 16
 %.status: %.new %.baseline
-	diff $^ && echo Regression test passes
+	diff $^ && echo Regression test passes > $@
 
