@@ -149,6 +149,8 @@ if __name__ == "__main__":
     parser.add_argument('--lens', default="SIS",
                     help='Lens model')
     parser.add_argument('--output', help='Output filename')
+    parser.add_argument('--diff', default=False,action="store_true",
+                    help='Simply differentiate psi')
 
     args = parser.parse_args()
     if args.lens == "SIS":
@@ -157,4 +159,11 @@ if __name__ == "__main__":
         model = psiSIE()
     else:
         model = None
-    main(psi=model,n=args.n,nproc=args.nproc,fn=args.output)
+    if args.diff:
+        psi,x,y = model
+        dx = factor(diff(psi, x))
+        dy = factor(diff(psi, y))
+        print( "dx", dx )
+        print( "dy", dy )
+    else:
+        main(psi=model,n=args.n,nproc=args.nproc,fn=args.output)
