@@ -10,7 +10,6 @@ RouletteModel::RouletteModel() :
    LensModel::LensModel()
 { 
     std::cout << "Instantiating RouletteModel ... \n" ;
-    rotatedMode = false ;
 }
 
 void RouletteModel::setLens( Lens *l ) {

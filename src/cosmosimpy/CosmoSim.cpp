@@ -158,6 +158,8 @@ void CosmoSim::initLens() {
           lens->initAlphasBetas() ;
           break ;
        case CSIM_NOPSI_PM:
+          lens = psilens = new PointMass() ;
+          break ;
        case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
           std::cout << "[initLens] Point Mass or No Lens (" 
@@ -173,10 +175,6 @@ void CosmoSim::initLens() {
      lens->setFile(filename) ;
    }
    switch ( modelmode ) {
-       case CSIM_MODEL_SIS_ROULETTE:
-         std::cout << "Running SphereLens (mode=" << modelmode << ")\n" ;
-         sim = new SphereLens(filename) ;
-         break ;
        case CSIM_MODEL_POINTMASS_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << modelmode << ")\n" ;
@@ -255,12 +253,14 @@ bool CosmoSim::runSim() {
    if ( lens != NULL ) lens->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
    if ( CSIM_NOPSI_ROULETTE != lensmode ) {
+      sim->setCHI( chi ) ;
       if ( rPos < 0 ) {
-         sim->setXY( xPos, yPos, chi, einsteinR ) ;
+         sim->setXY( xPos, yPos ) ;
       } else {
-         sim->setPolar( rPos, thetaPos, chi, einsteinR ) ;
+         sim->setPolar( rPos, thetaPos ) ;
       }
       if ( lens != NULL ) {
+         lens->setEinsteinR( einsteinR ) ;
          lens->setEinsteinR( einsteinR ) ;
       }
    }
@@ -424,7 +424,6 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "RouletteRegenerator", CSIM_MODEL_ROULETTE_REGEN  )
        .value( "PointMassExact", CSIM_MODEL_POINTMASS_EXACT )
        .value( "PointMassRoulettes", CSIM_MODEL_POINTMASS_ROULETTE ) 
-       .value( "SIS", CSIM_MODEL_SIS_ROULETTE  )
        .value( "NoModel", CSIM_NOMODEL  )  ;
 
     // cv::Mat binding from https://alexsm.com/pybind11-buffer-protocol-opencv-to-numpy/

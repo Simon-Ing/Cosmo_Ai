@@ -16,7 +16,6 @@ double factorial_(unsigned int n);
 
 LensModel::LensModel() :
         CHI(0.5),
-        einsteinR(20),
         nterms(10),
         source(NULL)
 { }
@@ -43,16 +42,7 @@ cv::Mat LensModel::getSource() const {
 cv::Mat LensModel::getApparent() const {
    cv::Mat src, dst ;
    src = source->getImage() ;
-   if ( rotatedMode ) {
-       int nrows = src.rows ;
-       int ncols = src.cols ;
-       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows/2, ncols/2),
-             360-phi*180/PI, 1) ;
-       cv::warpAffine(src, dst, rot, src.size() ) ;
-      return dst ;
-   } else {
-      return src ;
-   }
+   return src ;
 }
 cv::Mat LensModel::getDistorted() const {
    std::cout << "[LensModel.getDistorted()] image type "
@@ -61,14 +51,6 @@ cv::Mat LensModel::getDistorted() const {
    return imgDistorted ;
 }
 
-void LensModel::updateSecondary( ) {
-   if ( apparentAbs2 == 0 ) {
-      throw NotSupported() ;
-   }
-   std::cout << "[LensModel.updateSecondary()] image type\n" ;
-   throw NotImplemented() ;
-   return updateInner() ;
-}
 void LensModel::update( ) {
    updateApparentAbs() ;
    return updateInner() ;
@@ -81,7 +63,7 @@ void LensModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
     std::cout << "[LensModel::updateInner()] R=" << getEtaAbs() << "; theta=" << phi
-              << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
+              << "; CHI=" << CHI << "\n" ;
     std::cout << "[LensModel::updateInner()] xi=" << getXi()   
               << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
     std::cout << "[LensModel::updateInner()] nu=" << getNu()   
@@ -91,24 +73,8 @@ void LensModel::updateInner( ) {
 
     this->calculateAlphaBeta() ;
 
-    if ( rotatedMode ) {
-       int nrows = imgApparent.rows ;
-       int ncols = imgApparent.cols ;
-
-       // Make Distorted Image
-       // We work in a double sized image to avoid cropping
-       cv::Mat imgD = cv::Mat(nrows*2, ncols*2, imgApparent.type(), 0.0 ) ;
-       parallelDistort(imgApparent, imgD);
-   
-       // Correct the rotation applied to the source image
-       cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows, ncols), phi*180/PI, 1);
-       cv::warpAffine(imgD, imgD, rot, cv::Size(2*nrows, 2*ncols));    
-           // crop distorted image
-       imgDistorted = imgD(cv::Rect(nrows/2, ncols/2, nrows, ncols)) ;
-    } else {
-       imgDistorted = cv::Mat::zeros(imgApparent.size(), imgApparent.type()) ;
-       parallelDistort(imgApparent, imgDistorted);
-    }
+    imgDistorted = cv::Mat::zeros(imgApparent.size(), imgApparent.type()) ;
+    parallelDistort(imgApparent, imgDistorted);
 
     // Calculate run time for this function and print diagnostic output
     auto endTime = std::chrono::system_clock::now();
@@ -228,18 +194,13 @@ void LensModel::setNterms(int n) {
 void LensModel::setCHI(double chi) {
    CHI = chi ;
 }
-void LensModel::setEinsteinR(double r) {
-   einsteinR = r ;
-}
 
 /* D. Position (eta) setters */
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
-void LensModel::setXY( double X, double Y, double chi, double er ) {
+void LensModel::setXY( double X, double Y ) {
 
-    CHI = chi ;
-    einsteinR = er ;
     // Actual position in source plane
     eta = cv::Point2d( X, Y ) ;
 
@@ -252,10 +213,7 @@ void LensModel::setXY( double X, double Y, double chi, double er ) {
 
 /* Re-calculate co-ordinates using updated parameter settings from the GUI.
  * This is called from the update() method.                                  */
-void LensModel::setPolar( double R, double theta, double chi, double er ) {
-
-    CHI = chi ;
-    einsteinR = er ;
+void LensModel::setPolar( double R, double theta ) {
 
     phi = PI*theta/180 ;
 
@@ -338,13 +296,8 @@ void LensModel::setNu( cv::Point2d n ) {
    std::cout << "[setNu] etaOffset set to zero.\n" ;
 }
 void LensModel::setXi( cv::Point2d x ) {
-   if ( rotatedMode ) {
-      std::cout << "Alternative viewpoints cannot be supported in rotated mode.\n" ;
-      throw NotSupported() ;
-   } else {
       std::cout << "[LensModel.setXi()] image type\n" ;
       throw NotImplemented() ;
-   }
 }
 void LensModel::setLens( Lens *l ) {
    lens = l ;

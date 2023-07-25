@@ -25,6 +25,9 @@ cv::Mat Lens::getPsiX() const {
 cv::Mat Lens::getPsiY() const {
    return psiY ;
 }
+double Lens::getEinsteinR() const {
+   return einsteinR ;
+}
 cv::Mat Lens::getPsiImage() const {
    cv::Mat im, ps = getPsi() ;
    double minVal, maxVal;

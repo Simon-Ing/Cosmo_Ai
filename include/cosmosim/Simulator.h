@@ -19,7 +19,7 @@ private:
 
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     cv::Mat imgDistorted;
-    void updateInner();
+    virtual void updateInner();
 
 
 protected:
@@ -31,14 +31,11 @@ protected:
     double CHI;
     Source *source ;
     Lens *lens = NULL ;
-    double einsteinR;
     int nterms;
-    bool rotatedMode = true ;
     double phi{};
 
     int bgcolour = 0;
 
-    double apparentAbs2 = 0;
     bool maskMode = false ;
     virtual double getMaskRadius() const ;
     void setNu( cv::Point2d ) ;
@@ -54,7 +51,6 @@ public:
     cv::Point2d getOffset( cv::Point2d ) ;
     cv::Point2d getRelativeEta( cv::Point2d ) ;
     void update();
-    void updateSecondary();
     void update( cv::Point2d );
     void setCentred( bool ) ;
     void setMaskMode( bool ) ;
@@ -70,10 +66,9 @@ public:
     cv::Point2d getEta() const ;
     cv::Point2d getCentre() const ;
 
-    void setXY(double, double, double, double) ;
-    void setPolar(double, double, double, double) ;
+    void setXY(double, double) ;
+    void setPolar(double, double) ;
     void setCHI(double) ;
-    void setEinsteinR(double) ;
     void setNterms(int);
     void setSource(Source*) ;
 
@@ -84,16 +79,33 @@ public:
     virtual void maskImage( cv::InputOutputArray, double ) ;
 
     cv::Mat getActual() const ;
-    cv::Mat getApparent() const ;
+    virtual cv::Mat getApparent() const ;
     cv::Mat getSource() const ;
     cv::Mat getDistorted() const ;
 
     virtual void setLens( Lens* ) ;
 };
 
-class PointMassLens : public LensModel { 
+class RotatedModel : public LensModel { 
 public:
-    using LensModel::LensModel ;
+   using LensModel::LensModel ;
+protected:
+    virtual cv::Mat getApparent() const ;
+    virtual void updateInner();
+};
+
+class PointMassLens : public RotatedModel { 
+public:
+    using RotatedModel::RotatedModel ;
+protected:
+    virtual cv::Point2d getDistortedPos(double r, double theta) const;
+    virtual void updateApparentAbs() ;
+};
+
+
+class RoulettePMLens : public RotatedModel { 
+public:
+    RoulettePMLens();
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;

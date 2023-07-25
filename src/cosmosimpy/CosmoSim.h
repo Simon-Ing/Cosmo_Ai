@@ -19,7 +19,6 @@ enum ModelSpec { CSIM_MODEL_RAYTRACE,
                   CSIM_MODEL_ROULETTE_REGEN,
                   CSIM_MODEL_POINTMASS_EXACT,
                   CSIM_MODEL_POINTMASS_ROULETTE,
-                  CSIM_MODEL_SIS_ROULETTE,
                   CSIM_NOMODEL } ;
 enum PsiSpec    { CSIM_PSI_SIS,
                   CSIM_NOPSI_ROULETTE,

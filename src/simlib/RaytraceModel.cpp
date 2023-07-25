@@ -5,13 +5,6 @@
 #include <thread>
 #include "simaux.h"
 
-RaytraceModel::RaytraceModel() :
-   LensModel::LensModel()
-{ 
-    std::cout << "Instantiating RaytraceModel ... \n" ;
-    rotatedMode = false ;
-}
-
 cv::Point2d RaytraceModel::calculateEta( cv::Point2d xi ) {
    cv::Point2d xy = cv::Point2d(
          lens->psiXvalue( xi.x, xi.y ),

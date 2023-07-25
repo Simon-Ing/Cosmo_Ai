@@ -15,7 +15,6 @@ set(SimLibFiles
 	simlib/RouletteRegenerator.cpp
         simlib/simaux.cpp
         simlib/Source.cpp
-        simlib/SphereLens.cpp
         simlib/SphericalSource.cpp
         simlib/TriangleSource.cpp
         )
