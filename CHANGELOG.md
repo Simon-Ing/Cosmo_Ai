@@ -16,6 +16,7 @@
 - Separated Point Mass Models as subclasses of RotatedModel and created a Point Mass
   Lens model to hold the Einstein Radius.
 - Removed the superfluous SphereLens class.
+- Renamed some classes for consistency.
 
 ### Fixed
 
