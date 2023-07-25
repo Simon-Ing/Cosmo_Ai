@@ -22,6 +22,7 @@ cv::Mat RotatedModel::getApparent() const {
    cv::Mat rot = cv::getRotationMatrix2D(cv::Point(nrows/2, ncols/2),
              360-phi*180/PI, 1) ;
    cv::warpAffine(src, dst, rot, src.size() ) ;
+   std::cout << "[RotatedModel] getApparent()\n" ;
    return dst ;
 }
 

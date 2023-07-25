@@ -303,6 +303,7 @@ cv::Mat CosmoSim::getSource(bool refLinesMode) {
 cv::Mat CosmoSim::getActual(bool refLinesMode) {
    if ( NULL == sim )
       throw std::bad_function_call() ;
+   std::cout << "[CosmoSim.cpp] getActual()\n" ;
    cv::Mat im = sim->getActual() ;
    std::cout << "basesize=" << basesize << "; size=" << size << "\n" ;
    if ( basesize < size ) {

@@ -86,6 +86,7 @@ class CosmoSim(cs.CosmoSim):
     """
     def __init__(self,*a,maxm=50,fn=None,**kw):
         super().__init__(*a,**kw)
+        print( "[CosmoSim] super().__init__ returned" )
         if fn == None:
             super().setFile( getFileName( maxm ) )
         else:
@@ -96,6 +97,7 @@ class CosmoSim(cs.CosmoSim):
         self.simThread = th.Thread(target=self.simThread)
         self.simThread.start()
         self.bgcolour = 0
+        print( "[CosmoSim] python __init__ returns" )
     def getRelativeEta(self,centrepoint):
         print ( "[getRelativeEta] centrepoint=", centrepoint, "in Planar Co-ordinates"  )
         r = super().getRelativeEta(centrepoint[0],centrepoint[1])
@@ -190,7 +192,9 @@ class CosmoSim(cs.CosmoSim):
         """
         Return the Actual Image from the simulator as a numpy array.
         """
+        print( "[getActualImage] starting" )
         im = np.array(self.getActual(reflines),copy=False)
+        print( "[getActualImage]" )
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return np.maximum(im,self.bgcolour)
     def getPsiMap(self):
@@ -291,6 +295,7 @@ class RouletteSim(cs.RouletteSim):
         """
         Return the Actual Image from the simulator as a numpy array.
         """
+        print( "[RouletteSim] getActualImage()" )
         im = np.array(self.getActual(reflines),copy=False)
         if im.shape[2] == 1 : im.shape = im.shape[:2]
         return np.maximum(im,self.bgcolour)
