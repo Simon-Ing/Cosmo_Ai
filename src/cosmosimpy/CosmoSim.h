@@ -30,7 +30,7 @@ private:
     int size=512, basesize=512 ;
     double chi=0.5 ;
     int modelmode=CSIM_MODEL_POINTMASS_EXACT, einsteinR=20 ;
-    int sampledlens = 0, modelchanged = 0 ;
+    int sampledlens = 0, modelchanged = 1 ;
     int lensmode=CSIM_NOPSI_PM ;
     int srcmode=CSIM_SOURCE_SPHERE, sourceSize=20, sourceSize2=10,
         sourceTheta=0 ;

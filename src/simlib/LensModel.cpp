@@ -33,7 +33,7 @@ cv::Mat LensModel::getActual() const {
    cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
    std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
    cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
-   std::cout << "getActual() rotated image.\n" ;
+   std::cout << "getActual() rotated source image.\n" ;
    return imgActual ; 
 
 }
