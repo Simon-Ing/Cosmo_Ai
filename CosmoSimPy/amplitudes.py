@@ -59,6 +59,12 @@ def psiSIS():
     # g is the Einstein radius and (x,y) coordinates in the lens plane
     x, y = symbols('x, y', real=True)
     g = symbols("g", positive=True, real=True)
+    psi = - g * sqrt(x ** 2 + y ** 2)
+    return (psi,x,y)
+def psiSIE():
+    # g is the Einstein radius and (x,y) coordinates in the lens plane
+    x, y = symbols('x, y', real=True)
+    g = symbols("g", positive=True, real=True)
     f = symbols("f", positive=True, real=True)
     p = symbols("p", positive=True, real=True)
     psi = - g * sqrt(x ** 2 + y ** 2)
