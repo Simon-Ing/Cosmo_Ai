@@ -30,10 +30,6 @@ double SIE::psiYfunction( double x, double y ) {
    return einsteinR*y/s ;
 }
 
-double SIE::getXiAbs( double e ) {
-   throw NotImplemented() ;
-   return (e + einsteinR) ;
-}
 cv::Point2d SIE::getXi( cv::Point2d chieta ) {
    throw NotImplemented() ;
    double phi = atan2(chieta.y, chieta.x); 

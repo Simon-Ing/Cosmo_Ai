@@ -57,7 +57,6 @@ public:
     double getAlphaXi( int m, int s ) ;
     double getBetaXi( int m, int s ) ;
 
-    virtual double getXiAbs( double ) ;
     virtual cv::Point2d getXi( cv::Point2d ) ;
 
     virtual double psiValue( double, double ) ;
@@ -107,7 +106,6 @@ public:
     virtual double psiXfunction( double, double ) ;
     virtual double psiYfunction( double, double ) ;
 
-    virtual double getXiAbs( double ) ;
     virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 
@@ -120,7 +118,6 @@ public:
     virtual double psiXfunction( double, double ) ;
     virtual double psiYfunction( double, double ) ;
 
-    virtual double getXiAbs( double ) ;
     virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 

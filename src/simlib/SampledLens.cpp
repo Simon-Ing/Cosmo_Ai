@@ -20,7 +20,7 @@ cv::Point2d SampledLens::getXi( cv::Point2d chieta ) {
    psiY = getPsiY() ;
    int ncols=psi.cols, nrows=psi.rows ;
 
-   std::cout << "[SampledLens] getXiAbs()"
+   std::cout << "[SampledLens] getXi()"
              << " chi*eta = " << chieta 
              << "; size: " << psi.size() << "\n" ;
 

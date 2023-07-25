@@ -125,10 +125,6 @@ double Lens::getAlphaXi( int m, int s ) {
 double Lens::getBetaXi( int m, int s ) {
    return betas_val[m][s] ;
 }
-double Lens::getXiAbs( double e ) {
-   std::cout << "[Lens.getXiAbs() not implemented\n" ;
-   throw NotImplemented() ;
-}
 cv::Point2d Lens::getXi( cv::Point2d e ) {
    std::cout << "[Lens.getXi() not implemented\n" ;
    throw NotImplemented() ;
