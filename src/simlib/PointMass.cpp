@@ -16,5 +16,6 @@ double PointMass::psiYfunction( double x, double y ) {
 }
 
 cv::Point2d PointMass::getXi( cv::Point2d chieta ) {
-   return chieta/2 + sqrt(0.25*chieta*chieta + einsteinR*einsteinR) ;
+   double c = chieta.x*chieta.x + chieta.y*chieta.y ;
+   return cv::Point2d( sqrt(c)/2 + sqrt(0.25*c + einsteinR*einsteinR), 0 ) ;
 }
