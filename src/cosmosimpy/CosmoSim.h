@@ -23,7 +23,6 @@ enum ModelSpec { CSIM_MODEL_RAYTRACE,
 enum PsiSpec    { CSIM_PSI_SIS,
                   CSIM_NOPSI_ROULETTE,
                   CSIM_NOPSI_PM,
-                  CSIM_NOPSI_SIS,
                   CSIM_NOPSI } ;
 
 class CosmoSim {

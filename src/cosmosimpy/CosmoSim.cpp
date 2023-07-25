@@ -160,7 +160,6 @@ void CosmoSim::initLens() {
        case CSIM_NOPSI_PM:
           lens = psilens = new PointMass() ;
           break ;
-       case CSIM_NOPSI_SIS:
        case CSIM_NOPSI:
           std::cout << "[initLens] Point Mass or No Lens (" 
                 << lensmode << ")\n" ;
@@ -179,10 +178,12 @@ void CosmoSim::initLens() {
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << modelmode << ")\n" ;
          sim = new PointMassRoulette() ;
+         sim->setLens(lens) ;
          break ;
        case CSIM_MODEL_POINTMASS_EXACT:
          std::cout << "Running Point Mass Lens (mode=" << modelmode << ")\n" ;
          sim = new PointMassExact() ;
+         sim->setLens(lens) ;
          break ;
        case CSIM_MODEL_RAYTRACE:
          std::cout << "Running Raytrace Lens (mode=" << modelmode << ")\n" ;
@@ -412,7 +413,6 @@ PYBIND11_MODULE(CosmoSimPy, m) {
        .value( "SIS", CSIM_PSI_SIS )
        .value( "PM", CSIM_NOPSI_PM ) 
        .value( "Roulette", CSIM_NOPSI_ROULETTE ) 
-       .value( "NoPsiSIS", CSIM_NOPSI_SIS ) 
        .value( "NoPsi", CSIM_NOPSI ) ;
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
        .value( "Sphere", CSIM_SOURCE_SPHERE )
