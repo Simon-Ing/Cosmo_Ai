@@ -98,23 +98,20 @@ public:
     using RotatedModel::RotatedModel ;
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
-    virtual void updateApparentAbs() ;
 };
 
 
 class PointMassRoulette: public RotatedModel { 
 public:
-    PointMassRoulette();
+    using RotatedModel::RotatedModel ;
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
-    virtual void updateApparentAbs() ;
 };
 
 
 class RaytraceModel : public LensModel { 
 public:
     using LensModel::LensModel ;
-    RaytraceModel();
 protected:
     virtual cv::Point2d calculateEta( cv::Point2d ) ;
     virtual void distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) ;
