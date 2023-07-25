@@ -72,7 +72,7 @@ def psiSIE():
             + cos( p + atan2(y,x) ) * asinh( sqrt( 1-f*f )/f* cos( p + atan2(y,x) ) )
             )
     return (psi,x,y)
-def main(psi=None,n=50,nproc=None):
+def main(psi=None,n=50,nproc=None,fn=None):
 
     global num_processes
 
@@ -80,7 +80,7 @@ def main(psi=None,n=50,nproc=None):
 
     
     # The filename is generated from the number of amplitudes
-    fn = str(n) + '.txt'
+    if fn is None: fn = str(n) + '.txt'
 
     start = time.time()
 
@@ -148,6 +148,7 @@ if __name__ == "__main__":
                     help='Number of processes.')
     parser.add_argument('--lens', default="SIS",
                     help='Lens model')
+    parser.add_argument('--output', help='Output filename')
 
     args = parser.parse_args()
     if args.lens == "SIS":
@@ -156,4 +157,4 @@ if __name__ == "__main__":
         model = psiSIE()
     else:
         model = None
-    main(psi=model,n=args.n,nproc=args.nproc)
+    main(psi=model,n=args.n,nproc=args.nproc,fn=args.output)
