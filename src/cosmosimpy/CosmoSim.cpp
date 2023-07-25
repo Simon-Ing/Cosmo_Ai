@@ -249,7 +249,11 @@ bool CosmoSim::runSim() {
    std::cout << "[CosmoSim.cpp] runSim() - running similator\n" ;
    initLens() ;
    initSource() ;
+   if ( sim == NULL ) {
+      throw std::logic_error("Simulator not instantiated.") ;
+   }
    sim->setBGColour( bgcolour ) ;
+   std::cout << "[CosmoSim.cpp] sim call succeeded.\n" ;
    sim->setNterms( nterms ) ;
    if ( lens != NULL ) lens->setNterms( nterms ) ;
    sim->setMaskMode( maskmode ) ;
