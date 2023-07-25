@@ -14,6 +14,7 @@ Usage: `python3 Amplitudes_gen.py [n [nproc]]`
 import multiprocessing as mp
 import sys
 import time
+import argparse
 
 from sympy import simplify, symbols, sqrt, diff, factor
 
@@ -62,20 +63,12 @@ def psiSIS():
     p = symbols("p", positive=True, real=True)
     psi = - g * sqrt(x ** 2 + y ** 2)
     return (psi,x,y)
-def main(psi=None):
+def main(psi=None,n=50,nproc=None):
 
     global num_processes
 
-    # Argument 1 is the number of amplitudes
-    if len(sys.argv) < 2:
-       n = 50
-    else:
-       n = int(sys.argv[1])
-    # Argument 2 is the number of threads to use
-    if len(sys.argv) < 3:
-       nproc = n
-    else:
-       nproc = int(sys.argv[2])
+    if nproc is None: nproc = n
+
     
     # The filename is generated from the number of amplitudes
     fn = str(n) + '.txt'
@@ -139,4 +132,19 @@ def main(psi=None):
     print( "Time spent:", time.time() - start)
 
 if __name__ == "__main__":
-   main()
+    parser = argparse.ArgumentParser(description='Generate roulette amplitude formulæ for CosmoSim.')
+    parser.add_argument('n', metavar='N', type=int, nargs="?", default=50,
+                    help='Max m (number of terms)')
+    parser.add_argument('nproc', type=int, nargs="?",
+                    help='Number of processes.')
+    parser.add_argument('--lens', default="SIS",
+                    help='Lens model')
+
+    args = parser.parse_args()
+    if args.lens == "SIS":
+        model = psiSIS()
+    elif args.lens == "SIE":
+        model = psiSIE()
+    else:
+        model = None
+    main(psi=model,n=args.n,nproc=args.nproc)
