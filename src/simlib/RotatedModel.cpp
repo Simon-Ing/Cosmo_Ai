@@ -1,18 +1,14 @@
 /* (C) 2023: Hans Georg Schaathun <georg@schaathun.net> *
- * Building on code by Simon Ingebrigtsen, Sondre Westbø Remøy,
- * Einar Leite Austnes, and Simon Nedreberg Runde
+ *
+ * RotatedModel assumes that the source is located on the $x$ axis.
+ * Thus we override three functions.
+ * 1.  getApparent() is overridden to rotate the source to fall on the $x$ axis.
+ * 2.  updateInner() is overridden to apply the inverse rotation on the distorted image.
+ * 3.  updateApparentAbs() is overridden so that xi and nu are rotated so that y=0. 
  */
 
 #include "cosmosim/Simulator.h"
 #include "simaux.h"
-
-#include <thread>
-
-#define DEBUG 0
-
-double factorial_(unsigned int n);
-
-#define signf(y)  ( y < 0 ? -1 : +1 )
 
 cv::Mat RotatedModel::getApparent() const {
    cv::Mat src, dst ;
