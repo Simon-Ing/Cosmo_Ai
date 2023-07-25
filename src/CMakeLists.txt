@@ -8,6 +8,7 @@ set(SimLibFiles
         simlib/SIE.cpp
         simlib/RaytraceModel.cpp
 	simlib/RouletteModel.cpp
+	simlib/RotatedModel.cpp
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMassLens.cpp

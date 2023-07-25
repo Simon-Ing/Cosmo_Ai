@@ -29,7 +29,7 @@ void RotatedModel::updateInner( ) {
     cv::Mat imgApparent = getApparent() ;
 
     std::cout << "[RotatedModel::updateInner()] R=" << getEtaAbs() << "; theta=" << phi
-              << "; R_E=" << einsteinR << "; CHI=" << CHI << "\n" ;
+              << "; CHI=" << CHI << "\n" ;
     std::cout << "[RotatedModel::updateInner()] xi=" << getXi()   
               << "; eta=" << getEta() << "; etaOffset=" << etaOffset << "\n" ;
     std::cout << "[RotatedModel::updateInner()] nu=" << getNu()   

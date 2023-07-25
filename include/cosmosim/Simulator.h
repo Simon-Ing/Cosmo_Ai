@@ -17,12 +17,13 @@ private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d nu ;   // Apparent position in the source plane
 
-    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
-    cv::Mat imgDistorted;
     virtual void updateInner();
 
 
 protected:
+    cv::Mat imgDistorted;
+
+    void parallelDistort(const cv::Mat &src, cv::Mat &dst);
     virtual void distort(int row, int col, const cv::Mat &src, cv::Mat &dst);
 
     cv::Point2d xi = cv::Point2d(0,0) ;   // Local origin in the lens plane
