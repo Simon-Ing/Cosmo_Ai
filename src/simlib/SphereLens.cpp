@@ -32,7 +32,6 @@ void SphereLens::initAlphasBetas() {
     auto x = SymEngine::symbol("x");
     auto y = SymEngine::symbol("y");
     auto g = SymEngine::symbol("g");
-    auto c = SymEngine::symbol("c");
 
     std::ifstream input;
     input.open(filename);

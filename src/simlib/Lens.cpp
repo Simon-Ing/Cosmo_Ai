@@ -71,8 +71,9 @@ void Lens::initAlphasBetas() {
 
     auto x = SymEngine::symbol("x");
     auto y = SymEngine::symbol("y");
-    auto g = SymEngine::symbol("g");
-    auto c = SymEngine::symbol("c");
+    auto g = SymEngine::symbol("g"); /* Einstein Radius */
+    auto f = SymEngine::symbol("f"); /* Ellipse Ratio */
+    auto p = SymEngine::symbol("p"); /* Orientation (phi) */
 
     std::ifstream input;
     input.open(filename);
@@ -93,17 +94,17 @@ void Lens::initAlphasBetas() {
         if (input) {
             auto alpha_sym = SymEngine::parse(alpha);
             auto beta_sym = SymEngine::parse(beta);
-            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *alpha_sym);
-            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g}, *beta_sym);
+            alphas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, f, p}, *alpha_sym);
+            betas_l[std::stoi(m)][std::stoi(s)].init({x, y, g, f, p}, *beta_sym);
         }
     }
 }
 
 double Lens::getAlpha( cv::Point2d xi, int m, int s ) {
-   return alphas_l[m][s].call({xi.x, xi.y, einsteinR});
+   return alphas_l[m][s].call({xi.x, xi.y, einsteinR, ellipseratio, phi});
 }
 double Lens::getBeta( cv::Point2d xi, int m, int s ) {
-   return betas_l[m][s].call({xi.x, xi.y, einsteinR});
+   return betas_l[m][s].call({xi.x, xi.y, einsteinR, ellipseratio, phi});
 }
 
 void Lens::calculateAlphaBeta( cv::Point2d xi ) {
@@ -113,8 +114,8 @@ void Lens::calculateAlphaBeta( cv::Point2d xi ) {
     // calculate all amplitudes for given xi, einsteinR
     for (int m = 1; m <= nterms; m++){
         for (int s = (m+1)%2; s <= (m+1); s+=2){
-            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR});
-            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR});
+            alphas_val[m][s] = alphas_l[m][s].call({xi.x, xi.y, einsteinR, ellipseratio, phi});
+            betas_val[m][s] = betas_l[m][s].call({xi.x, xi.y, einsteinR, ellipseratio, phi});
         }
     }
 }

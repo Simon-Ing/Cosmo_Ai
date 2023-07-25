@@ -34,7 +34,7 @@ def listener(fn,q):
         print( "File writer terminated", fn ) 
     if hit_except: print( "Failed to open file ", fn )
 
-def func(n, m, s, alpha, beta, x, y, g, q):
+def func(n, m, s, alpha, beta, x, y, q):
     """
     Generate the amplitudes for one fixed sum $m+s$.
     This is done by recursion on s and m.
@@ -54,7 +54,15 @@ def func(n, m, s, alpha, beta, x, y, g, q):
         # print ( "Inner", res )
         q.put(res)
 
-def main():
+def psiSIS():
+    # g is the Einstein radius and (x,y) coordinates in the lens plane
+    x, y = symbols('x, y', real=True)
+    g = symbols("g", positive=True, real=True)
+    f = symbols("f", positive=True, real=True)
+    p = symbols("p", positive=True, real=True)
+    psi = - g * sqrt(x ** 2 + y ** 2)
+    return (psi,x,y)
+def main(psi=None):
 
     global num_processes
 
@@ -76,10 +84,10 @@ def main():
 
 
     # psi is the lens potential
-    # g is the Einstein radius and (x,y) coordinates in the lens plane
-    x, y = symbols('x, y', real=True)
-    g = symbols("g", positive=True, real=True)
-    psi = - g * sqrt(x ** 2 + y ** 2)
+    if psi is None:
+       psi, x, y = psiSIS()
+    else:
+       psi, x, y = psi
 
     # Must use Manager queue here, or will not work
     manager = mp.Manager()
@@ -113,7 +121,7 @@ def main():
             # print ( "Outer", res )
             q.put(res)
 
-            job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, g, q))
+            job = pool.apply_async(func, (n, m, s, alpha, beta, x, y, q))
             jobs.append(job)
 
         # collect results from the workers through the pool result queue
