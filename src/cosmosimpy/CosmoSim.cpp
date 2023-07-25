@@ -178,11 +178,11 @@ void CosmoSim::initLens() {
        case CSIM_MODEL_POINTMASS_ROULETTE:
          std::cout << "Running Roulette Point Mass Lens (mode=" 
                    << modelmode << ")\n" ;
-         sim = new RoulettePMLens() ;
+         sim = new PointMassRoulette() ;
          break ;
        case CSIM_MODEL_POINTMASS_EXACT:
          std::cout << "Running Point Mass Lens (mode=" << modelmode << ")\n" ;
-         sim = new PointMassLens() ;
+         sim = new PointMassExact() ;
          break ;
        case CSIM_MODEL_RAYTRACE:
          std::cout << "Running Raytrace Lens (mode=" << modelmode << ")\n" ;

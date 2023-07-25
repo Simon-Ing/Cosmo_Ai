@@ -12,8 +12,8 @@ set(SimLibFiles
         simlib/EllipsoidSource.cpp
         simlib/LensModel.cpp
         simlib/PointMass.cpp
-        simlib/PointMassLens.cpp
-        simlib/RoulettePMLens.cpp
+	simlib/PointMassExact.cpp
+	simlib/PointMassRoulette.cpp
 	simlib/RouletteRegenerator.cpp
         simlib/simaux.cpp
         simlib/Source.cpp

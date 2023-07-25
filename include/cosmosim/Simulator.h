@@ -93,7 +93,7 @@ protected:
     virtual void updateInner();
 };
 
-class PointMassLens : public RotatedModel { 
+class PointMassExact : public RotatedModel { 
 public:
     using RotatedModel::RotatedModel ;
 protected:
@@ -102,9 +102,9 @@ protected:
 };
 
 
-class RoulettePMLens : public RotatedModel { 
+class PointMassRoulette: public RotatedModel { 
 public:
-    RoulettePMLens();
+    PointMassRoulette();
 protected:
     virtual cv::Point2d getDistortedPos(double r, double theta) const;
     virtual void updateApparentAbs() ;
