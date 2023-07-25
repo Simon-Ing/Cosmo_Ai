@@ -17,10 +17,8 @@ private:
     cv::Point2d eta ;  // Actual position in the source plane
     cv::Point2d nu ;   // Apparent position in the source plane
 
-    virtual void updateInner();
-
-
 protected:
+    virtual void updateInner();
     cv::Mat imgDistorted;
 
     void parallelDistort(const cv::Mat &src, cv::Mat &dst);

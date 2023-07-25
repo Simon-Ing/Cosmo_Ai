@@ -40,9 +40,7 @@ cv::Mat LensModel::getSource() const {
    return source->getImage() ;
 }
 cv::Mat LensModel::getApparent() const {
-   cv::Mat src, dst ;
-   src = source->getImage() ;
-   return src ;
+   return source->getImage() ;
 }
 cv::Mat LensModel::getDistorted() const {
    std::cout << "[LensModel.getDistorted()] image type "
@@ -123,7 +121,6 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
         thread.join();
     }
 }
-
 
 void LensModel::distort(int begin, int end, const cv::Mat& src, cv::Mat& dst) {
     // Iterate over the pixels in the image distorted image.
@@ -327,7 +324,6 @@ cv::Point2d LensModel::getOffset( cv::Point2d xi1 ) {
    // reference point in the lens plane and the actual source centre
    return r ;
 }
-
 
 void LensModel::updateApparentAbs( ) {
     std::cout << "[LensModel] updateApparentAbs() updates psi.\n" ;
