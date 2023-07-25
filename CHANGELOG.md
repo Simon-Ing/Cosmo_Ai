@@ -1,7 +1,7 @@
 
 # CosmoSim Change Log
 
-## [2.2.3] - not released
+## [2.3.0] - not released
 
 ### Added
 
