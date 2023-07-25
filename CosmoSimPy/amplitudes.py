@@ -16,7 +16,7 @@ import sys
 import time
 import argparse
 
-from sympy import simplify, symbols, sqrt, diff, factor
+from sympy import simplify, symbols, sqrt, diff, factor, sin, cos, asin, atan2, asinh
 
 def listener(fn,q):
     '''Listens for messages on the Queue q and writes to file `fn`. '''
@@ -67,7 +67,10 @@ def psiSIE():
     g = symbols("g", positive=True, real=True)
     f = symbols("f", positive=True, real=True)
     p = symbols("p", positive=True, real=True)
-    psi = - g * sqrt(x ** 2 + y ** 2)
+    psi = - g * sqrt(x ** 2 + y ** 2) * sqrt( f/(1-f*f) )  * (
+            sin( p + atan2(y,x) ) * asin( sqrt( 1-f*f )* sin( p + atan2(y,x) ) )
+            + cos( p + atan2(y,x) ) * asinh( sqrt( 1-f*f )/f* cos( p + atan2(y,x) ) )
+            )
     return (psi,x,y)
 def main(psi=None,n=50,nproc=None):
 

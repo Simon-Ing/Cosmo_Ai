@@ -10,14 +10,13 @@
 
 double SIE::psifunction( double x, double y ) {
    double sq = sqrt( 1 - ellipseratio*ellipseratio ) ;
-   double sqrtf = sqrt( ellipseratio ) ;
-   double sqf = sqrtf/sq ;
+   double sqf = sqrt( ellipseratio )/sq ;
    double theta = phi + atan2(y, x); 
    double sintheta = sin(theta), costheta = cos(theta) ;
    double R = sqrt( x*x + y*y ) ;
    return einsteinR*R*sqf*(
 	   sintheta*asin( sq * sintheta )
-	   + costheta*asinh(costheta/sqf)
+	   + costheta*asinh(costheta*sq/ellipseratio)
 	 ) ;
 }
 double SIE::psiXfunction( double x, double y ) {
