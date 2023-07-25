@@ -13,6 +13,10 @@
 
 ### Changed
 
+- Separated Point Mass Models as subclasses of RotatedModel and created a Point Mass
+  Lens model to hold the Einstein Radius.
+- Removed the superfluous SphereLens class.
+
 ### Fixed
 
 - In LensModel::distort(), fixed the sign of the polar angle theta
