@@ -40,27 +40,25 @@
 % Simulator.h:class RaytraceModel : public LensModel { 
    \begin{class}[text width = 40mm]{RaytraceModel}{-2 , -3}
       \inherit{LensModel}
+      \operation[0]{getApparent() : cv::Mat}
+      \operation[0]{updateInner() : void}
    \end{class}
 
-% Simulator.h:class PointMassLens : public LensModel { 
-   \begin{class}[text width = 58mm]{PointMassLens}{-1 , -5.5}
+% Simulator.h:class RotatedModel : public LensModel { 
+   \begin{class}[text width = 58mm]{RotatedModel}{-1 , -5.5}
       \inherit{LensModel}
+   \end{class}
+
+% Simulator.h:class PointMassExact : public RotatedModel { 
+   \begin{class}[text width = 58mm]{PointMassExact}{-1 , -8}
+      \inherit{RotatedModel}
       \operation[0]{getDistortedPos(r, theta) : Point2d}
-      \operation[0]{updateApparentAbs()  : void}
    \end{class}
 
-% Roulette.h:class SphereLens : public RouletteModel { 
-   \begin{class}[text width = 52mm]{SphereLens}{0 , -9}
-      \inherit{RouletteModel}
-      % \operation{initAlphaBeta() : void}
-      \operation[0]{calculateAlphaBeta() : void}
-      \operation[0]{updateApparentAbs()  : void}
-   \end{class}
-
-% Roulette.h:class RoulettePMLens : public RouletteModel { 
-   \begin{class}[text width = 36mm]{RoulettePMLens}{5 , -7}
-      \inherit{RouletteModel}
-      % \operation{initAlphaBeta() : void}
+% Simulator.h:class PointMassRoulette : public RotatedModel { 
+   \begin{class}[text width = 52mm]{PointMassRoulette}{5.5 , -8}
+      \inherit{RotatedModel}
+      \operation[0]{getDistortedPos(r, theta) : Point2d}
    \end{class}
 
 % Lens.h:class SampledLens : public Lens {
@@ -85,12 +83,15 @@
    \unidirectionalAssociation{SampledPsiFunctionLens}{}{1}{PsiFunctionLens}
 
 % Lens.h:class RouletteLens : public Lens {
-   \begin{class}[text width = 52mm]{RouletteRegenerator}{10 , -9}
+   \begin{class}[text width = 52mm]{RouletteRegenerator}{5 , -5.5}
       \inherit{RouletteModel}
    \end{class}
 
 % Lens.h:class SIS : public PsiFunctionLens { 
-   \begin{class}[text width = 30mm]{SIS}{16 , -5.5}
+   \begin{class}[text width = 24mm]{SIS}{15 , -5.5}
+      \inherit{PsiFunctionLens}
+   \end{class}
+   \begin{class}[text width = 24mm]{SIE}{18 , -5.5}
       \inherit{PsiFunctionLens}
    \end{class}
 
