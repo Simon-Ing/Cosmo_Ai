@@ -20,8 +20,7 @@ double PointMass::psiYfunction( double x, double y ) {
 }
 
 cv::Point2d PointMass::getXi( cv::Point2d chieta ) {
-   double phi = atan2(chieta.y, chieta.x); 
    double c = chieta.x*chieta.x + chieta.y*chieta.y ;
-   double a = 1.5 + sqrt(0.25*c + einsteinR*einsteinR)/sqrt(c) ;
-   return a*chieta ;
+   double root = sqrt(0.25*c + einsteinR*einsteinR) ; // /CHI
+   return chieta/2 + root*chieta/sqrt(c) ;
 }

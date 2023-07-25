@@ -89,6 +89,7 @@ class RotatedModel : public LensModel {
 public:
    using LensModel::LensModel ;
 protected:
+    virtual void updateApparentAbs() ;
     virtual cv::Mat getApparent() const ;
     virtual void updateInner();
 };
