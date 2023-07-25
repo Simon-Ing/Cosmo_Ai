@@ -13,6 +13,8 @@ void Lens::updatePsi( cv::Size size ) {
    return ; 
 }
 void Lens::setEinsteinR( double r ) { einsteinR = r ; }
+void Lens::setRatio( double r ) { ellipseratio = r ; }
+void Lens::setOrientation( double r ) { phi = r ; }
 
 cv::Mat Lens::getPsi() const {
    return psi ;

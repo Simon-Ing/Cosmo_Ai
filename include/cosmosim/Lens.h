@@ -18,8 +18,11 @@ private:
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> alphas_l;
     std::array<std::array<LambdaRealDoubleVisitor, 202>, 201> betas_l;
 
+
 protected:
-   double einsteinR ;
+   double einsteinR /* R_E or \xi_0 */,
+          ellipseratio=1 /* f */,
+	  phi=0 /* \phi */ ;
    std::string filename = "50.txt" ;
    cv::Mat psi, psiX, psiY, einsteinMap ;
 
@@ -31,6 +34,8 @@ public:
     virtual void updatePsi( cv::Size ) ;
     virtual void updatePsi( ) ;
     virtual void setEinsteinR( double ) ;
+    virtual void setOrientation( double ) ;
+    virtual void setRatio( double ) ;
 
     cv::Mat getPsi( ) const ;
     cv::Mat getPsiX( ) const ;
@@ -89,6 +94,8 @@ class SampledPsiFunctionLens : public SampledLens {
       SampledPsiFunctionLens(PsiFunctionLens*) ;
       virtual void updatePsi( cv::Size ) ;
       virtual void setEinsteinR( double ) ;
+      virtual void setOrientation( double ) ;
+      virtual void setRatio( double ) ;
 } ;
 
 class SIS : public PsiFunctionLens { 
@@ -104,5 +111,17 @@ public:
     virtual cv::Point2d getXi( cv::Point2d ) ;
 };
 
+class SIE : public PsiFunctionLens { 
+
+private:
+
+public:
+    virtual double psifunction( double, double ) ;
+    virtual double psiXfunction( double, double ) ;
+    virtual double psiYfunction( double, double ) ;
+
+    virtual double getXiAbs( double ) ;
+    virtual cv::Point2d getXi( cv::Point2d ) ;
+};
 
 #endif // LENS_H

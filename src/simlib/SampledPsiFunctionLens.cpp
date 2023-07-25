@@ -9,6 +9,12 @@ SampledPsiFunctionLens::SampledPsiFunctionLens( PsiFunctionLens *psilens ) {
 void SampledPsiFunctionLens::setEinsteinR( double r ) {
    lens->setEinsteinR( einsteinR = r ) ; 
 }
+void SampledPsiFunctionLens::setOrientation( double r ) {
+   lens->setOrientation( phi = r ) ; 
+}
+void SampledPsiFunctionLens::setRatio( double r ) {
+   lens->setRatio( ellipseratio = r ) ; 
+}
 
 void SampledPsiFunctionLens::updatePsi( cv::Size size ) { 
    std::cout << "[SampledPsiFunctionLens] updatePsi " << size << "\n" ;
