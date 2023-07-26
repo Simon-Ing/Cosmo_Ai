@@ -10,6 +10,7 @@ clean alltests:
 	cd roulette ; $(MAKE) $@
 	cd roulettepm ; $(MAKE) $@
 	cd roulettelens ; $(MAKE) $@
+	cd amplitudes ; $(MAKE) $@
 	$(MAKE) status
 
 baselines:
