@@ -25,5 +25,5 @@ echo "Array Task ID:     $SLURM_ARRAY_TASK_ID"
 
 source ./pythonenv.config
 
-amplitudes.py 50 24
+amplitudes.py --lens SIE --output sie50.txt 50 24
 
