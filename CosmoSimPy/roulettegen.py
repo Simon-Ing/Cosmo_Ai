@@ -139,12 +139,13 @@ if __name__ == "__main__":
     for index,row in frame.iterrows():
             print( "Processing", index )
             sys.stdout.flush()
-            print( "Relative eta", row.get("reletaX", None), row.get("reletaY",None) )
-            print( "Offset", row["offsetX"], row["offsetY"] )
-            print( "Centre Point", row.get("centreX",None), row.get("centreY",None) )
+            # print( "Relative eta", row.get("reletaX", None), row.get("reletaY",None) )
+            # print( "Centre Point", row.get("centreX",None), row.get("centreY",None) )
             if args.xireference:
+                print( "xi", row["xiX"], row["xiY"], row["sigma"] )
                 sim.initSim( 0, 0 )
             else:
+                print( "Offset", row["offsetX"], row["offsetY"], row["sigma"] )
                 sim.initSim( row["offsetX"], row["offsetY"] )
             print( "Initialised simulator" )
             sys.stdout.flush()
