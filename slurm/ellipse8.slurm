@@ -5,8 +5,8 @@
 #SBATCH --mem=32G
 #SBATCH --nodes=1
 #SBATCH -c8
-#SBATCH --job-name="ellips08"    
-#SBATCH --output=ellips08.out
+#SBATCH --job-name="ellipse08"    
+#SBATCH --output=ellipse08.out
 #SBATCH --mail-user=hasc@ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -24,5 +24,5 @@ echo "Array Task ID:     $SLURM_ARRAY_TASK_ID"
 
 source ./pythonenv.config
 
-amplitudes.py --model SIE 8 
+$simdir/amplitudes.py --lens SIE 8 
 
