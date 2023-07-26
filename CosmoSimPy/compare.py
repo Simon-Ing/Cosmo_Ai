@@ -43,10 +43,8 @@ def comparefiles(f1,f2,fout=None):
              "norm":    norm,
              "minimum": mn,
              "maximum": mx,
-             "image1": im1,
-             "image2": im2,
-             "diff": diff,
              "outfile": fout }
+             # "image1": im1, "image2": im2, "diff": diff,
 
 
 if __name__ == "__main__":
