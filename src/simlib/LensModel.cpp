@@ -31,9 +31,7 @@ cv::Mat LensModel::getActual() const {
    cv::Mat imgActual 
         = cv::Mat::zeros(imgApparent.size(), imgApparent.type());
    cv::Mat tr = (cv::Mat_<double>(2,3) << 1, 0, getEta().x, 0, 1, -getEta().y);
-   std::cout << "getActual() (x,y)=(" << getEta().x << "," << getEta().y << ")\n" ;
    cv::warpAffine(imgApparent, imgActual, tr, imgApparent.size()) ;
-   std::cout << "getActual() rotated source image.\n" ;
    return imgActual ; 
 
 }
@@ -97,18 +95,18 @@ void LensModel::parallelDistort(const cv::Mat& src, cv::Mat& dst) {
         double mrng ;
         cv::Point2d origin = getCentre() ;
         cv::Point2d ij = imageCoordinate( origin, dst ) ;
-        std::cout << "mask " << ij << " - " << origin << "\n" ;
+        if (DEBUG) std::cout << "mask " << ij << " - " << origin << "\n" ;
         lower = floor( ij.x - maskRadius ) ;
         if ( lower < 0 ) lower = 0 ;
         mrng = dst.rows - lower ;
         rng = ceil( 2.0*maskRadius ) + 1 ;
         if ( rng > mrng ) rng = mrng ;
-        std::cout << maskRadius << " - " << lower << "/" << rng << "\n" ;
+        if (DEBUG) std::cout << maskRadius << " - " << lower << "/" << rng << "\n" ;
     } else {
         std::cout << "[LensModel] No mask \n" ;
     } 
     rng1 = ceil( (double) rng / (double) n_threads ) ;
-    std::cout << "[parallelDistort] lower=" << lower << "; rng=" << rng
+    if (DEBUG) std::cout << "[parallelDistort] lower=" << lower << "; rng=" << rng
             << "; rng1=" << rng1 << std::endl ;
     for (int i = 0; i < n_threads; i++) {
         int begin = lower+rng1*i, end = begin+rng1 ;
@@ -204,7 +202,7 @@ void LensModel::setXY( double X, double Y ) {
     // Calculate Polar Co-ordinates
     phi = atan2(eta.y, eta.x); // Angle relative to x-axis
 
-    std::cout << "[setXY] eta=" << eta 
+    if (DEBUG) std::cout << "[setXY] eta=" << eta 
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 }
 
@@ -217,7 +215,7 @@ void LensModel::setPolar( double R, double theta ) {
     // Actual position in source plane
     eta = cv::Point2d( R*cos(phi), R*sin(phi) ) ;
 
-    std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
+    if (DEBUG) std::cout << "[setPolar] Set position x=" << eta.x << "; y=" << eta.y
               << "; R=" << getEtaAbs() << "; theta=" << phi << ".\n" ;
 
 }
@@ -290,7 +288,7 @@ void LensModel::setNu( cv::Point2d n ) {
    nu = n ;
    xi = nu*CHI ;
    etaOffset = cv::Point2d( 0, 0 ) ;
-   std::cout << "[setNu] etaOffset set to zero.\n" ;
+   if (DEBUG) std::cout << "[setNu] etaOffset set to zero.\n" ;
 }
 void LensModel::setXi( cv::Point2d x ) {
       std::cout << "[LensModel.setXi()] image type\n" ;
