@@ -1,7 +1,10 @@
 
 # CosmoSim Change Log
 
-## [2.3.0] - not released
+## [2.3.0] - 2023-08-02
+
+This version is the reference version for the paper submitted
+to NIK 2023.
 
 ### Added
 
