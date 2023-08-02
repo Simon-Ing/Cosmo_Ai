@@ -1,0 +1,6 @@
+index,filename,source,config,chi,x,y,einsteinR,sigma,sigma2,theta,nterms
+"roulette15",roulette15.png,s,ss,50,-64,-25,28,20,0,0,15
+"roulette7",roulette7.png,s,ss,50,-64,-25,28,20,0,0,7
+"roulette5",roulette5.png,s,ss,50,-64,-25,28,20,0,0,5
+"roulette3",roulette3.png,s,ss,50,-64,-25,28,20,0,0,3
+"raytrace",raytrace.png,s,rs,50,-64,-25,28,20,0,0,5
