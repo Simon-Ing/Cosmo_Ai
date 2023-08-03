@@ -104,6 +104,9 @@ void CosmoSim::diagnostics() {
 void CosmoSim::setFile( std::string fn ) {
     filename = fn ;
 } 
+void CosmoSim::setSourceFile( std::string fn ) {
+    sourcefile = fn ;
+} 
 
 cv::Mat CosmoSim::getPsiMap( ) {
    cv::Mat im = lens->getPsi() ;
@@ -230,6 +233,9 @@ void CosmoSim::initSource( ) {
        case CSIM_SOURCE_ELLIPSE:
          src = new EllipsoidSource( size, sourceSize,
                sourceSize2, sourceTheta*PI/180 ) ;
+         break ;
+       case CSIM_SOURCE_IMAGE:
+         src = new ImageSource( size, sourcefile ) ;
          break ;
        case CSIM_SOURCE_TRIANGLE:
          src = new TriangleSource( size, sourceSize, sourceTheta*PI/180 ) ;
@@ -382,6 +388,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
         .def("setResolution", &CosmoSim::setResolution)
         .def("setBGColour", &CosmoSim::setBGColour)
         .def("setFile", &CosmoSim::setFile)
+        .def("setSourceFile", &CosmoSim::setSourceFile)
         .def("getPsiMap", &CosmoSim::getPsiMap)
         .def("getMassMap", &CosmoSim::getMassMap)
         .def("getAlpha", &CosmoSim::getAlpha)
@@ -422,6 +429,7 @@ PYBIND11_MODULE(CosmoSimPy, m) {
     pybind11::enum_<SourceSpec>(m, "SourceSpec") 
        .value( "Sphere", CSIM_SOURCE_SPHERE )
        .value( "Ellipse", CSIM_SOURCE_ELLIPSE )
+       .value( "Image", CSIM_SOURCE_IMAGE )
        .value( "Triangle", CSIM_SOURCE_TRIANGLE ) ;
     pybind11::enum_<ModelSpec>(m, "ModelSpec") 
        .value( "Raytrace", CSIM_MODEL_RAYTRACE )

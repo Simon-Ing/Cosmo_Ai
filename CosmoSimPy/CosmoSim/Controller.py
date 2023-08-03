@@ -95,7 +95,7 @@ class SourcePane(ttk.Frame):
             text="Source Model", style="Std.TLabel" )
         self.sourceSelector = ttk.Combobox( self,
                 textvariable=modeVar,
-                values=[ "Spherical", "Ellipsoid", "Triangle" ] )
+                values=self.sourceValues ) # [ "Spherical", "Ellipsoid", "Triangle" ] )
         sourceLabel.grid(column=0, row=1, sticky=E )
         self.sourceSelector.grid(column=1, row=1)
 

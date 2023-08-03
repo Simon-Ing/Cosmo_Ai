@@ -13,6 +13,7 @@
 
 enum SourceSpec { CSIM_SOURCE_SPHERE,
                   CSIM_SOURCE_ELLIPSE,
+                  CSIM_SOURCE_IMAGE,
                   CSIM_SOURCE_TRIANGLE } ;
 enum ModelSpec { CSIM_MODEL_RAYTRACE,
                   CSIM_MODEL_ROULETTE,
@@ -45,7 +46,7 @@ private:
 
     void initSource() ;
     void initLens() ;
-    std::string filename = "50.txt" ;
+    std::string filename = "50.txt", sourcefile = "einstein.png" ;
 
     Lens *lens = NULL ;
     PsiFunctionLens *psilens = NULL ;
@@ -54,6 +55,7 @@ public:
     CosmoSim();
 
     void setFile(std::string) ;
+    void setSourceFile(std::string) ;
     void setXY(double, double) ;
     void setPolar(int, int) ;
     void setCHI(double);

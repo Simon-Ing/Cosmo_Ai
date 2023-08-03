@@ -67,5 +67,15 @@ protected:
 
 };
 
+class ImageSource : public Source {
+   protected:
+      std::string filename ;
+   public:
+      ImageSource( int, std::string ) ;
+      virtual cv::Mat getImage() ;
+      virtual void drawSource(int, int, cv::Mat &) ;
+};
+
+
 #endif // COSMOSIM_SOURCE_H
 

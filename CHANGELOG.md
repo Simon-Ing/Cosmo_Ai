@@ -1,6 +1,13 @@
 
 # CosmoSim Change Log
 
+## [2.3.1] - 2023-08-03 TBC
+
+### Added
+
+- New source class for demonstration, using a photo of Einstein.
+  This is supported in the GUI, but not tested in the CLI.
+
 ## [2.3.0] - 2023-08-02
 
 This version is the reference version for the paper submitted

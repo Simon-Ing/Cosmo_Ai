@@ -10,6 +10,7 @@ set(SimLibFiles
 	simlib/RouletteModel.cpp
 	simlib/RotatedModel.cpp
         simlib/EllipsoidSource.cpp
+        simlib/ImageSource.cpp
         simlib/LensModel.cpp
         simlib/PointMass.cpp
 	simlib/PointMassExact.cpp

@@ -45,6 +45,7 @@ configDict["rs"] = configDict["Raytrace SIS"]
 sourceDict = {
         "Spherical" : SourceSpec.Sphere,
         "Ellipsoid" : SourceSpec.Ellipse,
+        "Image (Einstein)" : SourceSpec.Image,
         "Triangle" : SourceSpec.Triangle,
         "s" : SourceSpec.Sphere,
         "e" : SourceSpec.Ellipse,
@@ -53,6 +54,7 @@ sourceDict = {
 sourceValues = {
         "Spherical" : SourceSpec.Sphere,
         "Ellipsoid" : SourceSpec.Ellipse,
+        "Image (Einstein)" : SourceSpec.Image,
         "Triangle" : SourceSpec.Triangle,
         }
 
@@ -75,6 +77,12 @@ def getFileName(maxm):
         if maxm <= m:
             return( os.path.join( dir, f"{m}.txt" ) )
     raise Exception( f"Cannot support m > {m0}." )
+def getSourceFileName():
+    """
+    Get the filename for an image source.
+    """
+    dir = os.path.dirname(os.path.abspath(__file__))
+    return( os.path.join( dir, f"einstein.png" ) )
     
 
 class CosmoSim(cs.CosmoSim):
@@ -91,6 +99,7 @@ class CosmoSim(cs.CosmoSim):
             super().setFile( getFileName( maxm ) )
         else:
             super().setFile( fn )
+        super().setSourceFile( getSourceFileName( ) )
         self._continue = True
         self.updateEvent = th.Event()
         self.simEvent = th.Event()

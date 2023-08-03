@@ -50,4 +50,3 @@ void Source::drawParallel(cv::Mat& dst){
         thread.join();
     }
 }
-
