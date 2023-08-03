@@ -43,8 +43,9 @@ def comparefiles(f1,f2,fout=None):
              "norm":    norm,
              "minimum": mn,
              "maximum": mx,
+             "diff": diff,
              "outfile": fout }
-             # "image1": im1, "image2": im2, "diff": diff,
+             # "image1": im1, "image2": im2, 
 
 
 if __name__ == "__main__":
@@ -91,6 +92,8 @@ if __name__ == "__main__":
             if args.masked and r["relnorm"] > threshold:
                 assert not f3 is None
                 maskedresults.append( maskedCompare( r["diff"], f3 ) )
+        # The dff image was needed for maskedCompare, but takes too much memory to keep
+        r["diff"] = None   
       badresults = [ r for r in results if r["norm"] > 0 ]
       badresults.sort(key=lambda x : x["relnorm"])
       print( "Bad results sorted by distance:" )
