@@ -84,15 +84,57 @@ gcc --version
 In ~/.conan/settings.yml, scroll down to the gcc section and make sure your version is in the list of versions. If not, add it there.
 
 ```
+nano ~/.conan/settings.yml
+
+# Check this section, and make sure the output from gcc --version is in the list. If not, add it.
+
+    gcc: &gcc
+        version: ["4.1", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9",
+                  "5", "5.1", "5.2", "5.3", "5.4", "5.5",
+                  "6", "6.1", "6.2", "6.3", "6.4", "6.5",
+                  "7", "7.1", "7.2", "7.3", "7.4", "7.5",
+                  "8", "8.1", "8.2", "8.3", "8.4", "8.5",
+                  "9", "9.1", "9.2", "9.3", "9.4", "9.5",
+                  "10", "10.1", "10.2", "10.3", "10.4",
+                  "11", "11.1", "11.2", "11.3", "11.4",
+                  "12", "12.1", "12.2"]
+```
+Now we need to update the conan default profile.
+First, run:
+
+```
+conan profile show default
+```
+and compare it to this:
+```
+[settings]
+os=Linux
+os_build=Linux
+arch=x86_64
+arch_build=x86_64
+build_type=Release
+compiler=gcc
+compiler.libcxx=libstdc++11
+compiler.version=11.4
+[options]
+[conf]
+[build_requires]
+[env]
+CC=/usr/bin/gcc
+CXX=/usr/bin/g++
+```
+You will need to update the settings if yours is considerably emptier. Most likely these parameters:
+
+```
 conan profile update settings.compiler=gcc default
 conan profile update settings.compiler.libcxx=libstdc++11 default
 conan profile update settings.compiler.version=<gcc-version> default
 
-conan profile update env.CC=/usr/bin/gcc
-conan profile update env.CXX=/usr/bin/g++
+conan profile update env.CC=<path/to/gcc>
+conan profile update env.CXX=<path/to/g++>
 ```
 
-You should check your location of gcc and g++. 'usr/bin/' is probably a good bet. 
+You should check your location of gcc and g++. 'usr/bin/' is probably a good bet. E.g I use usr/bin/gcc and usr/bin/g++ above.
 
 ## **Step 2: Build**
 
