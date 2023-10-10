@@ -42,7 +42,10 @@ The GUI has not been tested on Windows.
 The binaries are not signed, and on MacOS you will have to confirm
 that you trust the binary before it will run.
 
-## Building from Source
+NOTE:
+The steps under "Running the Software" do not currently work from the precompiled version. TODO: Build a more complete and rubust release artifact.
+
+# Building from Source
 
 The build procedure is primarily developed on Debian Bullseye, but it now 
 also works reliable on github runners running Windows-2019, Ubuntu-20.04,
@@ -51,44 +54,62 @@ with other macs, depending on their setup.  We do not have capacity to develop
 generic and robust build procedures, but we shall be happy to incorporate 
 contributions.
 
-**Step 1 (install conan).**
-The build stack uses conan for dependencies.  It needs to be installed,
-in version 1.59, and configured to use the C++11 ABI.
-(See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
-for further information.)
-```
-pip3 install conan==1.59
-conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
-conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
-```
-
-**Step 2 (build).**
-To build the C++ library and the Python library (wrapper), we use cmake as follows.
-```sh
-conan install . -if build
-cmake . -B build
-cmake --build build
-```
-
-There are recurring problems with broken dependencies on conan.  This seems
-to be out of our control.  The building scripts suddenly break even with no
-change on our side.  
-For instance, it may be necessary explicitly to build OpenCV:
-```sh
-conan install . -if build --build=opencv
-```
-
-### Dependencies
+## Pre-step: Dependencies
 
 Using conan, it will tell you about any missing libraries that have to 
-be installed system level.  The following commands is what I needed on a
-Debian system, and may be good start saving some time.  
+be installed on the system level.  The following commands is what I needed on a Debian system, and may be good start saving some time. 
 
 ```sh
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
 
-## Installation without Conan
+## **Step 1: Install Conan**
+
+The build stack uses conan for dependencies.  It needs to be installed,
+in version 1.59, and configured to use the C++11 ABI.
+(See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
+for further information.)
+
+Find your gcc version, and make sure it's included in the . This is needed for below
+```
+gcc --version
+```
+
+In /.conan/settings.yml, scroll down to the gcc section and make sure your version is in the list of versions. If not, add it there.
+
+```
+pip3 install conan==1.59
+
+conan profile new default --detect 
+
+conan profile update settings.compiler=gcc default
+conan profile update settings.compiler.libcxx=libstdc++11 default
+conan profile update settings.compiler.version=<gcc-version> default
+
+conan profile update env.CC=/usr/bin/gcc
+conan profile update env.CXX=/usr/bin/g++
+```
+You should check your location of gcc and g++. 'usr/bin/' is probably a good bet. 
+
+## **Step 2: Build**
+
+*NOTE: There are recurring problems with broken dependencies on conan.  This seems to be out of our control.  The building scripts suddenly break even with no change on our side. For instance, it may be necessary explicitly to build OpenCV:*
+
+```sh
+# if install command below fails, try:
+conan install . -if build --build=missing
+```
+
+To build the C++ library and the Python library (wrapper), we use cmake as follows.
+```sh
+cd {/path/to/CosmoSim/root/dir}
+conan install . -if build
+cmake . -B build
+cmake --build build
+```
+.
+
+# Installation without Conan
 
 If conan is not available, OpenCV and SymEngine must be installed
 on the system.  We have set up cmake not to use conan when the
@@ -96,7 +117,7 @@ hostname starts with `idun`, in which case the `idunbuild.sh`
 script can be used for installation.  This has been designed
 for the NTNU Idun cluster, but can be tweaked for other systems.
 
-## Using Docker 
+# Using Docker 
 
 Docker images have been created to build and run the new python GUI.
 It should be possible to build and run them as follows, assuming a Unix like system.
