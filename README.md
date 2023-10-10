@@ -18,7 +18,7 @@ Documentation is being written at
 [https://cosmoai-aes.github.io/](https://cosmoai-aes.github.io/),
 but it still incomplete and fragmented.
 
-# Making it Run
+# Installation Guide
 
 ## Running from Precompiled Version in Python
 
@@ -45,7 +45,7 @@ that you trust the binary before it will run.
 NOTE:
 The steps under "Running the Software" do not currently work with the CLI without some extra configuration. TODO: Build a more complete and rubust release artifact.
 
-# Building from Source
+## Building from Source
 
 The build procedure is primarily developed on Debian Bullseye, but it now 
 also works reliable on github runners running Windows-2019, Ubuntu-20.04,
