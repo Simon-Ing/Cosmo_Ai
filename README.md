@@ -70,18 +70,20 @@ in version 1.59, and configured to use the C++11 ABI.
 (See [Conan Tutorial](https://docs.conan.io/en/latest/getting_started.html)
 for further information.)
 
-Find your gcc version, and make sure it's included in the . This is needed for below
+```
+pip3 install conan==1.59
+conan profile new default --detect 
+```
+
+Find your gcc version. This is needed for below.
+
 ```
 gcc --version
 ```
 
-In /.conan/settings.yml, scroll down to the gcc section and make sure your version is in the list of versions. If not, add it there.
+In ~/.conan/settings.yml, scroll down to the gcc section and make sure your version is in the list of versions. If not, add it there.
 
 ```
-pip3 install conan==1.59
-
-conan profile new default --detect 
-
 conan profile update settings.compiler=gcc default
 conan profile update settings.compiler.libcxx=libstdc++11 default
 conan profile update settings.compiler.version=<gcc-version> default
@@ -89,6 +91,7 @@ conan profile update settings.compiler.version=<gcc-version> default
 conan profile update env.CC=/usr/bin/gcc
 conan profile update env.CXX=/usr/bin/g++
 ```
+
 You should check your location of gcc and g++. 'usr/bin/' is probably a good bet. 
 
 ## **Step 2: Build**
