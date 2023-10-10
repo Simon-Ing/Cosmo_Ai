@@ -54,14 +54,22 @@ with other macs, depending on their setup.  We do not have capacity to develop
 generic and robust build procedures, but we shall be happy to incorporate 
 contributions.
 
-### Pre-step: Dependencies
+### Dependencies and Prerequisites 
 
-Using conan, it will tell you about any missing libraries that have to 
-be installed on the system level.  The following commands is what I needed on a Debian system, and may be good start saving some time. 
+In order to build CosmoSim's C++ libararies, we will need to use conan. During the process, it will tell you about any missing libraries that have to be installed on the system level.  
+
+The following command is probably a good start to save some time later on. 
 
 ```sh
 sudo apt-get install libgtk2.0-dev libva-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmuu-dev libxpm-dev libxres-dev libxtst-dev libxvmc-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev libvdpau-dev
 ```
+Make sure you have gcc and g++ installed (c++ compiler). They *may be already installed on some linux distros, or perhaps in the list above... maybe.
+
+```
+gcc --version
+g++ --version
+```
+Specifically, take note of the g++ version.
 
 ### **Step 1: Install Conan**
 
