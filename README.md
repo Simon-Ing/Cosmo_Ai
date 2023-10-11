@@ -42,8 +42,7 @@ The GUI has not been tested on Windows.
 The binaries are not signed, and on MacOS you will have to confirm
 that you trust the binary before it will run.
 
-NOTE:
-The steps under "Running the Software" do not currently work with the CLI without some extra configuration. TODO: Build a more complete and rubust release artifact.
+The instructions to run from the precompiled versions are contained inside the package.
 
 ## Building from Source
 
@@ -210,16 +209,11 @@ docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u $(id
 
 ### CLI
 
+To generate images specifying parameters, you can use
 ```sh
-CosmoSimPy/datagen.py -S sourcemodel -L lensmodel -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name -R -C
-CosmoSimPy/datagen.py --csvfile Datasets/debug.csv --mask -R -C
-CosmoSimPy/datagen.py --help
+python3 CosmoSimPy/datagen.py -S sourcemodel -L lensmodel -x x -y y -s sigma -X chi -E einsteinR -n n -I imageSize -N name -R -C
 ```
-
-The second form generates images in bulk by parsing the CSV file.
-Parameters which are constant for all images may be given on the 
-command line instead of the CSV file.
-
+Here are the options specified:
 + `lensmodel` is `p` for point mass (exact), `r` for Roulette (point mass),
   or `s` for SIS (Roulette).
 + `sourcemodel` is `s` for sphere, `e` for ellipse, or `t` for
@@ -237,12 +231,22 @@ command line instead of the CSV file.
 + `name` is the name of the simulation, and used to generate filenames.
 + `--help` for a complete list of options.
 
-To bulk generate images the following script creates a CSV file
-to use with the `--csvfile` option above.
+Alternatively, you can parse in a csv file to bulk generate images. Parameters which are constant for all images may be given on the 
+command line instead of the CSV file.
 
-+ `CosmoSimPy/datasetgen.py` makes a CSV file of random parameter sets.
-  It should be tweaked to get the desired distribution.
-+ `python3 CosmoSimPy/datasetgen.py --help` for instructions
+```sh
+python3 CosmoSimPy/datagen.py --csvfile Datasets/debug.csv --mask -R -C
+```
+
+
+The following script creates a CSV file of random parameter sets to use with the `--csvfile` option above.
+
+```
+python3 CosmoSimPy/datasetgen.py
+```
+
+It should be tweaked to get the desired distribution.
+
 
 
 ## Scripts
