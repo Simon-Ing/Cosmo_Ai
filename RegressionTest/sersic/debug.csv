@@ -1,0 +1,11 @@
+filename,source,lens,x,y,einsteinradius,ellipseratio,orientation,sigma,luminosity,theta
+sies01s.png,SersicSphere,SIE,20,10,40,0.4,0,10,20,0
+sies03s.png,SersicSphere,SIE,20,10,40,0.4,30,10,20,0
+sies07s.png,SersicSphere,SIE,20,10,40,0.4,60,10,20,0
+sies09s.png,SersicSphere,SIE,20,10,40,0.4,90,10,20,0
+sies13s.png,SersicSphere,SIE,20,10,40,0.4,120,10,20,0
+sies15s.png,SersicSphere,SIE,20,10,40,0.4,150,10,20,0
+a01.png,SersicSphere,SIE,12,30,10,0.4,0,20,12,0
+a02.png,SersicSphere,SIE,12,30,10,0.4,60,20,20,0
+b01.png,SersicSphere,SIE,12,30,30,0.4,0,20,12,0
+b01.png,SersicSphere,SIE,12,30,30,0.4,60,20,20,0

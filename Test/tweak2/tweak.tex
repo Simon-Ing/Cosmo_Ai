@@ -1,0 +1,39 @@
+\documentclass{scrartcl}
+\usepackage{pgffor,graphicx,subfig,verbatim}
+
+\pagestyle{empty}
+
+
+\usepackage[margin=5mm,footskip=5mm]{geometry}
+
+\def\im#1#2#3{\subfloat[#3]{\includegraphics[width=0.33\textwidth]{#1/#2}}}
+%\def\im#1#2{\includegraphics[width=0.49\textwidth]\expandafter\relax{#1/#2}}
+\parindent=0pt
+
+\begin{document}
+
+\foreach \f in 
+   {image-0008,image-0012,image-0018,image-0025,image-0032,image-0036,image-0045,image-0047}
+{
+   \begin{figure}
+      \begin{minipage}{0.8\textwidth}
+         \verbatiminput{\f .txt}
+      \end{minipage}
+
+      \im{Raytrace}{\f}{Raytrace }
+      \im{roulette-base}{\f}{Correct amplitudes $m=5$}
+      \im{roulette-alphas}{\f}{$\alpha_5^s$ increased by factor 10.}
+  
+      \im{roulette-alpha}{\f}{$\alpha_5^2$ increased by factor 10.}
+      \im{roulette-ab}{\f}{$\alpha_5^s$ and $\beta_5^s$ increased by factor 10.}
+      \im{roulette-beta}{\f}{$\beta_5^2$ increased by factor 10.}
+  
+      \im{roulette-min}{\f}{$\alpha_5^s$ and $\beta_5^s$ decreased by factor 10.}
+      \im{roulette-alpha0}{\f}{$\alpha_5^2=0$}
+      \im{roulette-beta0}{\f}{$\beta_5^2=0$}
+      \caption{Image \texttt{\f}.}
+   \end{figure}
+   \clearpage
+}
+
+\end{document}

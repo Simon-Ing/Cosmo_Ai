@@ -1,0 +1,78 @@
+[build-system]
+requires = [
+    "conan>=2.0.0",
+    "setuptools",
+    "scikit-build>=0.17.3",
+    "skbuild-conan",
+    "cmake>=3.15",
+    "ninja>=1.13",
+    "cascadict>=0.8",
+    "pybind11>=2.12",
+]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+dynamic = [ "version" ]
+name = "CosmoSim"
+authors = [
+  { name='Hans Georg Schaathun', email="georg+github@schaathun.net" },
+]
+description = 'Simulator of Gravitational Lenses'
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords=[ 'cosmology', 'gravitational lensing', "simulation" ]
+dependencies=["sympy>=1.13", "numpy>=2.0", "matplotlib", "opencv-python", "pandas", "toml", "cascadict" ]
+
+[tool.setuptools.dynamic]
+version = {attr = "CosmoSim.__version__"}
+
+[project.urls]
+Homepage = "https://github.com/CosmoAI-AES/CosmoSim"
+Issues = "https://github.com/CosmoAI-AES/CosmoSim/issues"
+
+[tool.cibuildwheel]
+# "*-win_amd64" (not "*-win_*64"): the latter also matches "*-win_arm64",
+# which we do not cross-compile here.
+build = [ "*-manylinux_x86_64", "*-manylinux_i686", "*-macosx_*", "*-win_amd64" ]
+skip = [ "cp314t-win_amd64" ]
+
+[tool.cibuildwheel.windows]
+# CosmoSim's C++ only uses cv::imread (imgcodecs), so OpenCV video I/O is not
+# needed.  Disable opencv's with_ffmpeg so the wheel build does NOT compile the
+# flaky ffmpeg + libaom-av1 source tree on MSVC (the cause of the historically
+# erratic Windows builds).  skbuild-conan cannot pass conan options directly, so
+# the option is injected into the skbuild_conan_py profile it reuses; see
+# Setup/conan_win_profile.py.
+before-all = [
+    "pipx install conan",
+    "conan profile detect --name skbuild_conan_py --force",
+    "python Setup/conan_win_profile.py",
+    ]
+[tool.cibuildwheel.linux]
+before-all = [ "yum -y install libva-devel libvdpau-devel xkeyboard-config-devel libfontenc-devel libXaw-devel libXcomposite-devel libXcursor-devel libXdmcp-devel libXtst-devel libXinerama-devel libxkbfile-devel libXrandr-devel libXres-devel libXScrnSaver-devel xcb-util-wm-devel xcb-util-image-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel libXxf86vm-devel libXv-devel xcb-util-devel libuuid-devel xcb-util-cursor-devel perl perl-IPC-Cmd perl-Digest-SHA",
+  "pipx install conan ",
+  "conan profile detect --name skbuild_conan_py ",
+  "echo 'CONAN START' ",
+  "conan install --profile:all=skbuild_conan_py --requires=libcap/2.69 '--build=*' ",
+  "conan install --profile:all=skbuild_conan_py --requires=libx264/cci.20240224 '--build=*' ",
+  "conan install --profile:all=skbuild_conan_py --requires=openssl/3.5.1 '--build=*' ",
+  "conan install --profile:all=skbuild_conan_py --requires=xkbcommon/1.5.0 '--build=*' ",
+  "echo 'CONAN DONE' && uname -a"
+  ]
+environment = { CC="gcc", CXX="g++" }
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-i686-image = "manylinux_2_28"
+
+[tool.cibuildwheel.macos]
+before-all = "pipx install conan && conan profile detect --name skbuild_conan_py &&  echo 'CONAN START' && conan install --profile:all=skbuild_conan_py --requires=libx264/cci.20240224 '--build=*' && conan install --profile:all=skbuild_conan_py --requires=openssl/3.5.1 '--build=*' && echo 'CONAN DONE' && uname -a"

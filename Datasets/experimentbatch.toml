@@ -1,0 +1,31 @@
+# (C) 2026: Hans Georg Schaathun <georg@schaathun.net> 
+# This configures training of a machine learning model for CosmoAI
+[settings]
+device = "cuda"
+models = [
+    "regnet_y_32gf", 
+    "wide_resnet50_2",
+    "resnet50",
+]
+problem = "problem.toml"
+
+[hyperparameters.array]
+learning-rate = [ 1e-3, 5e-4, 1e-4 ]
+batch-size = [ 32, 64, 96 ]
+# batch-size = [ 32, 64, 96 ]
+weight-decay = [ 1e-4, 4e-5, 1e-5 ]
+
+[training]
+num-epochs = 50
+patience = 10
+
+[dataset]
+directory = "images"
+training.filename = "training.csv"
+testing.filename = "testing.csv"
+validation.filename = "validation.csv"
+
+[output]
+dirbase = "experiment%%"
+# Predictions are placed in the output directory using the
+# same filenames as the input files (training/testing/validation).

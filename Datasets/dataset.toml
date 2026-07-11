@@ -1,0 +1,35 @@
+# (C) 2026: Hans Georg Schaathun <georg@schaathun.net> 
+[simulator]
+model = [ "Raytrace", "Roulette" ]
+size = 20
+nterms = 4
+
+[lens]
+mode = [ "PM", "SIS", "SIE" ]
+chi = 50
+einstein-min = 2.5
+einstein-max = 75
+# orientation and ellipseratio are used for SIE lenses
+orientation-min = 0
+orientation-max = 180
+ellipseratio-min = 0.1
+ellipseratio-max = 1.0
+
+[source]
+mode = "SersicEllipsoid"
+sigma-min = 1.25
+sigma-max = 20
+sigma2-min = 1.25
+sigma2-max = 20
+# source.theta is the rotation of the source (relevant for non-spherical sources)
+theta-min = 0
+theta-max = 180
+position = "polar"
+
+[position]
+# (phi,r) is the source position in polar co-ordinates, angle in degrees
+phi-min = 0
+phi-max = 360
+r-min = 1
+r-max = 75
+

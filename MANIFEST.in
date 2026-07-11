@@ -1,0 +1,21 @@
+exclude *.pyc
+exclude *.log
+exclude __pycache__
+recursive-exclude .github/ *
+recursive-exclude Legacy/ *
+recursive-exclude Notes/ *
+recursive-exclude Test/ *
+recursive-exclude _skbuild/ *
+recursive-exclude build/ *
+recursive-exclude tmp/ *
+include src/CosmoSim/*.so 
+include src/CosmoSim/*.pyd 
+recursive-exclude RegressionTest *
+recursive-include src *
+recursive-include include *
+recursive-include Setup *
+recursive-include Datasets *
+include setup.py
+include *.toml
+include CMakeLists.txt
+include requirements*.txt
