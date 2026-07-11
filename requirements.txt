@@ -1,0 +1,11 @@
+sympy>=1.13
+numpy 
+matplotlib
+opencv-python
+pandas 
+pybind11 
+conan
+twine
+build
+cibuildwheel
+cascadict

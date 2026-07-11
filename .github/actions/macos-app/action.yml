@@ -1,0 +1,55 @@
+name: 'Macos Build'
+
+description: |
+  This builds a MacOS desktop application.
+  From Summer 2025, this is not maintained, and we rely instead on
+  building python wheels with cibuildwheel.
+
+inputs:
+  compiler-version:
+    default: 14
+  python-version:
+    required: false
+    default: '3.11'
+
+runs:
+    using: "composite"
+
+    steps:
+      - uses: kenchan0130/actions-system-info@master
+        id: system-info
+      - uses: actions/checkout@v4
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install prerequisites
+        shell: bash
+        run: |
+          pip3 install -r requirements-build.txt
+          conan profile new default --detect
+          conan profile update settings.compiler.version=${{ inputs.compiler-version }} default
+          pip3 install pyinstaller
+      - name: Run conan
+        shell: bash
+        run: |
+          conan install . -s build_type=Release -if build -b missing
+      - name: Configure and build
+        shell: bash
+        run: |
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Make application bundle
+        shell: bash
+        run: |
+          pyinstaller --windowed --icon uranus.icns --osx-bundle-identifier no.ntnu.iir.CosmoGUI CosmoSimPy/CosmoGUI.py
+      - name: Remove non-app data
+        shell: bash
+        run: |
+          rm -rf dist/CosmoGUI
+      - name: Archive Python link library
+        uses: actions/upload-artifact@v4
+        with:
+          name: CosmoGUI-application-${{runner.os}}-${{ steps.system-info.outputs.release }}
+          path: dist

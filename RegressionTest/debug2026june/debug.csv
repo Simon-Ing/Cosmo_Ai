@@ -1,0 +1,3 @@
+index,filename,source,config,x,y,einsteinradius,sigma,sigma2,theta,nterms
+r01,r01.png,s,ss,24,-68,96.0,21,0,0,16
+r04,r04.png,s,ss,30,-30,40,10,10,0,16

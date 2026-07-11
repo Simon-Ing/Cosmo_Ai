@@ -1,0 +1,38 @@
+# This file is intended to document default parameters.
+# It is incomplete and unused at the moment, and must be
+# completed as part of the refactoring into using the TOML
+# structure for parameters throughout
+
+[simulator]
+nterms = 5
+imagesize = 512
+cropsize = 192
+xireference = true
+centred = true
+
+
+[simulator.config]
+mode = 0   # This used to be just simulator -> config
+lens = "SIE"
+model = "Raytrace"
+sampled = false
+
+[lens]
+chi = 50
+einsteinradius = 20
+orientation = 0
+ellipseratio = 0.6
+
+[source]
+mode = "Spherical" 
+sigma = 20
+sigma2 = 10
+theta = 45
+
+[dataset]
+directory = "./"
+
+[annotation] 
+# not yet in TOML
+reflines = false
+criticalcurves = false

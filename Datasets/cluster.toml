@@ -1,0 +1,54 @@
+# (C) 2026: Hans Georg Schaathun <georg@schaathun.net> 
+#
+# This is a draft, exploring the criteria we /want to/ define.
+# Once agreed on the criteria, we can implement the random
+# generator.
+
+[simulator]
+model = "Raytrace"
+size = 10
+nterms = 4
+
+
+[lens]
+mode = "SIE"
+chi = 50
+einstein-min = 1
+einstein-max = 39
+# orientation and ellipseratio are used for SIE lenses
+orientation-min = 0
+orientation-max = 180
+ellipseratio-min = 0.1
+ellipseratio-max = 1.0
+
+[lens.cluster]
+count = 4
+
+# The other parameters are early drafts
+maxrelativesize = 10
+mindistance = [ 0, 1, 1 ] # Sum of Einstein radiuses
+maxdistance = [ 0, 10 ] # 10 times largest Einstein radiues in cluster
+
+# Most of the cluster criteria will be exclusion criteria applied
+# after drawing.
+
+# Need to compute origin after cluster definition
+
+[source]
+mode = "SersicSphere"
+sigma-min = 1
+sigma-max = 10
+sigma2-min = 1
+sigma2-max = 10
+# source.theta is the rotation of the source (relevant for non-spherical sources)
+theta-min = 0
+theta-max = 180
+position = "polar"
+
+[position]
+# (phi,r) is the source position in polar co-ordinates, angle in degrees
+phi-min = 0
+phi-max = 360
+r-min = 1
+r-max = { "maxlensposition" : 1.2 }
+

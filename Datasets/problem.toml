@@ -1,0 +1,20 @@
+[problem]
+filename = "roulette.csv"
+dataset =  "dataset.toml"
+variables = [ "sigma", "xiX", "xiY" ]
+nterms = 4 
+
+[dataset]
+roulette = "resimulation"
+
+[dataset.training]
+filename = "training.csv"
+size = 16000
+
+[dataset.validation]
+filename = "validation.csv"
+size = 4000
+
+[dataset.testing]
+filename = "testing.csv"
+size = 4000
