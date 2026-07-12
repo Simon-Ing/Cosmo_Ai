@@ -1,0 +1,78 @@
+name: 'Build (generic version)'
+
+description: |
+  Build the project on Linux.
+  This action does not build a wheel, but relies on finding
+  the dynamic library directly in the file system.
+
+inputs:
+  compiler-version:
+    required: false
+    default: 13
+  python-version:
+    required: false
+    default: '3.13'
+
+runs:
+    using: "composite"
+    steps:
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install prerequisites on Linux
+        shell: bash
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+               libxcb-glx0-dev libxcb-cursor-dev libxcb-dri2-0-dev \
+               libxcb-present-dev libxcb-composite0-dev libxcb-ewmh-dev \
+               libxcb-res0-dev \
+               libx11-dev libx11-xcb-dev libfontenc-dev libice-dev \
+               libsm-dev libxau-dev libxaw7-dev \
+               libva-dev libvdpau-dev xkb-data \
+               libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev \
+               libxau-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev \
+               libxfixes-dev libxi-dev libxinerama-dev libxkbfile-dev libxmuu-dev \
+               libxrandr-dev libxrender-dev libxres-dev libxss-dev libxtst-dev libxv-dev \
+               libxxf86vm-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-keysyms1-dev \
+               libxcb-xinerama0-dev libxcb-dri3-dev uuid-dev libxcb-dri3-dev \
+               libxcb-util-dev libglib2.0-0
+      - name: Install python dependencies
+        shell: bash
+        run: |
+          pip3 install -r requirements.txt
+      - name: Install and run conan
+        shell: bash
+        env:
+            GIT_SSL_NO_VERIFY: "true" # Bypasses SSL verification for Git
+        run: |
+          conan profile detect 
+          conan profile show
+          conan install . --output-folder=build --build=missing 
+      - name: Configure and build
+        shell: bash
+        run: |
+           cd build 
+           cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release 
+           cmake --build . 
+           cmake --install . --prefix=../src
+      - uses: kenchan0130/actions-system-info@master
+        id: system-info
+      - name: Archive Python Application
+        uses: actions/upload-artifact@v4
+        with:
+          name: CosmoSimPy-${{ runner.os }}-${{ steps.system-info.outputs.release }}-python${{ inputs.python-version }}
+          path: src/CosmoSim/CosmoSimPy.*.so
+      - name: Diagnostic
+        shell: bash
+        run: |
+          ls -l src/CosmoSim
+          date
+          python3 --version
+      - name: Test
+        shell: bash
+        run: |
+          PYTHONPATH=src/:$PYTHONPATH python3 -m CosmoSim -x 10 -y 5

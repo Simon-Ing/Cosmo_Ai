@@ -1,0 +1,5 @@
+index,filename,source,lens,x,y,einsteinR,ellipseratio,orientation,sigma,sigma2,theta
+t11,t11.png,e,SIS,50,0,96,0.5,0,20,30,0
+t12,t12.png,e,SIS,0,50,96,0.5,0,20,30,0
+t13,t13.png,e,SIS,30,30,96,0.5,0,20,30,0
+sie01,sie01.png,e,SIE,50,0,96,0.5,0,20,30,0

@@ -1,0 +1,126 @@
+# (C) 2023,2025: Hans Georg Schaathun <georg@schaathun.net> 
+
+name: "Regression Test (Modular)"
+
+description: |
+  This makes a trial build and runs runs the regression tests
+  on a few configurations.
+
+  The regression tests often fail inexplicably, presumably because
+  minor variations in the dependencies and/or machine architecture
+  cause slightly different numerical errors.  For instance, the
+  same release may fail on one OS and succeed on another.
+
+  For this reason, the regression tests cannot be automated for 
+  release validation, and rely on manual evaluation.
+
+on: 
+   push:
+       branches: [ feature/regressiontests ]
+   release:
+   workflow_dispatch:
+   workflow_call:
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12','3.13']
+        os: [ ubuntu-latest, macos-13, macos-15 ]
+        include:
+          - compiler-version: 14
+          - os: ubuntu-latest
+            compiler-version: 13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Project
+        uses: ./.github/actions/build
+        with:
+           compiler-version: ${{ matrix.compiler-version }}
+           python-version: ${{ matrix.python-version }}
+
+  regression-test:
+
+    runs-on:  ${{ matrix.os }}
+    needs: 
+      - build
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12','3.13']
+        os: [ ubuntu-latest, macos-13, macos-15 ]
+        include:
+          - compiler-version: 14
+          - os: ubuntu-latest
+            compiler-version: 13
+        test-dir: [ 'exactpm', 'raytrace', 'roulette', 'roulettepm',
+          'new-roulette', 'new-raytrace',
+          'sampled-roulette', 'sampled-raytrace',
+          'cluster-roulette', 'cluster-raytrace',
+          'cluster-sampled-roulette', 'cluster-sampled-raytrace',
+        ]
+    steps:
+      - name: apt-installations
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+      - name: brew-installations
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install imagemagick
+      - uses: actions/checkout@v4
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+          cache: "pip"
+      - name: pip-installations
+        run: |
+          pip install -r requirements.txt
+      - uses: kenchan0130/actions-system-info@master
+        id: system-info
+      - name: artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: .
+          name: CosmoSimPy-${{ runner.os }}-${{ steps.system-info.outputs.release }}-python${{ matrix.python-version }}
+      - name: diagnostic
+        shell: bash
+        run: |
+            git status
+            python3 --version
+            ls -l
+            ls -lR CosmoSimPy-* || echo 'No directory CosmoSimPy-\*'
+      - name: move artifacts in place
+        shell: bash
+        run: |
+          mv CosmoSim*.so  src/CosmoSim
+      - name: makeimages
+        run: |
+          cd RegressionTest/${{ matrix.test-dir }}
+          sh ../bin/makeimages.sh
+      - name: compare
+        run: |
+          cd RegressionTest/${{ matrix.test-dir }}
+          sh ../bin/compareimages.sh
+      - name: montage
+        run: |
+          cd RegressionTest/${{ matrix.test-dir }}
+          sh ../bin/montageimages.sh
+      - name: artifact-preparation
+        run: |
+          mkdir -p dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
+          mv RegressionTest/${{ matrix.test-dir }}/montage/ dist/${{ matrix.os }}/python${{ matrix.python-version }}/${{ matrix.test-dir }}
+      - name: image-upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: montage-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.test-dir }}
+          path: dist
+
+

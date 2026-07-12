@@ -1,0 +1,103 @@
+# (C) 2025: Hans Georg Schaathun <georg+professor@schaathun.net> 
+
+name: cibuildwheel
+
+description: |
+  Build python wheels for deployment to the PyPI server.
+  This is the most critical workflow in the project.
+
+  Builds run on Linux, macOS and Windows (amd64).  OpenCV's ffmpeg/video
+  support is disabled for the wheel build (see pyproject.toml) so it avoids
+  the flaky from-source ffmpeg/libaom compile that previously made the
+  Windows build unreliable.  The Windows leg is marked continue-on-error
+  until it is proven consistently green, so it cannot block the
+  Linux/macOS deployment.
+
+on: 
+   push:
+       branches: [ "build/pypi*", "refactor/workflow*" ]
+   workflow_call:
+   workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    # Windows wheels are still being stabilised.  Mark only the Windows leg as
+    # non-blocking so a Windows failure does not fail this (reusable) workflow,
+    # which would otherwise skip the dependent `upload` job in pypideploy.yml /
+    # pypitest.yml and block publication of the working Linux/macOS wheels.
+    # Remove this once Windows builds are reliably green to make it a hard gate.
+    continue-on-error: ${{ startsWith(matrix.os, 'windows') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # windows-2022 (not windows-latest): the windows-latest image moved to
+        # Visual Studio 2026 (MSVC v145) in June 2026, which the classic
+        # scikit-build that skbuild-conan wraps does not yet recognise -- its
+        # generator probe caps at VS 2022 and rejects _MSC_VER 1950. windows-2022
+        # ships VS 2022 (MSVC 1944), which builds cleanly. Revisit once
+        # scikit-build ships a release with Visual Studio 2026 support.
+        os: [ ubuntu-latest, macos-latest, windows-2022 ]
+# Not enabled yet (unproven / extra cost): ubuntu-24.04-arm, windows-11-arm, macos-13
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Used to host cibuildwheel
+      - uses: actions/setup-python@v5
+        with:
+           python-version: '3.13'
+
+      - name: Upgrade pip
+        run: |
+           python --version
+           python -m pip install --upgrade pip
+
+      - name: Install cibuildwheel
+        # run: python -m pip install cibuildwheel==3.4.1
+        run: python -m pip install cibuildwheel==4.0.0rc1
+
+      # Cache the conan package store so OpenCV/symengine are restored instead
+      # of recompiled from source on every run (the dominant cost). Windows and
+      # macOS build on the host runner, so its conan home is reused directly.
+      # Linux builds run inside the manylinux container, whose conan home is not
+      # this path, so caching there needs a CONAN_HOME redirect into the mounted
+      # project -- left as a follow-up; the step is skipped on Linux for now.
+      - name: Cache conan packages
+        if: runner.os != 'Linux'
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2/p
+          key: ${{ matrix.os }}-conan-${{ hashFiles('pyproject.toml', 'conanfile.py', 'Setup/conan_win_profile.py') }}
+          restore-keys: |
+            ${{ matrix.os }}-conan-
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Project
+        uses: ./.github/actions/build
+        with:
+           python-version: '3.13'
+           compiler-version: 13
+
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+
